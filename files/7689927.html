@@ -1,0 +1,135 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7689927.html">[LeetCode] Top K Frequent Words 前K个高频词</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Given a non-empty list of words, return the&nbsp;<em>k</em>&nbsp;most frequent elements.</p>
+<p>Your answer should be sorted by frequency from highest to lowest. If two words have the same frequency, then the word with the lower alphabetical order comes first.</p>
+<p>Example 1:</p>
+<pre>Input: ["i", "love", "leetcode", "i", "love", "coding"], k = 2
+Output: ["i", "love"]
+Explanation: "i" and "love" are the two most frequent words.
+    Note that "i" comes before "love" due to a lower alphabetical order.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: ["the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"], k = 4
+Output: ["the", "is", "sunny", "day"]
+Explanation: "the", "is", "sunny" and "day" are the four most frequent words,
+    with the number of occurrence being 4, 3, 2 and 1 respectively.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>You may assume&nbsp;<em>k</em>&nbsp;is always valid, 1 &le;&nbsp;<em>k</em>&nbsp;&le; number of unique elements.</li>
+<li>Input words contain only lowercase letters.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Follow up:</p>
+<ol>
+<li>Try to solve it in&nbsp;<em>O</em>(<em>n</em>&nbsp;log&nbsp;<em>k</em>) time and&nbsp;<em>O</em>(<em>n</em>) extra space.</li>
+<li>Can you solve it in&nbsp;<em>O</em>(<em>n</em>) time with only&nbsp;<em>O</em>(<em>k</em>) extra space?</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求前K个高频词，跟之前那道题<a href="http://www.cnblogs.com/grandyang/p/5454125.html">Top K Frequent Elements</a>极其类似，换了个数据类型就又是一道新题。唯一的不同就是之前那道题对于出现频率相同的数字，没有顺序要求。而这道题对于出现频率相同的单词，需要按照字母顺序来排。但是解法都一样，还是用最大堆和桶排序的方法。首先来看最大堆的方法，思路是先建立每个单词和其出现次数之间的映射，然后把单词和频率的pair放进最大堆，如果没有相同频率的单词排序要求，我们完全可以让频率当作pair的第一项，这样priority_queue默认是以pair的第一项为key进行从大到小的排序，而当第一项相等时，又会以第二项由大到小进行排序，这样就与题目要求的相同频率的单词要按字母顺序排列不相符，当然我们可以在存入结果res时对相同频率的词进行重新排序处理，也可以对priority_queue的排序机制进行自定义，这里我们采用第二种方法，我们自定义排序机制，我们让a.second &gt; b.second，让小频率的词在第一位，然后当a.second == b.second时，我们让a.first &lt; b.first，这是让字母顺序大的排在前面（这里博主需要强调一点的是，priority_queue的排序机制的写法和vector的sort的排序机制的写法正好顺序相反，同样的写法，用在sort里面就是频率小的在前面，不信的话可以自己试一下）。定义好最小堆后，我们首先统计单词的出现频率，然后组成pair排序最小堆之中，我们只保存k个pair，超过了就把队首的pair移除队列，最后我们把单词放入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; topKFrequent(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res(k);
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> freq;
+        auto cmp </span>= [](pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;&amp; a, pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> b) {
+            </span><span style="color: #0000ff;">return</span> a.second &gt; b.second || (a.second == b.second &amp;&amp; a.first &lt;<span style="color: #000000;"> b.first);
+        };
+        priority_queue</span>&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;, vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;&gt;, decltype(cmp) &gt;<span style="color: #000000;"> q(cmp);
+        </span><span style="color: #0000ff;">for</span> (auto word : words) ++<span style="color: #000000;">freq[word];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto f : freq) {
+            q.push(f);
+            </span><span style="color: #0000ff;">if</span> (q.size() &gt;<span style="color: #000000;"> k) q.pop();
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = res.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            res[i] </span>=<span style="color: #000000;"> q.top().first; q.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法还是一种堆排序的思路，这里我们用map，来建立次数和出现该次数所有单词的集合set之间的映射，这里也利用了set能自动排序的特性，当然我们还是需要首先建立每个单词和其出现次数的映射，然后将其组成pair放入map种，map是从小到大排序的，这样我们从最后面取pair，就是次数最大的，每次取出一层中所有的单词，如果此时的k大于该层的单词个数，就将整层的单词加入结果res中，否则就取前K个就行了，取完要更更新K值，如果K小于等于0了，就break掉，返回结果res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; topKFrequent(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> freq;
+        map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> word : words) ++<span style="color: #000000;">freq[word];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : freq) {
+            m[a.second].insert(a.first);
+        }
+        </span><span style="color: #0000ff;">for</span> (auto it = m.rbegin(); it != m.rend(); ++<span style="color: #000000;">it) {
+            </span><span style="color: #0000ff;">if</span> (k &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            auto t </span>= it-&gt;<span style="color: #000000;">second;
+            vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> v(t.begin(), t.end());
+            </span><span style="color: #0000ff;">if</span> (k &gt;=<span style="color: #000000;"> t.size()) {
+                res.insert(res.end(), v.begin(), v.end());
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                res.insert(res.end(), v.begin(), v.begin() </span>+<span style="color: #000000;"> k);
+            }
+            k </span>-=<span style="color: #000000;"> t.size();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是一种桶排序的思路，我们根据出现次数建立多个bucket，桶的个数不会超过单词的个数，在每个桶中，我们对单词按字符顺序进行排序。我们可以用个数组来表示桶，每一层中放一个集合，利用set的自动排序的功能，使其能按字母顺序排列。我们还是需要首先建立每个单词和其出现次数的映射，然后将其组成pair放入map种，map是从小到大排序的，这样我们倒序遍历所有的桶，这样取pair，就是次数最大的，每次取出一层中所有的单词，如果此时的k大于该层的单词个数，就将整层的单词加入结果res中，否则就取前K个就行了，取完要更更新K值，如果K小于等于0了，就break掉，返回结果res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; topKFrequent(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> freq;
+        vector</span>&lt;<span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;&gt; v(words.size() + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> word : words) ++<span style="color: #000000;">freq[word];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : freq) {
+            v[a.second].insert(a.first);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = v.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (k &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> t(v[i].begin(), v[i].end());
+            </span><span style="color: #0000ff;">if</span> (k &gt;=<span style="color: #000000;"> t.size()) {
+                res.insert(res.end(), t.begin(), t.end());
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                res.insert(res.end(), t.begin(), t.begin() </span>+<span style="color: #000000;"> k);
+            }
+            k </span>-=<span style="color: #000000;"> t.size();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5454125.html">Top K Frequent Elements</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7897166.html">Design Search Autocomplete System</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/106861/o-nlog-k-priority-queue-c-code">https://discuss.leetcode.com/topic/106861/o-nlog-k-priority-queue-c-code</a>&nbsp;</p>
+<p><a href="https://discuss.leetcode.com/topic/106868/clean-heap-based-solution-o-nlogk-time-and-o-n-space-16ms">https://discuss.leetcode.com/topic/106868/clean-heap-based-solution-o-nlogk-time-and-o-n-space-16ms</a></p>
+<p>&nbsp;</p>
+</div>
+<div id="interviewed-div"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></div></div><div id="MySignature"></div>
+<div class="clear"></div>

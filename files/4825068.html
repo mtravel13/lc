@@ -1,0 +1,86 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4825068.html">[LeetCode] Peeking Iterator 顶端迭代器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an Iterator class interface with methods: <code>next()</code> and <code>hasNext()</code>, design and implement a PeekingIterator that support the <code>peek()</code> operation -- it essentially peek() at the element that will be returned by the next call to next().</p>
+<hr />
+<p>Here is an example. Assume that the iterator is initialized to the beginning of the list: <code>[1, 2, 3]</code>.</p>
+<p>Call <code>next()</code> gets you 1, the first element in the list.</p>
+<p>Now you call <code>peek()</code> and it returns 2, the next element. Calling <code>next()</code> after that <em><strong>still</strong></em> return 2.</p>
+<p>You call <code>next()</code> the final time and it returns 3, the last element. Calling <code>hasNext()</code> after that should return false.</p>
+<p><strong>Hint:</strong></p>
+<ol id="hints">
+<li class="hint animated fadeInLeft" style="display: list-item;">Think of "looking ahead". You want to cache the next element.</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">Is one variable sufficient? Why or why not?</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">Test your design with call order of <code>peek()</code> before <code>next()</code> vs <code>next()</code> before <code>peek()</code>.</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">For a clean implementation, check out <a href="https://github.com/google/guava/blob/703ef758b8621cfbab16814f01ddcc5324bdea33/guava-gwt/src-super/com/google/common/collect/super/com/google/common/collect/Iterators.java#L1125" target="_blank">Google's guava library source code</a>.</li>
+</ol>
+<p><strong>Follow up</strong>: How would you extend your design to be generic and work with all types, not just integer?</p>
+<p>&nbsp;</p>
+<p>这道题让我们实现一个顶端迭代器，在普通的迭代器类Iterator的基础上增加了peek的功能，就是返回查看下一个值的功能，但是不移动指针，next()函数才会移动指针，那我们可以定义一个变量专门来保存下一个值，再用一个bool型变量标记是否保存了下一个值，再调用原来的一些成员函数，就可以实现这个顶端迭代器了，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Below is the interface for Iterator, which is already defined for you.
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> **DO NOT** modify the interface for Iterator.</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Iterator {
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Data;
+    Data</span>*<span style="color: #000000;"> data;
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Iterator(</span><span style="color: #0000ff;">const</span> vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums);
+    Iterator(</span><span style="color: #0000ff;">const</span> Iterator&amp;<span style="color: #000000;"> iter);
+    </span><span style="color: #0000ff;">virtual</span> ~<span style="color: #000000;">Iterator();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Returns the next element in the iteration.</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> next();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Returns true if the iteration has more elements.</span>
+    <span style="color: #0000ff;">bool</span> hasNext() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+};
+
+
+</span><span style="color: #0000ff;">class</span> PeekingIterator : <span style="color: #0000ff;">public</span><span style="color: #000000;"> Iterator {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    PeekingIterator(</span><span style="color: #0000ff;">const</span> vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) : Iterator(nums) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Initialize any member here.
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> **DO NOT** save a copy of nums and manipulate it directly.
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> You should only use the Iterator interface methods.</span>
+        _flag = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Returns the next element in the iteration without advancing the iterator.</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> peek() {
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">_flag) {
+            _value </span>=<span style="color: #000000;"> Iterator::next();
+            _flag </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _value;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> hasNext() and next() should behave the same as in the Iterator interface.
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Override them if needed.</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">if</span> (!_flag) <span style="color: #0000ff;">return</span><span style="color: #000000;"> Iterator::next();
+        _flag </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _value;
+    }
+
+    </span><span style="color: #0000ff;">bool</span> hasNext() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (_flag) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (Iterator::hasNext()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> _value;
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> _flag;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/59314/c-code-of-this-problem" target="_blank">https://leetcode.com/discuss/59314/c-code-of-this-problem</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

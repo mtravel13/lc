@@ -1,0 +1,82 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4952464.html">[LeetCode] Range Sum Query - Immutable 区域和检索 - 不可变</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer array <em>nums</em>, find the sum of the elements between indices <em>i</em> and <em>j</em> (<em>i</em> &le; <em>j</em>), inclusive.</p>
+<p><strong>Example:</strong><br />
+</p>
+<pre>Given nums = [-2, 0, 3, -5, 2, -1]
+
+sumRange(0, 2) -&gt; 1
+sumRange(2, 5) -&gt; -1
+sumRange(0, 5) -&gt; -3
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol>
+<li>You may assume that the array does not change.</li>
+<li>There are many calls to <em>sumRange</em> function.</li>
+
+
+
+
+
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们检索一个数组的某个区间的所有数字之和，题目中给了两条条件，首先数组内容不会变化，其次有很多的区间和检索。那么我们用传统的遍历相加来求每次区间和检索，十分的不高效，而且无法通过OJ。所以这道题的难点就在于是否能想到来用建立累计直方图的思想来建立一个累计和的数组dp，其中dp[i]表示[0, i]区间的数字之和，那么[i,j]就可以表示为dp[j]-dp[i-1]，这里要注意一下当i=0时，直接返回dp[j]即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> NumArray {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NumArray(vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">nums) {
+        dp </span>=<span style="color: #000000;"> nums;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            dp[i] </span>+= dp[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+        }
+    }
+    </span><span style="color: #0000ff;">int</span> sumRange(<span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">return</span> i == <span style="color: #800080;">0</span>? dp[j] : dp[j] - dp[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> dp;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>当然，我们也可以通过增加一位dp的长度，来避免在sumRange中检测i是否为0，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> NumArray {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NumArray(vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">nums) {
+        dp.resize(nums.size() </span>+ <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= nums.size(); ++<span style="color: #000000;">i) {
+            dp[i] </span>= dp[i - <span style="color: #800080;">1</span>] + nums[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+        }
+    }
+    </span><span style="color: #0000ff;">int</span> sumRange(<span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">return</span> dp[j + <span style="color: #800080;">1</span>] -<span style="color: #000000;"> dp[i];
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> dp;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5300458.html">Range Sum Query 2D - Mutable </a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4958789.html">Range Sum Query 2D - Immutable</a></p>
+<p><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_66" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4985506.html">Range Sum Query - Mutable</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/68670/my-simple-short-python-solution" target="_blank">https://leetcode.com/discuss/68670/my-simple-short-python-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

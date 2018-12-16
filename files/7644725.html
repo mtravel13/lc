@@ -1,0 +1,47 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7644725.html">[LeetCode] Largest Palindrome Product 最大回文串乘积</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Find the largest palindrome made from the product of two n-digit numbers.</p>
+<p>Since the result could be very large, you should return the largest palindrome mod 1337.</p>
+<p>Example:</p>
+<p>Input: 2</p>
+<p>Output: 987</p>
+<p>Explanation: 99 x 91 = 9009, 9009 % 1337 = 987</p>
+<p>&nbsp;</p>
+<p>Note:</p>
+<p>The range of n is [1,8].</p>
+<p>&nbsp;</p>
+<p>这道题给我们一个数字n，问两个n位数的乘积组成的最大回文数是多少，返回的结果对1337取余。博主刚开始用暴力搜索做，遍历所有的数字组合，求乘积，再来判断是否是回文数，最终TLE了，只能换一种思路来做。论坛上的这种思路真心叼啊，博主感觉这题绝比不该Easy啊。首先我们还是要确定出n位数的范围，最大值upper，可以取到，最小值lower，不能取到。然后我们遍历这区间的所有数字，对于每个遍历到的数字，我们用当前数字当作回文数的前半段，将其翻转一下拼接到后面，此时组成一个回文数，这里用到了一个规律，当n&gt;1时，两个n位数乘积的最大回文数一定是2n位的。下面我们就要来验证这个回文数能否由两个n位数相乘的来，我们还是遍历区间中的数，从upper开始遍历，但此时结束位置不是lower，而是当前数的平方大于回文数，因为我们遍历的是相乘得到回文数的两个数中的较大数，一旦超过这个范围，就变成较小数了，就重复计算了。比如对于回文数9009，其是由99和91组成的，其较大数的范围是[99,95]，所以当遍历到94时，另一个数至少需要是95，而这种情况在之前已经验证过了。当回文数能整除较大数时，说明是成立的，直接对1337取余返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> largestPalindrome(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> upper = pow(<span style="color: #800080;">10</span>, n) - <span style="color: #800080;">1</span>, lower = upper / <span style="color: #800080;">10</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = upper; i &gt; lower; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> to_string(i);
+            </span><span style="color: #0000ff;">long</span> p = stol(t + <span style="color: #0000ff;">string</span><span style="color: #000000;">(t.rbegin(), t.rend()));
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">long</span> j = upper; j * j &gt; p; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (p % j == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> p % <span style="color: #800080;">1337</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">9</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/74372/an-easy-9-line-java-solution">https://discuss.leetcode.com/topic/74372/an-easy-9-line-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/74125/java-solution-using-assumed-max-palindrom">https://discuss.leetcode.com/topic/74125/java-solution-using-assumed-max-palindrom</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

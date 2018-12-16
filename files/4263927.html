@@ -1,0 +1,94 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4263927.html">[LeetCode] Single Number II 单独的数字之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of integers, every element appears&nbsp;<em>three</em>&nbsp;times except for one. Find that single one.</p>
+<p>Note:<br />Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道 <a href="http://www.cnblogs.com/Given%20an%20array%20of%20integers,%20every%20element%20appears%20three%20times%20except%20for%20one.%20Find%20that%20single%20one.%20%20Note:%20Your%20algorithm%20should%20have%20a%20linear%20runtime%20complexity.%20Could%20you%20implement%20it%20without%20using%20extra%20memory" target="_blank">Single Number 单独的数字 </a>的延伸，那道题的解法就比较独特，是利用计算机按位储存数字的特性来做的，这道题就是除了一个单独的数字之外，数组中其他的数字都出现了三次，那么还是要利用位操作 Bit Operation 来解此题。我们可以建立一个32位的数字，来统计每一位上1出现的个数，我们知道如果某一位上为1的话，那么如果该整数出现了三次，对3去余为0，我们把每个数的对应位都加起来对3取余，最终剩下来的那个数就是单独的数字。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> singleNumber(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; nums.size(); ++<span style="color: #000000;">j) {
+                sum </span>+= (nums[j] &gt;&gt; i) &amp; <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            res </span>|= (sum % <span style="color: #800080;">3</span>) &lt;&lt;<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p>还有一种解法，思路很相似，用3个整数来表示INT的各位的出现次数情况，one表示出现了1次，two表示出现了2次。当出现3次的时候该位清零。最后答案就是one的值。</p>
+<ol>
+<li><code>ones</code>&nbsp;&nbsp; 代表第i<sup>th</sup>&nbsp;位只出现一次的掩码变量</li>
+<li><code>twos</code>&nbsp; 代表第i<sup>th</sup>&nbsp;位只出现两次次的掩码变量</li>
+<li><code>threes</code>&nbsp; 代表第i<sup>th</sup>&nbsp;位只出现三次的掩码变量</li>
+</ol>
+<p>假设现在有一个数字1，那么我们更新one的方法就是&lsquo;亦或&rsquo;这个1，则one就变成了1，而two的更新方法是用上一个状态下的one去&lsquo;与&rsquo;上数字1，然后&lsquo;或&rsquo;上这个结果，这样假如之前one是1，那么此时two也会变成1，这make sense，因为说明是当前位遇到两个1了；反之如果之前one是0，那么现在two也就是0。注意更新的顺序是先更新two，再更新one，不理解的话只要带个只有一个数字1的输入数组看一下就不难理解了。然后我们更新three，如果此时one和two都是1了，那么由于我们先更新的two，再更新的one，two为1，说明此时至少有两个数字1了，而此时one为1，说明了此时已经有了三个数字1，这块要仔细想清楚，因为one是要&lsquo;亦或&rsquo;一个1的，值能为1，说明之前one为0，实际情况是，当第二个1来的时候，two先更新为1，此时one再更新为0，下面three就是0了，那么&lsquo;与&rsquo;上three的相反数1不会改变one和two的值；那么当第三个1来的时候，two还是1，此时one就更新为1了，那么three就更新为1了，此时就要清空one和two了，让它们&lsquo;与&rsquo;上three的相反数0即可，最终结果将会保存在one中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> singleNumber(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> one = <span style="color: #800080;">0</span>, two = <span style="color: #800080;">0</span>, three = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            two </span>|= one &amp;<span style="color: #000000;"> nums[i];
+            one </span>^=<span style="color: #000000;"> nums[i];
+            three </span>= one &amp;<span style="color: #000000;"> two;
+            one </span>&amp;= ~<span style="color: #000000;">three;
+            two </span>&amp;= ~<span style="color: #000000;">three;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> one;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法思路也十分巧妙，根据上面解法的思路，我们把数组中数字的每一位累加起来对3取余，剩下的结果就是那个单独数组该位上的数字，由于我们累加的过程都要对3取余，那么每一位上累加的过程就是0-&gt;1-&gt;2-&gt;0，换成二进制的表示为00-&gt;01-&gt;10-&gt;00，那么我们可以写出对应关系：</p>
+<p>00 (+) 1 = 01</p>
+<p>01 (+) 1 = 10</p>
+<p>10 (+) 1 = 00 ( mod 3)</p>
+<p>那么我们用ab来表示开始的状态，对于加1操作后，得到的新状态的ab的算法如下：</p>
+<p>b = b xor r &amp; ~a;</p>
+<p>a = a xor r &amp; ~b;</p>
+<p>我们这里的ab就是上面的三种状态00，01，10的十位和各位，刚开始的时候，a和b都是0，当此时遇到数字1的时候，b更新为1，a更新为0，就是01的状态；再次遇到1的时候，b更新为0，a更新为1，就是10的状态；再次遇到1的时候，b更新为0，a更新为0，就是00的状态，相当于重置了；最后的结果保存在b中。明白了上面的分析过程，就能写出代码如下；</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> singleNumber(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> a = <span style="color: #800080;">0</span>, b = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            b </span>= (b ^ nums[i]) &amp; ~<span style="color: #000000;">a;
+            a </span>= (a ^ nums[i]) &amp; ~<span style="color: #000000;">b;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> b;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4130577.html" target="_blank">Single Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4741122.html" target="_blank">Single Number III</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/2031/challenge-me-thx/58" target="_blank">https://discuss.leetcode.com/topic/2031/challenge-me-thx/58</a></p>
+<p><a href="https://discuss.leetcode.com/topic/18085/java-bit-manipulation-solution" target="_blank">https://discuss.leetcode.com/topic/18085/java-bit-manipulation-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/43166/java-o-n-easy-to-understand-solution-easily-extended-to-any-times-of-occurance" target="_blank">https://discuss.leetcode.com/topic/43166/java-o-n-easy-to-understand-solution-easily-extended-to-any-times-of-occurance</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

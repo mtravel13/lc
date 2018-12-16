@@ -1,0 +1,135 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8445733.html">[LeetCode] Redundant Connection II 冗余的连接之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>In this problem, a rooted tree is a&nbsp;directed&nbsp;graph such that, there is exactly one node (the root) for which all other nodes are descendants of this node, plus every node has exactly one parent, except for the root node which has no parents.</p>
+<p>The given input is a directed graph that started as a rooted tree with N nodes (with distinct values 1, 2, ..., N), with one additional directed edge added. The added edge has two different vertices chosen from 1 to N, and was not an edge that already existed.</p>
+<p>The resulting graph is given as a 2D-array of&nbsp;<code>edges</code>. Each element of&nbsp;<code>edges</code>&nbsp;is a pair&nbsp;<code>[u, v]</code>&nbsp;that represents a&nbsp;directed&nbsp;edge connecting nodes&nbsp;<code>u</code>&nbsp;and&nbsp;<code>v</code>, where&nbsp;<code>u</code>&nbsp;is a parent of child&nbsp;<code>v</code>.</p>
+<p>Return an edge that can be removed so that the resulting graph is a rooted tree of N nodes. If there are multiple answers, return the answer that occurs last in the given 2D-array.</p>
+<p>Example 1:</p>
+<pre>Input: [[1,2], [1,3], [2,3]]
+Output: [2,3]
+Explanation: The given directed graph will be like this:
+  1
+ / \
+v   v
+2--&gt;3
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [[1,2], [2,3], [3,4], [4,1], [1,5]]
+Output: [4,1]
+Explanation: The given directed graph will be like this:
+5 &lt;- 1 -&gt; 2
+     ^    |
+     |    v
+     4 &lt;- 3
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The size of the input 2D-array will be between 3 and 1000.</li>
+<li>Every integer represented in the 2D-array will be between 1 and N, where N is the size of the input array.</li>
+</ul>
+<p>&nbsp;</p>
+</div>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/7628977.html">Redundant Connection</a>的拓展，那道题给的是无向图，只需要删掉组成环的最后一条边即可，归根到底就是检测环就行了。而这道题给我们的是有向图，那么整个就复杂多了，因为有多种情况存在，比如给的例子1就是无环，但是有入度为2的结点3。再比如例子2就是有环，但是没有入度为2的结点。其实还有一种情况例子没有给出，就是既有环，又有入度为2的结点。好，我们现在就来总结一下这三种情况：</p>
+<p>第一种：无环，但是有结点入度为2的结点（结点3）</p>
+<p>[[1,2], [1,3], [2,3]]</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #800080;">1</span>
+ /<span style="color: #000000;"> \
+v   v
+</span><span style="color: #800080;">2</span>--&gt;<span style="color: #800080;">3</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>第二种：有环，没有入度为2的结点</p>
+<p>[[1,2], [2,3], [3,4], [4,1], [1,5]]</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">5</span> &lt;- <span style="color: #800080;">1</span> -&gt; <span style="color: #800080;">2</span>
+     ^    |
+     |<span style="color: #000000;">    v
+     </span><span style="color: #800080;">4</span> &lt;- <span style="color: #800080;">3</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>第三种：有环，且有入度为2的结点（结点1）</p>
+<p>[[1,2],[2,3],[3,1],[1,4]]</p>
+<div class="cnblogs_code">
+<pre>     <span style="color: #800080;">4</span>
+    /<span style="color: #000000;">
+   v
+   </span><span style="color: #800080;">1</span>
+ /  ^<span style="color: #000000;">
+v    \
+</span><span style="color: #800080;">2</span> --&gt;<span style="color: #800080;">3</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>对于这三种情况的处理方法各不相同，首先对于第一种情况，我们返回的产生入度为2的后加入的那条边[2, 3]，而对于第二种情况，我们返回的是刚好组成环的最后加入的那条边[4, 1]，最后对于第三种情况我们返回的是组成环，且组成入度为2的那条边[3, 1]。</p>
+<p>明白了这些，我们先来找入度为2的点，如果有的话，那么我们将当前产生入度为2的后加入的那条边标记为second，前一条边标记为first。然后我们来找环，为了方便起见，找环使用联合查找Union Find的方法，可参见<a href="http://www.cnblogs.com/grandyang/p/7628977.html">Redundant Connection</a>中的解法三。当我们找到了环之后，如果first不存在，说明是第二种情况，我们返回刚好组成环的最后加入的那条边。如果first存在，说明是第三种情况，我们返回first。如果没有环存在，说明是第一种情况，我们返回second，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findRedundantDirectedConnection(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> edges) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> edges.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; root(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">), first, second;
+        </span><span style="color: #0000ff;">for</span> (auto&amp;<span style="color: #000000;"> edge : edges) {
+            </span><span style="color: #0000ff;">if</span> (root[edge[<span style="color: #800080;">1</span>]] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                root[edge[</span><span style="color: #800080;">1</span>]] = edge[<span style="color: #800080;">0</span><span style="color: #000000;">];
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                first </span>= {root[edge[<span style="color: #800080;">1</span>]], edge[<span style="color: #800080;">1</span><span style="color: #000000;">]};
+                second </span>=<span style="color: #000000;"> edge;
+                edge[</span><span style="color: #800080;">1</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= n; ++i) root[i] =<span style="color: #000000;"> i;
+        </span><span style="color: #0000ff;">for</span> (auto&amp;<span style="color: #000000;"> edge : edges) {
+            </span><span style="color: #0000ff;">if</span> (edge[<span style="color: #800080;">1</span>] == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> x = getRoot(root, edge[<span style="color: #800080;">0</span>]), y = getRoot(root, edge[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+            </span><span style="color: #0000ff;">if</span> (x == y) <span style="color: #0000ff;">return</span> first.empty() ?<span style="color: #000000;"> edge : first;
+            root[x] </span>=<span style="color: #000000;"> y;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> second;
+    }
+    </span><span style="color: #0000ff;">int</span> getRoot(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #0000ff;">return</span> i == root[i] ?<span style="color: #000000;"> i : getRoot(root, root[i]);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>讨论：使用联合查找Union Find的方法一般都需要写个子函数，来查找祖宗结点，上面的解法getRoot()函数就是这个子函数，我们使用递归的形式来写的，其实还可以用迭代的方式来写，下面这两种写法都可以：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> getRoot(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+    </span><span style="color: #0000ff;">while</span> (i !=<span style="color: #000000;"> root[i]) {
+        root[i] </span>=<span style="color: #000000;"> root[root[i]];
+        i </span>=<span style="color: #000000;"> root[i];
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> getRoot(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+    </span><span style="color: #0000ff;">while</span> (i != root[i]) i =<span style="color: #000000;"> root[i];
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7628977.html">Redundant Connection</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/redundant-connection-ii/" target="_blank">https://leetcode.com/problems/redundant-connection-ii/</a></p>
+<p><a href="https://leetcode.com/problems/redundant-connection-ii/discuss/108045/C++Java-Union-Find-with-explanation-O(n)" target="_blank">https://leetcode.com/problems/redundant-connection-ii/discuss/108045/C++Java-Union-Find-with-explanation-O(n)</a></p>
+<p><a href="https://leetcode.com/problems/redundant-connection-ii/discuss/108058/one-pass-disjoint-set-solution-with-explain" target="_blank">https://leetcode.com/problems/redundant-connection-ii/discuss/108058/one-pass-disjoint-set-solution-with-explain</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

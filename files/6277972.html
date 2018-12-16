@@ -1,0 +1,85 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6277972.html">[LeetCode] License Key Formatting 注册码格式化</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Now you are given a string S, which represents a software license key which we would like to format. The string S is composed of alphanumerical characters and dashes. The dashes split the alphanumerical characters within the string into groups. (i.e. if there are M dashes, the string is split into M+1 groups). The dashes in the given string are possibly misplaced.</p>
+<p>We want each group of characters to be of length K (except for possibly the first group, which could be shorter, but still must contain at least one character). To satisfy this requirement, we will reinsert dashes. Additionally, all the lower case letters in the string must be converted to upper case.</p>
+<p>So, you are given a non-empty string S, representing a license key to format, and an integer K. And you need to return the license key formatted according to the description above.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> S = "2-4A0r7-4k", K = 4
+
+<strong>Output:</strong> "24A0-R74K"
+
+<strong>Explanation:</strong> The string S has been split into two parts, each part has 4 characters.
+</pre>
+<p><strong>Example 2:</strong><br />
+</p>
+<pre><strong>Input:</strong> S = "2-4A0r7-4k", K = 3
+
+<strong>Output:</strong> "24-A0R-74K"
+
+<strong>Explanation:</strong> The string S has been split into three parts, each part has 3 characters except the first part as it could be shorter as said above.
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol><ol>
+<li>The length of string S will not exceed 12,000, and K is a positive integer.</li>
+<li>String S consists only of alphanumerical characters (a-z and/or A-Z and/or 0-9) and dashes(-).</li>
+<li>String S is non-empty.</li>
+
+</ol></ol>
+<p>&nbsp;</p>
+<p>这道题让我们对注册码进行格式化，正确的注册码的格式是每四个字符后面跟一个短杠，每一部分的长度为K，第一部分长度可以小于K，另外，字母必须是大写的。那么由于第一部分可以不为K，那么我们可以反过来想，我们从S的尾部往前遍历，把字符加入结果res，每K个后面加一个短杠，那么最后遍历完再把res翻转一下即可，注意翻转之前要把结尾的短杠去掉(如果有的话)，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> licenseKeyFormatting(<span style="color: #0000ff;">string</span> S, <span style="color: #0000ff;">int</span><span style="color: #000000;"> K) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> S.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> S[i];
+            </span><span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span> &amp;&amp; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>) c -= <span style="color: #800080;">32</span><span style="color: #000000;">;
+            res.push_back(c);
+            </span><span style="color: #0000ff;">if</span> (++cnt % K == <span style="color: #800080;">0</span>) res.push_back(<span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">if</span> (!res.empty() &amp;&amp; res.back() == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">) res.pop_back();
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">string</span><span style="color: #000000;">(res.rbegin(), res.rend());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面代码可以进一步精简到下面这种，我们用到了自带函数toupper，把字母转为大写格式，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> licenseKeyFormatting(<span style="color: #0000ff;">string</span> S, <span style="color: #0000ff;">int</span><span style="color: #000000;"> K) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = (<span style="color: #0000ff;">int</span>)S.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (S[i] != <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                ((res.size() </span>% (K + <span style="color: #800080;">1</span>) - K) ? res : res += <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>) +=<span style="color: #000000;"> toupper(S[i]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">string</span><span style="color: #000000;">(res.rbegin(), res.rend());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/74995/java-5-lines-clean-solution" target="_blank">https://discuss.leetcode.com/topic/74995/java-5-lines-clean-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/74925/short-and-fast-java-solution" target="_blank">https://discuss.leetcode.com/topic/74925/short-and-fast-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/74993/4-line-c-concise-solution-to-scan-string-backward" target="_blank">https://discuss.leetcode.com/topic/74993/4-line-c-concise-solution-to-scan-string-backward</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

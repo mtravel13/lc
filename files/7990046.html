@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7990046.html">[LeetCode] Flood Fill 洪水填充</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>An&nbsp;<code>image</code>&nbsp;is represented by a 2-D array of integers, each integer representing the pixel value of the image (from 0 to 65535).</p>
+<p>Given a coordinate&nbsp;<code>(sr, sc)</code>&nbsp;representing the starting pixel (row and column) of the flood fill, and a pixel value&nbsp;<code>newColor</code>, "flood fill" the image.</p>
+<p>To perform a "flood fill", consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color as the starting pixel), and so on. Replace the color of all of the aforementioned pixels with the newColor.</p>
+<p>At the end, return the modified image.</p>
+<p>Example 1:</p>
+<pre>Input: 
+image = [[1,1,1],[1,1,0],[1,0,1]]
+sr = 1, sc = 1, newColor = 2
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+Explanation: 
+From the center of the image (with position (sr, sc) = (1, 1)), all pixels connected 
+by a path of the same color as the starting pixel are colored with the new color.
+Note the bottom corner is not colored 2, because it is not 4-directionally connected
+to the starting pixel.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The length of&nbsp;<code>image</code>&nbsp;and&nbsp;<code>image[0]</code>&nbsp;will be in the range&nbsp;<code>[1, 50]</code>.</li>
+<li>The given starting pixel will satisfy&nbsp;<code>0 &lt;= sr &lt; image.length</code>&nbsp;and&nbsp;<code>0 &lt;= sc &lt; image[0].length</code>.</li>
+<li>The value of each color in&nbsp;<code>image[i][j]</code>&nbsp;and&nbsp;<code>newColor</code>&nbsp;will be an integer in&nbsp;<code>[0, 65535]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们一个用二维数组表示的图像，不同的数字代表不同的颜色，给了我们一个起始点坐标，还有一个新的颜色，让我们把起始点的颜色以及其相邻的同样的颜色都换成新的颜色。那么实际上就是一个找相同区间的题，我们可以用BFS或者DFS来做。先来看BFS的解法，我们使用一个队列queue来辅助，首先将给定点放入队列中，然后进行while循环，条件是queue不为空，然后进行类似层序遍历的方法，取出队首元素，将其赋值为新的颜色，然后遍历周围四个点，如果不越界，且周围的颜色跟起始颜色相同的话，将位置加入队列中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; floodFill(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; image, <span style="color: #0000ff;">int</span> sr, <span style="color: #0000ff;">int</span> sc, <span style="color: #0000ff;">int</span><span style="color: #000000;"> newColor) {
+        </span><span style="color: #0000ff;">int</span> m = image.size(), n = image[<span style="color: #800080;">0</span>].size(), color =<span style="color: #000000;"> image[sr][sc];
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res =<span style="color: #000000;"> image;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q{{{sr, sc}}};
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+                auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+                res[t.first][t.second] </span>=<span style="color: #000000;"> newColor;
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                    </span><span style="color: #0000ff;">int</span> x = t.first + dir[<span style="color: #800080;">0</span>], y = t.second + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n || res[x][y] != color) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                    q.push({x, y});
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>DFS的写法相对简洁一些，首先判断如果给定位置的颜色跟新的颜色相同的话，直接返回，否则就对给定位置调用递归函数。在递归函数中，如果越界或者当前颜色跟起始颜色不同，直接返回。否则就给当前位置赋上新的颜色，然后对周围四个点继续调用递归函数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; floodFill(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; image, <span style="color: #0000ff;">int</span> sr, <span style="color: #0000ff;">int</span> sc, <span style="color: #0000ff;">int</span><span style="color: #000000;"> newColor) {
+        </span><span style="color: #0000ff;">if</span> (image[sr][sc] == newColor) <span style="color: #0000ff;">return</span><span style="color: #000000;"> image;
+        helper(image, sr, sc, image[sr][sc], newColor);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> image;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; image, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> j, <span style="color: #0000ff;">int</span> color, <span style="color: #0000ff;">int</span><span style="color: #000000;"> newColor) {
+        </span><span style="color: #0000ff;">int</span> m = image.size(), n = image[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">if</span> (i &lt; <span style="color: #800080;">0</span> || i &gt;= m || j &lt; <span style="color: #800080;">0</span> || j &gt;= n || image[i][j] != color) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        image[i][j] </span>=<span style="color: #000000;"> newColor;
+        helper(image, i </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, j, color, newColor);
+        helper(image, i, j </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, color, newColor);
+        helper(image, i </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, j, color, newColor);
+        helper(image, i, j </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, color, newColor);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6096138.html">Island Perimeter</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/112055/java-9-liner-dfs">https://discuss.leetcode.com/topic/112055/java-9-liner-dfs</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

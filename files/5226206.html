@@ -1,0 +1,67 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5226206.html">[LeetCode] Flip Game II 翻转游戏之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are playing the following Flip Game with your friend: Given a string that contains only these two characters:&nbsp;<code>+</code>&nbsp;and&nbsp;<code>-</code>, you and your friend take turns to flip two&nbsp;consecutive&nbsp;<code>"++"</code>&nbsp;into&nbsp;<code>"--"</code>. The game ends when a person can no longer make a move and therefore the other person will be the winner.</p>
+<p>Write a function to determine if the starting player can guarantee a win.</p>
+<p>Example:</p>
+<pre>Input: <code>s = "++++"</code>
+Output: true 
+Explanation: The starting player can guarantee a win by flipping the middle <code>"++"</code> to become <code>"+--+"</code>.
+</pre>
+<p>Follow up:<br />Derive your algorithm's runtime complexity.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/5224896.html">Flip Game</a>的拓展，让我们判断先手的玩家是否能赢，那么我们可以穷举所有的情况，用回溯法来解题，我们的思路跟上面那题类似，也是从第二个字母开始遍历整个字符串，如果当前字母和之前那个字母都是+，那么我们递归调用将这两个位置变为--的字符串，如果返回false，说明当前玩家可以赢，结束循环返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canWin(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> &amp;&amp; s[i - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> &amp;&amp; !canWin(s.substr(<span style="color: #800080;">0</span>, i - <span style="color: #800080;">1</span>) + <span style="color: #800000;">"</span><span style="color: #800000;">--</span><span style="color: #800000;">"</span> + s.substr(i + <span style="color: #800080;">1</span><span style="color: #000000;">))) {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>第二种解法和第一种解法一样，只是用find函数来查找++的位置，然后把位置赋值给i，然后还是递归调用canWin函数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canWin(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = -<span style="color: #800080;">1</span>; (i = s.find(<span style="color: #800000;">"</span><span style="color: #800000;">++</span><span style="color: #800000;">"</span>, i + <span style="color: #800080;">1</span>)) &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">;) {
+            </span><span style="color: #0000ff;">if</span> (!canWin(s.substr(<span style="color: #800080;">0</span>, i) + <span style="color: #800000;">"</span><span style="color: #800000;">--</span><span style="color: #800000;">"</span> + s.substr(i + <span style="color: #800080;">2</span><span style="color: #000000;">))) {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4873248.html">Nim Game</a>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5224896.html" target="_blank">Flip Game</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5677550.html">Guess Number Higher or Lower II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6103525.html">Can I Win</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/flip-game-ii/" target="_blank">https://leetcode.com/problems/flip-game-ii/</a></p>
+<p class="p1"><a href="https://leetcode.com/problems/flip-game-ii/discuss/74033/4-line-Java-Solution" target="_blank">https://leetcode.com/problems/flip-game-ii/discuss/74033/4-line-Java-Solution</a></p>
+<p class="p1"><a href="https://leetcode.com/problems/flip-game-ii/discuss/74010/Short-Java-and-Ruby" target="_blank">https://leetcode.com/problems/flip-game-ii/discuss/74010/Short-Java-and-Ruby</a></p>
+<p class="p1"><a href="https://leetcode.com/problems/flip-game-ii/discuss/73962/Share-my-Java-backtracking-solution" target="_blank">https://leetcode.com/problems/flip-game-ii/discuss/73962/Share-my-Java-backtracking-solution</a></p>
+<p class="p1">&nbsp;</p>
+<p class="p1"><span class="s1"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></span></p></div><div id="MySignature"></div>
+<div class="clear"></div>

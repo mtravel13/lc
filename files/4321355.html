@@ -1,0 +1,118 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4321355.html">[LeetCode] Reverse Bits  翻转位</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Reverse bits of a given 32 bits unsigned integer.</p>
+<p>For example, given input 43261596 (represented in binary as&nbsp;00000010100101000001111010011100), return 964176192 (represented in binary as00111001011110000010100101000000).</p>
+<p>Follow up:<br />If this function is called many times, how would you optimize it?</p>
+<p>Related problem:&nbsp;<a href="https://oj.leetcode.com/problems/reverse-integer/">Reverse Integer</a></p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://oj.leetcode.com/discuss/user/ts">@ts</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题又是在考察位操作Bit Operation，LeetCode中有关位操作的题也有不少，比如&nbsp;<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_24" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4284205.html">Repeated DNA Sequences</a>，<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_57" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4130577.html">Single Number</a>, &nbsp;<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_35" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4263927.html">&nbsp;Single Number II</a>&nbsp;，和<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4315649.html">&nbsp;Grey Code</a>&nbsp;等等。跟上面那些题比起来，这道题简直不能再简单了。那么对于这道题，我们只需要把要翻转的数从右向左一位位的取出来，如果取出来的是1，我们将结果res左移一位并且加上1；如果取出来的是0，我们将结果res左移一位，然后将n右移一位即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t res </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (n &amp; <span style="color: #800080;">1</span> == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                res </span>= (res &lt;&lt; <span style="color: #800080;">1</span>) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                res </span>= res &lt;&lt; <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            n </span>= n &gt;&gt; <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以简化上面的代码，去掉if...else...结构，可以结果res左移一位，然后再判断n的最低位是否为1，是的话那么结果res加上1，然后将n右移一位即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t res </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            res </span>&lt;&lt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> ((n &amp; <span style="color: #800080;">1</span>) == <span style="color: #800080;">1</span>) ++<span style="color: #000000;">res;
+            n </span>&gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们继续简化上面的解法，将if判断句直接揉进去，通过&lsquo;或&rsquo;上一个n的最低位即可，用n&lsquo;与&rsquo;1提取最低位，然后将n右移一位即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t res </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            res </span>= (res &lt;&lt; <span style="color: #800080;">1</span>) | (n &amp; <span style="color: #800080;">1</span><span style="color: #000000;">);
+            n </span>&gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>博主还能进一步简化，这里我们不更新n的值，而是直接将n右移i位，然后通过&lsquo;与&rsquo;1来提取出该位，加到左移一位后的结果res中即可，参加代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t res </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            res </span>= (res &lt;&lt; <span style="color: #800080;">1</span>) + (n &gt;&gt; i &amp; <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以换一种角度来做，首先将n右移i位，然后通过&lsquo;与&rsquo;1来提取出该位，然后将其左移 (32 - i) 位，然后&lsquo;或&rsquo;上结果res，就是其翻转后应该在的位置，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法五：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t res </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            res </span>|= ((n &gt;&gt; i) &amp; <span style="color: #800080;">1</span>) &lt;&lt; (<span style="color: #800080;">31</span> -<span style="color: #000000;"> i);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>讨论：这道题的最高票解法实在是很叼啊，参见<a href="https://leetcode.com/problems/reverse-bits/discuss/54741/O(1)-bit-operation-C++-solution-(8ms)" target="_blank">这个帖子</a>，但是博主没有太理解啊，希望哪位大神能讲解一下哈～</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4325432.html" target="_blank">Number of 1 Bits</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/reverse-bits/discuss/54938/A-short-simple-Java-solution">https://leetcode.com/problems/reverse-bits/discuss/54938/A-short-simple-Java-solution</a></p>
+<p><a href="https://leetcode.com/problems/reverse-bits/discuss/54772/The-concise-C++-solution(9ms)">https://leetcode.com/problems/reverse-bits/discuss/54772/The-concise-C++-solution(9ms)</a></p>
+<p><a href="https://leetcode.com/problems/reverse-bits/discuss/54741/O(1)-bit-operation-C++-solution-(8ms)">https://leetcode.com/problems/reverse-bits/discuss/54741/O(1)-bit-operation-C++-solution-(8ms)</a></p>
+<p><a href="https://leetcode.com/problems/reverse-bits/discuss/54738/Sharing-my-2ms-Java-Solution-with-Explanation">https://leetcode.com/problems/reverse-bits/discuss/54738/Sharing-my-2ms-Java-Solution-with-Explanation</a></p>
+<p><a href="https://leetcode.com/problems/reverse-bits/discuss/54873/Java-two-methods-using-String-or-bit-operation-6ms-and-2ms-easy-understand">https://leetcode.com/problems/reverse-bits/discuss/54873/Java-two-methods-using-String-or-bit-operation-6ms-and-2ms-easy-understand</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

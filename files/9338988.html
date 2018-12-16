@@ -1,0 +1,61 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9338988.html">[LeetCode] Unique Morse Code Words 独特的摩斯码单词</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>International Morse Code defines a standard encoding where each letter is mapped to a series of dots and dashes, as follows:&nbsp;<code>"a"</code>&nbsp;maps to&nbsp;<code>".-"</code>,&nbsp;<code>"b"</code>&nbsp;maps to&nbsp;<code>"-..."</code>,&nbsp;<code>"c"</code>&nbsp;maps to&nbsp;<code>"-.-."</code>, and so on.</p>
+<p>For convenience, the full table for the 26 letters of the English alphabet is given below:</p>
+<pre>[".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."]</pre>
+<p>Now, given a list of words, each word can be written as a concatenation of the Morse code of each letter. For example, "cab" can be written as "-.-.-....-", (which is the concatenation "-.-." + "-..." + ".-"). We'll call such a concatenation, the transformation&nbsp;of a word.</p>
+<p>Return the number of different transformations among all words we have.</p>
+<pre>Example:
+Input: words = ["gin", "zen", "gig", "msg"]
+Output: 2
+Explanation: 
+The transformation of each word is:
+"gin" -&gt; "--...-."
+"zen" -&gt; "--...-."
+"gig" -&gt; "--...--."
+"msg" -&gt; "--...--."
+
+There are 2 different transformations, "--...-." and "--...--.".
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The length of&nbsp;<code>words</code>&nbsp;will be at most&nbsp;<code>100</code>.</li>
+<li>Each&nbsp;<code>words[i]</code>&nbsp;will have length in range&nbsp;<code>[1, 12]</code>.</li>
+<li><code>words[i]</code>&nbsp;will only consist of lowercase letters.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题说的就是大名鼎鼎的摩斯码了，给了我们所有字母的摩斯码的写法，然后给了我们一个单词数组，问我们表示这些单词的摩斯码有多少种。因为某些单词的摩斯码表示是相同的，比如gin和zen就是相同的。最简单直接的方法就是我们求出每一个单词的摩斯码，然后将其放入一个HashSet中，利用其去重复的特性，从而实现题目的要求，最终HashSet中元素的个数即为所求，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> uniqueMorseRepresentations(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; morse{<span style="color: #800000;">"</span><span style="color: #800000;">.-</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-...</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-.-.</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-..</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">..-.</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">--.</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">....</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">..</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">.---</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-.-</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">.-..</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">--</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-.</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">---</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">.--.</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">--.-</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">.-.</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">...</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">..-</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">...-</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">.--</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-..-</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">-.--</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">--..</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">string</span> t = <span style="color: #800000;">""</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : word) t += morse[c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+            s.insert(t);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>讨论：这道题其实没有充分发挥其潜力，摩斯码的场景很好，只是作为一道Easy题未免有些可惜了。一个比较显而易见的follow up就是，给我们一个摩斯码，问其有几种可能的单词组，比如给我们一个"--...-."，那么我们知道至少有两种zen和gin，可能还有更多，这样是不是就更加有趣了呢？</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="https://leetcode.com/problems/unique-morse-code-words/solution/">https://leetcode.com/problems/unique-morse-code-words/solution/</a></p>
+<p><a href="https://leetcode.com/problems/unique-morse-code-words/discuss/120675/C++JavaPython-Easy-and-Concise-Solution">https://leetcode.com/problems/unique-morse-code-words/discuss/120675/C++JavaPython-Easy-and-Concise-Solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

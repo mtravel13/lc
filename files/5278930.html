@@ -1,0 +1,81 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5278930.html">[LeetCode] Binary Tree Vertical Order Traversal 二叉树的竖直遍历</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, return the <em>vertical order</em> traversal of its nodes' values. (ie, from top to bottom, column by column).</p>
+<p>If two nodes are in the same row and column, the order should be from <strong>left to right</strong>.</p>
+<p> <strong>Examples:</strong><br />
+Given binary tree <code>[3,9,20,null,null,15,7]</code>,<br />
+</p>
+<pre>    3
+   / \
+  9  20
+    /  \
+   15   7
+</pre>
+<p> return its vertical order traversal as:<br />
+</p>
+<pre>[
+  [9],
+  [3,15],
+  [20],
+  [7]
+]
+</pre>
+<p> Given binary tree <code>[3,9,20,4,5,2,7]</code>,<br />
+</p>
+<pre>    _3_
+   /   \
+  9    20
+ / \   / \
+4   5 2   7
+</pre>
+<p> return its vertical order traversal as:<br />
+</p>
+<pre>[
+  [4],
+  [9],
+  [3,5,2],
+  [20],
+  [7]
+]
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们竖直遍历二叉树，并把每一列存入一个二维数组，我们看题目中给的第一个例子，3和15属于同一列，3在前，第二个例子中，3,5,2在同一列，3在前，5和2紧随其后，那么我们隐约的可以感觉到好像是一种层序遍历的前后顺序，那么我们如何来确定列的顺序呢，我们可以把根节点给个序号0，然后开始层序遍历，凡是左子节点则序号减1，右子节点序号加1，这样我们可以通过序号来把相同列的节点值放到一起，我们用一个TreeMap来建立序号和其对应的节点值的映射，用TreeMap的另一个好处是其自动排序功能可以让我们的列从左到右，由于层序遍历需要用到queue，我们此时queue里不能只存节点，而是要存序号和节点组成的pair，这样我们每次取出就可以操作序号，而且排入队中的节点也赋上其正确的序号，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; verticalOrder(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        map</span>&lt;<span style="color: #0000ff;">int</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> m;
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, TreeNode*&gt;&gt;<span style="color: #000000;"> q;
+        q.push({</span><span style="color: #800080;">0</span><span style="color: #000000;">, root});
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            auto a </span>=<span style="color: #000000;"> q.front(); q.pop();
+            m[a.first].push_back(a.second</span>-&gt;<span style="color: #000000;">val);
+            </span><span style="color: #0000ff;">if</span> (a.second-&gt;left) q.push({a.first - <span style="color: #800080;">1</span>, a.second-&gt;<span style="color: #000000;">left});
+            </span><span style="color: #0000ff;">if</span> (a.second-&gt;right) q.push({a.first + <span style="color: #800080;">1</span>, a.second-&gt;<span style="color: #000000;">right});
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            res.push_back(a.second);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4051321.html" target="_blank">Binary Tree Level Order Traversal</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/85987/14-lines-concise-and-easy-understand-c-solution" target="_blank">https://leetcode.com/discuss/85987/14-lines-concise-and-easy-understand-c-solution</a><br /><br /></p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

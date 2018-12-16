@@ -1,0 +1,147 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4550604.html">[LeetCode] Maximal Square 最大正方形</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a 2D binary matrix filled with 0's and 1's, find the largest square containing all 1's and return its area.</p>
+<p>For example, given the following matrix:</p>
+<pre>1 0 1 0 0
+1 0 <span style="color: red;">1</span> <span style="color: red;">1</span> 1
+1 1 <span style="color: red;">1</span> <span style="color: red;">1</span> 1
+1 0 0 1 0
+</pre>
+<p>Return 4.</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://oj.leetcode.com/discuss/user/Freezen">@Freezen</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题我刚看到的时候，马上联想到了之前的一道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4402656.html">Number of Islands 岛屿的数量</a>，但是仔细一对比，发现又不太一样，那道题1的形状不确定，很适合DFS的特点，而这道题要找的是正方形，是非常有特点的形状，所以并不需要用到DFS，要论相似，我倒认为这道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4322667.html">Maximal Rectangle 最大矩形</a>更相似一些。这道题的解法不止一种，我们先来看一种brute force的方法，这种方法的机理就是就是把数组中每一个点都当成正方形的左顶点来向右下方扫描，来寻找最大正方形。具体的扫描方法是，确定了左顶点后，再往下扫的时候，正方形的竖边长度就确定了，只需要找到横边即可，这时候我们使用直方图的原理，从其累加值能反映出上面的值是否全为1，之前也有一道关于直方图的题<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4322653.html">Largest Rectangle in Histogram 直方图中最大的矩形</a> 。通过这种方法我们就可以找出最大的正方形，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maximalSquare(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; matrix.size(); ++<span style="color: #000000;">i) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; v(matrix[i].size(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; matrix.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; matrix[j].size(); ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">if</span> (matrix[j][k] == <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">v[k];
+                }
+                res </span>= max(res, getSquareArea(v, j - i + <span style="color: #800080;">1</span><span style="color: #000000;">));
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> getSquareArea(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;v, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (v.size() &lt; k) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> count = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; v.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (v[i] != k) count = <span style="color: #800080;">0</span><span style="color: #000000;">; 
+            </span><span style="color: #0000ff;">else</span> ++<span style="color: #000000;">count;
+            </span><span style="color: #0000ff;">if</span> (count == k) <span style="color: #0000ff;">return</span> k *<span style="color: #000000;"> k;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这个方法用到了建立累计和数组的方法，可以参见之前那篇博客<a href="http://www.cnblogs.com/grandyang/p/4958789.html">Range Sum Query 2D - Immutable</a>。原理是建立好了累加和数组后，我们开始遍历二维数组的每一个位置，对于任意一个位置(i, j)，我们从该位置往(0,0)点遍历所有的正方形，正方形的个数为min(i,j)+1，由于我们有了累加和矩阵，能快速的求出任意一个区域之和，所以我们能快速得到所有子正方形之和，比较正方形之和跟边长的平方是否相等，相等说明正方形中的数字均为1，更新res结果即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maximalSquare(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; sum(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; matrix.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; matrix[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> t = matrix[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span>) t += sum[i - <span style="color: #800080;">1</span><span style="color: #000000;">][j];
+                </span><span style="color: #0000ff;">if</span> (j &gt; <span style="color: #800080;">0</span>) t += sum[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span> &amp;&amp; j &gt; <span style="color: #800080;">0</span>) t -= sum[i - <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                sum[i][j] </span>=<span style="color: #000000;"> t;
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = min(i, j); k &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">int</span> d =<span style="color: #000000;"> sum[i][j];
+                    </span><span style="color: #0000ff;">if</span> (i - cnt &gt;= <span style="color: #800080;">0</span>) d -= sum[i -<span style="color: #000000;"> cnt][j];
+                    </span><span style="color: #0000ff;">if</span> (j - cnt &gt;= <span style="color: #800080;">0</span>) d -= sum[i][j -<span style="color: #000000;"> cnt];
+                    </span><span style="color: #0000ff;">if</span> (i - cnt &gt;= <span style="color: #800080;">0</span> &amp;&amp; j - cnt &gt;= <span style="color: #800080;">0</span>) d += sum[i - cnt][j -<span style="color: #000000;"> cnt];
+                    </span><span style="color: #0000ff;">if</span> (d == cnt * cnt) res =<span style="color: #000000;"> max(res, d);
+                    </span>++<span style="color: #000000;">cnt;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们还可以进一步的优化时间复杂度到O(n<sup>2</sup>)，做法是使用DP，简历一个二维dp数组，其中dp[i][j]表示到达(i, j)位置所能组成的最大正方形的边长。我们首先来考虑边界情况，也就是当i或j为0的情况，那么在首行或者首列中，必定有一个方向长度为1，那么就无法组成长度超过1的正方形，最多能组成长度为1的正方形，条件是当前位置为1。边界条件处理完了，再来看一般情况的递推公式怎么办，对于任意一点dp[i][j]，由于该点是正方形的右下角，所以该点的右边，下边，右下边都不用考虑，关心的就是左边，上边，和左上边。这三个位置的dp值suppose都应该算好的，还有就是要知道一点，只有当前(i, j)位置为1，dp[i][j]才有可能大于0，否则dp[i][j]一定为0。当(i, j)位置为1，此时要看dp[i-1][j-1], dp[i][j-1]，和dp[i-1][j]这三个位置，我们找其中最小的值，并加上1，就是dp[i][j]的当前值了，这个并不难想，毕竟不能有0存在，所以只能取交集，最后再用dp[i][j]的值来更新结果res的值即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maximalSquare(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> || j == <span style="color: #800080;">0</span>) dp[i][j] = matrix[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (matrix[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    dp[i][j] </span>= min(dp[i - <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span>], min(dp[i][j - <span style="color: #800080;">1</span>], dp[i - <span style="color: #800080;">1</span>][j])) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                }
+                res </span>=<span style="color: #000000;"> max(res, dp[i][j]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> res *<span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法进一步的优化了空间复杂度，此时只需要用一个一维数组就可以解决，为了处理边界情况，padding了一位，所以dp的长度是m+1，然后还需要一个变量pre来记录上一个层的dp值，我们更新的顺序是行优先，就是先往下遍历，用一个临时变量t保存当前dp值，然后看如果当前位置为1，则更新dp[i]为dp[i], dp[i-1], 和pre三者之间的最小值，再加上1，来更新结果res，如果当前位置为0，则重置当前dp值为0，因为只有一维数组，每个位置会被重复使用，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maximalSquare(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span>, pre = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(m + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= m; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> dp[i];
+                </span><span style="color: #0000ff;">if</span> (matrix[i - <span style="color: #800080;">1</span>][j] == <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    dp[i] </span>= min(dp[i], min(dp[i - <span style="color: #800080;">1</span>], pre)) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                    res </span>=<span style="color: #000000;"> max(res, dp[i]);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    dp[i] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }
+                pre </span>=<span style="color: #000000;"> t;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> res *<span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4322667.html">Maximal Rectangle</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4322653.html">Largest Rectangle in Histogram</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/15325/my-concise-solution-in-c/2">https://discuss.leetcode.com/topic/15325/my-concise-solution-in-c/2</a></p>
+<p>&nbsp;</p>
+<p><a href="https://discuss.leetcode.com/topic/15328/easy-dp-solution-in-c-with-detailed-explanations-8ms-o-n-2-time-and-o-n-space/2">https://discuss.leetcode.com/topic/15328/easy-dp-solution-in-c-with-detailed-explanations-8ms-o-n-2-time-and-o-n-space/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,141 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4347125.html">[LeetCode] Simplify Path 简化路径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an absolute path for a file (Unix-style), simplify it.</p>
+<p>For example,<br />path&nbsp;=&nbsp;<code>"/home/"</code>, =&gt;&nbsp;<code>"/home"</code><br />path&nbsp;=&nbsp;<code>"/a/./b/../../c/"</code>, =&gt;&nbsp;<code>"/c"</code></p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/simplify-path/">click to show corner cases.</a></p>
+<div class="spoilers">Corner Cases:
+<p>&nbsp;</p>
+<ul>
+<li>Did you consider the case where&nbsp;path&nbsp;=&nbsp;<code>"/../"</code>?<br />In this case, you should return&nbsp;<code>"/"</code>.</li>
+<li>Another corner case is the path might contain multiple slashes&nbsp;<code>'/'</code>&nbsp;together, such as&nbsp;<code>"/home//foo/"</code>.<br />In this case, you should ignore redundant slashes and return&nbsp;<code>"/home/foo"</code>.</li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+</div>
+<p>&nbsp;</p>
+<p>这道题让简化给定的路径，光根据题目中给的那一个例子还真不太好总结出规律，应该再加上两个例子&nbsp;path&nbsp;=&nbsp;<code>"/a/./b/../c/"</code>, =&gt;&nbsp;<code>"/a/c"和path&nbsp;=&nbsp;<code>"/a/./b/c/"</code>, =&gt;&nbsp;<code>"/a/b/c"，</code> 这样我们就可以知道中间是"."的情况直接去掉，是".."时删掉它上面挨着的一个路径，而下面的边界条件给的一些情况中可以得知，如果是空的话返回"/"，如果有多个"/"只保留一个。那么我们可以把路径看做是由一个或多个"/"分割开的众多子字符串，把它们分别提取出来一一处理即可，代码如下：</code></p>
+<p>&nbsp;</p>
+<p>C++ 解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> simplifyPath(<span style="color: #0000ff;">string</span><span style="color: #000000;"> path) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> path.size()) {
+            </span><span style="color: #0000ff;">while</span> (path[i] == <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span> &amp;&amp; i &lt; path.size()) ++<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">if</span> (i == path.size()) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> start =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">while</span> (path[i] != <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span> &amp;&amp; i &lt; path.size()) ++<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">int</span> end = i - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">string</span> s = path.substr(start, end - start + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (s == <span style="color: #800000;">"</span><span style="color: #800000;">..</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">v.empty()) v.pop_back(); 
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s != <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+                v.push_back(s);
+            }
+        }
+        </span><span style="color: #0000ff;">if</span> (v.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; v.size(); ++<span style="color: #000000;">i) {
+            res </span>+= <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span> +<span style="color: #000000;"> v[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种解法是利用了C语言中的函数strtok来分隔字符串，但是需要把string和char*类型相互转换，转换方法请猛戳<a href="http://www.cnblogs.com/grandyang/p/4312273.html" target="_blank">这里</a>。除了这块不同，其余的思想和上面那种解法相同，代码如下：</p>
+<p>&nbsp;</p>
+<p>C 解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> simplifyPath(<span style="color: #0000ff;">string</span><span style="color: #000000;"> path) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">char</span> *cstr = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">char</span>[path.length() + <span style="color: #800080;">1</span><span style="color: #000000;">];
+        strcpy(cstr, path.c_str());
+        </span><span style="color: #0000ff;">char</span> *pch = strtok(cstr, <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">while</span> (pch !=<span style="color: #000000;"> NULL) {
+            </span><span style="color: #0000ff;">string</span> p = <span style="color: #0000ff;">string</span><span style="color: #000000;">(pch);
+            </span><span style="color: #0000ff;">if</span> (p == <span style="color: #800000;">"</span><span style="color: #800000;">..</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">v.empty()) v.pop_back();
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (p != <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+                v.push_back(p);
+            }
+            pch </span>= strtok(NULL, <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">if</span> (v.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; v.size(); ++<span style="color: #000000;">i) {
+            res </span>+= <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span> +<span style="color: #000000;"> v[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>C++中也有专门处理字符串的机制，我们可以使用stringstream来分隔字符串，然后对每一段分别处理，思路和上面的方法相似，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> simplifyPath(<span style="color: #0000ff;">string</span><span style="color: #000000;"> path) {
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> res, t;
+        stringstream ss(path);
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">while</span> (getline(ss, t, <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">)) {
+            </span><span style="color: #0000ff;">if</span> (t == <span style="color: #800000;">""</span> || t == <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (t == <span style="color: #800000;">"</span><span style="color: #800000;">..</span><span style="color: #800000;">"</span> &amp;&amp; !<span style="color: #000000;">v.empty()) v.pop_back();
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (t != <span style="color: #800000;">"</span><span style="color: #800000;">..</span><span style="color: #800000;">"</span><span style="color: #000000;">) v.push_back(t);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> s : v) res += <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">return</span> res.empty() ? <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String simplifyPath(String path) {
+        Stack</span>&lt;String&gt; s = <span style="color: #0000ff;">new</span> Stack&lt;&gt;<span style="color: #000000;">();
+        String[] p </span>= path.split("/"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String t : p) {
+            </span><span style="color: #0000ff;">if</span> (!s.isEmpty() &amp;&amp; t.equals(".."<span style="color: #000000;">)) {
+                s.pop();
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!t.equals(".") &amp;&amp; !t.equals("") &amp;&amp; !t.equals(".."<span style="color: #000000;">)) {
+                s.push(t);
+            }
+        }
+        List</span>&lt;String&gt; list = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayList(s);
+        </span><span style="color: #0000ff;">return</span> "/" + String.join("/"<span style="color: #000000;">, list);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/8678/c-10-lines-solution" target="_blank">https://discuss.leetcode.com/topic/8678/c-10-lines-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/7675/java-10-lines-solution-with-stack" target="_blank">https://discuss.leetcode.com/topic/7675/java-10-lines-solution-with-stack</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,55 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5420836.html">[LeetCode] Reverse String 翻转字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a function that takes a string as input and returns the string reversed.</p>
+<p> <strong>Example:</strong><br />
+Given s = "hello", return "olleh".
+</p>
+<p>&nbsp;</p>
+<p>这道题没什么难度，直接从两头往中间走，同时交换两边的字符即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseString(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">char</span> t =<span style="color: #000000;"> s[left];
+            s[left</span>++] =<span style="color: #000000;"> s[right];
+            s[right</span>--] =<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用swap函数来帮助我们翻转：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseString(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            swap(s[left</span>++], s[right--<span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5186294.html" target="_blank">Reverse Words in a String II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

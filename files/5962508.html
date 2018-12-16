@@ -1,0 +1,136 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5962508.html">[LeetCode] Pacific Atlantic Water Flow 太平洋大西洋水流</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an <code>m x n</code> matrix of non-negative integers representing the height of each unit cell in a continent, the "Pacific ocean" touches the left and top edges of the matrix and the "Atlantic ocean" touches the right and bottom edges.</p>
+<p>Water can only flow in four directions (up, down, left, or right) from a cell to another one with height equal or lower.</p>
+<p>Find the list of grid coordinates where water can flow to both the Pacific and Atlantic ocean.</p>
+<p><strong>Note:</strong><br />
+</p>
+<ol>
+<li>The order of returned grid coordinates does not matter.</li>
+<li>Both <em>m</em> and <em>n</em> are less than 150.</li>
+
+
+
+</ol>
+<p><strong>Example:</strong>
+</p>
+<pre>Given the following 5x5 matrix:
+
+  Pacific ~   ~   ~   ~   ~ 
+       ~  1   2   2   3  (5) *
+       ~  3   2   3  (4) (4) *
+       ~  2   4  (5)  3   1  *
+       ~ (6) (7)  1   4   5  *
+       ~ (5)  1   1   2   4  *
+          *   *   *   *   * Atlantic
+
+Return:
+
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个二维数组，说是数组的左边和上边是太平洋，右边和下边是大西洋，假设水能从高处向低处流，问我们所有能流向两大洋的点的集合。刚开始我们没有理解题意，以为加括号的点是一条路径，连通两大洋的，但是看来看去感觉也不太对，后来终于明白了，是每一个点单独都路径来通向两大洋。那么就是典型的搜索问题，那么我最开始想的是对于每个点来搜索是否能到达边缘，只不过搜索的目标点不在是一个单点，而是所有的边缘点，找这种思路写出的代码无法通过OJ大数据集，那么我们就要想办法来优化我们的代码，优化的方法跟之前那道<a href="http://www.cnblogs.com/grandyang/p/4555831.html" target="_blank">Surrounded Regions</a>很类似，都是换一个方向考虑问题，既然从每个点像中间扩散会TLE，那么我们从边缘当作起点开始遍历搜索，然后标记能到达的点位true，分别标记出pacific和atlantic能到达的点，那么最终能返回的点就是二者均为true的点。我们可以先用DFS来遍历二维数组，参见代码如下：</p>
+<p>s</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt; pacificAtlantic(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; pacific(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; atlantic(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            dfs(matrix, pacific, INT_MIN, i, </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+            dfs(matrix, atlantic, INT_MIN, i, n </span>- <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            dfs(matrix, pacific, INT_MIN, </span><span style="color: #800080;">0</span><span style="color: #000000;">, i);
+            dfs(matrix, atlantic, INT_MIN, m </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, i);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (pacific[i][j] &amp;&amp;<span style="color: #000000;"> atlantic[i][j]) {
+                    res.push_back({i, j});
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> dfs(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; matrix, vector&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt;&amp; visited, <span style="color: #0000ff;">int</span> pre, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">if</span> (i &lt; <span style="color: #800080;">0</span> || i &gt;= m || j &lt; <span style="color: #800080;">0</span> || j &gt;= n || visited[i][j] || matrix[i][j] &lt; pre) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        visited[i][j] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        dfs(matrix, visited, matrix[i][j], i </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, j);
+        dfs(matrix, visited, matrix[i][j], i </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, j);
+        dfs(matrix, visited, matrix[i][j], i, j </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">);
+        dfs(matrix, visited, matrix[i][j], i, j </span>- <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>那么BFS的解法也可以做，用queue来辅助，开始把边上的点分别存入queue中，然后对应的map标记true，然后开始BFS遍历，遍历结束后还是找pacific和atlantic均标记为true的点加入res中返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt; pacificAtlantic(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q1, q2;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; pacific(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span>)), atlantic =<span style="color: #000000;"> pacific;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            q1.push({i, </span><span style="color: #800080;">0</span><span style="color: #000000;">}); 
+            q2.push({i, n </span>- <span style="color: #800080;">1</span><span style="color: #000000;">});
+            pacific[i][</span><span style="color: #800080;">0</span>] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            atlantic[i][n </span>- <span style="color: #800080;">1</span>] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            q1.push({</span><span style="color: #800080;">0</span><span style="color: #000000;">, i});
+            q2.push({m </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, i});
+            pacific[</span><span style="color: #800080;">0</span>][i] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            atlantic[m </span>- <span style="color: #800080;">1</span>][i] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        bfs(matrix, pacific, q1);
+        bfs(matrix, atlantic, q2);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (pacific[i][j] &amp;&amp;<span style="color: #000000;"> atlantic[i][j]) {
+                    res.push_back({i, j});
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> bfs(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; matrix, vector&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt;&amp; visited, queue&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> q) {
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                </span><span style="color: #0000ff;">int</span> x = t.first + dir[<span style="color: #800080;">0</span>], y = t.second + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n || visited[x][y] || matrix[x][y] &lt; matrix[t.first][t.second]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                visited[x][y] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                q.push({x, y});
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/62379/java-bfs-dfs-from-ocean/2" target="_blank">https://discuss.leetcode.com/topic/62379/java-bfs-dfs-from-ocean/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

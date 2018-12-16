@@ -1,0 +1,99 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6810361.html">[LeetCode] Subarray Sum Equals K 子数组和为K</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of integers and an integer&nbsp;k, you need to find the total number of continuous subarrays whose sum equals to&nbsp;k.</p>
+<p>Example 1:</p>
+<pre>Input:nums = [1,1,1], k = 2
+Output: 2
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The length of the array is in range [1, 20,000].</li>
+<li>The range of numbers in the array is [-1000, 1000] and the range of the integer&nbsp;k&nbsp;is [-1e7, 1e7].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，让我们求和为k的连续子数组的个数，博主最开始看到这道题想着肯定要建立累加和数组啊，然后遍历累加和数组的每个数字，首先看其是否为k，是的话结果res自增1，然后再加个往前的循环，这样可以快速求出所有的子数组之和，看是否为k，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> subarraySum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; sums =<span style="color: #000000;"> nums;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            sums[i] </span>= sums[i - <span style="color: #800080;">1</span>] +<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (sums[i] == k) ++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (sums[i] - sums[j] == k) ++<span style="color: #000000;">res;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的求累加和的方法其实并没有提高程序的执行效率，跟下面这种暴力搜索的解法并没有什么不同，博主很惊奇OJ居然这么大度，让这种解法也能通过，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> subarraySum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> sum =<span style="color: #000000;"> nums[i];
+            </span><span style="color: #0000ff;">if</span> (sum == k) ++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                sum </span>+=<span style="color: #000000;"> nums[j];
+                </span><span style="color: #0000ff;">if</span> (sum == k) ++<span style="color: #000000;">res;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>论坛上大家比较推崇的其实是这种解法，用一个哈希表来建立连续子数组之和跟其出现次数之间的映射，初始化要加入{0,1}这对映射，这是为啥呢，因为我们的解题思路是遍历数组中的数字，用sum来记录到当前位置的累加和，我们建立哈希表的目的是为了让我们可以快速的查找sum-k是否存在，即是否有连续子数组的和为sum-k，如果存在的话，那么和为k的子数组一定也存在，这样当sum刚好为k的时候，那么数组从起始到当前位置的这段子数组的和就是k，满足题意，如果哈希表中事先没有m[0]项的话，这个符合题意的结果就无法累加到结果res中，这就是初始化的用途。上面讲解的内容顺带着也把for循环中的内容解释了，这里就不多阐述了，有疑问的童鞋请在评论区留言哈，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> subarraySum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, sum = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; m{{<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            sum </span>+=<span style="color: #000000;"> nums[i];
+            res </span>+= m[sum -<span style="color: #000000;"> k];
+            </span>++<span style="color: #000000;">m[sum]; 
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4130379.html" target="_blank">Two Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6504158.html">Continuous Subarray Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7753959.html">Subarray Product Less Than K</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7865693.html">Find Pivot Index</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/subarray-sum-equals-k/" target="_blank">https://leetcode.com/problems/subarray-sum-equals-k/</a></p>
+<p><a href="https://leetcode.com/problems/subarray-sum-equals-k/discuss/102153/Basic-Java-solution" target="_blank">https://leetcode.com/problems/subarray-sum-equals-k/discuss/102153/Basic-Java-solution</a></p>
+<p><a href="https://leetcode.com/problems/subarray-sum-equals-k/discuss/134689/Three-Approaches-With-Explanation" target="_blank">https://leetcode.com/problems/subarray-sum-equals-k/discuss/134689/Three-Approaches-With-Explanation</a></p>
+<p><a href="https://leetcode.com/problems/subarray-sum-equals-k/discuss/102106/Java-Solution-PreSum-%2B-HashMap" target="_blank">https://leetcode.com/problems/subarray-sum-equals-k/discuss/102106/Java-Solution-PreSum-%2B-HashMap</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

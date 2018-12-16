@@ -1,0 +1,38 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4225047.html">[LeetCode] Largest Number 最大组合数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of non negative integers, arrange them such that they form the largest number.</p>
+<p>For example, given&nbsp;<code>[3, 30, 34, 5, 9]</code>, the largest formed number is&nbsp;<code>9534330</code>.</p>
+<p>Note: The result may be very large, so you need to return a string instead of an integer.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://oj.leetcode.com/discuss/user/ts">@ts</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，让我们将其拼接成最大的数，那么根据题目中给的例子来看，主要就是要给给定数组进行排序，但是排序方法不是普通的升序或者降序，因为9要排在最前面，而9既不是数组中最大的也不是最小的，所以我们要自定义排序方法。如果不参考网友的解法，我估计是无法想出来的。这种解法对于两个数字a和b来说，如果将其都转为字符串，如果ab &gt; ba，则a排在前面，比如9和34，由于934&gt;349，所以9排在前面，再比如说30和3，由于303&lt;330，所以3排在30的前面。按照这种规则对原数组进行排序后，将每个数字转化为字符串再连接起来就是最终结果。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> largestNumber(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> res;
+        sort(nums.begin(), nums.end(), [](</span><span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b) {
+           </span><span style="color: #0000ff;">return</span> to_string(a) + to_string(b) &gt; to_string(b) +<span style="color: #000000;"> to_string(a); 
+        });
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            res </span>+=<span style="color: #000000;"> to_string(nums[i]);
+        }
+        </span><span style="color: #0000ff;">return</span> res[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> ? <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p><span style="font-size: 14px; line-height: 1.5;">&nbsp;</span></p>
+<p>参考资料：</p>
+<p><a href="http://leetcodesolution.blogspot.com/2015/01/leetcode-largest-number.html" target="_blank">http://leetcodesolution.blogspot.com/2015/01/leetcode-largest-number.html</a><br /><a href="https://leetcode.com/discuss/32431/simple-10-line-c-solution" target="_blank">https://leetcode.com/discuss/32431/simple-10-line-c-solution</a><br /><a href="https://leetcode.com/discuss/29699/share-a-short-code-in-c" target="_blank">https://leetcode.com/discuss/29699/share-a-short-code-in-c</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

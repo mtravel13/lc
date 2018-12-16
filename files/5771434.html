@@ -1,0 +1,148 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5771434.html">[LeetCode] Mini Parser 迷你解析器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a nested list of integers represented as a string, implement a parser to deserialize it.</p>
+<p>Each element is either an integer, or a list -- whose elements may also be integers or other lists.</p>
+<p>Note:&nbsp;You may assume that the string is well-formed:</p>
+<ul>
+<li>String is non-empty.</li>
+<li>String does not contain white spaces.</li>
+<li>String contains only digits&nbsp;<code>0-9</code>,&nbsp;<code>[</code>,&nbsp;<code>-</code>&nbsp;<code>,</code>,&nbsp;<code>]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Given s = "324",
+
+You should return a NestedInteger object which contains a single integer 324.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Given s = "[123,[456,[789]]]",
+
+Return a NestedInteger object containing a nested list with 2 elements:
+
+1. An integer containing value 123.
+2. A nested list containing two elements:
+    i.  An integer containing value 456.
+    ii. A nested list with one element:
+         a. An integer containing value 789.
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们实现一个迷你解析器用来把一个字符串解析成NestInteger类，关于这个嵌套链表类的题我们之前做过三道，<a href="http://www.cnblogs.com/grandyang/p/5615583.html">Nested List Weight Sum II</a>，<a href="http://www.cnblogs.com/grandyang/p/5358793.html" target="_blank">Flatten Nested List Iterator</a>，和<a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a>。应该对这个类并不陌生了，我们可以先用递归来做，思路是，首先判断s是否为空，为空直接返回，不为空的话看首字符是否为'['，不是的话说明s为一个整数，我们直接返回结果。如果首字符是'['，且s长度小于等于2，说明没有内容，直接返回结果。反之如果s长度大于2，我们从i=1开始遍历，我们需要一个变量start来记录某一层的其实位置，用cnt来记录跟其实位置是否为同一深度，cnt=0表示同一深度，由于中间每段都是由逗号隔开，所以当我们判断当cnt为0，且当前字符是逗号或者已经到字符串末尾了，我们把start到当前位置之间的字符串取出来递归调用函数，把返回结果加入res中，然后start更新为i+1。如果遇到'['，计数器cnt自增1，若遇到']'，计数器cnt自减1。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NestedInteger deserialize(</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">if</span> (s.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NestedInteger();
+        </span><span style="color: #0000ff;">if</span> (s[<span style="color: #800080;">0</span>] != <span style="color: #800000;">'</span><span style="color: #800000;">[</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NestedInteger(stoi(s));
+        </span><span style="color: #0000ff;">if</span> (s.size() &lt;= <span style="color: #800080;">2</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NestedInteger();
+        NestedInteger res;
+        </span><span style="color: #0000ff;">int</span> start = <span style="color: #800080;">1</span>, cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">0</span> &amp;&amp; (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">,</span><span style="color: #800000;">'</span> || i == s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">)) {
+                res.add(deserialize(s.substr(start, i </span>-<span style="color: #000000;"> start)));
+                start </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">[</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">]</span><span style="color: #800000;">'</span>) --<span style="color: #000000;">cnt;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<div>
+<div class="btn btn-xs btn-warning">我们也可以使用迭代的方法来做，这样就需要使用栈来辅助，变量start记录起始位置，我们遍历字符串，如果遇到'['，我们给栈中加上一个空的NestInteger，如果遇到的字符数逗号或者']'，如果i&gt;start，那么我们给栈顶元素调用add来新加一个NestInteger，初始化参数传入start到i之间的子字符串转为的整数，然后更新start=i+1，当遇到的']'时，如果此时栈中元素多于1个，那么我们将栈顶元素取出，加入新的栈顶元素中通过调用add函数，参见代码如下：</div>
+<div class="btn btn-xs btn-warning">&nbsp;</div>
+<div id="company_tags" class="btn btn-xs btn-warning">解法二：</div>
+<div class="btn btn-xs btn-warning">
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NestedInteger deserialize(</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">if</span> (s.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NestedInteger();
+        </span><span style="color: #0000ff;">if</span> (s[<span style="color: #800080;">0</span>] != <span style="color: #800000;">'</span><span style="color: #800000;">[</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NestedInteger(stoi(s));
+        stack</span>&lt;NestedInteger&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">int</span> start = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">[</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                st.push(NestedInteger());
+                start </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">,</span><span style="color: #800000;">'</span> || s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">]</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (i &gt;<span style="color: #000000;"> start) {
+                    st.top().add(NestedInteger(stoi(s.substr(start, i </span>-<span style="color: #000000;"> start))));
+                }
+                start </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">]</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (st.size() &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                        NestedInteger t </span>=<span style="color: #000000;"> st.top(); st.pop();
+                        st.top().add(t);
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> st.top();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种方法是利用C++ STL中的字符串流处理类istringstream，我们需要对几个函数有些了解，比如clear()是重置字符流中的字符串，get()是获得下一个字符，peek()是返回首字符，&gt;&gt;num是读取出合法的整数，如果无法读取出整数，需要调用clear()来重置字符串，否则调用get()会出错。思路跟上面的递归解法相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NestedInteger deserialize(</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        istringstream </span><span style="color: #0000ff;">in</span><span style="color: #000000;">(s);
+        </span><span style="color: #0000ff;">return</span> deserialize(<span style="color: #0000ff;">in</span><span style="color: #000000;">);
+    }
+    NestedInteger deserialize(istringstream</span>&amp; <span style="color: #0000ff;">in</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">in</span> &gt;&gt; num) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NestedInteger(num);
+        </span><span style="color: #0000ff;">in</span><span style="color: #000000;">.clear();
+        </span><span style="color: #0000ff;">in</span>.<span style="color: #0000ff;">get</span><span style="color: #000000;">();
+        NestedInteger list;
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">in</span>.peek() != <span style="color: #800000;">'</span><span style="color: #800000;">]</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            list.add(deserialize(</span><span style="color: #0000ff;">in</span><span style="color: #000000;">));
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">in</span>.peek() == <span style="color: #800000;">'</span><span style="color: #800000;">,</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">in</span>.<span style="color: #0000ff;">get</span><span style="color: #000000;">();
+            }
+        }
+        </span><span style="color: #0000ff;">in</span>.<span style="color: #0000ff;">get</span><span style="color: #000000;">();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5615583.html">Nested List Weight Sum II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5358793.html" target="_blank">Flatten Nested List Iterator</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/54258/python-c-solutions/3" target="_blank">https://discuss.leetcode.com/topic/54258/python-c-solutions/3</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a href="https://discuss.leetcode.com/topic/54341/iterative-c-using-stack" target="_blank">https://discuss.leetcode.com/topic/54341/iterative-c-using-stack</a></p>
+<p><a href="https://discuss.leetcode.com/topic/54277/short-java-recursive-solution" target="_blank">https://discuss.leetcode.com/topic/54277/short-java-recursive-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

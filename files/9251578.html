@@ -1,0 +1,59 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9251578.html">[LeetCode] Rotate String 旋转字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>We are given two strings,&nbsp;<code>A</code>&nbsp;and&nbsp;<code>B</code>.</p>
+<p>A&nbsp;<em>shift on&nbsp;<code>A</code></em>&nbsp;consists of taking string&nbsp;<code>A</code>&nbsp;and moving the leftmost character to the rightmost position. For example, if&nbsp;<code>A = 'abcde'</code>, then it will be&nbsp;<code>'bcdea'</code>&nbsp;after one shift on&nbsp;<code>A</code>. Return&nbsp;<code>True</code>&nbsp;if and only if&nbsp;<code>A</code>&nbsp;can become&nbsp;<code>B</code>&nbsp;after some number of shifts on&nbsp;<code>A</code>.</p>
+<pre>Example 1:
+Input: A = 'abcde', B = 'cdeab'
+Output: true
+
+Example 2:
+Input: A = 'abcde', B = 'abced'
+Output: false
+</pre>
+<p>Note:</p>
+<ul>
+<li><code>A</code>&nbsp;and&nbsp;<code>B</code>&nbsp;will have length at most&nbsp;<code>100</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们两个字符串A和B，定义了一种偏移操作，以某一个位置将字符串A分为两截，并将两段调换位置，如果此时跟字符串B相等了，就说明字符串A可以通过偏移得到B。现在就是让我们判断是否存在这种偏移，那么最简单最暴力的方法就是遍历所有能将A分为两截的位置，然后用取子串的方法将A断开，交换顺序，再去跟B比较，如果相等，返回true即可，遍历结束后，返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> rotateString(<span style="color: #0000ff;">string</span> A, <span style="color: #0000ff;">string</span><span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">if</span> (A.size() != B.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; A.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (A.substr(i, A.size() - i) + A.substr(<span style="color: #800080;">0</span>, i) == B) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }      
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种一行完成碉堡了的方法，就是我们其实可以在A之后再加上一个A，这样如果新的字符串(A+A)中包含B的话，说明A一定能通过偏移得到B。就比如题目中的例子，A="abcde", B="bcdea"，那么A+A="a<span style="color: #ff0000;">bcdea</span>bcde"，里面是包括B的，所以返回true即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> rotateString(<span style="color: #0000ff;">string</span> A, <span style="color: #0000ff;">string</span><span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">return</span> A.size() == B.size() &amp;&amp; (A + A).find(B) != <span style="color: #0000ff;">string</span><span style="color: #000000;">::npos;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/rotate-string/solution/">https://leetcode.com/problems/rotate-string/solution/</a></p>
+<p><a href="https://leetcode.com/problems/rotate-string/discuss/118696/C++-Java-Python-1-Line-Solution">https://leetcode.com/problems/rotate-string/discuss/118696/C++-Java-Python-1-Line-Solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

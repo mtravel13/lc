@@ -1,0 +1,44 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4510984.html">[LeetCode] 3Sum Closest 最近三数之和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array&nbsp;<em>S</em>&nbsp;of&nbsp;<em>n</em>&nbsp;integers, find three integers in&nbsp;<em>S</em>&nbsp;such that the sum is closest to a given number, target. Return the sum of the three integers. You may assume that each input would have exactly one solution.</p>
+<pre>    For example, given array S = {-1 2 1 -4}, and target = 1.
+
+    The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).</pre>
+<p>&nbsp;</p>
+<p>这道题让我们求最接近给定值的三数之和，是在之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4481576.html">&nbsp;3Sum 三数之和</a>的基础上又增加了些许难度，那么这道题让我们返回这个最接近于给定值的值，即我们要保证当前三数和跟给定值之间的差的绝对值最小，所以我们需要定义一个变量diff用来记录差的绝对值，然后我们还是要先将数组排个序，然后开始遍历数组，思路跟那道三数之和很相似，都是先确定一个数，然后用两个指针left和right来滑动寻找另外两个数，每确定两个数，我们求出此三数之和，然后算和给定值的差的绝对值存在newDiff中，然后和diff比较并更新diff和结果closest即可，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> threeSumClosest(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> closest = nums[<span style="color: #800080;">0</span>] + nums[<span style="color: #800080;">1</span>] + nums[<span style="color: #800080;">2</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">int</span> diff = abs(closest -<span style="color: #000000;"> target);
+        sort(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size() - <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> left = i + <span style="color: #800080;">1</span>, right = nums.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">int</span> sum = nums[i] + nums[left] +<span style="color: #000000;"> nums[right];
+                </span><span style="color: #0000ff;">int</span> newDiff = abs(sum -<span style="color: #000000;"> target);
+                </span><span style="color: #0000ff;">if</span> (diff &gt;<span style="color: #000000;"> newDiff) {
+                    diff </span>=<span style="color: #000000;"> newDiff;
+                    closest </span>=<span style="color: #000000;"> sum;
+                }
+                </span><span style="color: #0000ff;">if</span> (sum &lt; target) ++<span style="color: #000000;">left;
+                </span><span style="color: #0000ff;">else</span> --<span style="color: #000000;">right;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> closest;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

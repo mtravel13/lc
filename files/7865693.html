@@ -1,0 +1,58 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7865693.html">[LeetCode] Find Pivot Index 寻找中枢点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of integers&nbsp;<code>nums</code>, write a method that returns the "pivot" index of this array.</p>
+<p>We define the pivot index as the index where the sum of the numbers to the left of the index is equal to the sum of the numbers to the right of the index.</p>
+<p>If no such index exists, we should return -1. If there are multiple pivot indexes, you should return the left-most pivot index.</p>
+<p>Example 1:</p>
+<pre>Input: 
+nums = [1, 7, 3, 6, 5, 6]
+Output: 3
+Explanation: 
+The sum of the numbers to the left of index 3 (nums[3] = 6) is equal to the sum of numbers to the right of index 3.
+Also, 3 is the first index where this occurs.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: 
+nums = [1, 2, 3]
+Output: -1
+Explanation: 
+There is no index that satisfies the conditions in the problem statement.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The length of&nbsp;<code>nums</code>&nbsp;will be in the range&nbsp;<code>[0, 10000]</code>.</li>
+<li>Each element&nbsp;<code>nums[i]</code>&nbsp;will be an integer in the range&nbsp;<code>[-1000, 1000]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，让我们求一个中枢点，使得该位置左右两边的子数组之和相等。这道题难度不大，直接按题意去搜索就行了，因为中枢点可能出现的位置就是数组上的位置，所以我们搜索一遍就可以找出来，我们先求出数组的总和，然后维护一个当前数组之和curSum，然后对于遍历到的位置，用总和减去当前数字，看得到的结果是否是curSum的两倍，是的话，那么当前位置就是中枢点，返回即可；否则就将当前数字加到curSum中继续遍历，遍历结束后还没返回，说明没有中枢点，返回-1即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> pivotIndex(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> sum = accumulate(nums.begin(), nums.end(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> curSum = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (sum - nums[i] == <span style="color: #800080;">2</span> * curSum) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+            curSum </span>+=<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6810361.html">Subarray Sum Equals K</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

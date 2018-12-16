@@ -1,0 +1,56 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9937844.html">[LeetCode] Binary Search 二分搜索法</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a&nbsp;sorted&nbsp;(in ascending order) integer array&nbsp;<code>nums</code>&nbsp;of&nbsp;<code>n</code>&nbsp;elements and a&nbsp;<code>target</code>&nbsp;value, write a function to search&nbsp;<code>target</code>&nbsp;in&nbsp;<code>nums</code>. If&nbsp;<code>target</code>&nbsp;exists, then return its index, otherwise return&nbsp;<code>-1</code>.</p>
+<p><br />Example 1:</p>
+<pre>Input: <code>nums</code> = [-1,0,3,5,9,12], <code>target</code> = 9
+Output: 4
+Explanation: 9 exists in <code>nums</code> and its index is 4
+
+</pre>
+<p>Example 2:</p>
+<pre>Input: <code>nums</code> = [-1,0,3,5,9,12], <code>target</code> = 2
+Output: -1
+Explanation: 2 does not exist in <code>nums</code> so return -1
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>You may assume that all elements in&nbsp;<code>nums</code>&nbsp;are unique.</li>
+<li><code>n</code>&nbsp;will be in the range&nbsp;<code>[1, 10000]</code>.</li>
+<li>The value of each element in&nbsp;<code>nums</code>&nbsp;will be in the range&nbsp;<code>[-9999, 9999]</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题就是最基本的二分搜索法了，这是博主之前总结的<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_1" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/6854825.html">LeetCode Binary Search Summary 二分搜索法小结</a>的四种之中的第一类，也是最简单的一类，写法什么很模版啊，注意right的初始化值，还有while的循环条件，以及right的更新值，这三点不同的人可能会有不同的写法，选一种自己最习惯的就好啦，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> search(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (nums[mid] == target) <span style="color: #0000ff;">return</span><span style="color: #000000;"> mid;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (nums[mid] &lt; target) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="https://www.cnblogs.com/grandyang/p/9937770.html">Search in a Sorted Array of Unknown Size</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/binary-search" target="_blank">https://leetcode.com/problems/binary-search</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

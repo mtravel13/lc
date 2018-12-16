@@ -1,0 +1,84 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5322870.html">[LeetCode] Paint House II 粉刷房子之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There are a row of&nbsp;<em>n</em>&nbsp;houses, each house can be painted with one of the&nbsp;<em>k</em>&nbsp;colors. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.</p>
+<p>The cost of painting each house with a certain color is represented by a&nbsp;<code><em>n</em>&nbsp;x&nbsp;<em>k</em></code>&nbsp;cost matrix. For example,&nbsp;<code>costs[0][0]</code>&nbsp;is the cost of painting house 0 with color 0;&nbsp;<code>costs[1][2]</code>is the cost of painting house 1 with color 2, and so on... Find the minimum cost to paint all houses.</p>
+<p>Note:<br />All costs are positive integers.</p>
+<p>Follow up:<br />Could you solve it in&nbsp;<em>O</em>(<em>nk</em>) runtime?</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/5319384.html" target="_blank">Paint House</a>的拓展，那道题只让用红绿蓝三种颜色来粉刷房子，而这道题让我们用k种颜色，这道题不能用之前那题的解法，会TLE。这题的解法的<span style="line-height: 1.5;">思路还是用DP，但是在找不同颜色的最小值不是遍历所有不同颜色，而是用min1和min2来记录之前房子的最小和第二小的花费的颜色，如果当前房子颜色和min1相同，那么我们用min2对应的值计算，反之我们用min1对应的值，这种解法实际上也包含了求次小值的方法，感觉也是一种很棒的解题思路，参见代码如下：</span></p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCostII(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> costs) {
+        </span><span style="color: #0000ff;">if</span> (costs.empty() || costs[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp =<span style="color: #000000;"> costs;
+        </span><span style="color: #0000ff;">int</span> min1 = -<span style="color: #800080;">1</span>, min2 = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; dp.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> last1 = min1, last2 =<span style="color: #000000;"> min2;
+            min1 </span>= -<span style="color: #800080;">1</span>; min2 = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; dp[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (j !=<span style="color: #000000;"> last1) {
+                    dp[i][j] </span>+= last1 &lt; <span style="color: #800080;">0</span> ? <span style="color: #800080;">0</span> : dp[i - <span style="color: #800080;">1</span><span style="color: #000000;">][last1];
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    dp[i][j] </span>+= last2 &lt; <span style="color: #800080;">0</span> ? <span style="color: #800080;">0</span> : dp[i - <span style="color: #800080;">1</span><span style="color: #000000;">][last2];
+                }
+                </span><span style="color: #0000ff;">if</span> (min1 &lt; <span style="color: #800080;">0</span> || dp[i][j] &lt;<span style="color: #000000;"> dp[i][min1]) {
+                    min2 </span>= min1; min1 =<span style="color: #000000;"> j;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (min2 &lt; <span style="color: #800080;">0</span> || dp[i][j] &lt;<span style="color: #000000;"> dp[i][min2]) {
+                    min2 </span>=<span style="color: #000000;"> j;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.back()[min1];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法不需要建立二维dp数组，直接用三个变量就可以保存需要的信息即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCostII(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> costs) {
+        </span><span style="color: #0000ff;">if</span> (costs.empty() || costs[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> min1 = <span style="color: #800080;">0</span>, min2 = <span style="color: #800080;">0</span>, idx1 = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; costs.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> m1 = INT_MAX, m2 = m1, id1 = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; costs[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> cost = costs[i][j] + (j == idx1 ?<span style="color: #000000;"> min2 : min1);
+                </span><span style="color: #0000ff;">if</span> (cost &lt;<span style="color: #000000;"> m1) {
+                    m2 </span>= m1; m1 = cost; id1 =<span style="color: #000000;"> j;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cost &lt;<span style="color: #000000;"> m2) {
+                    m2 </span>=<span style="color: #000000;"> cost;
+                }
+            }
+            min1 </span>= m1; min2 = m2; idx1 =<span style="color: #000000;"> id1;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> min1;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4650187.html">Product of Array Except Self</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4656517.html">Sliding Window Maximum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5319384.html" target="_blank">Paint House</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5231220.html" target="_blank">Paint Fence</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/54415/ac-java-solution-without-extra-space" target="_blank">https://leetcode.com/discuss/54415/ac-java-solution-without-extra-space</a></p>
+<p><a href="https://discuss.leetcode.com/topic/30659/easiest-o-1-space-java-solution" target="_blank">https://discuss.leetcode.com/topic/30659/easiest-o-1-space-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,57 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5783392.html">[LeetCode] Shuffle an Array 数组洗牌</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Shuffle a set of numbers without duplicates.</p>
+<p>Example:</p>
+<pre>// Init an array with set 1, 2, and 3.
+int[] nums = {1,2,3};
+Solution solution = new Solution(nums);
+
+// Shuffle the array [1,2,3] and return its result. Any permutation of [1,2,3] must equally likely to be returned.
+solution.shuffle();
+
+// Resets the array back to its original configuration [1,2,3].
+solution.reset();
+
+// Returns the random shuffling of array [1,2,3].
+solution.shuffle();</pre>
+<p>&nbsp;</p>
+<p>这道题让我们给数组洗牌，也就是随机打乱顺序，那么由于之前那道题<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_2" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/5759926.html">Linked List Random Node</a>我们接触到了<a href="https://zh.wikipedia.org/wiki/%E6%B0%B4%E5%A1%98%E6%8A%BD%E6%A8%A3" target="_blank">水塘抽样Reservoir Sampling</a>的思想，这道题实际上这道题也是用类似的思路，我们遍历数组每个位置，每次都随机生成一个坐标位置，然后交换当前遍历位置和随机生成的坐标位置的数字，这样如果数组有n个数字，那么我们也随机交换了n组位置，从而达到了洗牌的目的，这里需要注意的是i + rand() % (res.size() - i)不能写成rand() % res.size()，虽然也能通过OJ，但是根据<a href="https://yjk94.wordpress.com/2017/03/17/%E6%B4%97%E7%89%8C%E7%9A%84%E6%AD%A3%E7%A1%AE%E5%A7%BF%E5%8A%BF-knuth-shuffle%E7%AE%97%E6%B3%95/" target="_blank">这个帖子</a>的最后部分的概率图表，前面那种写法不是真正的随机分布，应该使用Knuth shuffle算法，感谢热心网友们的留言，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Solution(vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums): v(nums) {}
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Resets the array to its original configuration and return it. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> reset() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> v;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Returns a random shuffling of the array. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> shuffle() {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res =<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; res.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> t = i + rand() % (res.size() -<span style="color: #000000;"> i);
+            swap(res[i], res[t]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_2" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/5759926.html">Linked List Random Node</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

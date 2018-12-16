@@ -1,0 +1,126 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5975426.html">[LeetCode] Sentence Screen Fitting 调整屏幕上的句子</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a&nbsp;<code>rows x cols</code>&nbsp;screen and a sentence represented by a list of words, find&nbsp;how many times&nbsp;the given sentence can be fitted on the screen.</p>
+<p>Note:</p>
+<ol>
+<li>A word cannot be split into two lines.</li>
+<li>The order of words in the sentence must remain unchanged.</li>
+<li>Two consecutive words&nbsp;in a line&nbsp;must be separated by a single space.</li>
+<li>Total words in the sentence won't exceed 100.</li>
+<li>Length of each word won't exceed 10.</li>
+<li>1 &le; rows, cols &le; 20,000.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input:
+rows = 2, cols = 8, sentence = ["hello", "world"]
+
+Output: 
+1
+
+Explanation:
+hello---
+world---
+
+The character '-' signifies an empty space on the screen.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+rows = 3, cols = 6, sentence = ["a", "bcd", "e"]
+
+Output: 
+2
+
+Explanation:
+a-bcd- 
+e-a---
+bcd-e-
+
+The character '-' signifies an empty space on the screen.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input:
+rows = 4, cols = 5, sentence = ["I", "had", "apple", "pie"]
+
+Output: 
+1
+
+Explanation:
+I-had
+apple
+pie-I
+had--
+
+The character '-' signifies an empty space on the screen.</pre>
+<p>&nbsp;</p>
+<p>这道题给我们了一个句子，由若干个单词组成，然后给我们了一个空白屏幕区域，让我们填充单词，前提是单词和单词之间需要一个空格隔开，而且单词不能断开，如果当前行剩余位置放下不下某个单词，则必须将该单词整个移动到下一行。我刚开始想的是便利句子，每个单词分别处理，但是这种做法很不高效，因为有可能屏幕的宽度特别大，而单词可能就一两个，那么我们这样遍历的话就太浪费时间了，应该直接用宽度除以句子加上空格的长度之和，可以快速的得到能装下的个数。下面这种方法设计的很巧妙，思路是用start变量来记录下能装下的句子的总长度，最后除以一个句子的长度，就可以得到个数。而句子的总长度的求法时要在每个单词后面加上一个空格(包括最后一个单词)，我们遍历屏幕的每一行，然后每次start都加上宽度，然后看all[start%len]是否为空格，是的话就start加1，这样做的好处是可以处理末尾是没有空格的情况，比如宽度为1，只有一个单词a，那么我们都知道是这样放的&nbsp;<span style="text-decoration: underline;">a</span>&nbsp;，start变为1，len是2，all[start%len]是空格，所以start自增1，变成2，这样我们用start/len就知道能放下几个了。对于all[start%len]不为空格的情况，如果all[(start-1)%len]也不为空格，那么start就自减1，进行while循环，直至其为空格为止。大家可以自己带例子尝试，个人觉得想出此方法的人真是太聪明了：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> wordsTyping(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; sentence, <span style="color: #0000ff;">int</span> rows, <span style="color: #0000ff;">int</span><span style="color: #000000;"> cols) {
+        </span><span style="color: #0000ff;">string</span> all = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> word : sentence) all += (word + <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> start = <span style="color: #800080;">0</span>, len =<span style="color: #000000;"> all.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; rows; ++<span style="color: #000000;">i) {
+            start </span>+=<span style="color: #000000;"> cols;
+            </span><span style="color: #0000ff;">if</span> (all[start % len] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span>++<span style="color: #000000;">start;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">while</span> (start &gt; <span style="color: #800080;">0</span> &amp;&amp; all[(start - <span style="color: #800080;">1</span>) % len] != <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span>--<span style="color: #000000;">start;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> start /<span style="color: #000000;"> len;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法也是很棒，同样也需要统计加空格的句子总长度，然后遍历每一行，初始化colsRemaining为cols，然后还需要一个变量idx，来记录当前单词的位置，如果colsRemaining大于0，就进行while循环，如果当前单词的长度小于等于colsRemaining，说明可以放下该单词，那么就减去该单词的长度就是剩余的空间，然后如果此时colsRemaining仍然大于0，则减去空格的长度1，然后idx自增1，如果idx此时超过单词个数的范围了，说明一整句可以放下，那么就有可能出现宽度远大于句子长度的情况，所以我们加上之前放好的一句之外，还要加上colsRemaining/len的个数，然后colsRemaining%len是剩余的位置，此时idx重置为0，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> wordsTyping(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; sentence, <span style="color: #0000ff;">int</span> rows, <span style="color: #0000ff;">int</span><span style="color: #000000;"> cols) {
+        </span><span style="color: #0000ff;">string</span> all = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> word : sentence) all += (word + <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, idx = <span style="color: #800080;">0</span>, n = sentence.size(), len =<span style="color: #000000;"> all.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; rows; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> colsRemaining =<span style="color: #000000;"> cols;
+            </span><span style="color: #0000ff;">while</span> (colsRemaining &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (sentence[idx].size() &lt;=<span style="color: #000000;"> colsRemaining) {
+                    colsRemaining </span>-=<span style="color: #000000;"> sentence[idx].size();
+                    </span><span style="color: #0000ff;">if</span> (colsRemaining &gt; <span style="color: #800080;">0</span>) colsRemaining -= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (++idx &gt;=<span style="color: #000000;"> n) {
+                        res </span>+= (<span style="color: #800080;">1</span> + colsRemaining /<span style="color: #000000;"> len);
+                        colsRemaining </span>%=<span style="color: #000000;"> len;
+                        idx </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    }
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/62509/accepted-java-solution" target="_blank">https://discuss.leetcode.com/topic/62509/accepted-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/62455/21ms-18-lines-java-solution" target="_blank">https://discuss.leetcode.com/topic/62455/21ms-18-lines-java-solution</a></p>
+<p><br class="Apple-interchange-newline" /><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

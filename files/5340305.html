@@ -1,0 +1,67 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5340305.html">[LeetCode] Nested List Weight Sum 嵌套链表权重和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a nested list of integers, return the sum of all integers in the list weighted by their depth.</p>
+<p>Each element is either an integer, or a list -- whose elements may also be integers or other lists.</p>
+<p><strong>Example 1:</strong><br />
+Given the list <code>[[1,1],2,[1,1]]</code>, return <strong>10</strong>. (four 1's at depth 2, one 2 at depth 1)</p>
+<p><strong>Example 2:</strong><br />
+Given the list <code>[1,[4,[6]]]</code>, return <strong>27</strong>. (one 1 at depth 1, one 4 at depth 2, and one 6 at depth 3; 1 + 4*2 + 6*3 = 27)
+</p>
+<p>&nbsp;</p>
+<p>这道题定义了一种嵌套链表的结构，链表可以无限往里嵌套，规定每嵌套一层，深度加1，让我们求权重之和，就是每个数字乘以其权重，再求总和。那么我们考虑，由于嵌套层数可以很大，所以我们用深度优先搜索DFS会很简单，每次遇到嵌套的，递归调用函数，一层一层往里算就可以了，我最先想的方法是遍历给的嵌套链表的数组，对于每个嵌套链表的对象，调用getSum函数，并赋深度值1，累加起来返回。在getSum函数中，首先判断其是否为整数，如果是，则返回当前深度乘以整数，如果不是，那么我们再遍历嵌套数组，对每个嵌套链表再调用递归函数，将返回值累加起来返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> depthSum(vector&lt;NestedInteger&gt;&amp;<span style="color: #000000;"> nestedList) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nestedList) {
+            res </span>+= getSum(a, <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> getSum(NestedInteger ni, <span style="color: #0000ff;">int</span><span style="color: #000000;"> level) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (ni.isInteger()) <span style="color: #0000ff;">return</span> level *<span style="color: #000000;"> ni.getInteger();
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : ni.getList()) {
+            res </span>+= getSum(a, level + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但其实上面的方法可以优化，我们可以把给的那个嵌套链表的一维数组直接当做一个嵌套链表的对象，然后调用递归函数，递归函数的处理方法跟上面一样，只不过用了个三元处理使其看起来更加简洁了一些：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> depthSum(vector&lt;NestedInteger&gt;&amp;<span style="color: #000000;"> nestedList) {
+        </span><span style="color: #0000ff;">return</span> helper(nestedList, <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(vector&lt;NestedInteger&gt;&amp; nl, <span style="color: #0000ff;">int</span><span style="color: #000000;"> depth) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nl) {
+            res </span>+= a.isInteger() ? a.getInteger() * depth : helper(a.getList(), depth + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/94956/2ms-easy-to-understand-java-solution" target="_blank">https://leetcode.com/discuss/94956/2ms-easy-to-understand-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

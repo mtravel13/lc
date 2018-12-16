@@ -1,0 +1,141 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7026999.html">[LeetCode] Design Compressed String Iterator 设计压缩字符串的迭代器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design and implement a data structure for a compressed string iterator. It should support the following operations:&nbsp;<code>next</code>&nbsp;and&nbsp;<code>hasNext</code>.</p>
+<p>The given compressed string will be in the form of each letter followed by a positive integer representing the number of this letter existing in the original uncompressed string.</p>
+<p><code>next()</code>&nbsp;- if the original string still has uncompressed characters, return the next letter; Otherwise return a white space.<br /><code>hasNext()</code>&nbsp;- Judge whether there is any letter needs to be uncompressed.</p>
+<p>Note:<br />Please remember to&nbsp;RESET&nbsp;your class variables declared in StringIterator, as static/class variables are&nbsp;persisted across multiple test cases. Please see&nbsp;<a href="https://leetcode.com/faq/#different-output">here</a>&nbsp;for more details.</p>
+<p>Example:</p>
+<pre>StringIterator iterator = new StringIterator("L1e2t1C1o1d1e1");
+
+iterator.next(); // return 'L'
+iterator.next(); // return 'e'
+iterator.next(); // return 'e'
+iterator.next(); // return 't'
+iterator.next(); // return 'C'
+iterator.next(); // return 'o'
+iterator.next(); // return 'd'
+iterator.hasNext(); // return true
+iterator.next(); // return 'e'
+iterator.hasNext(); // return false
+iterator.next(); // return ' '</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个压缩字符串，就是每个字符后面跟上其出现的次数，这里就算只出现一次，后面还是要加上1，那么其实如果当字符串很好有连续字符的时候，压缩字符串反而要比原字符串长。不过这题的重点不在于压缩字符串本身，而是让我们设计一个压缩字符串的迭代器，那么实际上是要我们根据压缩字符串来输出原字符串中的所有字符。那么我们关键就是要取出每个字符和其出现的次数，每当调用一次next，次数减1，如果减到0了，我们就要取出下一个字符和其出现的次数。我们要用个私有变量s来保存原字符串，然后用个变量i来记录当前遍历到的位置，变量c为当前处理的字符，变量cnt为字符c的当前次数。变量i的初始化为0，指向第一个字符，我们在hasNext()函数中，现将s[i]存入c，然后i自增1，然后我们用while循环取出所有的数字，存入cnt中。在next()函数中，如果hasNext()返回true，那么cnt就自减1，返回c；如果hasNext()返回false，那么字节返回空字符。在hasNext()函数中首先判断cnt的值，如果大于0，直接返回true，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> StringIterator {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    StringIterator(</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> compressedString) {
+        s </span>=<span style="color: #000000;"> compressedString;
+        n </span>=<span style="color: #000000;"> s.size();
+        i </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        c </span>= <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (hasNext()) {
+            </span>--<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> c;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">if</span> (cnt &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (i &gt;= n) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        c </span>= s[i++<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; s[i] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; s[i] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            cnt </span>= cnt * <span style="color: #800080;">10</span> + s[i++] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n, i, cnt;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以用C++中的字符流类来处理字符串，写法非常的简洁，可以少定义一些变量，在hasNext()函数中，如果cnt为0了，那么我们用字符流类直接读出下一个字符和次数，然后看是否能读出大于0的次数来返回真假值，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> StringIterator {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    StringIterator(</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> compressedString) {
+        </span><span style="color: #0000ff;">is</span> =<span style="color: #000000;"> istringstream(compressedString);
+        cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        c </span>= <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (hasNext()) {
+            </span>--<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> c;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">is</span> &gt;&gt; c &gt;&gt;<span style="color: #000000;"> cnt;
+        }
+        </span><span style="color: #0000ff;">return</span> cnt &gt; <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    istringstream </span><span style="color: #0000ff;">is</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法还是用字符流类，和上面方法不同的地方是，在构建函数中完成了所有字符和次数的拆分，然后字符和其次数组成一个pair，加入一个队列queue中，这样我们每次处理的时候就直接去queue中取值就行了，这样hasNext()函数就变的非常简洁，只需要判断队列queue是否为空即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> StringIterator {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    StringIterator(</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> compressedString) {
+        istringstream </span><span style="color: #0000ff;">is</span><span style="color: #000000;">(compressedString);
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">char</span> c = <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">is</span> &gt;&gt; c &gt;&gt;<span style="color: #000000;"> cnt) {
+            q.push({c, cnt});
+        }
+    }
+    
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (hasNext()) {
+            auto </span>&amp;t =<span style="color: #000000;"> q.front();
+            </span><span style="color: #0000ff;">if</span> (--t.second == <span style="color: #800080;">0</span><span style="color: #000000;">) q.pop();
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t.first;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">return</span> !<span style="color: #000000;">q.empty();
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    queue</span>&lt;pair&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/92098/java-concise-single-queue-solution" target="_blank">https://discuss.leetcode.com/topic/92098/java-concise-single-queue-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/92159/short-solution-of-c-using-stringstream-python-using-re" target="_blank">https://discuss.leetcode.com/topic/92159/short-solution-of-c-using-stringstream-python-using-re</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

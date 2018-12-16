@@ -1,0 +1,74 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5172838.html">[LeetCode] Binary Tree Upside Down 二叉树的上下颠倒</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty, flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.</p>
+<p>For example:</p>
+<p>Given a binary tree {1,2,3,4,5},</p>
+<p>&nbsp;&nbsp;&nbsp; 1</p>
+<p>&nbsp;&nbsp; / \</p>
+<p>&nbsp; 2&nbsp;&nbsp; 3</p>
+<p>&nbsp;/ \</p>
+<p>4&nbsp;&nbsp; 5</p>
+<p>return the root of the binary tree [4,5,2,#,#,3,1].</p>
+<p>&nbsp;&nbsp; 4</p>
+<p>&nbsp; / \</p>
+<p>&nbsp;5&nbsp;&nbsp; 2</p>
+<p>&nbsp;&nbsp;&nbsp; / \</p>
+<p>&nbsp;&nbsp; 3&nbsp;&nbsp; 1&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<p>这道题让我们把一棵二叉树上下颠倒一下，而且限制了右节点要么为空要么一定会有对应的左节点。上下颠倒后原来二叉树的最左子节点变成了根节点，其对应的右节点变成了其左子节点，其父节点变成了其右子节点，相当于顺时针旋转了一下。对于一般树的题都会有迭代和递归两种解法，这道题也不例外，那么我们先来看看递归的解法。对于一个根节点来说，我们的目标是将其左子节点变为根节点，右子节点变为左子节点，原根节点变为右子节点，那么我们首先判断这个根节点是否存在，且其有没有左子节点，如果不满足这两个条件的话，直接返回即可，不需要翻转操作。那么我们不停的对左子节点调用递归函数，直到到达最左子节点开始翻转，翻转好最左子节点后，开始回到上一个左子节点继续翻转即可，直至翻转完整棵树，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode </span>*upsideDownBinaryTree(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root || !root-&gt;left) <span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+        TreeNode </span>*l = root-&gt;left, *r = root-&gt;<span style="color: #000000;">right;
+        TreeNode </span>*res =<span style="color: #000000;"> upsideDownBinaryTree(l);
+        l</span>-&gt;left =<span style="color: #000000;"> r;
+        l</span>-&gt;right =<span style="color: #000000;"> root;
+        root</span>-&gt;left =<span style="color: #000000;"> NULL;
+        root</span>-&gt;right =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看迭代的方法，和递归方法相反的时，这个是从上往下开始翻转，直至翻转到最左子节点，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Iterative</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode </span>*upsideDownBinaryTree(TreeNode *<span style="color: #000000;">root) {
+        TreeNode </span>*cur = root, *pre = NULL, *next = NULL, *tmp =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+            next </span>= cur-&gt;<span style="color: #000000;">left;
+            cur</span>-&gt;left =<span style="color: #000000;"> tmp;
+            tmp </span>= cur-&gt;<span style="color: #000000;">right;
+            cur</span>-&gt;right =<span style="color: #000000;"> pre;
+            pre </span>=<span style="color: #000000;"> cur;
+            cur </span>=<span style="color: #000000;"> next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> pre;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p>&nbsp;</p>
+<p><a href="https://discuss.leetcode.com/topic/5961/easy-o-n-iteration-solution-java">https://discuss.leetcode.com/topic/5961/easy-o-n-iteration-solution-java</a></p>
+<p><a href="https://discuss.leetcode.com/topic/40924/java-recursive-o-logn-space-and-iterative-solutions-o-1-space-with-explanation-and-figure">https://discuss.leetcode.com/topic/40924/java-recursive-o-logn-space-and-iterative-solutions-o-1-space-with-explanation-and-figure</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

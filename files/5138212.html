@@ -1,0 +1,76 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5138212.html">[LeetCode] Power of Three 判断3的次方数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer, write a function to determine if it is a power of three.</p>
+<p>Example 1:</p>
+<pre>Input: 27
+Output: true
+</pre>
+<p>Example 2:</p>
+<pre>Input: 0
+Output: false</pre>
+<p>Example 3:</p>
+<pre>Input: 9
+Output: true</pre>
+<p>Example 4:</p>
+<pre>Input: 45
+Output: false</pre>
+<p>Follow up:<br />Could you do it without using any loop / recursion?</p>
+<p>&nbsp;</p>
+<p>这道题让我们判断一个数是不是3的次方数，在LeetCode中，有一道类似的题目<a href="http://www.cnblogs.com/grandyang/p/4623394.html" target="_blank">Power of Two</a>，那道题有个非常简单的方法，由于2的次方数实在太有特点，最高位为1，其他位均为0，所以特别容易，而3的次方数没有显著的特点，最直接的方法就是不停地除以3，看最后的迭代商是否为1，要注意考虑输入是负数和0的情况，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfThree(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">while</span> (n &amp;&amp; n % <span style="color: #800080;">3</span> == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            n </span>/= <span style="color: #800080;">3</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> n == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>题目中的Follow up让我们不用循环，那么有一个投机取巧的方法，由于输入是int，正数范围是0-2<sup>31</sup>，在此范围中允许的最大的3的次方数为3<sup>19</sup>=1162261467，那么我们只要看这个数能否被n整除即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfThree(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">return</span> (n &gt; <span style="color: #800080;">0</span> &amp;&amp; <span style="color: #800080;">1162261467</span> % n == <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后还有一种巧妙的方法，利用对数的换底公式来做，高中学过的换底公式为log<sub>a</sub>b = log<sub>c</sub>b / log<sub>c</sub>a，那么如果n是3的倍数，则log<sub>3</sub>n一定是整数，我们利用换底公式可以写为log<sub>3</sub>n = log<sub>10</sub>n / log<sub>10</sub>3，注意这里一定要用10为底数，不能用自然数或者2为底数，否则当n=243时会出错，原因请看<a href="https://leetcode.com/discuss/78532/summary-all-solutions-new-method-included-at-15-30pm-jan-8th" target="_blank">这个帖子</a>。现在问题就变成了判断log<sub>10</sub>n / log<sub>10</sub>3是否为整数，在c++中判断数字a是否为整数，我们可以用 a - int(a) == 0 来判断，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfThree(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">return</span> (n &gt; <span style="color: #800080;">0</span> &amp;&amp; <span style="color: #0000ff;">int</span>(log10(n) / log10(<span style="color: #800080;">3</span>)) - log10(n) / log10(<span style="color: #800080;">3</span>) == <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4623394.html" target="_blank">Power of Two</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5403783.html" target="_blank">Power of Four</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/power-of-three" target="_blank">https://leetcode.com/problems/power-of-three</a></p>
+<p><a href="https://leetcode.com/problems/power-of-three/discuss/77856/1-line-java-solution-without-loop-recursion" target="_blank">https://leetcode.com/problems/power-of-three/discuss/77856/1-line-java-solution-without-loop-recursion</a></p>
+<p><a href="https://leetcode.com/problems/power-of-three/discuss/77876/**-A-summary-of-all-solutions-(new-method-included-at-15%3A30pm-Jan-8th)" target="_blank">https://leetcode.com/problems/power-of-three/discuss/77876/**-A-summary-of-all-solutions-(new-method-included-at-15%3A30pm-Jan-8th)</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

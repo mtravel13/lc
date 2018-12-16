@@ -1,0 +1,97 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4548184.html">[LeetCode] Word Ladder II 词语阶梯之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two words (<em>beginWord</em>&nbsp;and&nbsp;<em>endWord</em>), and a dictionary's word list, find all shortest transformation sequence(s) from&nbsp;<em>beginWord</em>&nbsp;to&nbsp;<em>endWord</em>, such that:</p>
+<ol>
+<li>Only one letter can be changed at a time</li>
+<li>Each transformed word must exist in the word list. Note that&nbsp;<em>beginWord</em>&nbsp;is&nbsp;<em>not</em>&nbsp;a transformed word.</li>
+</ol>
+<p>Note:</p>
+<ul>
+<li>Return an empty list if there is no such transformation sequence.</li>
+<li>All words have the same length.</li>
+<li>All words contain only lowercase alphabetic characters.</li>
+<li>You may assume no duplicates in the word list.</li>
+<li>You may assume&nbsp;<em>beginWord</em>&nbsp;and&nbsp;<em>endWord</em>&nbsp;are non-empty and are not the same.</li>
+</ul>
+<p>Example 1:</p>
+<pre>Input:
+beginWord = "hit",
+endWord = "cog",
+wordList = ["hot","dot","dog","lot","log","cog"]
+
+Output:
+[
+  ["hit","hot","dot","dog","cog"],
+&nbsp; ["hit","hot","lot","log","cog"]
+]
+</pre>
+<p>Example 2:</p>
+<pre>Input:
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log"]
+
+Output: []
+
+Explanation:&nbsp;The endWord "cog" is not in wordList, therefore no possible&nbsp;transformation.</pre>
+<p>&nbsp;</p>
+<p>个人感觉这道题是相当有难度的一道题，它比之前那道&nbsp;<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4539768.html">Word Ladder</a>&nbsp;要复杂很多，全场第四低的通过率12.9%正说明了这道题的难度，我也是研究了网上别人的解法很久才看懂，然后照葫芦画瓢的写了出来，下面这种解法的核心思想是BFS，大概思路如下：我们的目的是找出所有的路径，我们建立一个路径集paths，用以保存所有路径，然后是起始路径p，在p中先把起始单词放进去。然后定义两个整型变量level，和minLevel，其中level是记录循环中当前路径的长度，minLevel是记录最短路径的长度，这样的好处是，如果某条路径的长度超过了已有的最短路径的长度，那么舍弃，这样会提高运行速度，相当于一种剪枝。还要定义一个set变量words，用来记录已经循环过的路径中的词，然后就是BFS的核心了，循环路径集paths里的内容，取出队首路径，如果该路径长度大于level，说明字典中的有些词已经存入路径了，如果在路径中重复出现，则肯定不是最短路径，所以我们需要在字典中将这些词删去，然后将words清空，对循环对剪枝处理。然后我们取出当前路径的最后一个词，对每个字母进行替换并在字典中查找是否存在替换后的新词，这个过程在之前那道&nbsp;<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4539768.html">Word Ladder</a>&nbsp;里面也有。如果替换后的新词在字典中存在，将其加入words中，并在原有路径的基础上加上这个新词生成一条新路径，如果这个新词就是结束词，则此新路径为一条完整的路径，加入结果中，并更新minLevel，若不是结束词，解将新路径加入路径集中继续循环。写了这么多，不知道你看晕了没有，还是看代码吧，这个最有效：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; findLadders(<span style="color: #0000ff;">string</span> beginWord, <span style="color: #0000ff;">string</span> endWord, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> wordList) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> res;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> dict(wordList.begin(), wordList.end());
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> p{beginWord};
+        queue</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> paths;
+        paths.push(p);
+        </span><span style="color: #0000ff;">int</span> level = <span style="color: #800080;">1</span>, minLevel =<span style="color: #000000;"> INT_MAX;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> words;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">paths.empty()) {
+            auto t </span>=<span style="color: #000000;"> paths.front(); paths.pop();
+            </span><span style="color: #0000ff;">if</span> (t.size() &gt;<span style="color: #000000;"> level) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> w : words) dict.erase(w);
+                words.clear();
+                level </span>=<span style="color: #000000;"> t.size();
+                </span><span style="color: #0000ff;">if</span> (level &gt; minLevel) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">string</span> last =<span style="color: #000000;"> t.back();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; last.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">string</span> newLast =<span style="color: #000000;"> last;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> ch = <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>; ch &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;">ch) {
+                    newLast[i] </span>=<span style="color: #000000;"> ch;
+                    </span><span style="color: #0000ff;">if</span> (!dict.count(newLast)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                    words.insert(newLast);
+                    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; nextPath =<span style="color: #000000;"> t;
+                    nextPath.push_back(newLast);
+                    </span><span style="color: #0000ff;">if</span> (newLast ==<span style="color: #000000;"> endWord) {
+                        res.push_back(nextPath);
+                        minLevel </span>=<span style="color: #000000;"> level;
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> paths.push(nextPath);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4539768.html" target="_blank">Word Ladder</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/word-ladder-ii/" target="_blank">https://leetcode.com/problems/word-ladder-ii/</a></p>
+<p><a href="https://leetcode.com/problems/word-ladder-ii/discuss/40487/Java-Solution-with-Iteration" target="_blank">https://leetcode.com/problems/word-ladder-ii/discuss/40487/Java-Solution-with-Iteration</a></p>
+<p><a href="http://yucoding.blogspot.com/2014/01/leetcode-question-word-ladder-ii.html" target="_blank">http://yucoding.blogspot.com/2014/01/leetcode-question-word-ladder-ii.html</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

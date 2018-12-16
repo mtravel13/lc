@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="origin" />
+<title>OpenCV - 随笔分类 - Grandyang - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=-duj5vpGTntb85GJoM3iRI972XwWcI-j8zmqDzyfu2w1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/UnlimitedSunlight/bundle-UnlimitedSunlight.css?v=U277U0wIYS14CMa8eCm6JCKf6HhAx4Z-aYITTLKh93g1"/>
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/UnlimitedSunlight/bundle-UnlimitedSunlight-mobile.css?v=VxC7ucUyn1xY9IlWteuEc3CgiJJILG_BSweawTmecb01"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/grandyang/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/grandyang/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/grandyang/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">var currentBlogApp = 'grandyang', cb_enable_mathjax=true;var isLogined=false;</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: { 
+            equationNumbers: { autoNumber: ['AMS'], useLabelIds: true }, extensions: ['extpfeil.js'] 
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script><script src="//mathjax.cnblogs.com/2_7_2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="/bundles/blog-common.js?v=_U8OpbfIPk4K3Mxrx3oPrbJt2JRnf47OVRruaRlQuEc1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+<!--PageBeginHtml Block Begin-->
+<script src="https://files.cnblogs.com/files/grandyang/tctip-1.0.4.js"></script>
+<script>
+new tctip({
+top: '20%',
+button: {
+  id:7,
+  type: 'zanzhu',
+},
+list: [
+  {
+        type: 'wechat',
+	qrImg: 'https://files.cnblogs.com/files/grandyang/wepay.gif'
+  }, {
+	type: 'announcement',
+        qrText: '2018，梦想，起航～'
+  }
+]
+}).init()
+</script>
+<!--PageBeginHtml Block End-->
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="https://www.cnblogs.com/grandyang/"><img id="blogLogo" src="/Skins/custom/images/logo.gif" alt="返回主页" /></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="https://www.cnblogs.com/grandyang/">Grandyang</a></h1>
+<h2>仰天长啸仗剑红尘，冬去春来寒暑几更...</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">博客园</a></li>
+<li><a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/grandyang/">首页</a></li>
+<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/Grandyang">联系</a></li>
+<li><a id="blog_nav_rss" class="menu" href="https://www.cnblogs.com/grandyang/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="https://www.cnblogs.com/grandyang/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<span id="stats_post_count">随笔 - 1306&nbsp; </span>
+<span id="stats_article_count">文章 - 1&nbsp; </span>
+<span id="stats-comment_count">评论 - 2263</span>
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+
+<!--done-->
+
+
+<div class="entrylist">
+	<h1 class="entrylistTitle">随笔分类 - OpenCV</h1>
+	<div class="entrylistDescription"></div>
+	
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_0" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6372319.html">Solve Error : Undefined function or variable ‘setInitialWorkingFolder’. Error in matlabrc (line 197)</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: When compile program using Visual Studio 2015, Matlab 2016b, and OpenCV 3.1.0, one might get the error as follow: Undefined function or variable ‘setI<a href="https://www.cnblogs.com/grandyang/p/6372319.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6372319.html" Title = "permalink">2017-02-07 02:14</a> Grandyang 阅读(756) | <a href="https://www.cnblogs.com/grandyang/p/6372319.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6372319" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_1" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6256200.html">OpenCV 3.1 Set Camera Resolution 设置相机的分辨率</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 在OpenCV中，有强大的处理相机事件的api，但是貌似没有直接获取相机的最大分辨率的函数，通过属性CV_CAP_PROP_FRAME_HEIGHT和CV_CAP_PROP_FRAME_WIDTH直接获取的貌似只是默认的分辨率640x480，不过我们可以通过手动设置来修改分辨率，使其可以达到自身所支<a href="https://www.cnblogs.com/grandyang/p/6256200.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6256200.html" Title = "permalink">2017-01-06 14:30</a> Grandyang 阅读(2819) | <a href="https://www.cnblogs.com/grandyang/p/6256200.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6256200" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_2" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5805261.html">OpenCV 3.1 StereoBM 获取正确视差Dispariy</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: OpenCV更新到3.0版本后，Stereo模块变化的挺多的，首先去掉了StereoBMState和StereoSGBMState这两个专门控制BM和SGBM算法参数的类，而且StereoBM不能直接声明实例，需要放到智能指针里cv::Ptr&lt;cv::StereoBM&gt;声明才行，而且不能直接通过访问<a href="https://www.cnblogs.com/grandyang/p/5805261.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5805261.html" Title = "permalink">2016-08-25 05:43</a> Grandyang 阅读(8678) | <a href="https://www.cnblogs.com/grandyang/p/5805261.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5805261" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_3" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5778504.html">OpenCV 3.0 CvMat and cv::Mat Conversion</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: After OpenCV 3.0, CvMat cannot be directly converted to cv::Mat, we need to use function cvarrToMat() to do it. Please see the code below:<a href="https://www.cnblogs.com/grandyang/p/5778504.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5778504.html" Title = "permalink">2016-08-17 06:29</a> Grandyang 阅读(127) | <a href="https://www.cnblogs.com/grandyang/p/5778504.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5778504" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_4" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5752756.html">OpenCV 3.1 VS 2010 Cuda 7.5 TBB Configuration 配置</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Download OpenCV 3.1 Download OpenCV Extra Modules Download VS2010 Download CMake 3.2.0 Download Cuda 7.5 Download GPU Computing SDK 4.0 Download Intel<a href="https://www.cnblogs.com/grandyang/p/5752756.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5752756.html" Title = "permalink">2016-08-09 12:19</a> Grandyang 阅读(841) | <a href="https://www.cnblogs.com/grandyang/p/5752756.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5752756" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_5" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5610251.html">Deep Copy cv::StereoBM 深度拷贝</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 在使用OpenCV的三维立体重建的库时，一个重要的步骤就是生成左右视图的差异图Disparity，而控制生成disparity的参数的类是cv::StereoBM，我们有时候需要拷贝一份cv::StereoBM，然后改变其中的参数值，但是如果用默认的等号‘=’来进行拷贝，其实是浅拷贝，如果改变拷贝项<a href="https://www.cnblogs.com/grandyang/p/5610251.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5610251.html" Title = "permalink">2016-06-23 12:07</a> Grandyang 阅读(614) | <a href="https://www.cnblogs.com/grandyang/p/5610251.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5610251" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_6" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5602360.html">Convert between cv::Mat and QImage 两种图片类转换</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 在使用Qt和OpenCV混合编程时，我们有时需要在两种图片类cv::Mat和QImage之间进行转换，下面的代码参考了网上这个帖子： 还可以用下面的这个代码，参考了这个帖子：<a href="https://www.cnblogs.com/grandyang/p/5602360.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5602360.html" Title = "permalink">2016-06-21 06:46</a> Grandyang 阅读(1997) | <a href="https://www.cnblogs.com/grandyang/p/5602360.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5602360" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_7" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5002633.html">OpenCV Open Camera 打开摄像头</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 这是一个用OpenCV2.4.10打开摄像头的一个例子，参见代码如下：#include #include #include using namespace cv;using namespace std;int main(int argc, char *argv[]){ CvCapture* c...<a href="https://www.cnblogs.com/grandyang/p/5002633.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5002633.html" Title = "permalink">2015-11-28 14:18</a> Grandyang 阅读(2061) | <a href="https://www.cnblogs.com/grandyang/p/5002633.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5002633" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_8" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4731957.html">CvArr* to cv::Mat 转换</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: OpenCV中的CvArr*的定义的一个空类型的指针，可以转换为其派生类CvMat和IplImage，那么如何将其转化为cv::Mat呢，其实很简单，只需要一行代码即可：// CvArr *_imgcv::Mat img = cv::cvarrToMat(_img);<a href="https://www.cnblogs.com/grandyang/p/4731957.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4731957.html" Title = "permalink">2015-08-15 10:46</a> Grandyang 阅读(1741) | <a href="https://www.cnblogs.com/grandyang/p/4731957.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4731957" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_9" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4731858.html">OpenCV Create Circular Mask 圆形遮罩</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 在OpenCV中，比较常见的是矩形遮罩CvRect，没有专门提供圆形的mask，那么我们只能自己写一个来模拟圆形mask的函数，需要提供的参数为原图的大小，以及圆形mask的圆心位置和半径即可，返回一个cv::Mat型的mask，参见代码如下：// C APIcv::Mat extractCircu...<a href="https://www.cnblogs.com/grandyang/p/4731858.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4731858.html" Title = "permalink">2015-08-15 09:51</a> Grandyang 阅读(783) | <a href="https://www.cnblogs.com/grandyang/p/4731858.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4731858" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_10" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4701589.html">OpenCV Cut Image via ROI 根据兴趣区域剪裁图片</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 我们在使用OpenCV时，有时候需要对现有图片剪裁，比如只需要一个小窗口中的内容，那么我们可以通过OpenCV的兴趣区域 Region of Interest (ROI) 来很轻易的实现，操作也很简单，首先建立一个新的IplImage图片，大小为你需要剪裁出来的大小，然后建立一个该大小的CvRect...<a href="https://www.cnblogs.com/grandyang/p/4701589.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4701589.html" Title = "permalink">2015-08-04 11:48</a> Grandyang 阅读(1702) | <a href="https://www.cnblogs.com/grandyang/p/4701589.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4701589" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_11" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4695058.html">MatLab Load cv::Mat 导入数据</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 我们有时候在项目中需要将OpenCV中的cv::Mat导入MatLab进行分析与处理，那么如果把数据转过去呢，我们的做法是首先将cv::Mat导出为txt文件，或者是yml文件，请参见我之前的博客Write cv::Mat to a file。导出的txt文件可以直接load进MatLab，如果数据...<a href="https://www.cnblogs.com/grandyang/p/4695058.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4695058.html" Title = "permalink">2015-08-02 07:42</a> Grandyang 阅读(346) | <a href="https://www.cnblogs.com/grandyang/p/4695058.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4695058" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_12" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4679695.html">OpenCV Save CvRect to File 保存CvRect变量到文件</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 在OpenCv中，我们有时候需要查看CvRect变量的值，我们可以通过将其保存到文件来查看，保存的代码如下：void writeCvRectToFile(CvRect &amp;rect, const char *filename) { CvFileStorage *fs = cvOpenFi...<a href="https://www.cnblogs.com/grandyang/p/4679695.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4679695.html" Title = "permalink">2015-07-27 11:32</a> Grandyang 阅读(148) | <a href="https://www.cnblogs.com/grandyang/p/4679695.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4679695" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_13" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4615036.html">cvReleaseImage 释放内存出错</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: cvReleaseImage是OpenCV中C语言库中的释放图片内存的函数，比如我们加载或者克隆了一幅图片，当不需要这幅图片了时，我们为了避免内存泄露，需要释放这些空间，可以参见我之前的博客OpenCV Show Image cvShowImage() 使用方法，其使用方法如下：IplImage *...<a href="https://www.cnblogs.com/grandyang/p/4615036.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4615036.html" Title = "permalink">2015-07-02 03:03</a> Grandyang 阅读(3285) | <a href="https://www.cnblogs.com/grandyang/p/4615036.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4615036" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_14" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4612228.html">FlyCapture2 fc2Image OpenCV IplImage Conversion 两种图像格式之间的转换</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: fc2Image是FlyCapture SDK的C语言库中的图片格式，由于在Windows上的MinGW无法编译FlyCapture2的C++库，只能使用C语言库，所以当我们在同时使用OpenCV的图像格式IplImage时，有时候就需要两种格式相互转换。如果需要FlyCapture2 Image和...<a href="https://www.cnblogs.com/grandyang/p/4612228.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4612228.html" Title = "permalink">2015-07-01 03:12</a> Grandyang 阅读(1031) | <a href="https://www.cnblogs.com/grandyang/p/4612228.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4612228" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_15" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4480803.html">FileStorage Read String Start With Number Need Quotation Mark 读取数字开头的字符串需要加引号</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: // Write data FileStorage fs(&quot;test.yml&quot;, FileStorage::WRITE); fs &lt;&lt; &quot;MyString&quot; &lt;&lt; &quot;123abc&quot;; fs.release(); // Read data FileStorage ...<a href="https://www.cnblogs.com/grandyang/p/4480803.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4480803.html" Title = "permalink">2015-05-06 04:56</a> Grandyang 阅读(247) | <a href="https://www.cnblogs.com/grandyang/p/4480803.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4480803" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_16" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4455246.html">OpenCV 2.4.11 VS2012 Configuration</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Add in the system Path:C:\opencv\build\x86\vc11\bin;Project-&gt;Project Property-&gt;Configuration Properties-&gt;VC++Directories -&gt;Include Directories:C:\open...<a href="https://www.cnblogs.com/grandyang/p/4455246.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4455246.html" Title = "permalink">2015-04-25 06:05</a> Grandyang 阅读(222) | <a href="https://www.cnblogs.com/grandyang/p/4455246.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4455246" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_17" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4446290.html">imread() not working in OpenCV 2.4.11 Debug mode</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: The OpenCV function imread() not working in OpenCV 2.4.11 Debug mode of VS2010 under Win32, the way we want to make it work is to change it to Release...<a href="https://www.cnblogs.com/grandyang/p/4446290.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4446290.html" Title = "permalink">2015-04-22 07:36</a> Grandyang 阅读(198) | <a href="https://www.cnblogs.com/grandyang/p/4446290.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4446290" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_18" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4446161.html">OpenCV 3.0 VS2010 Configuration</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Add in the system Path:C:\opencv\build\x86\vc10\bin;Project-&gt;Project Property-&gt;Configuration Properties-&gt;VC++Directories -&gt;Include Directories:C:\open...<a href="https://www.cnblogs.com/grandyang/p/4446161.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4446161.html" Title = "permalink">2015-04-22 02:52</a> Grandyang 阅读(409) | <a href="https://www.cnblogs.com/grandyang/p/4446161.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4446161" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_19" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4385683.html">Solve problem &#39;SURF&#39; is not a member of &#39;cv&#39;</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: SIFT and SURF were moved to nonfree module. You need to add #include header and link with opencv_nonfree library.<a href="https://www.cnblogs.com/grandyang/p/4385683.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4385683.html" Title = "permalink">2015-04-01 23:17</a> Grandyang 阅读(295) | <a href="https://www.cnblogs.com/grandyang/p/4385683.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4385683" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_20" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4364601.html">StereoBM::disp12MaxDiff Crash the Release</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Initializing &quot;cv::StereoBM bm.state-&gt;disp12MaxDiff&quot; should be careful, inappropriate value might crash your program. Suggested that you set it to -1 t...<a href="https://www.cnblogs.com/grandyang/p/4364601.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4364601.html" Title = "permalink">2015-03-25 06:11</a> Grandyang 阅读(264) | <a href="https://www.cnblogs.com/grandyang/p/4364601.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4364601" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_21" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4355089.html">cvSave in VS2010 or Linux</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: cvSave这个函数是OpenCV中用来保存某个数据类型到文件中常用的函数，它原本共有五个参数，但是在VS2010中只需要填前两个，而在Linux必须填满五个，否则会出错，如下：// VS2010cvSave(&quot;m.xml&quot;, mat);// LinuxcvSave(&quot;m.xml&quot;, mat, NU...<a href="https://www.cnblogs.com/grandyang/p/4355089.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4355089.html" Title = "permalink">2015-03-21 07:11</a> Grandyang 阅读(294) | <a href="https://www.cnblogs.com/grandyang/p/4355089.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4355089" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_22" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4354952.html">Write cv::Mat to a file</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 如果我们想把OpenCV中的矩阵数据类型cv::Mat保存在一个文件中，可以使用如下的代码：void writeMatToFile(cv::Mat&amp; m, const char* filename) { ofstream fout(filename); if(!fout) { ...<a href="https://www.cnblogs.com/grandyang/p/4354952.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4354952.html" Title = "permalink">2015-03-20 23:33</a> Grandyang 阅读(1852) | <a href="https://www.cnblogs.com/grandyang/p/4354952.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4354952" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_23" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4336999.html">OpenCV 2.4.10  Linux Qt Conifguration</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Download CMake 2.8.12Extract the file, and run &quot;./bootstrap&quot;, then &quot;make&quot;, then &quot;sudo make install&quot;Add some dependencies, run &quot;sudo apt-get install bu...<a href="https://www.cnblogs.com/grandyang/p/4336999.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4336999.html" Title = "permalink">2015-03-14 08:48</a> Grandyang 阅读(185) | <a href="https://www.cnblogs.com/grandyang/p/4336999.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4336999" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_24" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4336964.html">OpenCV2.4.10 Mac Qt Configuration</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Download OpenCV 2.4.10Download CMake 2.8Open CMake and choose the source code directory and build binary directoryThen click &quot;Configure&quot;, and &quot;Generat...<a href="https://www.cnblogs.com/grandyang/p/4336964.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4336964.html" Title = "permalink">2015-03-14 06:01</a> Grandyang 阅读(202) | <a href="https://www.cnblogs.com/grandyang/p/4336964.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4336964" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_25" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4331421.html">OpenCV count the number of connected camera 检测连接的摄像头的数量</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 有时候在项目中我们需要检测当前连接在机子上的摄像头的数量，可以通过下面的代码实现，其中连接摄像头的最大数量maxCamNum可以任意修改：/** * Count current camera number */int countCamera() { int maxCamNum = 5; ...<a href="https://www.cnblogs.com/grandyang/p/4331421.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4331421.html" Title = "permalink">2015-03-12 03:51</a> Grandyang 阅读(369) | <a href="https://www.cnblogs.com/grandyang/p/4331421.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4331421" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_26" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4331408.html">OpenCV 2.4.11 VS2010 Configuration</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Add in the system Path:C:\opencv\build\x86\vc10\bin;Project-&gt;Project Property-&gt;Configuration Properties-&gt;VC++Directories -&gt;Include Directories:C:\open...<a href="https://www.cnblogs.com/grandyang/p/4331408.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4331408.html" Title = "permalink">2015-03-12 01:49</a> Grandyang 阅读(2165) | <a href="https://www.cnblogs.com/grandyang/p/4331408.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4331408" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_27" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4328896.html">Qt 5.4 OpenCV 2.4.11 Win 32 Configuration</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Download CMake 2.8.2Download OpenCV 2.4.11Download Qt 5.4Highly improtant note: The installation directory should not contain any space or non-English...<a href="https://www.cnblogs.com/grandyang/p/4328896.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4328896.html" Title = "permalink">2015-03-11 04:29</a> Grandyang 阅读(387) | <a href="https://www.cnblogs.com/grandyang/p/4328896.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4328896" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_28" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4302501.html">OpenCV show two cameras 同时显示两个摄像头</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 用OpenCV同时显示两个摄像头的内容的代码如下：#include #include #include #include #include #include using namespace std;int _tmain(int argc, _TCHAR* argv[]) { CvCapture...<a href="https://www.cnblogs.com/grandyang/p/4302501.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4302501.html" Title = "permalink">2015-02-27 04:48</a> Grandyang 阅读(1948) | <a href="https://www.cnblogs.com/grandyang/p/4302501.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4302501" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_29" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4296811.html">IplImage 与 QImage 相互转换</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 在使用Qt和OpenCV编程时，对于它们各自的图像类QImage和IplImage难以避免的需要互相之间的转换，下面我们就来看它们的相互转换。1. QImage 转换为 IplImageIplImage *QImageToIplImage(const QImage * qImage){ int...<a href="https://www.cnblogs.com/grandyang/p/4296811.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4296811.html" Title = "permalink">2015-02-21 01:46</a> Grandyang 阅读(442) | <a href="https://www.cnblogs.com/grandyang/p/4296811.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4296811" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_30" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4276250.html">CvMat and cv::Mat</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: CvMat:typedef struct CvMat{ int type; int step; /* for internal use only */ int* refcount; int hdr_refcount; union { uchar...<a href="https://www.cnblogs.com/grandyang/p/4276250.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4276250.html" Title = "permalink">2015-02-06 04:12</a> Grandyang 阅读(1101) | <a href="https://www.cnblogs.com/grandyang/p/4276250.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4276250" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_31" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4273714.html">[转帖] CvMat，Mat和IplImage之间的转化和拷贝</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 原文地址： http://blog.csdn.net/holybin/article/details/17711013在OpenCV中Mat、CvMat和IplImage类型都可以代表和显示图像。 IplImage由CvMat派生，而CvMat由CvArr派生即CvArr -&gt; CvMat -&gt; I...<a href="https://www.cnblogs.com/grandyang/p/4273714.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4273714.html" Title = "permalink">2015-02-05 00:44</a> Grandyang 阅读(1838) | <a href="https://www.cnblogs.com/grandyang/p/4273714.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4273714" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_32" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4257718.html">Configuration of OpenCV2.1.0 with VS2010</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Add in the system Path:C:\Program Files (x86)\OpenCV-2.1.0\build\bin\DebugProject-&gt;Project Property-&gt;Configuration Properties-&gt;VC++Directories -&gt;Inclu...<a href="https://www.cnblogs.com/grandyang/p/4257718.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4257718.html" Title = "permalink">2015-01-29 01:20</a> Grandyang 阅读(95) | <a href="https://www.cnblogs.com/grandyang/p/4257718.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4257718" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_33" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4142796.html">OpenCV学习链接</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Creating a video with OpenCV<a href="https://www.cnblogs.com/grandyang/p/4142796.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4142796.html" Title = "permalink">2014-12-04 14:25</a> Grandyang 阅读(89) | <a href="https://www.cnblogs.com/grandyang/p/4142796.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4142796" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_34" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4141917.html">Video Codecs by FOURCC 视频格式编码</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: FOURCCNameSummary1978A.M.Paredes predictorThis is a LossLess video codec. &gt;&gt;&gt;2VUY2VUY / BlackMagic&gt;&gt;&gt;3IV03ivx3IV0 no longer used for this codec, howev...<a href="https://www.cnblogs.com/grandyang/p/4141917.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4141917.html" Title = "permalink">2014-12-04 07:32</a> Grandyang 阅读(1523) | <a href="https://www.cnblogs.com/grandyang/p/4141917.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4141917" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_35" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4111847.html">OpenCV Show Image cvShowImage() 使用方法</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: 新版的OpenCV在所有的函数和类前都加上了cv或Cv，这样很好的避免了区域污染（namespace pollution），而且不用在前面加‘cv::’，非常的使用。像之前的imshow()函数被现在的cvShowImage()所替代，现如今在OpenCV中显示一张图片可用如下代码：C API:Ip...<a href="https://www.cnblogs.com/grandyang/p/4111847.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4111847.html" Title = "permalink">2014-11-21 00:08</a> Grandyang 阅读(8639) | <a href="https://www.cnblogs.com/grandyang/p/4111847.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4111847" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_36" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4109742.html">OpenCV IplImage FlyCapture2 Image Conversion 两种图像类的相互转化</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: OpenCV的IplImag和 FlyCapture2 的 Image是两种常见的图片格式，在实际的应用中，我们通常要混合使用OpenCV和FlyCapture2这两个SDK，所以这两种图片格式之间的相互转换就是经常需要做的。首先分别来看看两种图片类的定义：IplImage:typedef stru...<a href="https://www.cnblogs.com/grandyang/p/4109742.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4109742.html" Title = "permalink">2014-11-20 09:03</a> Grandyang 阅读(2273) | <a href="https://www.cnblogs.com/grandyang/p/4109742.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4109742" rel="nofollow">编辑</a></div>
+			</div>
+		
+	<p>
+	
+	</p>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright &copy;2018 Grandyang
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+</html>

@@ -1,0 +1,70 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4129891.html">[LeetCode] Add Two Numbers 两个数字相加</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.</p>
+<p>Input:&nbsp;(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)<br />Output:&nbsp;7 -&gt; 0 -&gt; 8</p>
+<p>&nbsp;</p>
+<p>这道并不是什么难题，算法很简单，链表的数据类型也不难。就是建立一个新链表，然后把输入的两个链表从头往后撸，每两个相加，添加一个新节点到新链表后面，就是要处理下进位问题。还有就是最高位的进位问题要最后特殊处理一下。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法：&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*addTwoNumbers(ListNode *l1, ListNode *<span style="color: #000000;">l2) {
+        ListNode </span>*res = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        ListNode </span>*cur =<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> carry = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (l1 ||<span style="color: #000000;"> l2) {
+            </span><span style="color: #0000ff;">int</span> n1 = l1 ? l1-&gt;val : <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> n2 = l2 ? l2-&gt;val : <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> sum = n1 + n2 +<span style="color: #000000;"> carry;
+            carry </span>= sum / <span style="color: #800080;">10</span><span style="color: #000000;">;
+            cur</span>-&gt;next = <span style="color: #0000ff;">new</span> ListNode(sum % <span style="color: #800080;">10</span><span style="color: #000000;">);
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+            </span><span style="color: #0000ff;">if</span> (l1) l1 = l1-&gt;<span style="color: #000000;">next;
+            </span><span style="color: #0000ff;">if</span> (l2) l2 = l2-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">if</span> (carry) cur-&gt;next = <span style="color: #0000ff;">new</span> ListNode(<span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> res-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy </span>= <span style="color: #0000ff;">new</span> ListNode(-1<span style="color: #000000;">);
+        ListNode cur </span>=<span style="color: #000000;"> dummy;
+        </span><span style="color: #0000ff;">int</span> carry = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (l1 != <span style="color: #0000ff;">null</span> || l2 != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> d1 = l1 == <span style="color: #0000ff;">null</span> ? 0<span style="color: #000000;"> : l1.val;
+            </span><span style="color: #0000ff;">int</span> d2 = l2 == <span style="color: #0000ff;">null</span> ? 0<span style="color: #000000;"> : l2.val;
+            </span><span style="color: #0000ff;">int</span> sum = d1 + d2 +<span style="color: #000000;"> carry;
+            carry </span>= sum &gt;= 10 ? 1 : 0<span style="color: #000000;">;
+            cur.next </span>= <span style="color: #0000ff;">new</span> ListNode(sum % 10<span style="color: #000000;">);
+            cur </span>=<span style="color: #000000;"> cur.next;
+            </span><span style="color: #0000ff;">if</span> (l1 != <span style="color: #0000ff;">null</span>) l1 =<span style="color: #000000;"> l1.next;
+            </span><span style="color: #0000ff;">if</span> (l2 != <span style="color: #0000ff;">null</span>) l2 =<span style="color: #000000;"> l2.next;
+        }
+        </span><span style="color: #0000ff;">if</span> (carry == 1) cur.next = <span style="color: #0000ff;">new</span> ListNode(1<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dummy.next;
+    }
+}</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p>在CareerCup上的这道题还有个Follow Up，把链表存的数字方向变了，原来是表头存最低位，现在是表头存最高位，请参见我的另一篇博客<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4662599.html">2.5 Add Two Numbers 两个数字相加</a> 。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4395356.html" target="_blank">Multiply Strings</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4084971.html" target="_blank">Add Binary</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

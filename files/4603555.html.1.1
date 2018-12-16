@@ -1,0 +1,39 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4603555.html">[LeetCode] Summary Ranges 总结区间</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a sorted integer array without duplicates, return the summary of its ranges.</p>
+<p>For example, given <code>[0,1,2,4,5,7]</code>, return <code>["0-&gt;2","4-&gt;5","7"].</code></p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/jianchao.li.fighter">@jianchao.li.fighter</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给定我们一个有序数组，让我们总结区间，具体来说就是让我们找出连续的序列，然后首尾两个数字之间用个&ldquo;-&gt;"来连接，那么我只需遍历一遍数组即可，每次检查下一个数是不是递增的，如果是，则继续往下遍历，如果不是了，我们还要判断此时是一个数还是一个序列，一个数直接存入结果，序列的话要存入首尾数字和箭头&ldquo;-&gt;"。我们需要两个变量i和j，其中i是连续序列起始数字的位置，j是连续数列的长度，当j为1时，说明只有一个数字，若大于1，则是一个连续序列，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; summaryRanges(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (i + j &lt; n &amp;&amp; nums[i + j] - nums[i] == j) ++<span style="color: #000000;">j;
+            res.push_back(j </span>&lt;= <span style="color: #800080;">1</span> ? to_string(nums[i]) : to_string(nums[i]) + <span style="color: #800000;">"</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">"</span> + to_string(nums[i + j - <span style="color: #800080;">1</span><span style="color: #000000;">]));
+            i </span>+=<span style="color: #000000;"> j;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/42204/7-13-lines-in-c" target="_blank">https://leetcode.com/discuss/42204/7-13-lines-in-c</a></p>
+<p><a href="https://leetcode.com/discuss/42298/9-lines-c-0ms-solution" target="_blank">https://leetcode.com/discuss/42298/9-lines-c-0ms-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

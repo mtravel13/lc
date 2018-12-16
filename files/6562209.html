@@ -1,0 +1,86 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6562209.html">[LeetCode] Encode and Decode TinyURL 编码和解码精简URL地址</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<blockquote>Note: This is a companion problem to the&nbsp;<a href="https://leetcode.com/problemset/system-design/">System Design</a>&nbsp;problem:&nbsp;<a href="https://leetcode.com/problems/design-tinyurl/">Design TinyURL</a>.</blockquote>
+<p>TinyURL is a URL shortening service where you enter a URL such as&nbsp;<code>https://leetcode.com/problems/design-tinyurl</code>&nbsp;and it returns a short URL such as&nbsp;<code>http://tinyurl.com/4e9iAk</code>.</p>
+<p>Design the&nbsp;<code>encode</code>&nbsp;and&nbsp;<code>decode</code>&nbsp;methods for the TinyURL service. There is no restriction on how your encode/decode algorithm should work. You just need to ensure that a URL can be encoded to a tiny URL and the tiny URL can be decoded to the original URL.</p>
+<p>&nbsp;</p>
+<p>这道题让我们编码和解码精简URL地址，这其实很有用，因为有的链接地址特别的长，就很烦，如果能精简成固定的长度，就很清爽。最简单的一种编码就是用个计数器，当前是第几个存入的url就编码成几，然后解码的时候也能根据数字来找到原来的url，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Encodes a URL to a shortened URL.</span>
+    <span style="color: #0000ff;">string</span> encode(<span style="color: #0000ff;">string</span><span style="color: #000000;"> longUrl) {
+        url.push_back(longUrl);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">http://tinyurl.com/</span><span style="color: #800000;">"</span> + to_string(url.size() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Decodes a shortened URL to its original URL.</span>
+    <span style="color: #0000ff;">string</span> decode(<span style="color: #0000ff;">string</span><span style="color: #000000;"> shortUrl) {
+        auto pos </span>= shortUrl.find_last_of(<span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> url[stoi(shortUrl.substr(pos + <span style="color: #800080;">1</span><span style="color: #000000;">))];
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> url;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面这种方法虽然简单，但是缺点却很多，首先，如果接受到多次同一url地址，仍然会当做不同的url来处理。当然这个缺点可以通过将vector换成哈希表，每次先查找url是否已经存在。虽然这个缺点可以克服掉，但是由于是用计数器编码，那么当前服务器存了多少url就曝露出来了，也许会有安全隐患。而且计数器编码另一个缺点就是数字会不断的增大，那么编码的长度也就不是确定的了。而题目中明确推荐了使用六位随机字符来编码，那么我们只要在所有大小写字母和数字中随机产生6个字符就可以了，我们用哈希表建立6位字符和url之间的映射，如果随机生成的字符之前已经存在了，我们就继续随机生成新的字符串，直到生成了之前没有的字符串为止。下面的代码中使用了两个哈希表，目的是为了建立六位随机字符串和url之间的相互映射，这样进来大量的相同url时，就不用生成新的随机字符串了。当然，不加这个功能也能通过OJ，这道题的OJ基本上是形同虚设，两个函数分别直接返回参数字符串也能通过OJ，囧～</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Solution() {
+        dict </span>= <span style="color: #800000;">"</span><span style="color: #800000;">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        short2long.clear();
+        long2short.clear();
+        srand(time(NULL));
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Encodes a URL to a shortened URL.</span>
+    <span style="color: #0000ff;">string</span> encode(<span style="color: #0000ff;">string</span><span style="color: #000000;"> longUrl) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (long2short.count(longUrl)) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">http://tinyurl.com/</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> long2short[longUrl];
+        }
+        </span><span style="color: #0000ff;">int</span> idx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> randStr;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">6</span>; ++i) randStr.push_back(dict[rand() % <span style="color: #800080;">62</span><span style="color: #000000;">]);
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (short2long.count(randStr)) {
+            randStr[idx] </span>= dict[rand() % <span style="color: #800080;">62</span><span style="color: #000000;">];
+            idx </span>= (idx + <span style="color: #800080;">1</span>) % <span style="color: #800080;">5</span><span style="color: #000000;">;
+        }
+        short2long[randStr] </span>=<span style="color: #000000;"> longUrl;
+        long2short[longUrl] </span>=<span style="color: #000000;"> randStr;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">http://tinyurl.com/</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> randStr;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Decodes a shortened URL to its original URL.</span>
+    <span style="color: #0000ff;">string</span> decode(<span style="color: #0000ff;">string</span><span style="color: #000000;"> shortUrl) {
+        </span><span style="color: #0000ff;">string</span> randStr = shortUrl.substr(shortUrl.find_last_of(<span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span>) + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> short2long.count(randStr) ?<span style="color: #000000;"> short2long[randStr] : shortUrl;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> short2long, long2short;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> dict;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/81637/two-solutions-and-thoughts/2" target="_blank">https://discuss.leetcode.com/topic/81637/two-solutions-and-thoughts/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/81736/c-solution-using-random-just-for-fun" target="_blank">https://discuss.leetcode.com/topic/81736/c-solution-using-random-just-for-fun</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

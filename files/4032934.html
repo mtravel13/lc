@@ -1,0 +1,42 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4032934.html">[LeetCode] Find Minimum in Rotated Sorted Array  寻找旋转有序数组的最小值</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Suppose a sorted array is rotated at some pivot unknown to you beforehand.</p>
+<p>(i.e.,&nbsp;<code>0 1 2 4 5 6 7</code>&nbsp;might become&nbsp;<code>4 5 6 7 0 1 2</code>).</p>
+<p>Find the minimum element.</p>
+<p>You may assume no duplicate exists in the array.</p>
+<p>&nbsp;</p>
+<p>这道寻找旋转有序数组的最小值肯定不能通过直接遍历整个数组来寻找，这个方法过于简单粗暴，这样的话，旋不旋转就没有意义。应该考虑将时间复杂度从简单粗暴的O(n)缩小到O(lgn)，这时候二分查找法就浮现在脑海。</p>
+<p>&nbsp;</p>
+<p>首先要判断这个有序数组是否旋转了，通过比较第一个和最后一个数的大小，如果第一个数小，则没有旋转，直接返回这个数。如果第一个数大，就要进一步搜索。我们定义left和right两个指针分别指向开头和结尾，还要找到中间那个数，然后和left指的数比较，如果中间的数大，则继续二分查找右半段数组，反之查找左半段。终止条件是当左右两个指针相邻，返回小的那个。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findMin(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">num) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = num.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (num[left] &gt;<span style="color: #000000;"> num[right]) {
+            </span><span style="color: #0000ff;">while</span> (left != (right - <span style="color: #800080;">1</span><span style="color: #000000;">)) {
+                </span><span style="color: #0000ff;">int</span> mid = (left + right) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (num[left] &lt; num[mid]) left =<span style="color: #000000;"> mid;
+                </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> min(num[left], num[right]);
+        }
+        </span><span style="color: #0000ff;">return</span> num[<span style="color: #800080;">0</span><span style="color: #000000;">];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>对于数组中有重复数字的情况，请参见我的另一篇博文：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4040438.html" target="_blank">http://www.cnblogs.com/grandyang/p/4040438.html</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

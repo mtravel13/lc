@@ -1,0 +1,123 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4290148.html">[LeetCode] Populating Next Right Pointers in Each Node II 每个节点的右向指针之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Follow up for problem "<em>Populating Next Right Pointers in Each Node</em>".</p>
+<p>What if the given tree could be any binary tree? Would your previous solution still work?</p>
+<p>Note:</p>
+<ul>
+<li>You may only use constant extra space.</li>
+</ul>
+<p>&nbsp;</p>
+<p>For example,<br />Given the following binary tree,</p>
+<pre>         1
+       /  \
+      2    3
+     / \    \
+    4   5    7
+</pre>
+<p>&nbsp;</p>
+<p>After calling your function, the tree should look like:</p>
+<pre>         1 -&gt; NULL
+       /  \
+      2 -&gt; 3 -&gt; NULL
+     / \    \
+    4-&gt; 5 -&gt; 7 -&gt; NULL</pre>
+<p>&nbsp;</p>
+<p>这道是之前那道<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4288151.html">Populating Next Right Pointers in Each Node 每个节点的右向指针</a>的延续，原本的完全二叉树的条件不再满足，但是整体的思路还是很相似，仍然有递归和非递归的解法。我们先来看递归的解法，这里由于子树有可能残缺，故需要平行扫描父节点同层的节点，找到他们的左右子节点。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursion, more than constant space</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> connect(TreeLinkNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        TreeLinkNode </span>*p = root-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (p) {
+            </span><span style="color: #0000ff;">if</span> (p-&gt;<span style="color: #000000;">left) {
+                p </span>= p-&gt;<span style="color: #000000;">left;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (p-&gt;<span style="color: #000000;">right) {
+                p </span>= p-&gt;<span style="color: #000000;">right;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            p </span>= p-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">if</span> (root-&gt;right) root-&gt;right-&gt;next =<span style="color: #000000;"> p; 
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left) root-&gt;left-&gt;next = root-&gt;right ? root-&gt;<span style="color: #000000;">right : p; 
+        connect(root</span>-&gt;<span style="color: #000000;">right);
+        connect(root</span>-&gt;<span style="color: #000000;">left);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>对于非递归的方法，我惊喜的发现之前的方法直接就能用，完全不需要做任何修改，算法思路可参见之前的博客<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4288151.html">Populating Next Right Pointers in Each Node 每个节点的右向指针</a>，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Non-recursion, more than constant space</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> connect(TreeLinkNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        queue</span>&lt;TreeLinkNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+                TreeLinkNode </span>*t =<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">if</span> (i &lt; len - <span style="color: #800080;">1</span>) t-&gt;next =<span style="color: #000000;"> q.front();
+                </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push(t-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push(t-&gt;<span style="color: #000000;">right);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>虽然以上的两种方法都能通过OJ，但其实它们都不符合题目的要求，题目说只能使用constant space，可是OJ却没有写专门检测space使用情况的test，那么下面贴上constant space的解法，这个解法也是用的层序遍历，只不过没有使用queue了，我们建立一个dummy结点来指向每层的首结点的前一个结点，然后指针t用来遍历这一层，我们实际上是遍历一层，然后连下一层的next，首先从根结点开始，如果左子结点存在，那么t的next连上左子结点，然后t指向其next指针；如果root的右子结点存在，那么t的next连上右子结点，然后t指向其next指针。此时root的左右子结点都连上了，此时root向右平移一位，指向其next指针，如果此时root不存在了，说明当前层已经遍历完了，我们重置t为dummy结点，root此时为dummy-&gt;next，即下一层的首结点，然后dummy的next指针清空，或者也可以将t的next指针清空，因为前面已经将t赋值为dummy了。那么现在想一想，为什么要清空？因为我们用dummy的目的就是要直到下一行的首结点的位置即dummy-&gt;next，而一旦将root赋值为dummy-&gt;next了之后，这个dummy的使命就已经完成了，必须要断开，如果不断开的话，那么假设现在root是叶结点了，那么while循环还会执行，不会进入前两个if，然后root右移赋空之后，会进入最后一个if，之前没有断开dummy-&gt;next的话，那么root又指向之前的叶结点了，死循环诞生了，跪了。所以一定要记得清空哦，呵呵哒～代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Non-recursion, constant space</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> connect(TreeLinkNode *<span style="color: #000000;">root) {
+        TreeLinkNode </span>*dummy = <span style="color: #0000ff;">new</span> TreeLinkNode(<span style="color: #800080;">0</span>), *t =<span style="color: #000000;"> dummy;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (root) {
+            </span><span style="color: #0000ff;">if</span> (root-&gt;<span style="color: #000000;">left) {
+                t</span>-&gt;next = root-&gt;<span style="color: #000000;">left;
+                t </span>= t-&gt;<span style="color: #000000;">next;
+            }
+            </span><span style="color: #0000ff;">if</span> (root-&gt;<span style="color: #000000;">right) {
+                t</span>-&gt;next = root-&gt;<span style="color: #000000;">right;
+                t </span>= t-&gt;<span style="color: #000000;">next;
+            }
+            root </span>= root-&gt;<span style="color: #000000;">next;
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">root) {
+                t </span>=<span style="color: #000000;"> dummy;
+                root </span>= dummy-&gt;<span style="color: #000000;">next;
+                dummy</span>-&gt;next =<span style="color: #000000;"> NULL;
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4288151.html" target="_blank">Populating Next Right Pointers in Each Node</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/28580/java-solution-with-constant-space">https://discuss.leetcode.com/topic/28580/java-solution-with-constant-space</a></p>
+<p><a href="https://discuss.leetcode.com/topic/1106/o-1-space-o-n-complexity-iterative-solution">https://discuss.leetcode.com/topic/1106/o-1-space-o-n-complexity-iterative-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

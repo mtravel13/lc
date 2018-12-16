@@ -1,0 +1,144 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6414461.html">[LeetCode] Diagonal Traverse 对角线遍历</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a matrix of M x N elements (M rows, N columns), return all elements of the matrix in diagonal order as shown in the below image.</p>
+<p>Example:</p>
+<pre>Input:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+Output:  [1,2,4,7,5,3,6,8,9]
+Explanation:
+</pre>
+<p><img src="https://leetcode.com/static/images/problemset/diagonal_traverse.png" alt="" width="20%" /></p>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The total number of elements of the given matrix will not exceed 10,000.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个mxn大小的数组，让我们进行对角线遍历，先向右上，然后左下，再右上，以此类推直至遍历完整个数组，题目中的例子和图示也能很好的帮我们理解。由于移动的方向不再是水平或竖直方向，而是对角线方向，那么每移动一次，横纵坐标都要变化，向右上移动的话要坐标加上[-1, 1]，向左下移动的话要坐标加上[1, -1]，那么难点在于我们如何处理越界情况，越界后遍历的方向怎么变换。向右上和左下两个对角线方向遍历的时候都会有越界的可能，但是除了左下角和右上角的位置越界需要改变两个坐标之外，其余的越界只需要改变一个。那么我们就先判断要同时改变两个坐标的越界情况，即在右上角和左下角的位置。如果在右上角位置还要往右上走时，那么要移动到它下面的位置的，那么如果col超过了n-1的范围，那么col重置为n-1，并且row自增2，然后改变遍历的方向。同理如果row超过了m-1的范围，那么row重置为m-1，并且col自增2，然后改变遍历的方向。然后我们再来判断一般的越界情况，如果row小于0，那么row重置0，然后改变遍历的方向。同理如果col小于0，那么col重置0，然后改变遍历的方向。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findDiagonalOrder(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), r = <span style="color: #800080;">0</span>, c = <span style="color: #800080;">0</span>, k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(m *<span style="color: #000000;"> n);
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{-<span style="color: #800080;">1</span>,<span style="color: #800080;">1</span>}, {<span style="color: #800080;">1</span>,-<span style="color: #800080;">1</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m * n; ++<span style="color: #000000;">i) {
+            res[i] </span>=<span style="color: #000000;"> matrix[r][c];
+            r </span>+= dirs[k][<span style="color: #800080;">0</span><span style="color: #000000;">];
+            c </span>+= dirs[k][<span style="color: #800080;">1</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">if</span> (r &gt;= m) {r = m - <span style="color: #800080;">1</span>; c += <span style="color: #800080;">2</span>; k = <span style="color: #800080;">1</span> -<span style="color: #000000;"> k;}
+            </span><span style="color: #0000ff;">if</span> (c &gt;= n) {c = n - <span style="color: #800080;">1</span>; r += <span style="color: #800080;">2</span>; k = <span style="color: #800080;">1</span> -<span style="color: #000000;"> k;}
+            </span><span style="color: #0000ff;">if</span> (r &lt; <span style="color: #800080;">0</span>) {r = <span style="color: #800080;">0</span>; k = <span style="color: #800080;">1</span> -<span style="color: #000000;"> k;}
+            </span><span style="color: #0000ff;">if</span> (c &lt; <span style="color: #800080;">0</span>) {c = <span style="color: #800080;">0</span>; k = <span style="color: #800080;">1</span> -<span style="color: #000000;"> k;}
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法跟上面的方法思路相同，不过写法有些不同，这里根据横纵左边之和的奇偶性来判断遍历的方向，然后对于越界情况再单独处理即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findDiagonalOrder(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), r = <span style="color: #800080;">0</span>, c = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(m *<span style="color: #000000;"> n);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m * n; ++<span style="color: #000000;">i) {
+            res[i] </span>=<span style="color: #000000;"> matrix[r][c];
+            </span><span style="color: #0000ff;">if</span> ((r + c) % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (c == n - <span style="color: #800080;">1</span>) {++<span style="color: #000000;">r;}
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (r == <span style="color: #800080;">0</span>) {++<span style="color: #000000;">c;}
+                </span><span style="color: #0000ff;">else</span> {--r; ++<span style="color: #000000;">c;}
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (r == m - <span style="color: #800080;">1</span>) {++<span style="color: #000000;">c;}
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800080;">0</span>) {++<span style="color: #000000;">r;}
+                </span><span style="color: #0000ff;">else</span> {++r; --<span style="color: #000000;">c;}
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是按遍历方向来按规律往结果res中添加数字的，比如题目中的那个例子，那么添加的顺序如下：</p>
+<p>[0,0] -&gt; [0,1],[1,0] -&gt; [2,0],[1,1],[0,2] -&gt; [1,2],[2,1] -&gt; [2,2]</p>
+<p>根据遍历的方向不同共分为五层，关键就是确定每一层的坐标范围，其中下边界low = max(0, i - n + 1)，这样可以保证下边界不会小于0，而上边界high = min(i, m - 1)，这样也保证了上边界不会大于m-1，如果是偶数层，则从上边界往下边界遍历，反之如果是奇数层，则从下边界往上边界遍历，注意从matrix中取数字的坐标，，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findDiagonalOrder(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(m *<span style="color: #000000;"> n);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m + n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> low = max(<span style="color: #800080;">0</span>, i - n + <span style="color: #800080;">1</span>), high = min(i, m - <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = high; j &gt;= low; --<span style="color: #000000;">j) {
+                    res[k</span>++] = matrix[j][i -<span style="color: #000000;"> j];
+                }
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = low; j &lt;= high; ++<span style="color: #000000;">j) {
+                    res[k</span>++] = matrix[j][i -<span style="color: #000000;"> j];
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法就有一点暴力搜索的感觉，不像上面一种精确计算每一层的坐标范围，这种方法是利用对角线上的数字的横纵坐标之和恒定这一特性来搜索的，然后把和为特定值的数字加入结果res中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findDiagonalOrder(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; m + n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">int</span> delta = <span style="color: #800080;">1</span> - <span style="color: #800080;">2</span> * (k % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">int</span> ii = (m - <span style="color: #800080;">1</span>) * (k % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">int</span> jj = (n - <span style="color: #800080;">1</span>) * (k % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = ii; i &gt;= <span style="color: #800080;">0</span> &amp;&amp; i &lt; m; i +=<span style="color: #000000;"> delta) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = jj; j &gt;= <span style="color: #800080;">0</span> &amp;&amp; j &lt; n; j +=<span style="color: #000000;"> delta) {
+                    </span><span style="color: #0000ff;">if</span> (i + j ==<span style="color: #000000;"> k) {
+                        res.push_back(matrix[i][j]);
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/77866/short-bf-solution" target="_blank">https://discuss.leetcode.com/topic/77866/short-bf-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77865/concise-java-solution/2" target="_blank">https://discuss.leetcode.com/topic/77865/concise-java-solution/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77862/my-8ms-short-solution-9line" target="_blank">https://discuss.leetcode.com/topic/77862/my-8ms-short-solution-9line</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77937/java-15-lines-without-using-boolean" target="_blank">https://discuss.leetcode.com/topic/77937/java-15-lines-without-using-boolean</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

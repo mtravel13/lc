@@ -1,0 +1,100 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5533305.html">[LeetCode] Intersection of Two Arrays II 两个数组相交之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given two arrays, write a function to compute their intersection.</p>
+<p>Example 1:</p>
+<pre>Input: nums1 = <span id="example-input-1-1">[1,2,2,1], nums2 = <span id="example-input-1-2">[2,2]
+Output: <span id="example-output-1">[2,2]
+</span></span></span></pre>
+<div>
+<p>Example 2:</p>
+<pre>Input: nums1 = <span id="example-input-2-1">[4,9,5], nums2 = <span id="example-input-2-2">[9,4,9,8,4]
+Output: <span id="example-output-2">[4,9]</span></span></span></pre>
+</div>
+<p>Note:</p>
+<ul>
+<li>Each element in the result should appear as many times as it shows in both arrays.</li>
+<li>The result can be in any order.</li>
+</ul>
+<p>Follow up:</p>
+<ul>
+<li>What if the given array is already sorted? How would you optimize your algorithm?</li>
+<li>What if&nbsp;<em>nums1</em>'s size is small compared to&nbsp;<em>nums2</em>'s size? Which algorithm is better?</li>
+<li>What if elements of&nbsp;<em>nums2</em>&nbsp;are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?</li>
+</ul>
+<div>&nbsp;</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>&nbsp;</div>
+<div id="interviewed_div">这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5507129.html">Intersection of Two Arrays</a>的拓展，不同之处在于这道题允许我们返回重复的数字，而且是尽可能多的返回，之前那道题是说有重复的数字只返回一个就行。那么这道题我们用哈希表来建立nums1中字符和其出现个数之间的映射, 然后遍历nums2数组，如果当前字符在哈希表中的个数大于0，则将此字符加入结果res中，然后哈希表的对应值自减1，参见代码如下：</div>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; intersect(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums1, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums2) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (auto a : nums1) ++<span style="color: #000000;">m[a];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nums2) {
+            </span><span style="color: #0000ff;">if</span> (m[a]-- &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) res.push_back(a);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种方法，这种方法先给两个数组排序，然后用两个指针分别指向两个数组的起始位置，如果两个指针指的数字相等，则存入结果中，两个指针均自增1，如果第一个指针指的数字大，则第二个指针自增1，反之亦然，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; intersect(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums1, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums2) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+        </span><span style="color: #0000ff;">while</span> (i &lt; nums1.size() &amp;&amp; j &lt;<span style="color: #000000;"> nums2.size()) {
+            </span><span style="color: #0000ff;">if</span> (nums1[i] ==<span style="color: #000000;"> nums2[j]) {
+                res.push_back(nums1[i]);
+                </span>++i; ++<span style="color: #000000;">j;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (nums1[i] &gt;<span style="color: #000000;"> nums2[j]) {
+                </span>++<span style="color: #000000;">j;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span>++<span style="color: #000000;">i;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5507129.html">Intersection of Two Arrays</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/intersection-of-two-arrays-ii/" target="_blank">https://leetcode.com/problems/intersection-of-two-arrays-ii/</a></p>
+<p><a href="https://leetcode.com/problems/intersection-of-two-arrays-ii/discuss/82269/Short-Python-C%2B%2B" target="_blank">https://leetcode.com/problems/intersection-of-two-arrays-ii/discuss/82269/Short-Python-C%2B%2B</a></p>
+<div id="cnblogs_post_body">
+<p><a href="https://leetcode.com/problems/intersection-of-two-arrays-ii/discuss/82241/AC-solution-using-Java-HashMap" target="_blank">https://leetcode.com/problems/intersection-of-two-arrays-ii/discuss/82241/AC-solution-using-Java-HashMap</a></p>
+<p><a href="https://leetcode.com/problems/intersection-of-two-arrays-ii/discuss/82263/C%2B%2B-hash-table-solution-and-sort-%2B-two-pointers-solution-with-time-and-space-complexity" target="_blank">https://leetcode.com/problems/intersection-of-two-arrays-ii/discuss/82263/C%2B%2B-hash-table-solution-and-sort-%2B-two-pointers-solution-with-time-and-space-complexity</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

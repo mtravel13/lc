@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9649348.html">[LeetCode] Construct Quad Tree 建立四叉树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>We want to use quad trees to store an&nbsp;<code>N x N</code>&nbsp;boolean grid. Each cell in the grid can only be true or false. The root node represents the whole grid. For each node, it will be subdivided into four children nodes&nbsp;until the values in the region it represents are all the same.</p>
+<p>Each node has another two boolean attributes :&nbsp;<code>isLeaf</code>&nbsp;and&nbsp;<code>val</code>.&nbsp;<code>isLeaf</code>&nbsp;is true if and only if the node is a leaf node. The&nbsp;<code>val</code>&nbsp;attribute for a leaf node contains the value of the region it represents.</p>
+<p>Your task is to use a quad tree to represent a given grid. The following example may help you understand the problem better:</p>
+<p>Given the&nbsp;<code>8 x 8</code>&nbsp;grid below, we want to construct the corresponding quad tree:</p>
+<p><img src="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/02/01/962_grid.png" alt="" width="199" height="200" /></p>
+<p>It can be divided according to the definition above:</p>
+<p><img src="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/02/01/962_grid_divided.png" alt="" width="734" height="199" /></p>
+<p>&nbsp;</p>
+<p>The corresponding quad tree should be as following, where each node is represented as a&nbsp;<code>(isLeaf, val)</code>pair.</p>
+<p>For the non-leaf&nbsp;nodes,&nbsp;<code>val</code>&nbsp;can be arbitrary, so it is represented as&nbsp;<code>*</code>.</p>
+<p><img src="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/02/01/962_quad_tree.png" alt="" width="745" height="267" /></p>
+<p>Note:</p>
+<ol>
+<li><code>N</code>&nbsp;is less than&nbsp;<code>1000</code>&nbsp;and guaranteened to be a power of 2.</li>
+<li>If you want to know more about the quad tree, you can refer to its&nbsp;<a href="https://en.wikipedia.org/wiki/Quadtree">wiki</a>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们根据一个二维数组来建立一棵四叉树，关于四叉树的介绍题目中也了给了<a href="https://zh.wikipedia.org/wiki/%E5%9B%9B%E5%8F%89%E6%A0%91" target="_blank">wiki百科的链接</a>。但是博主开始看到题目中给的那个例子，没怎么看懂。后来分析大神们的代码，才略微弄明白了一些。原来叶结点表示的是值相同的一片区域，比如我们看二维数组图示那行的第三个图，首先整个数组被分成了四等份，左上，左下，和右下部分内的值均相同，那么他们都是一个叶结点，而右上只有再四等分一下，才能使各自部分内的值相同，所以其就不是叶结点，而四等分后的每个区间才是叶结点。题目中限定了N的值一定是2的指数，就是说其如果可分的话，一定可以四等分，而之前说了，只有区间内的值不同时，才需要四等分，否则整体就当作一个叶结点。所以我们需要check四等分区间内的值是否相同，当然，我们可以将二维数组拆分为四个二维数组，但是那样可能不太高效，而且还占用额外空间，一个比较好的选择是用坐标变量来控制等分数组的范围，我们只需要一个起始点坐标，和区间的长度，就可以精确定位一个区间了。比如说对于例子中的整个二维数组数组来说，知道起始点坐标 (0, 0)，还有长度8，就知道表示的是哪个区间。我们可以遍历这个区间上的其他所有的点，跟起点对比，只要有任何点跟起点不相同，则说明该区间是可分的，因为我们前面说了，只有一个区间上所有的值均相同，才能当作一个叶结点。只要有不同，就表示可以四分，那么我们就新建一个结点，这里的左上，左下，右上，和右下四个子结点就需要用过调用递归函数来实现了，实现原理都一样，重要的地方就是确定每个四分区间的起点和长度，长度好确定，都是当前长度的一半，然后就是把各个区间的起点确定好，这个也不难，就是细心一点，不要写错了就可以了，另外，对于非叶结点，结点值可以是true或者false都没问题。如果某个区间上所有值均相同，那么就生成一个叶结点，结点值就跟区间值相同，isLeaf是true，四个子结点均为NULL即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Node</span>* construct(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">return</span> build(grid, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, grid.size());
+    }
+    Node</span>* build(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; grid, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> y, <span style="color: #0000ff;">int</span><span style="color: #000000;"> len) {
+        </span><span style="color: #0000ff;">if</span> (len &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = x; i &lt; x + len; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = y; j &lt; y + len; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] !=<span style="color: #000000;"> grid[x][y]) {
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Node(<span style="color: #0000ff;">true</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">,
+                           build(grid, x, y, len </span>/ <span style="color: #800080;">2</span><span style="color: #000000;">),
+                           build(grid, x, y </span>+ len / <span style="color: #800080;">2</span>, len / <span style="color: #800080;">2</span><span style="color: #000000;">),
+                           build(grid, x </span>+ len/ <span style="color: #800080;">2</span>, y, len / <span style="color: #800080;">2</span><span style="color: #000000;">),
+                           build(grid, x </span>+ len / <span style="color: #800080;">2</span>, y + len / <span style="color: #800080;">2</span>, len / <span style="color: #800080;">2</span><span style="color: #000000;">));
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Node(grid[x][y] == <span style="color: #800080;">1</span>, <span style="color: #0000ff;">true</span><span style="color: #000000;">, NULL, NULL, NULL, NULL);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种写法，记录了区间的左上点和右下点，知道这两个点也可以确定一个区间的位置，整体思路和上面的方法并没有什么太大的区别，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Node</span>* construct(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">return</span> build(grid, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, grid.size() - <span style="color: #800080;">1</span>, grid.size() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    Node</span>* build(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; grid, <span style="color: #0000ff;">int</span> r1, <span style="color: #0000ff;">int</span> c1, <span style="color: #0000ff;">int</span> r2, <span style="color: #0000ff;">int</span><span style="color: #000000;"> c2) {
+        </span><span style="color: #0000ff;">if</span> (r1 &gt; r2 || c1 &gt; c2) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">bool</span> isLeaf = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> val = grid[r1][c1], rowMid = (r1 + r2) / <span style="color: #800080;">2</span>, colMid = (c1 + c2) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = r1; i &lt;= r2; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = c1; j &lt;= c2; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] !=<span style="color: #000000;"> val) {
+                    isLeaf </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">if</span> (isLeaf) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Node(val == <span style="color: #800080;">1</span>, <span style="color: #0000ff;">true</span><span style="color: #000000;">, NULL, NULL, NULL, NULL);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Node(<span style="color: #0000ff;">false</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">, 
+               build(grid, r1, c1, rowMid, colMid),
+               build(grid, r1, colMid </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, rowMid, c2),
+               build(grid, rowMid </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, c1, r2, colMid),
+               build(grid, rowMid </span>+ <span style="color: #800080;">1</span>, colMid + <span style="color: #800080;">1</span><span style="color: #000000;">, r2, c2));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/construct-quad-tree/" target="_blank">https://leetcode.com/problems/construct-quad-tree/</a></p>
+<p><a href="https://leetcode.com/problems/construct-quad-tree/discuss/151j684/Recursive-Java-Solution" target="_blank">https://leetcode.com/problems/construct-quad-tree/discuss/151j684/Recursive-Java-Solution</a></p>
+<p><a href="https://leetcode.com/problems/construct-quad-tree/discuss/154420/My-Java-Recursive-Solution" target="_blank">https://leetcode.com/problems/construct-quad-tree/discuss/154420/My-Java-Recursive-Solution</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

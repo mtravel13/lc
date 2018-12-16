@@ -1,0 +1,73 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4409379.html">[LeetCode] Search for a Range 搜索一个范围</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a sorted array of integers, find the starting and ending position of a given target value.</p>
+<p>Your algorithm's runtime complexity must be in the order of&nbsp;<em>O</em>(log&nbsp;<em>n</em>).</p>
+<p>If the target is not found in the array, return&nbsp;<code>[-1, -1]</code>.</p>
+<p>For example,<br />Given&nbsp;<code>[5, 7, 7, 8, 8, 10]</code>&nbsp;and target value 8,<br />return&nbsp;<code>[3, 4]</code>.</p>
+<p>&nbsp;</p>
+<p>这道题让我们在一个有序整数数组中寻找相同目标值的起始和结束位置，而且限定了时间复杂度为O(logn)，这是典型的二分查找法的时间复杂度，所以这道题我们也需要用此方法，我们的思路是首先对原数组使用二分查找法，找出其中一个目标值的位置，然后向两边搜索找出起始和结束的位置，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; searchRange(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> idx = search(nums, <span style="color: #800080;">0</span>, nums.size() - <span style="color: #800080;">1</span><span style="color: #000000;">, target);
+        </span><span style="color: #0000ff;">if</span> (idx == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> {-<span style="color: #800080;">1</span>, -<span style="color: #800080;">1</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">int</span> left = idx, right =<span style="color: #000000;"> idx;
+        </span><span style="color: #0000ff;">while</span> (left &gt; <span style="color: #800080;">0</span> &amp;&amp; nums[left - <span style="color: #800080;">1</span>] == nums[idx]) --<span style="color: #000000;">left;
+        </span><span style="color: #0000ff;">while</span> (right &lt; nums.size() - <span style="color: #800080;">1</span> &amp;&amp; nums[right + <span style="color: #800080;">1</span>] == nums[idx]) ++<span style="color: #000000;">right;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {left, right};
+    }
+    </span><span style="color: #0000ff;">int</span> search(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span> right, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">if</span> (left &gt; right) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (nums[mid] == target) <span style="color: #0000ff;">return</span><span style="color: #000000;"> mid;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (nums[mid] &lt; target) <span style="color: #0000ff;">return</span> search(nums, mid + <span style="color: #800080;">1</span><span style="color: #000000;">, right, target);
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> search(nums, left, mid - <span style="color: #800080;">1</span><span style="color: #000000;">, target);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>可能有些人会觉得上面的算法不是严格意义上的O(logn)的算法，因为在最坏的情况下会变成O(n)，比如当数组里的数全是目标值的话，从中间向两边找边界就会一直遍历完整个数组，那么我们下面来看一种真正意义上的O(logn)的算法，使用两次二分查找法，第一次找到左边界，第二次调用找到右边界即可，具体代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; searchRange(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(<span style="color: #800080;">2</span>, -<span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = nums.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (nums[mid] &lt; target) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">if</span> (nums[right] != target) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        res[</span><span style="color: #800080;">0</span>] =<span style="color: #000000;"> right;
+        right </span>=<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (nums[mid] &lt;= target) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> right=<span style="color: #000000;"> mid;
+        }
+        res[</span><span style="color: #800080;">1</span>] = left - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/19437/the-standard-and-clean-c-binary-search-implementation" target="_blank">https://discuss.leetcode.com/topic/19437/the-standard-and-clean-c-binary-search-implementation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/5891/clean-iterative-solution-with-two-binary-searches-with-explanation/2" target="_blank">https://discuss.leetcode.com/topic/5891/clean-iterative-solution-with-two-binary-searches-with-explanation/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

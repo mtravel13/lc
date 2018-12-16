@@ -1,0 +1,49 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5354306.html">[LeetCode] Employees Earning More Than Their Managers 员工挣得比经理多</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The&nbsp;<code>Employee</code>&nbsp;table holds all employees including their managers. Every employee has an Id, and there is also a column for the manager Id.</p>
+<pre>+----+-------+--------+-----------+
+| Id | Name  | Salary | ManagerId |
++----+-------+--------+-----------+
+| 1  | Joe   | 70000  | 3         |
+| 2  | Henry | 80000  | 4         |
+| 3  | Sam   | 60000  | NULL      |
+| 4  | Max   | 90000  | NULL      |
++----+-------+--------+-----------+
+</pre>
+<p>Given the&nbsp;<code>Employee</code>&nbsp;table, write a SQL query that finds out employees who earn more than their managers. For the above table, Joe is the only employee who earns more than his manager.</p>
+<pre>+----------+
+| Employee |
++----------+
+| Joe      |
++----------+</pre>
+<p>&nbsp;</p>
+<p>这道题给我们了一个Employee表，里面有员工的薪水信息和其经理的信息，经理也属于员工，其经理Id为空，让我们找出薪水比其经理高的员工，那么就是一个很简单的比较问题了，我们可以生成两个实例对象进行内交通过ManagerId和Id，然后限制条件是一个Salary大于另一个即可：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> e1.Name <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee e1
+</span><span style="color: #808080;">JOIN</span> Employee e2 <span style="color: #0000ff;">ON</span> e1.ManagerId <span style="color: #808080;">=</span><span style="color: #000000;"> e2.Id
+</span><span style="color: #0000ff;">WHERE</span> e1.Salary <span style="color: #808080;">&gt;</span> e2.Salary;</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以不用Join，直接把条件都写到where里也行：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> e1.Name <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee e1, Employee e2
+</span><span style="color: #0000ff;">WHERE</span> e1.ManagerId <span style="color: #808080;">=</span> e2.Id <span style="color: #808080;">AND</span> e1.Salary <span style="color: #808080;">&gt;</span> e2.Salary;</pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/88189/two-straightforward-way-using-where-and-join%20" target="_blank">https://leetcode.com/discuss/88189/two-straightforward-way-using-where-and-join</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

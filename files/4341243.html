@@ -1,0 +1,66 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4341243.html">[LeetCode] Sort Colors 颜色排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array with&nbsp;<em>n</em>&nbsp;objects colored red, white or blue, sort them so that objects of the same color are adjacent, with the colors in the order red, white and blue.</p>
+<p>Here, we will use the integers 0, 1, and 2 to represent the color red, white, and blue respectively.</p>
+<p>Note:<br />You are not suppose to use the library's sort function for this problem.</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/sort-colors/">click to show follow up.</a></p>
+<div class="spoilers">
+<p>Follow up:<br />A rather straight forward solution is a two-pass algorithm using counting sort.<br />First, iterate the array counting number of 0's, 1's, and 2's, then overwrite array with total number of 0's, then 1's and followed by 2's.</p>
+<p>Could you come up with an one-pass algorithm using only constant space?</p>
+
+
+
+
+
+
+</div>
+<p>&nbsp;</p>
+<p>这道题的本质还是一道排序的题，题目中给出提示说可以用计数排序，需要遍历数组两遍，那么先来看这种方法，因为数组中只有三个不同的元素，所以实现起来很容易。</p>
+<p>- 首先遍历一遍原数组，分别记录0,1,2的个数<br />- 然后更新原数组，按个数分别赋上0，1，2</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> sortColors(<span style="color: #0000ff;">int</span> A[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> count[<span style="color: #800080;">3</span>] = {<span style="color: #800080;">0</span>}, idx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++i) ++<span style="color: #000000;">count[A[i]];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; count[i]; ++<span style="color: #000000;">j) {
+                A[idx</span>++] =<span style="color: #000000;"> i;
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>题目中还要让只遍历一次数组来求解，那么我需要用双指针来做，分别从原数组的首尾往中心移动。</p>
+<p>- 定义red指针指向开头位置，blue指针指向末尾位置</p>
+<p>- 从头开始遍历原数组，如果遇到0，则交换该值和red指针指向的值，并将red指针后移一位。若遇到2，则交换该值和blue指针指向的值，并将blue指针前移一位。若遇到1，则继续遍历。</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> sortColors(<span style="color: #0000ff;">int</span> A[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {</span><span style="color: #0000ff;">int</span> red = <span style="color: #800080;">0</span>, blue = n - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= blue; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (A[i] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                swap(A[i], A[red</span>++<span style="color: #000000;">]);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (A[i] == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+                swap(A[i</span>--], A[blue--<span style="color: #000000;">]);
+            } 
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

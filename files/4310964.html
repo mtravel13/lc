@@ -1,0 +1,102 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4310964.html">[LeetCode] Subsets II 子集合之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a collection of integers that might contain duplicates,&nbsp;<em>S</em>, return all possible subsets.</p>
+<p>Note:</p>
+<ul>
+<li>Elements in a subset must be in non-descending order.</li>
+<li>The solution set must not contain duplicate subsets.</li>
+</ul>
+<p>&nbsp;</p>
+<p>For example,<br />If&nbsp;<em>S</em>&nbsp;=&nbsp;<code>[1,2,2]</code>, a solution is:</p>
+<pre>[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]</pre>
+<p>&nbsp;</p>
+<p>这道子集合之二是之前那道<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4309345.html">&nbsp;Subsets 子集合</a>&nbsp;的延伸，这次输入数组允许有重复项，其他条件都不变，只需要在之前那道题解法的基础上稍加改动便可以做出来，我们先来看非递归解法，拿题目中的例子[1 2 2]来分析，根据之前<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4309345.html">&nbsp;Subsets 子集合</a>&nbsp;里的分析可知，当处理到第一个2时，此时的子集合为[], [1], [2], [1, 2]，而这时再处理第二个2时，如果在[]和[1]后直接加2会产生重复，所以只能在上一个循环生成的后两个子集合后面加2，发现了这一点，题目就可以做了，我们用last来记录上一个处理的数字，然后判定当前的数字和上面的是否相同，若不同，则循环还是从0到当前子集的个数，若相同，则新子集个数减去之前循环时子集的个数当做起点来循环，这样就不会产生重复了，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; subsetsWithDup(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">S) {
+        </span><span style="color: #0000ff;">if</span> (S.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res(<span style="color: #800080;">1</span><span style="color: #000000;">);
+        sort(S.begin(), S.end());
+        </span><span style="color: #0000ff;">int</span> size = <span style="color: #800080;">1</span>, last = S[<span style="color: #800080;">0</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; S.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (last !=<span style="color: #000000;"> S[i]) {
+                last </span>=<span style="color: #000000;"> S[i];
+                size </span>=<span style="color: #000000;"> res.size();
+            }
+            </span><span style="color: #0000ff;">int</span> newSize =<span style="color: #000000;"> res.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = newSize - size; j &lt; newSize; ++<span style="color: #000000;">j) {
+                res.push_back(res[j]);
+                res.back().push_back(S[i]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>整个添加的顺序为：</p>
+<p>[]<br />[1]<br />[2]<br />[1 2]<br />[2 2]<br />[1 2 2]</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px; line-height: 1.5;">对于递归的解法，根据之前<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4309345.html">&nbsp;Subsets 子集合</a>&nbsp;里的构建树的方法，在处理到第二个2时，由于前面已经处理了一次2，这次我们只在添加过2的[2] 和 [1 2]后面添加2，其他的都不添加，那么这样构成的二叉树如下图所示：</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">                        []        
+                   </span>/<span style="color: #000000;">          \        
+                  </span>/<span style="color: #000000;">            \     
+                 </span>/<span style="color: #000000;">              \
+              [</span><span style="color: #800080;">1</span><span style="color: #000000;">]                []
+           </span>/       \           /<span style="color: #000000;">    \
+          </span>/         \         /<span style="color: #000000;">      \        
+       [</span><span style="color: #800080;">1</span> <span style="color: #800080;">2</span>]       [<span style="color: #800080;">1</span>]       [<span style="color: #800080;">2</span><span style="color: #000000;">]     []
+      </span>/     \     /   \     /   \    /<span style="color: #000000;"> \
+  [</span><span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span>] [<span style="color: #800080;">1</span> <span style="color: #800080;">2</span>]  X   [<span style="color: #800080;">1</span>]  [<span style="color: #800080;">2</span> <span style="color: #800080;">2</span>] [<span style="color: #800080;">2</span>] X  []</pre>
+</div>
+<p>&nbsp;</p>
+<p>代码只需在原有的基础上增加一句话，while (S[i] == S[i + 1]) ++i; 这句话的作用是跳过树中为X的叶节点，因为它们是重复的子集，应被抛弃。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; subsetsWithDup(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">S) {
+        </span><span style="color: #0000ff;">if</span> (S.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        sort(S.begin(), S.end());
+        getSubsets(S, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> getSubsets(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;S, <span style="color: #0000ff;">int</span> pos, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;<span style="color: #000000;">res) {
+        res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = pos; i &lt; S.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(S[i]);
+            getSubsets(S, i </span>+ <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+            </span><span style="color: #0000ff;">while</span> (i + <span style="color: #800080;">1</span> &lt; S.size() &amp;&amp; S[i] == S[i + <span style="color: #800080;">1</span>]) ++<span style="color: #000000;">i;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>整个添加的顺序为：</p>
+<p>[]<br />[1]<br />[1 2]<br />[1 2 2]<br />[2]<br />[2 2]<br /><br /></p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

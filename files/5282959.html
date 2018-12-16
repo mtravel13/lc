@@ -1,0 +1,86 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5282959.html">[LeetCode] Sparse Matrix Multiplication 稀疏矩阵相乘</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two <a href="https://en.wikipedia.org/wiki/Sparse_matrix" target="_blank">sparse matrices</a> <strong>A</strong> and <strong>B</strong>, return the result of <strong>AB</strong>.</p>
+<p>You may assume that <strong>A</strong>'s column number is equal to <strong>B</strong>'s row number.</p>
+<p><strong>Example:</strong></p>
+<pre><strong>A</strong> = [
+  [ 1, 0, 0],
+  [-1, 0, 3]
+]
+
+<strong>B</strong> = [
+  [ 7, 0, 0 ],
+  [ 0, 0, 0 ],
+  [ 0, 0, 1 ]
+]
+
+
+     |  1 0 0 |   | 7 0 0 |   |  7 0 0 |
+<strong>AB</strong> = | -1 0 3 | x | 0 0 0 | = | -7 0 3 |
+                  | 0 0 1 |
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们实现稀疏矩阵相乘，稀疏矩阵的特点是矩阵中绝大多数的元素为0，而相乘的结果是还应该是稀疏矩阵，即还是大多数元素为0，那么我们使用传统的矩阵相乘的算法肯定会处理大量的0乘0的无用功，所以我们需要适当的优化算法，使其可以顺利通过OJ，我们知道一个 i x k 的矩阵A乘以一个 k x j 的矩阵B会得到一个 i x j 大小的矩阵C，那么我们来看结果矩阵中的某个元素C[i][j]是怎么来的，起始是A[i][0]*B[0][j] + A[i][1]*B[1][j] + ... + A[i][k]*B[k][j]，那么为了不重复计算0乘0，我们首先遍历A数组，要确保A[i][k]不为0，才继续计算，然后我们遍历B矩阵的第k行，如果B[K][J]不为0，我们累加结果矩阵res[i][j] += A[i][k] *<span style="color: #000000;"> B[k][j];</span> 这样我们就能高效的算出稀疏矩阵的乘法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; multiply(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; A, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> B) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res(A.size(), vector&lt;<span style="color: #0000ff;">int</span>&gt;(B[<span style="color: #800080;">0</span><span style="color: #000000;">].size()));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; A.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; A[<span style="color: #800080;">0</span>].size(); ++<span style="color: #000000;">k) {
+                </span><span style="color: #0000ff;">if</span> (A[i][k] != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; B[<span style="color: #800080;">0</span>].size(); ++<span style="color: #000000;">j) {
+                        </span><span style="color: #0000ff;">if</span> (B[k][j] != <span style="color: #800080;">0</span>) res[i][j] += A[i][k] *<span style="color: #000000;"> B[k][j];
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看另一种方法，这种方法其实核心思想跟上面那种方法相同，稍有不同的是我们用一个二维矩阵矩阵来记录每一行中，各个位置中不为0的列数和其对应的值，然后我们遍历这个二维矩阵，取出每行中不为零的列数和值，然后遍历B中对应行进行累加相乘，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; multiply(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; A, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> B) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res(A.size(), vector&lt;<span style="color: #0000ff;">int</span>&gt;(B[<span style="color: #800080;">0</span><span style="color: #000000;">].size()));
+        vector</span>&lt;vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&gt; v(A.size(), vector&lt;pair&lt;<span style="color: #0000ff;">int</span>,<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; A.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; A[i].size(); ++<span style="color: #000000;">k) {
+                </span><span style="color: #0000ff;">if</span> (A[i][k] != <span style="color: #800080;">0</span><span style="color: #000000;">) v[i].push_back({k, A[i][k]});
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; A.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; v[i].size(); ++<span style="color: #000000;">k) {
+                </span><span style="color: #0000ff;">int</span> col =<span style="color: #000000;"> v[i][k].first;
+                </span><span style="color: #0000ff;">int</span> val =<span style="color: #000000;"> v[i][k].second;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; B[<span style="color: #800080;">0</span>].size(); ++<span style="color: #000000;">j) {
+                    res[i][j] </span>+= val *<span style="color: #000000;"> B[col][j];
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/77235/ac-soluiton-code" target="_blank">https://leetcode.com/discuss/77235/ac-soluiton-code</a></p>
+<p><a href="https://leetcode.com/discuss/71912/easiest-java-solution" target="_blank">https://leetcode.com/discuss/71912/easiest-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

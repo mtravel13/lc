@@ -1,0 +1,123 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5880133.html">[LeetCode] Evaluate Division 求除法表达式的值</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Equations are given in the format&nbsp;<code>A / B = k</code>, where&nbsp;<code>A</code>&nbsp;and&nbsp;<code>B</code>&nbsp;are variables represented as strings, and&nbsp;<code>k</code>&nbsp;is a real number (floating point number). Given some queries, return the answers. If the answer does not exist, return&nbsp;<code>-1.0</code>.</p>
+<p>Example:<br />Given&nbsp;<code>a / b = 2.0, b / c = 3.0.</code>&nbsp;<br />queries are:&nbsp;<code>a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? .</code>&nbsp;<br />return&nbsp;<code>[6.0, 0.5, -1.0, 1.0, -1.0 ].</code></p>
+<p>The input is:&nbsp;<code>vector&lt;pair&lt;string, string&gt;&gt; equations, vector&lt;double&gt;&amp; values, vector&lt;pair&lt;string, string&gt;&gt; queries&nbsp;</code>, where<code>equations.size() == values.size()</code>, and the values are positive. This represents the equations. Return&nbsp;<code>vector&lt;double&gt;</code>.</p>
+<p>According to the example above:</p>
+<pre>equations = [ ["a", "b"], ["b", "c"] ],
+values = [2.0, 3.0],
+queries = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ]. </pre>
+<p>&nbsp;</p>
+<p>The input is always valid. You may assume that evaluating the queries will result in no division by zero and there is no contradiction.</p>
+<p>&nbsp;</p>
+<p>这道题作为第四次编程比赛的压轴题，感觉还是挺有难度的，个人感觉难度应该设为hard比较合理。这道题已知条件中给了一些除法等式，然后给了另外一些除法等式，问我们能不能根据已知条件求出结果，不能的用-1表示。问题本身是很简单的数学问题，但是写代码来自动实现就需要我们用正确的数据结构和算法，通过观察题目中的例子，我们可以看出如果需要分析的除法式的除数和被除数如果其中任意一个没有在已知条件中出现过，那么返回结果-1，所以我们在分析已知条件的时候，可以使用set来记录所有出现过的字符串，然后我们在分析其他除法式的时候，可以使用递归来做。通过分析得出，不能直接由已知条件得到的情况主要有下面三种：</p>
+<p>1) 已知: a / b = 2, b / c = 3， 求 a / c<br />2) 已知: a / c = 2, b / c = 3， 求 a / b<br />3) 已知: a / b = 2, a / c = 3， 求 b / c</p>
+<p>在递归函数中，我们有一个需要分析的除法表达式，我们遍历所有的已知条件，如果跟某一个已知表达式相等，直接返回结果，或者跟某一个已知表达式正好相反，那么返回已知表达式结果的倒数即可。如果都没有的话，那么就需要间接寻找了，我们需要一个vector来记录已经访问过的表达式，我们先看待求表达式的被除数和当前遍历到的已知表达式的被除数是否相同如果相同，那么就是上面的第一种情况，我们就可以把待求表达式的被输出换成已知表达式的除数，比如要求a/c就换成了求b/c，而求b/c的过程就可以调用递归函数来求解，结果要乘以a/b的值。如果算出来是正数我们直接返回，如果是非正数说明没有找到。对于上面的第一种情况，如果我们要求c/a，那么上面的方法就没法开始查找，所以我们同时也要看待求表达式的除数和当前遍历到的已知表达式的被除数是否相同，后面的处理方法都相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">double</span>&gt; calcEquation(vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt; equations, vector&lt;<span style="color: #0000ff;">double</span>&gt;&amp; values, vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> queries) {
+        vector</span>&lt;<span style="color: #0000ff;">double</span>&gt; res(queries.size(), -<span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : equations) {
+            s.insert(a.first);
+            s.insert(a.second);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; queries.size(); ++<span style="color: #000000;">i) {
+            vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> query{queries[i].first, queries[i].second};
+            </span><span style="color: #0000ff;">if</span> (s.count(query[<span style="color: #800080;">0</span>]) &amp;&amp; s.count(query[<span style="color: #800080;">1</span><span style="color: #000000;">])) {
+                vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+                res[i] </span>=<span style="color: #000000;"> helper(equations, values, query, v);
+            }   
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">double</span> helper(vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt; equations, vector&lt;<span style="color: #0000ff;">double</span>&gt;&amp; values, vector&lt;<span style="color: #0000ff;">string</span>&gt; query, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> v) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; equations.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (equations[i].first == query[<span style="color: #800080;">0</span>] &amp;&amp; equations[i].second == query[<span style="color: #800080;">1</span>]) <span style="color: #0000ff;">return</span><span style="color: #000000;"> values[i];
+            </span><span style="color: #0000ff;">if</span> (equations[i].first == query[<span style="color: #800080;">1</span>] &amp;&amp; equations[i].second == query[<span style="color: #800080;">0</span>]) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1.0</span> /<span style="color: #000000;"> values[i];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; equations.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (find(v.begin(), v.end(), i) == v.end() &amp;&amp; equations[i].first == query[<span style="color: #800080;">0</span><span style="color: #000000;">]) {
+                v.push_back(i);
+                </span><span style="color: #0000ff;">double</span> t = values[i] * helper(equations, values, {equations[i].second, query[<span style="color: #800080;">1</span><span style="color: #000000;">]}, v);
+                </span><span style="color: #0000ff;">if</span> (t &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> t;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> v.pop_back();
+            }
+            </span><span style="color: #0000ff;">if</span> (find(v.begin(), v.end(), i) == v.end() &amp;&amp; equations[i].second == query[<span style="color: #800080;">0</span><span style="color: #000000;">]) {
+                v.push_back(i);
+                </span><span style="color: #0000ff;">double</span> t = helper(equations, values, {equations[i].first, query[<span style="color: #800080;">1</span>]}, v) /<span style="color: #000000;"> values[i];
+                </span><span style="color: #0000ff;">if</span> (t &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> t;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> v.pop_back();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1.0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>此题还有迭代的写法，用邻接列表的表示方法建立了一个图，然后进行bfs搜索，需要用queue来辅助运算，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">double</span>&gt; calcEquation(vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt; equations, vector&lt;<span style="color: #0000ff;">double</span>&gt;&amp; values, vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> queries) {
+        vector</span>&lt;<span style="color: #0000ff;">double</span>&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, unordered_map&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">double</span>&gt;&gt;<span style="color: #000000;"> g;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; equations.size(); ++<span style="color: #000000;">i) {
+            g[equations[i].first].emplace(equations[i].second, values[i]);
+            g[equations[i].first].emplace(equations[i].first, </span><span style="color: #800080;">1.0</span><span style="color: #000000;">);
+            g[equations[i].second].emplace(equations[i].first, </span><span style="color: #800080;">1.0</span> /<span style="color: #000000;"> values[i]);
+            g[equations[i].second].emplace(equations[i].second, </span><span style="color: #800080;">1.0</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto query : queries) {
+            </span><span style="color: #0000ff;">if</span> (!g.count(query.first) || !g.count(query.second)) res.push_back(-<span style="color: #800080;">1.0</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                queue</span>&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">double</span>&gt;&gt;<span style="color: #000000;"> q;
+                unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> used{query.first};
+                </span><span style="color: #0000ff;">bool</span> find = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                q.push({query.first, </span><span style="color: #800080;">1.0</span><span style="color: #000000;">});
+                </span><span style="color: #0000ff;">while</span> (!q.empty() &amp;&amp; !<span style="color: #000000;">find) {
+                    queue</span>&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">double</span>&gt;&gt;<span style="color: #000000;"> next;
+                    </span><span style="color: #0000ff;">while</span> (!q.empty() &amp;&amp; !<span style="color: #000000;">find) {
+                        pair</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">double</span>&gt; t =<span style="color: #000000;"> q.front(); q.pop();
+                        </span><span style="color: #0000ff;">if</span> (t.first ==<span style="color: #000000;"> query.second) {
+                            find </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                            res.push_back(t.second);
+                            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                        }
+                        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : g[t.first]) {
+                            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">used.count(a.first)) {
+                                a.second </span>*=<span style="color: #000000;"> t.second;
+                                next.push(a);
+                                used.insert(a.first);
+                            }
+                        }
+                    }
+                    q </span>=<span style="color: #000000;"> next;
+                }
+                </span><span style="color: #0000ff;">if</span> (!find) res.push_back(-<span style="color: #800080;">1.0</span><span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/58444/c-bfs-solution-easy-to-understand" target="_blank">https://discuss.leetcode.com/topic/58444/c-bfs-solution-easy-to-understand</a></p>
+<p><a href="https://discuss.leetcode.com/topic/58355/esay-understand-java-solution-3ms" target="_blank">https://discuss.leetcode.com/topic/58355/esay-understand-java-solution-3ms</a></p>
+<p><a href="https://discuss.leetcode.com/topic/58444/c-bfs-solution-easy-to-understand" target="_blank">&nbsp;</a></p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

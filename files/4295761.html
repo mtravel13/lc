@@ -1,0 +1,59 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4295761.html">[LeetCode] Best Time to Buy and Sell Stock IV 买卖股票的最佳时间之四</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Say you have an array for which the&nbsp;<em>i</em>th&nbsp;element is the price of a given stock on day&nbsp;<em>i</em>.</p>
+<p>Design an algorithm to find the maximum profit. You may complete at most&nbsp;k&nbsp;transactions.</p>
+<p>Note:<br />You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://oj.leetcode.com/discuss/user/Freezen">@Freezen</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题实际上是之前那道<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_8" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4281975.html">&nbsp;Best Time to Buy and Sell Stock III 买股票的最佳时间之三</a>的一般情况的推广，还是需要用动态规划Dynamic programming来解决，具体思路如下：</p>
+<p>这里我们需要两个递推公式来分别更新两个变量local和global，参见网友<a href="http://blog.csdn.net/linhuanmars/article/details/23236995" target="_blank">Code Ganker的博客</a>，我们其实可以求至少k次交易的最大利润。我们定义local[i][j]为在到达第i天时最多可进行j次交易并且最后一次交易在最后一天卖出的最大利润，此为局部最优。然后我们定义global[i][j]为在到达第i天时最多可进行j次交易的最大利润，此为全局最优。它们的递推式为：</p>
+<p>local[i][j] = max(global[i - 1][j - 1] + max(diff, 0), local[i - 1][j] + diff)</p>
+<p>global[i][j] = max(local[i][j], global[i - 1][j])，</p>
+<p>其中局部最优值是比较前一天并少交易一次的全局最优加上大于0的差值，和前一天的局部最优加上差值后相比，两者之中取较大值，而全局最优比较局部最优和前一天的全局最优。</p>
+<p>但这道题还有个坑，就是如果k的值远大于prices的天数，比如k是好几百万，而prices的天数就为若干天的话，上面的DP解法就非常的没有效率，应该直接用<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_9" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4280803.html">Best Time to Buy and Sell Stock II 买股票的最佳时间之二</a>的方法来求解，所以实际上这道题是之前的二和三的综合体，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxProfit(<span style="color: #0000ff;">int</span> k, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">prices) {
+        </span><span style="color: #0000ff;">if</span> (prices.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (k &gt;= prices.size()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> solveMaxProfit(prices);
+        </span><span style="color: #0000ff;">int</span> g[k + <span style="color: #800080;">1</span>] = {<span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">int</span> l[k + <span style="color: #800080;">1</span>] = {<span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; prices.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> diff = prices[i + <span style="color: #800080;">1</span>] -<span style="color: #000000;"> prices[i];
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = k; j &gt;= <span style="color: #800080;">1</span>; --<span style="color: #000000;">j) {
+                l[j] </span>= max(g[j - <span style="color: #800080;">1</span>] + max(diff, <span style="color: #800080;">0</span>), l[j] +<span style="color: #000000;"> diff);
+                g[j] </span>=<span style="color: #000000;"> max(g[j], l[j]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> g[k];
+    }
+    </span><span style="color: #0000ff;">int</span> solveMaxProfit(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">prices) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; prices.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (prices[i] - prices[i - <span style="color: #800080;">1</span>] &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                res </span>+= prices[i] - prices[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4997417.html">Best Time to Buy and Sell Stock with Cooldown</a></p>
+<p><a style="line-height: 1.5;" href="http://www.cnblogs.com/grandyang/p/4281975.html" target="_blank">Best Time to Buy and Sell Stock III</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4280803.html" target="_blank">Best Time to Buy and Sell Stock II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4280131.html" target="_blank">Best Time to Buy and Sell Stock</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

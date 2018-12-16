@@ -1,0 +1,135 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6388103.html">[LeetCode] Increasing Subsequences 递增子序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="col-md-12">
+<div class="question-content">
+<p>Given an integer array, your task is to find all the different possible increasing subsequences of the given array, and the length of an increasing subsequence should be at least 2 .</p>
+<p>Example:</p>
+<pre>Input: [4, 6, 7, 7]
+Output: [[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The length of the given array will not exceed 15.</li>
+<li>The range of integer in the given array is [-100,100].</li>
+<li>The given array may contain duplicates, and two equal integers should also be considered as a special case of increasing sequence.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们找出所有的递增子序列，那么我们应该不难想到，这题肯定是要先找出所有的子序列，从中找出递增的。找出所有的子序列的题我们之前也接触过<a href="http://www.cnblogs.com/grandyang/p/4309345.html" target="_blank">Subsets</a>和<a href="http://www.cnblogs.com/grandyang/p/4310964.html" target="_blank">Subsets II</a>，那两题不同之处在于数组中有没有重复项。而这道题明显是有重复项的，所以需要用到<a href="http://www.cnblogs.com/grandyang/p/4310964.html" target="_blank">Subsets II</a>中的解法。我们首先来看一种迭代的解法，对于重复项的处理，最偷懒的方法是使用set，利用其自动去处重复项的机制，然后最后返回时再转回vector即可。由于是找递增序列，所以我们需要对递归函数做一些修改，首先题目中说明了递归序列数字至少两个，所以只有当当前子序列个数大于等于2时，才加入结果。然后就是要递增，如果之前的数字大于当前的数字，那么跳过这种情况，继续循环，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; findSubsequences(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">set</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        helper(nums, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span> vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;">(res.begin(), res.end());
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> start, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; <span style="color: #0000ff;">out</span>, <span style="color: #0000ff;">set</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">out</span>.size() &gt;= <span style="color: #800080;">2</span>) res.insert(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">out</span>.empty() &amp;&amp; <span style="color: #0000ff;">out</span>.back() &gt; nums[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(nums[i]);
+            helper(nums, i </span>+ <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以在递归中进行去重复处理，方法是用一个set保存中间过程的数字，如果当前的数字在之前出现过了，就直接跳过这种情况即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; findSubsequences(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        helper(nums, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> start, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; <span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">out</span>.size() &gt;= <span style="color: #800080;">2</span>) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">out</span>.empty() &amp;&amp; <span style="color: #0000ff;">out</span>.back() &gt; nums[i] || st.count(nums[i])) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(nums[i]);
+            st.insert(nums[i]);
+            helper(nums, i </span>+ <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看迭代的解法，还是老套路，先看偷懒的方法，用set来去处重复。对于递归的处理方法跟之前相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; findSubsequences(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">set</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; cur(<span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> cur.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (!cur[j].empty() &amp;&amp; cur[j].back() &gt; nums[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                cur.push_back(cur[j]);
+                cur.back().push_back(nums[i]);
+                </span><span style="color: #0000ff;">if</span> (cur.back().size() &gt;= <span style="color: #800080;">2</span><span style="color: #000000;">) res.insert(cur.back());
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;">(res.begin(), res.end());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们来看不用set的方法，使用一个哈希表来建立每个数字对应的遍历起始位置，默认都是0，然后在遍历的时候先取出原有值当作遍历起始点，然后更新为当前位置，如果某个数字之前出现过，那么取出的原有值就不是0，而是之前那个数的出现位置，这样就就不会产生重复了，如果不太好理解的话就带个简单的实例去试试吧，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; findSubsequences(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res, cur(<span style="color: #800080;">1</span><span style="color: #000000;">);
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> cur.size();
+            </span><span style="color: #0000ff;">int</span> start =<span style="color: #000000;"> m[nums[i]];
+            m[nums[i]] </span>=<span style="color: #000000;"> n;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = start; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (!cur[j].empty() &amp;&amp; cur[j].back() &gt; nums[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                cur.push_back(cur[j]);
+                cur.back().push_back(nums[i]);
+                </span><span style="color: #0000ff;">if</span> (cur.back().size() &gt;= <span style="color: #800080;">2</span><span style="color: #000000;">) res.push_back(cur.back());
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4309345.html" target="_blank">Subsets</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4310964.html" target="_blank">Subsets II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/76274/c-dfs-solution-using-unordered_set" target="_blank">https://discuss.leetcode.com/topic/76274/c-dfs-solution-using-unordered_set</a></p>
+<p><a href="https://discuss.leetcode.com/topic/76367/evolve-from-intuitive-solution-to-optimal" target="_blank">https://discuss.leetcode.com/topic/76367/evolve-from-intuitive-solution-to-optimal</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

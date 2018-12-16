@@ -1,0 +1,51 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5666502.html">[LeetCode] Guess Number Higher or Lower 猜数字大小</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>We are playing the Guess Game. The game is as follows:</p>
+<p>I pick a number from&nbsp;1&nbsp;to&nbsp;<em>n</em>. You have to guess which number I picked.</p>
+<p>Every time you guess wrong, I'll tell you whether the number is higher or lower.</p>
+<p>You call a pre-defined API&nbsp;<code>guess(int num)</code>&nbsp;which returns 3 possible results (<code>-1</code>,&nbsp;<code>1</code>, or&nbsp;<code>0</code>):</p>
+<pre>-1 : My number is lower
+ 1 : My number is higher
+ 0 : Congrats! You got it!
+</pre>
+<p>Example:</p>
+<pre>n = 10, I pick 6.
+
+Return 6.</pre>
+<p>这道题是一道典型的猜价格的问题，根据对方说高了还是低了来缩小范围，最简单快速的方法就是折半搜索法，原理很简单，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Forward declaration of guess API.
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> @param num, your guess
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> @return -1 if my number is lower, 1 if my number is higher, otherwise return 0</span>
+<span style="color: #0000ff;">int</span> guess(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num);
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> guessNumber(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (guess(n) == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">1</span>, right =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span>, t =<span style="color: #000000;"> guess(mid);
+            </span><span style="color: #0000ff;">if</span> (t == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> mid;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (t == <span style="color: #800080;">1</span>) left =<span style="color: #000000;"> mid;
+            </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> left;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5677550.html">Guess Number Higher or Lower II</a>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

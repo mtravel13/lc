@@ -1,0 +1,89 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7636259.html">[LeetCode] Longest Univalue Path 最长相同值路径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, find the length of the longest path where each node in the path has the same value. This path may or may not pass through the root.</p>
+<p>Note:&nbsp;The length of path between two nodes is represented by the number of edges between them.</p>
+<p>Example 1:</p>
+<p>Input:</p>
+<pre>              5
+             / \
+            4   5
+           / \   \
+          1   1   5
+</pre>
+<p>&nbsp;</p>
+<p>Output:</p>
+<pre>2
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<p>Input:</p>
+<pre>              1
+             / \
+            4   5
+           / \   \
+          4   4   5
+</pre>
+<p>&nbsp;</p>
+<p>Output:</p>
+<pre>2
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;The given binary tree has not more than 10000 nodes. The height of the tree is not more than 1000.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求最长的相同值路径，跟之前那道<a href="http://www.cnblogs.com/grandyang/p/5206862.html" target="_blank">Count Univalue Subtrees</a>十分的类似，解法也很类似。对于这种树的路径问题，递归是不二之选。在递归函数中，我们首先对其左右子结点调用递归函数，得到其左右子树的最大相同值路径，下面就要来看当前结点和其左右子结点之间的关系了，如果其左子结点存在且和当前节点值相同，则left自增1，否则left重置0；同理，如果其右子结点存在且和当前节点值相同，则right自增1，否则right重置0。然后用left+right来更新结果res。而调用当前节点值的函数只能返回left和right中的较大值，因为如果还要跟父节点组path，就只能在左右子节点中选一条path，当然选值大的那个了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestUnivaluePath(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        helper(root, root, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> helper(TreeNode* node, TreeNode* parent, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = helper(node-&gt;<span style="color: #000000;">left, node, res);
+        </span><span style="color: #0000ff;">int</span> right = helper(node-&gt;<span style="color: #000000;">right, node, res);
+        left </span>= (node-&gt;left &amp;&amp; node-&gt;val == node-&gt;left-&gt;val) ? left + <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">;
+        right </span>= (node-&gt;right &amp;&amp; node-&gt;val == node-&gt;right-&gt;val) ? right + <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">;
+        res </span>= max(res, left +<span style="color: #000000;"> right);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> max(left, right);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法使用了两个递归函数，使得写法更加简洁了，首先还是先判断root是否为空，是的话返回0。然后对左右子节点分别调用当前函数，取其中较大值保存到变量sub中，表示左右子树中最长的相同值路径，然后就是要跟当前树的最长相同值路径比较，计算方法是对左右子结点调用一个helper函数，并把当前结点值传进去，把返回值加起来和sub比较，去较大值返回。在helper函数里，当当前结点为空，或者当前节点值不等于父结点值的话，返回0。否则结返回对左右子结点分别调用helper递归函数中的较大值加1，我们发现这种写法跟求树的最大深度很像，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestUnivaluePath(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> sub = max(longestUnivaluePath(root-&gt;left), longestUnivaluePath(root-&gt;<span style="color: #000000;">right));
+        </span><span style="color: #0000ff;">return</span> max(sub, helper(root-&gt;left, root-&gt;val) + helper(root-&gt;right, root-&gt;<span style="color: #000000;">val));
+    }
+    </span><span style="color: #0000ff;">int</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span><span style="color: #000000;"> parent) {
+        </span><span style="color: #0000ff;">if</span> (!node || node-&gt;val != parent) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> + max(helper(node-&gt;left, node-&gt;val), helper(node-&gt;right, node-&gt;<span style="color: #000000;">val));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4280120.html" target="_blank">Binary Tree Maximum Path Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5206862.html" target="_blank">Count Univalue Subtrees</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6007336.html">Path Sum III</a>&nbsp; </p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

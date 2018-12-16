@@ -1,0 +1,76 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4353680.html">[LeetCode] Unique Paths II 不同的路径之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Follow up for "Unique Paths":</p>
+<p>Now consider if some obstacles are added to the grids. How many unique paths would there be?</p>
+<p>An obstacle and empty space is marked as&nbsp;<code>1</code>&nbsp;and&nbsp;<code>0</code>&nbsp;respectively in the grid.</p>
+<p>For example,</p>
+<p>There is one obstacle in the middle of a 3x3 grid as illustrated below.</p>
+<pre>[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+</pre>
+<p>The total number of unique paths is&nbsp;<code>2</code>.</p>
+<p>Note:&nbsp;<em>m</em>&nbsp;and&nbsp;<em>n</em>&nbsp;will be at most 100.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4353555.html">&nbsp;Unique Paths 不同的路径</a>&nbsp;的延伸，在路径中加了一些障碍物，还是用动态规划Dynamic Programming来解，不同的是当遇到为1的点，将该位置的dp数组中的值清零，其余和之前那道题并没有什么区别，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> uniquePathsWithObstacles(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> obstacleGrid) {
+        </span><span style="color: #0000ff;">if</span> (obstacleGrid.empty() || obstacleGrid[<span style="color: #800080;">0</span>].empty() || obstacleGrid[<span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; dp(obstacleGrid.size(), vector&lt;<span style="color: #0000ff;">int</span>&gt;(obstacleGrid[<span style="color: #800080;">0</span>].size(), <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; obstacleGrid.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; obstacleGrid[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (obstacleGrid[i][j] == <span style="color: #800080;">1</span>) dp[i][j] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> &amp;&amp; j == <span style="color: #800080;">0</span>) dp[i][j] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> &amp;&amp; j &gt; <span style="color: #800080;">0</span>) dp[i][j] = dp[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span> &amp;&amp; j == <span style="color: #800080;">0</span>) dp[i][j] = dp[i - <span style="color: #800080;">1</span><span style="color: #000000;">][j];
+                </span><span style="color: #0000ff;">else</span> dp[i][j] = dp[i - <span style="color: #800080;">1</span>][j] + dp[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.back().back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>或者我们也可以使用一维dp数组来解，省一些空间，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> DP</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> uniquePathsWithObstacles(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">obstacleGrid) {
+        </span><span style="color: #0000ff;">if</span> (obstacleGrid.empty() || obstacleGrid[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = obstacleGrid.size(), n = obstacleGrid[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">if</span> (obstacleGrid[<span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        dp[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (obstacleGrid[i][j] == <span style="color: #800080;">1</span>) dp[j] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (j &gt; <span style="color: #800080;">0</span>) dp[j] += dp[j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[n - <span style="color: #800080;">1</span><span style="color: #000000;">];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4353555.html" target="_blank">Unique Paths</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,68 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5136749.html">[LeetCode] Create Maximum Number 创建最大数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two arrays of length&nbsp;<code>m</code>&nbsp;and&nbsp;<code>n</code>&nbsp;with digits&nbsp;<code>0-9</code>&nbsp;representing two numbers. Create the maximum number of length&nbsp;<code>k &lt;= m + n</code>&nbsp;from digits of the two. The relative order of the digits from the same array must be preserved. Return an array of the&nbsp;<code>k</code>&nbsp;digits. You should try to optimize your time and space complexity.</p>
+<p>Example 1:</p>
+<p>nums1 =&nbsp;<code>[3, 4, 6, 5]</code><br />nums2 =&nbsp;<code>[9, 1, 2, 5, 8, 3]</code><br />k =&nbsp;<code>5</code><br />return&nbsp;<code>[9, 8, 6, 5, 3]</code></p>
+<p>Example 2:</p>
+<p>nums1 =&nbsp;<code>[6, 7]</code><br />nums2 =&nbsp;<code>[6, 0, 4]</code><br />k =&nbsp;<code>5</code><br />return&nbsp;<code>[6, 7, 6, 0, 4]</code></p>
+<p>Example 3:</p>
+<p>nums1 =&nbsp;<code>[3, 9]</code><br />nums2 =&nbsp;<code>[8, 9]</code><br />k =&nbsp;<code>3</code><br />return&nbsp;<code>[9, 8, 9]</code></p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/dietpepsi">@dietpepsi</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们两个数组，里面数字是无序的，又给我们一个k值为k &lt;= m + n，然后我们从两个数组中共挑出k个数，数字之间的相对顺序不变，求能组成的最大的数。这道题的难度是Hard，博主木有想出解法，参考网上大神们的解法来做的。由于k的大小不定，所以有三种可能，第一种是当k为0时，两个数组中都不取数；第二种是当k不大于其中一个数组的长度时，有可能只从一个数组中取数；第三种情况是k大于其中一个数组的长度，则需要从两个数组中分别取数，至于每个数组中取几个，每种情况都要考虑到，然后每次更结果即可。对于分别从两个数组中取数字的情况，我们需要将两个取出的小数组混合排序成一个数组，小数组中各自的数字之间的相对顺序不变。我们还需要一个函数来从数组中取若干个数字的函数，而且取出的数要最大。比如当前数组长度为n，需要取出k个数字，我们定义一个变量drop = n - k，表示需要丢弃的数字的个数，我们遍历数组中的数字，进行下列循环，如果此时drop为整数，且结果数组长度不为0，结果数组的尾元素小于当前遍历的元素，则去掉结果数组的尾元素，此时drop自减1，重复循环直至上述任意条件不满足为止，然后把当前元素加入结果数组中，最后我们返回结果数组中的前k个元素。对于两个数组的混合，我们只要从两个数组开头每次取两个，把大的加入结果数组，然后删掉这个大的，然后继续取一对比较，直到两个数组都为空停止。参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; maxNumber(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums1, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums2, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> m = nums1.size(), n =<span style="color: #000000;"> nums2.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = max(<span style="color: #800080;">0</span>, k - n); i &lt;= min(k, m); ++<span style="color: #000000;">i) {
+            res </span>= max(res, mergeVector(maxVector(nums1, i), maxVector(nums2, k -<span style="color: #000000;"> i)));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; maxVector(vector&lt;<span style="color: #0000ff;">int</span>&gt; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> drop = nums.size() -<span style="color: #000000;"> k;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            </span><span style="color: #0000ff;">while</span> (drop &amp;&amp; res.size() &amp;&amp; res.back() &lt;<span style="color: #000000;"> num) {
+                res.pop_back();
+                </span>--<span style="color: #000000;">drop;
+            }
+            res.push_back(num);
+        }
+        res.resize(k);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; mergeVector(vector&lt;<span style="color: #0000ff;">int</span>&gt; nums1, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums2) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">while</span> (nums1.size() +<span style="color: #000000;"> nums2.size()) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; &amp;tmp = nums1 &gt; nums2 ?<span style="color: #000000;"> nums1 : nums2;
+            res.push_back(tmp[</span><span style="color: #800080;">0</span><span style="color: #000000;">]);
+            tmp.erase(tmp.begin());
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7583875.html">Maximum Swap</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5883736.html">Remove K Digits</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5085379.html">Remove Duplicate Letters</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/75804/short-python-ruby-c" target="_blank">https://leetcode.com/discuss/75804/short-python-ruby-c</a></p>
+<p><a href="https://leetcode.com/discuss/75821/clean-and-easy-to-understand-c-solution" target="_blank">https://leetcode.com/discuss/75821/clean-and-easy-to-understand-c-solution</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

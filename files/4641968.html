@@ -1,0 +1,82 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4641968.html">[LeetCode] Lowest Common Ancestor of a Binary Tree 二叉树的最小共同父节点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.</p>
+<p>According to the&nbsp;<a href="https://en.wikipedia.org/wiki/Lowest_common_ancestor" target="_blank">definition of LCA on Wikipedia</a>: &ldquo;The lowest common ancestor is defined between two nodes p&nbsp;and q&nbsp;as the lowest node in T that has both p&nbsp;and q&nbsp;as descendants (where we allow&nbsp;a node to be a descendant of itself).&rdquo;</p>
+<p>Given the following binary tree:&nbsp; root =&nbsp;[3,5,1,6,2,0,8,null,null,7,4]</p>
+<pre>        _______3______
+       /              \
+    ___5__          ___1__
+   /      \        /      \
+   6      _2       0       8
+         /  \
+         7   4
+</pre>
+<p>Example 1:</p>
+<pre>Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+Explanation: The LCA of of nodes <code>5</code> and <code>1</code> is <code>3.</code>
+</pre>
+<p>Example 2:</p>
+<pre>Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+Output: 5
+Explanation: The LCA of nodes <code>5</code> and <code>4</code> is <code>5</code>, since a node can be a descendant of itself
+             according to the LCA definition.</pre>
+<p>Note:</p>
+<ul>
+<li>All of the nodes' values will be unique.</li>
+<li>p and q are different and both values will&nbsp;exist in the binary tree.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道求二叉树的最小共同父节点的题是之前那道&nbsp;<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4640572.html">Lowest Common Ancestor of a Binary Search Tree</a>&nbsp;的Follow Up。跟之前那题不同的地方是，这道题是普通是二叉树，不是二叉搜索树，所以就不能利用其特有的性质，所以我们只能在二叉树中来搜索p和q，然后从路径中找到最后一个相同的节点即为父节点，我们可以用递归来实现，在递归函数中，我们首先看当前结点是否为空，若为空则直接返回空，若为p或q中的任意一个，也直接返回当前结点。否则的话就对其左右子结点分别调用递归函数，由于这道题限制了p和q一定都在二叉树中存在，那么如果当前结点不等于p或q，p和q要么分别位于左右子树中，要么同时位于左子树，或者同时位于右子树，那么我们分别来讨论：</p>
+<p>若p和q要么分别位于左右子树中，那么对左右子结点调用递归函数，会分别返回p和q结点的位置，而当前结点正好就是p和q的最小共同父结点，直接返回当前结点即可，这就是题目中的例子1的情况。</p>
+<p>若p和q同时位于左子树，这里有两种情况，一种情况是left会返回p和q中较高的那个位置，而right会返回空，所以我们最终返回非空的left即可，这就是题目中的例子2的情况。还有一种情况是会返回p和q的最小父结点，就是说当前结点的左子树中的某个结点才是p和q的最小父结点，会被返回。</p>
+<p>若p和q同时位于右子树，同样这里有两种情况，一种情况是right会返回p和q中较高的那个位置，而left会返回空，所以我们最终返回非空的right即可，还有一种情况是会返回p和q的最小父结点，就是说当前结点的右子树中的某个结点才是p和q的最小父结点，会被返回，写法很简洁，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode</span>* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode*<span style="color: #000000;"> q) {
+       </span><span style="color: #0000ff;">if</span> (!root || p == root || q == root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+       TreeNode </span>*left = lowestCommonAncestor(root-&gt;<span style="color: #000000;">left, p, q);
+       TreeNode </span>*right = lowestCommonAncestor(root-&gt;<span style="color: #000000;">right, p , q);
+       </span><span style="color: #0000ff;">if</span> (left &amp;&amp; right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+       </span><span style="color: #0000ff;">return</span> left ?<span style="color: #000000;"> left : right;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述代码可以进行优化一下，如果当前结点不为空，且既不是p也不是q，那么根据上面的分析，p和q的位置就有三种情况，p和q要么分别位于左右子树中，要么同时位于左子树，或者同时位于右子树。我们需要优化的情况就是当p和q同时为于左子树或右子树中，而且返回的结点并不是p或q，那么就是p和q的最小父结点了，已经求出来了，就不用再对右结点调用递归函数了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode</span>* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode*<span style="color: #000000;"> q) {
+       </span><span style="color: #0000ff;">if</span> (!root || p == root || q == root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+       TreeNode </span>*left = lowestCommonAncestor(root-&gt;<span style="color: #000000;">left, p, q);
+       </span><span style="color: #0000ff;">if</span> (left &amp;&amp; left != p &amp;&amp; left != q) <span style="color: #0000ff;">return</span><span style="color: #000000;"> left;
+       TreeNode </span>*right = lowestCommonAncestor(root-&gt;<span style="color: #000000;">right, p , q);<br /></span><span style="color: #0000ff;">　　　　if</span> (left &amp;&amp; right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+       </span><span style="color: #0000ff;">return</span> left ?<span style="color: #000000;"> left : right;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>此题还有一种情况，题目中没有明确说明p和q是否是树中的节点，如果不是，应该返回NULL，而上面的方法就不正确了，对于这种情况请参见 Cracking the Coding Interview 5th Edition 的第233-234页。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4640572.html">Lowest Common Ancestor of a Binary Search Tree</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/discuss/65225/4-lines-C++JavaPythonRuby">https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/discuss/65225/4-lines-C++JavaPythonRuby</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,85 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7053730.html">[LeetCode] Valid Triangle Number 合法的三角形个数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array consists of non-negative integers, your task is to count the number of triplets chosen from the array that can make triangles if we take them as side lengths of a triangle.</p>
+<p>Example 1:</p>
+<pre>Input: [2,2,3,4]
+Output: 3
+Explanation:
+Valid combinations are: 
+2,3,4 (using the first 2)
+2,3,4 (using the second 2)
+2,2,3
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The length of the given array won't exceed 1000.</li>
+<li>The integers in the given array are in the range of [0, 1000].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一堆数字，问我们能组成多少个正确的三角形，我们初中就知道三角形的性质，任意两条边之和要大于第三边。那么问题其实就变成了找出所有这样的三个数字，使得任意两个数字之和都大于第三个数字。那么可以转变一下，三个数字中如果较小的两个数字之和大于第三个数字，那么任意两个数字之和都大于第三个数字，这很好证明，因为第三个数字是最大的，所以它加上任意一个数肯定大于另一个数。这样，我们就先要给数组排序，博主最先尝试了暴力破解法，结果TLE了(不要吐槽博主哈，博主就是喜欢霸王硬上弓～)，后来优化的方法是先确定前两个数，将这两个数之和sum作为目标值，然后用二分查找法来快速确定第一个小于目标值的数，这种情况属于博主之前的博客<a href="http://www.cnblogs.com/grandyang/p/6854825.html" target="_blank">LeetCode Binary Search Summary 二分搜索法小结</a>中总结的第二类的变形，我们找到这个临界值，那么这之前一直到j的位置之间的数都满足题意，直接加起来即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> triangleNumber(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        sort(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> sum = nums[i] + nums[j], left = j + <span style="color: #800080;">1</span>, right =<span style="color: #000000;"> n;
+                </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                    </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (nums[mid] &lt; sum) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+                }
+                res </span>+= right - <span style="color: #800080;">1</span> -<span style="color: #000000;"> j;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其实还有更进一步优化的方法，用的是博主之前那篇<a href="http://www.cnblogs.com/grandyang/p/5235086.html" target="_blank">3Sum Smaller</a>里面的解法二，明明博主以前都总结过，换个题目情景就又没想到，看来博主的举一反三能力还是有所欠缺啊。没办法，只能继续刻意练习了。这种方法能将时间复杂度优化到O(n<sup>2</sup>), 感觉很叼了。思路是排序之后，从数字末尾开始往前遍历，将left指向首数字，将right之前遍历到的数字的前面一个数字，然后如果left小于right就进行循环，循环里面判断如果left指向的数加上right指向的数大于当前的数字的话，那么right到left之间的数字都可以组成三角形，这是为啥呢，相当于此时确定了i和right的位置，可以将left向右移到right的位置，中间经过的数都大于left指向的数，所以都能组成三角形，就说这思路叼不叼！加完之后，right自减一，即向左移动一位。如果left和right指向的数字之和不大于nums[i]，那么left自增1，即向右移动一位，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> triangleNumber(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        sort(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">2</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = i - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">if</span> (nums[left] + nums[right] &gt;<span style="color: #000000;"> nums[i]) {
+                    res </span>+= right -<span style="color: #000000;"> left;
+                    </span>--<span style="color: #000000;">right;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span>++<span style="color: #000000;">left;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5235086.html" target="_blank">3Sum Smaller</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/92099/java-o-n-2-time-o-1-space" target="_blank">https://discuss.leetcode.com/topic/92099/java-o-n-2-time-o-1-space</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

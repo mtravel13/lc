@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5926674.html">[LeetCode] Convert a Number to Hexadecimal 数字转为十六进制</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer, write an algorithm to convert it to hexadecimal. For negative integer,&nbsp;<a href="https://en.wikipedia.org/wiki/Two%27s_complement" target="_blank">two&rsquo;s complement</a>&nbsp;method is used.</p>
+<p>Note:</p>
+<ol>
+<li>All letters in hexadecimal (<code>a-f</code>) must be in lowercase.</li>
+<li>The hexadecimal string must not contain extra leading&nbsp;<code>0</code>s. If the number is zero, it is represented by a single zero character&nbsp;<code>'0'</code>; otherwise, the first character in the hexadecimal string will not be the zero character.</li>
+<li>The given number is guaranteed to fit within the range of a 32-bit signed integer.</li>
+<li>You&nbsp;must not use&nbsp;<em>any</em>&nbsp;method provided by the library&nbsp;which converts/formats the number to hex directly.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input:
+26
+
+Output:
+"1a"
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+-1
+
+Output:
+"ffffffff"</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数字，让我们转化为十六进制，抛开题目，我们应该都会把一个十进制数转为十六进制数，比如50，转为十六进制数，我们先对50除以16，商3余2，那么转为十六进制数就是32。所以我们就按照这个思路来写代码，由于输入数字的大小限制为int型，我们对于负数的处理方法是用其补码来运算，那么数字范围就是0到UINT_MAX，即为16^8-1，那么最高位就是16^7，我们首先除以这个数字，如果商大于等于10，我们用字母代替，否则就是用数字代替，然后对其余数进行同样的处理，一直到当前数字为0停止，最后我们还要补齐末尾的0，方法根据n的值，比-1大多少就补多少个0。由于题目中说明了最高位不能有多余的0，所以我们将起始0移除，如果res为空了，我们就返回0即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> toHex(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; v{<span style="color: #800000;">"</span><span style="color: #800000;">a</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">b</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">c</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">d</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">e</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">f</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">int</span> n = <span style="color: #800080;">7</span><span style="color: #000000;">;
+        unsigned </span><span style="color: #0000ff;">int</span> x =<span style="color: #000000;"> num;
+        </span><span style="color: #0000ff;">if</span> (num &lt; <span style="color: #800080;">0</span>) x = UINT_MAX + num + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (x &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> t = pow(<span style="color: #800080;">16</span><span style="color: #000000;">, n);
+            </span><span style="color: #0000ff;">int</span> d = x /<span style="color: #000000;"> t;
+            </span><span style="color: #0000ff;">if</span> (d &gt;= <span style="color: #800080;">10</span>) res += v[d - <span style="color: #800080;">10</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (d &gt;= <span style="color: #800080;">0</span>) res +=<span style="color: #000000;"> to_string(d);
+            x </span>%=<span style="color: #000000;"> t;
+            </span>--<span style="color: #000000;">n;
+        }
+        </span><span style="color: #0000ff;">while</span> (n-- &gt;= <span style="color: #800080;">0</span>) res += to_string(<span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">while</span> (!res.empty() &amp;&amp; res[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) res.erase(res.begin());
+        </span><span style="color: #0000ff;">return</span> res.empty() ? <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述方法稍稍复杂一些，我们来看一种更简洁的方法，我们采取位操作的思路，每次取出最右边四位，如果其大于等于10，找到对应的字母加入结果，反之则将对应的数字加入结果，然后num像右平移四位，循环停止的条件是num为0，或者是已经循环了7次，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> toHex(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; num &amp;&amp; i &lt; <span style="color: #800080;">8</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> t = num &amp; <span style="color: #800080;">0xf</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (t &gt;= <span style="color: #800080;">10</span>) res = <span style="color: #0000ff;">char</span>(<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span> + t - <span style="color: #800080;">10</span>) +<span style="color: #000000;"> res;
+            </span><span style="color: #0000ff;">else</span> res = <span style="color: #0000ff;">char</span>(<span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> + t) +<span style="color: #000000;"> res;
+            num </span>&gt;&gt;= <span style="color: #800080;">4</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> res.empty() ? <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种写法更加简洁一些，虽然思路跟解法二并没有什么区别，但是我们把要转换的十六进制的数字字母都放在一个字符串中，按位置直接取就可以了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> toHex(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span>, str = <span style="color: #800000;">"</span><span style="color: #800000;">0123456789abcdef</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (num != <span style="color: #800080;">0</span> &amp;&amp; cnt++ &lt; <span style="color: #800080;">8</span><span style="color: #000000;">) {
+            res </span>= str[(num &amp; <span style="color: #800080;">0xf</span>)] +<span style="color: #000000;"> res;
+            num </span>&gt;&gt;= <span style="color: #800080;">4</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> res.empty() ? <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/60431/concise-c-solution" target="_blank">https://discuss.leetcode.com/topic/60431/concise-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/60365/simple-java-solution-with-comment" target="_blank">https://discuss.leetcode.com/topic/60365/simple-java-solution-with-comment</a></p>
+<p><a href="https://discuss.leetcode.com/topic/60412/concise-10-line-c-solution-for-both-positive-and-negative-input" target="_blank">https://discuss.leetcode.com/topic/60412/concise-10-line-c-solution-for-both-positive-and-negative-input</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

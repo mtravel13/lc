@@ -1,0 +1,73 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6442861.html">[LeetCode] Next Greater Element II 下一个较大的元素之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a circular array (the next element of the last element is the first element of the array), print the Next Greater Number for every element. The Next Greater Number of a number x is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn't exist, output -1 for this number.</p>
+<p>Example 1:</p>
+<pre>Input: [1,2,1]
+Output: [2,-1,2]
+Explanation: The first 1's next greater number is 2; <br />The number 2 can't find next greater number; <br />The second 1's next greater number needs to search circularly, which is also 2.
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;The length of given array won't exceed 10000.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/6399855.html" target="_blank">Next Greater Element I</a>的拓展，不同的是，此时数组是一个循环数组，就是说某一个元素的下一个较大值可以在其前面，那么对于循环数组的遍历，为了使下标不超过数组的长度，我们需要对n取余，下面先来看暴力破解的方法，遍历每一个数字，然后对于每一个遍历到的数字，遍历所有其他数字，注意不是遍历到数组末尾，而是通过循环数组遍历其前一个数字，遇到较大值则存入结果res中，并break，再进行下一个数字的遍历，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; nextGreaterElements(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(n, -<span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; i + n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (nums[j % n] &gt;<span style="color: #000000;"> nums[i]) {
+                    res[i] </span>= nums[j %<span style="color: #000000;"> n];
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以使用栈来进行优化上面的算法，我们遍历两倍的数组，然后还是坐标i对n取余，取出数字，如果此时栈不为空，且栈顶元素小于当前数字，说明当前数字就是栈顶元素的右边第一个较大数，那么建立二者的映射，并且去除当前栈顶元素，最后如果i小于n，则把i压入栈。因为res的长度必须是n，超过n的部分我们只是为了给之前栈中的数字找较大值，所以不能压入栈，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; nextGreaterElements(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(n, -<span style="color: #800080;">1</span><span style="color: #000000;">);
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">2</span> * n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> num = nums[i %<span style="color: #000000;"> n];
+            </span><span style="color: #0000ff;">while</span> (!st.empty() &amp;&amp; nums[st.top()] &lt;<span style="color: #000000;"> num) {
+                res[st.top()] </span>=<span style="color: #000000;"> num; st.pop();
+            }
+            </span><span style="color: #0000ff;">if</span> (i &lt;<span style="color: #000000;"> n) st.push(i);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6399855.html" target="_blank">Next Greater Element I</a>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6716130.html">Next Greater Element III</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/77871/short-ac-solution-and-fast-dp-solution-45ms" target="_blank">https://discuss.leetcode.com/topic/77871/short-ac-solution-and-fast-dp-solution-45ms</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77923/java-10-lines-and-c-12-lines-linear-time-complexity-o-n-with-explanation" target="_blank">https://discuss.leetcode.com/topic/77923/java-10-lines-and-c-12-lines-linear-time-complexity-o-n-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

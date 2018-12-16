@@ -1,0 +1,74 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5348976.html">[LeetCode] Nth Highest Salary 第N高薪水</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a SQL query to get the&nbsp;<em>n</em>th&nbsp;highest salary from the&nbsp;<code>Employee</code>&nbsp;table.</p>
+<pre>+----+--------+
+| Id | Salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+</pre>
+<p>For example, given the above Employee table, the&nbsp;<em>n</em>th&nbsp;highest salary where&nbsp;<em>n</em>&nbsp;= 2 is&nbsp;<code>200</code>. If there is no&nbsp;<em>n</em>th&nbsp;highest salary, then the query should return&nbsp;<code>null</code>.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348961.html">Second Highest Salary</a>的拓展，根据之前那道题的做法，我们可以很容易的将其推展为N，根据对<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348961.html">Second Highest Salary</a>中解法一的分析，我们只需要将OFFSET后面的1改为N-1就行了，但是这样MySQL会报错，估计不支持运算，那么我们可以在前面加一个SET N = N - 1，将N先变成N-1再做也是一样的：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">FUNCTION</span> getNthHighestSalary(N <span style="color: #0000ff;">INT</span>) <span style="color: #0000ff;">RETURNS</span> <span style="color: #0000ff;">INT</span>
+<span style="color: #0000ff;">BEGIN</span>
+  <span style="color: #0000ff;">SET</span> N <span style="color: #808080;">=</span> N <span style="color: #808080;">-</span> <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+  </span><span style="color: #0000ff;">RETURN</span><span style="color: #000000;"> (
+      </span><span style="color: #0000ff;">SELECT</span> <span style="color: #0000ff;">DISTINCT</span> Salary <span style="color: #0000ff;">FROM</span> Employee <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> Salary
+      </span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> Salary <span style="color: #0000ff;">DESC</span> LIMIT <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;"> OFFSET N
+  );
+</span><span style="color: #0000ff;">END</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>根据对<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348961.html">Second Highest Salary</a>中解法四的分析，我们只需要将其1改为N-1即可，这里却支持N-1的计算，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">FUNCTION</span> getNthHighestSalary(N <span style="color: #0000ff;">INT</span>) <span style="color: #0000ff;">RETURNS</span> <span style="color: #0000ff;">INT</span>
+<span style="color: #0000ff;">BEGIN</span>
+  <span style="color: #0000ff;">RETURN</span><span style="color: #000000;"> (
+      </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee E1
+      </span><span style="color: #0000ff;">WHERE</span> N <span style="color: #808080;">-</span> <span style="color: #800000; font-weight: bold;">1</span> <span style="color: #808080;">=</span><span style="color: #000000;">
+      (</span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span>(E2.Salary)) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee E2
+      </span><span style="color: #0000ff;">WHERE</span> E2.Salary <span style="color: #808080;">&gt;</span><span style="color: #000000;"> E1.Salary)
+  );
+</span><span style="color: #0000ff;">END</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>当然我们也可以通过将最后的&gt;改为&gt;=，这样我们就可以将N-1换成N了：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">FUNCTION</span> getNthHighestSalary(N <span style="color: #0000ff;">INT</span>) <span style="color: #0000ff;">RETURNS</span> <span style="color: #0000ff;">INT</span>
+<span style="color: #0000ff;">BEGIN</span>
+  <span style="color: #0000ff;">RETURN</span><span style="color: #000000;"> (
+      </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee E1
+      </span><span style="color: #0000ff;">WHERE</span> N <span style="color: #808080;">=</span><span style="color: #000000;">
+      (</span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span>(E2.Salary)) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee E2
+      </span><span style="color: #0000ff;">WHERE</span> E2.Salary <span style="color: #808080;">&gt;=</span><span style="color: #000000;"> E1.Salary)
+  );
+</span><span style="color: #0000ff;">END</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348961.html">Second Highest Salary</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/88875/simple-answer-with-limit-and-offset" target="_blank">https://leetcode.com/discuss/88875/simple-answer-with-limit-and-offset</a></p>
+<p><a href="https://leetcode.com/discuss/63183/fastest-solution-without-using-order-declaring-variables" target="_blank">https://leetcode.com/discuss/63183/fastest-solution-without-using-order-declaring-variables</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,109 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5923559.html">[LeetCode] Sum of Left Leaves 左子叶之和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Find the sum of all left leaves in a given binary tree.</p>
+<p>Example:</p>
+<pre>    3
+   / \
+  9  20
+    /  \
+   15   7
+
+There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.</pre>
+<p>&nbsp;</p>
+<p>这道题让我们求一棵二叉树的所有左子叶的和，那么看到这道题我们知道这肯定是考二叉树的遍历问题，那么最简洁的写法肯定是用递归，由于我们只需要累加左子叶之和，那么我们在进入递归函数的时候需要知道当前结点是否是左子节点，如果是左子节点，而且该左子节点再没有子节点了说明其是左子叶，那么我们将其值加入结果res中，我们用一个bool型的变量，如果为true说明当前结点是左子节点，若为false则说明是右子节点，不做特殊处理，整个来说就是个递归的先序遍历的写法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> sumOfLeftLeaves(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root || (!root-&gt;left &amp;&amp; !root-&gt;right)) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        helper(root</span>-&gt;left, <span style="color: #0000ff;">true</span><span style="color: #000000;">, res);
+        helper(root</span>-&gt;right, <span style="color: #0000ff;">false</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">bool</span> left, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (!node-&gt;left &amp;&amp; !node-&gt;right &amp;&amp; left) res += node-&gt;<span style="color: #000000;">val;
+        helper(node</span>-&gt;left, <span style="color: #0000ff;">true</span><span style="color: #000000;">, res);
+        helper(node</span>-&gt;right, <span style="color: #0000ff;">false</span><span style="color: #000000;">, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们还可以写的更简洁一些，不需要写其他的函数，直接在原函数中检查当前节点的左子节点是否是左子叶，如果是的话，则返回左子叶的值加上对当前结点的右子节点调用递归的结果；如果不是的话，我们对左右子节点分别调用递归函数，返回二者之和，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> sumOfLeftLeaves(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left &amp;&amp; !root-&gt;left-&gt;left &amp;&amp; !root-&gt;left-&gt;<span style="color: #000000;">right) {
+            </span><span style="color: #0000ff;">return</span> root-&gt;left-&gt;val + sumOfLeftLeaves(root-&gt;<span style="color: #000000;">right);
+        }
+        </span><span style="color: #0000ff;">return</span> sumOfLeftLeaves(root-&gt;left) + sumOfLeftLeaves(root-&gt;<span style="color: #000000;">right);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用迭代来解，因为这道题的本质是遍历二叉树，所以我们可以用层序遍历的迭代写法，利用queue来辅助，注意对左子叶的判断和处理，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> sumOfLeftLeaves(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root || (!root-&gt;left &amp;&amp; !root-&gt;right)) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        queue</span>&lt;TreeNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            TreeNode </span>*t =<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">if</span> (t-&gt;left &amp;&amp; !t-&gt;left-&gt;left &amp;&amp; !t-&gt;left-&gt;right) res += t-&gt;left-&gt;<span style="color: #000000;">val;
+            </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push(t-&gt;<span style="color: #000000;">left);
+            </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push(t-&gt;<span style="color: #000000;">right);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用stack来辅助，对比上面的解法，我们发现几乎一模一样，只是把queue换成了stack，但实际上遍历的顺序不同，这种方法是先序遍历的迭代写法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> sumOfLeftLeaves(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root || (!root-&gt;left &amp;&amp; !root-&gt;right)) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s;
+        s.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s.empty()) {
+            TreeNode </span>*t =<span style="color: #000000;"> s.top(); s.pop();
+            </span><span style="color: #0000ff;">if</span> (t-&gt;left &amp;&amp; !t-&gt;left-&gt;left &amp;&amp; !t-&gt;left-&gt;right) res += t-&gt;left-&gt;<span style="color: #000000;">val;
+            </span><span style="color: #0000ff;">if</span> (t-&gt;left) s.push(t-&gt;<span style="color: #000000;">left);
+            </span><span style="color: #0000ff;">if</span> (t-&gt;right) s.push(t-&gt;<span style="color: #000000;">right);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/60467/3-line-c-solution" target="_blank">https://discuss.leetcode.com/topic/60467/3-line-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/60381/java-solution-using-bfs" target="_blank">https://discuss.leetcode.com/topic/60381/java-solution-using-bfs</a></p>
+<p><a href="https://discuss.leetcode.com/topic/60415/java-solution-with-stack" target="_blank">https://discuss.leetcode.com/topic/60415/java-solution-with-stack</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,90 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5873525.html">[LeetCode] Integer Replacement 整数替换</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a positive integer&nbsp;<em>n</em>&nbsp;and you can do operations as follow:</p>
+<p>&nbsp;</p>
+<ol>
+<li>If&nbsp;<em>n</em>&nbsp;is even, replace&nbsp;<em>n</em>&nbsp;with&nbsp;<code><em>n</em>/2</code>.</li>
+<li>If&nbsp;<em>n</em>&nbsp;is odd, you can replace&nbsp;<em>n</em>&nbsp;with either&nbsp;<code><em>n</em>&nbsp;+ 1</code>&nbsp;or&nbsp;<code><em>n</em>&nbsp;- 1</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>What is the minimum number of replacements needed for&nbsp;<em>n</em>&nbsp;to become 1?</p>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input:
+8
+
+Output:
+3
+
+Explanation:
+8 -&gt; 4 -&gt; 2 -&gt; 1
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+7
+
+Output:
+4
+
+Explanation:
+7 -&gt; 8 -&gt; 4 -&gt; 2 -&gt; 1
+or
+7 -&gt; 6 -&gt; 3 -&gt; 2 -&gt; 1</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个整数n，然后让我们通过变换变为1，如果n是偶数，我们变为n/2，如果是奇数，我们可以变为n+1或n-1，让我们求变为1的最少步骤。那么一看道题的要求，就会感觉应该用递归很合适，我们直接按照规则写出递归即可，注意由于有n+1的操作，所以当n为INT_MAX的时候，就有可能溢出，所以我们可以先将n转为长整型，然后再进行运算，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> integerReplacement(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (n % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> + integerReplacement(n / <span style="color: #800080;">2</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> t =<span style="color: #000000;"> n;
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">2</span> + min(integerReplacement((t + <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span>), integerReplacement((t - <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span><span style="color: #000000;">));
+        }
+    }
+}; </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用迭代的解法，那么这里就有小技巧了，当n为奇数的时候，我们什么时候应该加1，什么时候应该减1呢，通过观察来说，除了3和7意外，所有加1就变成4的倍数的奇数，适合加1运算，比如15:</p>
+<p>15 -&gt; 16 -&gt; 8 -&gt; 4 -&gt; 2 -&gt; 1</p>
+<p>15 -&gt; 14 -&gt; 7 -&gt; 6 -&gt; 3 -&gt; 2 -&gt; 1</p>
+<p>对于7来说，加1和减1的结果相同，我们可以不用管，对于3来说，减1的步骤小，所以我们需要去掉这种情况。那么我们如何知道某个数字加1后是否是4的倍数呢，我们可以用个小技巧，由于我们之前判定其是奇数了，那么最右边一位肯定是1，如果其右边第二位也是1的话，那么进行加1运算，进位后右边肯定会出现两个0，则一定是4的倍数，搞定。如果之前判定是偶数，那么除以2即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> integerReplacement(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> t =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (t &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span>++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">if</span> (t &amp; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> ((t &amp; <span style="color: #800080;">2</span>) &amp;&amp; (t != <span style="color: #800080;">3</span>)) ++<span style="color: #000000;">t;
+                </span><span style="color: #0000ff;">else</span> --<span style="color: #000000;">t;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                t </span>&gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/58655/0ms-cpp-solution" target="_blank">https://discuss.leetcode.com/topic/58655/0ms-cpp-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

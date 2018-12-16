@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6087347.html">[LeetCode] Repeated Substring Pattern 重复子字符串模式</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.</p>
+<p>Example 1:</p>
+<pre>Input: "abab"
+
+Output: True
+
+Explanation: It's the substring "ab" twice.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: "aba"
+
+Output: False
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: "abcabcabcabc"
+
+Output: True
+
+Explanation: It's the substring "abc" four times. (And the substring "abcabc" twice.)
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个字符串，问其是否能拆成n个重复的子串。那么既然能拆分成多个子串，那么每个子串的长度肯定不能大于原字符串长度的一半，那么我们可以从原字符串长度的一半遍历到1，如果当前长度能被总长度整除，说明可以分成若干个子字符串，我们将这些子字符串拼接起来看跟原字符串是否相等。 如果拆完了都不相等，返回false。</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> repeatedSubstringPattern(<span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> str.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n / <span style="color: #800080;">2</span>; i &gt;= <span style="color: #800080;">1</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (n % i == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">int</span> c = n /<span style="color: #000000;"> i;
+                </span><span style="color: #0000ff;">string</span> t = <span style="color: #800000;">""</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; c; ++<span style="color: #000000;">j) {
+                    t </span>+= str.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i); 
+                }
+                </span><span style="color: #0000ff;">if</span> (t == str) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是参考的<a href="https://discuss.leetcode.com/topic/67652/c-o-n-using-kmp-32ms-8-lines-of-code-with-brief-explanation" target="_blank">网上的这个帖子</a>，原作者说是用的KMP算法，LeetCode之前也有一道应用KMP算法来解的题<a href="http://www.cnblogs.com/grandyang/p/4523624.html" target="_blank">Shortest Palindrome</a>，但是感觉那道题才是KMP算法。这道题也称为KMP算法感觉怪怪的(关于KMP的详细介绍请参见<a href="http://blog.csdn.net/v_july_v/article/details/7041827" target="_blank">从头到尾彻底理解KMP</a>，也可以看博主自己写的一篇<a title="发布于2017-06-12 13:08" href="http://www.cnblogs.com/grandyang/p/6992403.html">KMP Algorithm 字符串匹配算法KMP小结</a>)，KMP算法中的next数组是找当前位置的最大相同前缀后缀的个数，而这道题维护的一位数组dp[i]表示，到位置i-1为止的重复字符串的字符个数，不包括被重复的那个字符串，什么意思呢，我们举个例子，比如"abcabc"的dp数组为[0 0 0 0 1 2 3]，dp数组长度要比原字符串长度多一个。那么我们看最后一个位置数字为3，就表示重复的字符串的字符数有3个。如果是"abcabcabc"，那么dp数组为[0 0 0 0 1 2 3 4 5 6]，我们发现最后一个数字为6，那么表示重复的字符串为&ldquo;abcabc&rdquo;，有6个字符。那么怎么通过最后一个数字来知道原字符串是否由重复的子字符串组成的呢，首先当然是最后一个数字不能为0，而且还要满足dp[n] % (n - dp[n]) == 0才行，因为n - dp[n]是一个子字符串的长度，那么重复字符串的长度和肯定是一个子字符串的整数倍，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> repeatedSubstringPattern(<span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>, j = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> str.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">if</span> (str[i] == str[j]) dp[++i] = ++<span style="color: #000000;">j;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (j == <span style="color: #800080;">0</span>) ++<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">else</span> j =<span style="color: #000000;"> dp[j];
+        }
+        </span><span style="color: #0000ff;">return</span> dp[n] &amp;&amp; (dp[n] % (n - dp[n]) == <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606696.html" target="_blank">Implement strStr()</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl14_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7631434.html">Repeated String Match</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/68498/one-line-with-regex/2" target="_blank">https://discuss.leetcode.com/topic/68498/one-line-with-regex/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/67992/java-simple-solution-with-explanation" target="_blank">https://discuss.leetcode.com/topic/67992/java-simple-solution-with-explanation</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="interviewed-div"><a href="https://discuss.leetcode.com/topic/67652/c-o-n-using-kmp-32ms-8-lines-of-code-with-brief-explanation" target="_blank">https://discuss.leetcode.com/topic/67652/c-o-n-using-kmp-32ms-8-lines-of-code-with-brief-explanation</a></div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

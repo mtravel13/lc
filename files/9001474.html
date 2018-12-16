@@ -1,0 +1,77 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9001474.html">[LeetCode] Swap Adjacent in LR String 交换LR字符串中的相邻项</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>In a string composed of&nbsp;<code>'L'</code>,&nbsp;<code>'R'</code>, and&nbsp;<code>'X'</code>&nbsp;characters, like&nbsp;<code>"RXXLRXRXL"</code>, a move consists of either replacing one occurrence of&nbsp;<code>"XL"</code>&nbsp;with&nbsp;<code>"LX"</code>, or replacing one occurrence of&nbsp;<code>"RX"</code>&nbsp;with&nbsp;<code>"XR"</code>. Given the starting string&nbsp;<code>start</code>&nbsp;and the ending string&nbsp;<code>end</code>, return&nbsp;<code>True</code>&nbsp;if and only if there exists a sequence of moves to transform one string to the other.</p>
+<p>Example:</p>
+<pre>Input: start = "RXXLRXRXL", end = "XRLXXRRLX"
+Output: True
+Explanation:
+We can transform start to end following these steps:
+RXXLRXRXL -&gt;
+XRXLRXRXL -&gt;
+XRLXRXRXL -&gt;
+XRLXXRRXL -&gt;
+XRLXXRRLX
+</pre>
+<p>Note:</p>
+<ol>
+<li><code>1 &lt;= len(start) = len(end) &lt;= 10000</code>.</li>
+<li>Both start and end will only consist of characters in&nbsp;<code>{'L', 'R', 'X'}</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个只含有L，R，X三个字符的字符串，然后说有两种操作，一种是把 "XL" 变成 "LX"，另一种是把 "RX" 变成 "XR"。博主刚开始没有读题意，以为二者是可以互换的，错误的认为认为&nbsp;"LX" 也能变成&nbsp;"XL"，其实题目这种变换是单向，这种单向关系就是解题的关键，具体来说，就是要把start字符串变成end字符串的话，L只能往前移动，因为是把 "XL" 变成 "LX"，同样，R只能往后移动，因为是把 "RX" 变成 "XR"。题目给的那个例子并不能很好的说明问题，博主之前那种双向变换的错误认知会跪在这个例子：</p>
+<p>start = "XX<span style="color: #ff0000;">R</span>XX<span style="color: #339966;">L</span>XXXX"<br />end &nbsp;= "XXXX<span style="color: #ff0000;">R</span>XX<span style="color: #339966;">L</span>XX"</p>
+<p>我们观察这个test case，可以发现start中的R可以往后移动，没有问题，但是start中的L永远无法变到end中L的位置，因为L只能往前移。这道题被归类为brainteaser，估计就是因为要观察出这个规律吧。那么搞明白这个以后，我们其实可以用双指针来解题，思路是，我们每次分别找到start和end中非X的字符，如果二者不相同的话，直接返回false，想想问什么？这是因为不论是L还是R，其只能跟X交换位置，L和R之间是不能改变相对顺序的，所以如果分别将start和end中所有的X去掉后的字符串不相等的话，那么就永远无法让start和end相等了。这个判断完之后，就来验证L只能前移，R只能后移这个限制条件吧，当i指向start中的L时，那么j指向end中的L必须要在前面，所以如果i小于j的话，就不对了，同理，当i指向start中的R，那么j指向end中的R必须在后面，所以i大于j就是错的，最后别忘了i和j同时要自增1，不然死循环了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canTransform(<span style="color: #0000ff;">string</span> start, <span style="color: #0000ff;">string</span><span style="color: #000000;"> end) {
+        </span><span style="color: #0000ff;">int</span> n = start.size(), i = <span style="color: #800080;">0</span>, j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; j &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; start[i] == <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">while</span> (j &lt; n &amp;&amp; end[j] == <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">j;
+            </span><span style="color: #0000ff;">if</span> (start[i] != end[j]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> ((start[i] == <span style="color: #800000;">'</span><span style="color: #800000;">L</span><span style="color: #800000;">'</span> &amp;&amp; i &lt; j) || (start[i] == <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span> &amp;&amp; i &gt; j)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span>++i; ++<span style="color: #000000;">j;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法也挺巧妙的，这里我们使用两个计数器cntL和cntR，分别来统计L和R出现的次数，统计方法时，start中出现了L或R，计数器自增1，end中出现了L或R，计数器自减1。注意我们检测的顺序很重要，由于start中的R必须在end中的R前面，所以我们要先检测start中的R，同理，由于end中的L必须要在start中的L前面，所以我们要先检测end中的L，那么四个if写完后，如果cntL或者cntR中有任何一个小于0了，说明限制条件被打破了，返回false，或者当二者都大于0的时候，说明此时不匹配了，参见上面解法中对于去掉所有的X的解释，一个道理，说明L和R的相对顺序不同了，那么也是false。最终for循环退出后，如果cntL和cntR均为0的时候，才返回true，否则就是false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canTransform(<span style="color: #0000ff;">string</span> start, <span style="color: #0000ff;">string</span><span style="color: #000000;"> end) {
+        </span><span style="color: #0000ff;">int</span> n = start.size(), cntL = <span style="color: #800080;">0</span>, cntR = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (start[i] == <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cntR;
+            </span><span style="color: #0000ff;">if</span> (end[i] == <span style="color: #800000;">'</span><span style="color: #800000;">L</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cntL;
+            </span><span style="color: #0000ff;">if</span> (start[i] == <span style="color: #800000;">'</span><span style="color: #800000;">L</span><span style="color: #800000;">'</span>) --<span style="color: #000000;">cntL;
+            </span><span style="color: #0000ff;">if</span> (end[i] == <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span>) --<span style="color: #000000;">cntR;
+            </span><span style="color: #0000ff;">if</span> (cntL &lt; <span style="color: #800080;">0</span> || cntR &lt; <span style="color: #800080;">0</span> || cntL * cntR != <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> cntL == <span style="color: #800080;">0</span> &amp;&amp; cntR == <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/swap-adjacent-in-lr-string/solution/">https://leetcode.com/problems/swap-adjacent-in-lr-string/solution/</a></p>
+<p><a href="https://leetcode.com/problems/swap-adjacent-in-lr-string/discuss/126397/Simple-C++-solution-12ms-O(N)-time-and-O(1)-space">https://leetcode.com/problems/swap-adjacent-in-lr-string/discuss/126397/Simple-C++-solution-12ms-O(N)-time-and-O(1)-space</a></p>
+<p><a href="https://leetcode.com/problems/swap-adjacent-in-lr-string/discuss/113789/Simple-Java-one-pass-O(n)-solution-with-explaination">https://leetcode.com/problems/swap-adjacent-in-lr-string/discuss/113789/Simple-Java-one-pass-O(n)-solution-with-explaination</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

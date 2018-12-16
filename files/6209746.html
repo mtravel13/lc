@@ -1,0 +1,104 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6209746.html">[LeetCode] Find All Duplicates in an Array 找出数组中所有重复项</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given an array of integers, 1 &le; a[i] &le;&nbsp;<em>n</em>&nbsp;(<em>n</em>&nbsp;= size of array), some elements appear&nbsp;twice&nbsp;and others appear&nbsp;once.</p>
+<p>Find all the elements that appear&nbsp;twice&nbsp;in this array.</p>
+<p>Could you do it without extra space and in O(<em>n</em>) runtime?</p>
+<p>&nbsp;</p>
+<p>Example:</p>
+<pre>Input:
+[4,3,2,7,8,2,3,1]
+
+Output:
+[2,3]
+</pre>
+<p>&nbsp;</p>
+<div>
+<div id="company_tags" class="btn btn-xs btn-warning">这道题给了我们一个数组，数组中的数字可能出现一次或两次，让我们找出所有出现两次的数字，由于之前做过一道类似的题目<a href="http://www.cnblogs.com/grandyang/p/4843654.html" target="_blank">Find the Duplicate Number</a>，所以不是完全无从下手。这类问题的一个重要条件就是1 &le; a[i] &le; n (n = size of array)，不然很难在O(1)空间和O(n)时间内完成。首先来看一种正负替换的方法，这类问题的核心是就是找nums[i]和nums[nums[i] - 1]的关系，我们的做法是，对于每个nums[i]，我们将其对应的nums[nums[i] - 1]取相反数，如果其已经是负数了，说明之前存在过，我们将其加入结果res中即可，参见代码如下：</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findDuplicates(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> idx = abs(nums[i]) - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (nums[idx] &lt; <span style="color: #800080;">0</span>) res.push_back(idx + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            nums[idx] </span>= -<span style="color: #000000;">nums[idx];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是将nums[i]置换到其对应的位置nums[nums[i]-1]上去，比如对于没有重复项的正确的顺序应该是[1, 2, 3, 4, 5, 6, 7, 8]，而我们现在却是[4,3,2,7,8,2,3,1]，我们需要把数字移动到正确的位置上去，比如第一个4就应该和7先交换个位置，以此类推，最后得到的顺序应该是[1, 2, 3, 4, 3, 2, 7, 8]，我们最后在对应位置检验，如果nums[i]和i+1不等，那么我们将nums[i]存入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findDuplicates(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] != nums[nums[i] - <span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                swap(nums[i], nums[nums[i] </span>- <span style="color: #800080;">1</span><span style="color: #000000;">]);
+                </span>--<span style="color: #000000;">i;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] != i + <span style="color: #800080;">1</span><span style="color: #000000;">) res.push_back(nums[i]);
+        }</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是在nums[nums[i]-1]位置累加数组长度n，注意nums[i]-1有可能越界，所以我们需要对n取余，最后要找出现两次的数只需要看nums[i]的值是否大于2n即可，最后遍历完nums[i]数组为[12, 19, 18, 15, 8, 2, 11, 9]，我们发现有两个数字19和18大于2n，那么就可以通过i+1来得到正确的结果2和3了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findDuplicates(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            nums[(nums[i] </span>- <span style="color: #800080;">1</span>) % n] +=<span style="color: #000000;"> n;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] &gt; <span style="color: #800080;">2</span> * n) res.push_back(i + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4843654.html" target="_blank">Find the Duplicate Number</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/64759/very-simple-c-solution" target="_blank">https://discuss.leetcode.com/topic/64759/very-simple-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/64735/java-simple-solution/2" target="_blank">https://discuss.leetcode.com/topic/64735/java-simple-solution/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/64744/2-pass-o-1-space-solution" target="_blank">https://discuss.leetcode.com/topic/64744/2-pass-o-1-space-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

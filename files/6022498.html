@@ -1,0 +1,136 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6022498.html">[LeetCode] Ternary Expression Parser 三元表达式解析器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a string representing arbitrarily nested ternary expressions, calculate the result of the expression. You can always assume that the given expression is valid and only consists of digits&nbsp;<code>0-9</code>,&nbsp;<code>?</code>,&nbsp;<code>:</code>,&nbsp;<code>T</code>&nbsp;and&nbsp;<code>F</code>&nbsp;(<code>T</code>&nbsp;and&nbsp;<code>F</code>represent True and False respectively).</p>
+<p>Note:</p>
+<ol>
+<li>The length of the given string is &le; 10000.</li>
+<li>Each number will contain only one digit.</li>
+<li>The conditional expressions group right-to-left (as usual in most languages).</li>
+<li>The condition will always be either&nbsp;<code>T</code>&nbsp;or&nbsp;<code>F</code>. That is, the condition will never be a digit.</li>
+<li>The result of the expression will always evaluate to either a digit&nbsp;<code>0-9</code>,&nbsp;<code>T</code>&nbsp;or&nbsp;<code>F</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: "T?2:3"
+
+Output: "2"
+
+Explanation: If true, then result is 2; otherwise result is 3.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: "F?1:T?4:5"
+
+Output: "4"
+
+Explanation: The conditional expressions group right-to-left. Using parenthesis, it is read/evaluated as:
+
+             "(F ? 1 : (T ? 4 : 5))"                   "(F ? 1 : (T ? 4 : 5))"
+          -&gt; "(F ? 1 : 4)"                 or       -&gt; "(T ? 4 : 5)"
+          -&gt; "4"                                    -&gt; "4"
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: "T?T?F:5:3"
+
+Output: "F"
+
+Explanation: The conditional expressions group right-to-left. Using parenthesis, it is read/evaluated as:
+
+             "(T ? (T ? F : 5) : 3)"                   "(T ? (T ? F : 5) : 3)"
+          -&gt; "(T ? F : 3)"                 or       -&gt; "(T ? F : 5)"
+          -&gt; "F"                                    -&gt; "F"
+</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>这道题让我们解析一个三元表达式，我们通过分析题目中的例子可以知道，如果有多个三元表达式嵌套的情况出现，那么我们的做法是从右边开始找到第一个问号，然后先处理这个三元表达式，然后再一步一步向左推，这也符合程序是从右向左执行的特点。那么我最先想到的方法是用用一个stack来记录所有问号的位置，然后根据此问号的位置，取出当前的三元表达式，调用一个eval函数来分析得到结果，能这样做的原因是题目中限定了三元表达式每一部分只有一个字符，而且需要分析的三元表达式是合法的，然后我们把分析后的结果和前后两段拼接成一个新的字符串，继续处理之前一个问号，这样当所有问号处理完成后，所剩的一个字符就是答案，参见代码如下:</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> parseTernary(<span style="color: #0000ff;">string</span><span style="color: #000000;"> expression) {
+        </span><span style="color: #0000ff;">string</span> res =<span style="color: #000000;"> expression;
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; expression.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (expression[i] == <span style="color: #800000;">'</span><span style="color: #800000;">?</span><span style="color: #800000;">'</span><span style="color: #000000;">) s.push(i);
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s.empty()) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> s.top(); s.pop();
+            res </span>= res.substr(<span style="color: #800080;">0</span>, t - <span style="color: #800080;">1</span>) + eval(res.substr(t - <span style="color: #800080;">1</span>, <span style="color: #800080;">5</span>)) + res.substr(t + <span style="color: #800080;">4</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">string</span> eval(<span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        </span><span style="color: #0000ff;">if</span> (str.size() != <span style="color: #800080;">5</span>) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> str[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">T</span><span style="color: #800000;">'</span> ? str.substr(<span style="color: #800080;">2</span>, <span style="color: #800080;">1</span>) : str.substr(<span style="color: #800080;">4</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法也是利用栈stack的思想，但是不同之处在于不是存问号的位置，而是存所有的字符，将原数组从后往前遍历，将遍历到的字符都压入栈中，我们检测如果栈首元素是问号，说明我们当前遍历到的字符是T或F，然后我们移除问号，再取出第一部分，再移除冒号，再取出第二部分，我们根据当前字符来判断是放哪一部分进栈，这样遍历完成后，所有问号都处理完了，剩下的栈顶元素即为所求:</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> parseTernary(<span style="color: #0000ff;">string</span><span style="color: #000000;"> expression) {
+        stack</span>&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = expression.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> expression[i];
+            </span><span style="color: #0000ff;">if</span> (!s.empty() &amp;&amp; s.top() == <span style="color: #800000;">'</span><span style="color: #800000;">?</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                s.pop();
+                </span><span style="color: #0000ff;">char</span> first =<span style="color: #000000;"> s.top(); s.pop();
+                s.pop();
+                </span><span style="color: #0000ff;">char</span> second =<span style="color: #000000;"> s.top(); s.pop();
+                s.push(c </span>== <span style="color: #800000;">'</span><span style="color: #800000;">T</span><span style="color: #800000;">'</span> ?<span style="color: #000000;"> first : second);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                s.push(c);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">string</span>(<span style="color: #800080;">1</span><span style="color: #000000;">, s.top());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法更加简洁，没有用到栈，但是用到了STL的内置函数find_last_of，用于查找字符串中最后一个目前字符串出现的位置，这里我们找最后一个问号出现的位置，刚好就是最右边的问号，我们进行跟解法一类似的处理，拼接字符串，循环处理，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> parseTernary(<span style="color: #0000ff;">string</span><span style="color: #000000;"> expression) {
+        </span><span style="color: #0000ff;">string</span> res =<span style="color: #000000;"> expression;
+        </span><span style="color: #0000ff;">while</span> (res.size() &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> i = res.find_last_of(<span style="color: #800000;">"</span><span style="color: #800000;">?</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            res </span>= res.substr(<span style="color: #800080;">0</span>, i - <span style="color: #800080;">1</span>) + <span style="color: #0000ff;">string</span>(<span style="color: #800080;">1</span>, res[i - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">T</span><span style="color: #800000;">'</span> ? res[i + <span style="color: #800080;">1</span>] : res[i + <span style="color: #800080;">3</span>]) + res.substr(i + <span style="color: #800080;">4</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/64389/easy-and-concise-5-lines-python-java-solution" target="_blank">https://discuss.leetcode.com/topic/64389/easy-and-concise-5-lines-python-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/64409/very-easy-1-pass-stack-solution-in-java-no-string-concat/2" target="_blank">https://discuss.leetcode.com/topic/64409/very-easy-1-pass-stack-solution-in-java-no-string-concat/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

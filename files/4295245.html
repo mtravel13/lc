@@ -1,0 +1,42 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4295245.html">[LeetCode] Convert Sorted Array to Binary Search Tree 将有序数组转为二叉搜索树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array where elements are sorted in ascending order, convert it to a height balanced BST.</p>
+<p>&nbsp;</p>
+<p>这道题是要将有序数组转为二叉搜索树，所谓<a href="http://zh.wikipedia.org/wiki/%E4%BA%8C%E5%85%83%E6%90%9C%E5%B0%8B%E6%A8%B9" target="_blank">二叉搜索树</a>，是一种始终满足左&lt;根&lt;右的特性，如果将二叉搜索树按中序遍历的话，得到的就是一个有序数组了。那么反过来，我们可以得知，根节点应该是有序数组的中间点，从中间点分开为左右两个有序数组，在分别找出其中间点作为原中间点的左右两个子节点，这不就是是二分查找法的核心思想么。所以这道题考的就是二分查找法，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode </span>*sortedArrayToBST(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">num) {
+        </span><span style="color: #0000ff;">return</span> sortedArrayToBST(num, <span style="color: #800080;">0</span> , num.size() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    TreeNode </span>*sortedArrayToBST(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;num, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span><span style="color: #000000;"> right) {
+        </span><span style="color: #0000ff;">if</span> (left &gt; right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">int</span> mid = (left + right) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        TreeNode </span>*cur = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TreeNode(num[mid]);
+        cur</span>-&gt;left = sortedArrayToBST(num, left, mid - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        cur</span>-&gt;right = sortedArrayToBST(num, mid + <span style="color: #800080;">1</span><span style="color: #000000;">, right);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cur;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

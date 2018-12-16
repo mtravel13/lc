@@ -1,0 +1,114 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6493182.html">[LeetCode] Longest Palindromic Subsequence 最长回文子序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string s, find the longest palindromic subsequence's length in s. You may assume that the maximum length of s is 1000.</p>
+<p>Example 1:<br />Input:</p>
+<pre>"bbbab"
+</pre>
+<p>Output:</p>
+<pre>4
+</pre>
+<p>One possible longest palindromic subsequence is "bbbb".</p>
+<p>&nbsp;</p>
+<p>Example 2:<br />Input:</p>
+<pre>"cbbd"
+</pre>
+<p>Output:</p>
+<pre>2
+</pre>
+<p>One possible longest palindromic subsequence is "bb".</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个字符串，让我们求最大的回文子序列，子序列和子字符串不同，不需要连续。而关于回文串的题之前也做了不少，处理方法上就是老老实实的两两比较吧。像这种有关极值的问题，最应该优先考虑的就是贪婪算法和动态规划，这道题显然使用DP更加合适。我们建立一个二维的DP数组，其中dp[i][j]表示[i,j]区间内的字符串的最长回文子序列，那么对于递推公式我们分析一下，如果s[i]==s[j]，那么i和j就可以增加2个回文串的长度，我们知道中间dp[i + 1][j - 1]的值，那么其加上2就是dp[i][j]的值。如果s[i] != s[j]，那么我们可以去掉i或j其中的一个字符，然后比较两种情况下所剩的字符串谁dp值大，就赋给dp[i][j]，那么递推公式如下：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /&nbsp; dp[i + 1][j - 1] + 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (s[i] == s[j])</p>
+<p>dp[i][j] =</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp; max(dp[i + 1][j], dp[i][j - 1])&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (s[i] != s[j])</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestPalindromeSubseq(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> s.size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">(n));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            dp[i][i] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (s[i] ==<span style="color: #000000;"> s[j]) {
+                    dp[i][j] </span>= dp[i + <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span>] + <span style="color: #800080;">2</span><span style="color: #000000;">;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    dp[i][j] </span>= max(dp[i + <span style="color: #800080;">1</span>][j], dp[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[<span style="color: #800080;">0</span>][n - <span style="color: #800080;">1</span><span style="color: #000000;">];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对空间进行优化，只用一个一维的dp数组，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestPalindromeSubseq(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> n = s.size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n, <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> len = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> dp[j];
+                </span><span style="color: #0000ff;">if</span> (s[i] ==<span style="color: #000000;"> s[j]) {
+                    dp[j] </span>= len + <span style="color: #800080;">2</span><span style="color: #000000;">;
+                } 
+                len </span>=<span style="color: #000000;"> max(len, t);
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> num : dp) res =<span style="color: #000000;"> max(res, num);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面是递归形式的解法，memo数组这里起到了一个缓存已经计算过了的结果，这样能提高运算效率，使其不会TLE，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestPalindromeSubseq(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> s.size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; memo(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, -<span style="color: #800080;">1</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">return</span> helper(s, <span style="color: #800080;">0</span>, n - <span style="color: #800080;">1</span><span style="color: #000000;">, memo);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">string</span>&amp; s, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> j, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">if</span> (memo[i][j] != -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[i][j];
+        </span><span style="color: #0000ff;">if</span> (i &gt; j) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (i == j) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (s[i] ==<span style="color: #000000;"> s[j]) {
+            memo[i][j] </span>= helper(s, i + <span style="color: #800080;">1</span>, j - <span style="color: #800080;">1</span>, memo) + <span style="color: #800080;">2</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            memo[i][j] </span>= max(helper(s, i + <span style="color: #800080;">1</span>, j, memo), helper(s, i, j - <span style="color: #800080;">1</span><span style="color: #000000;">, memo));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[i][j];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7404777.html">Palindromic Substrings</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4464476.html" target="_blank">Longest Palindromic Substring</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/78603/straight-forward-java-dp-solution" target="_blank">https://discuss.leetcode.com/topic/78603/straight-forward-java-dp-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/78799/c-beats-100-dp-solution-o-n-2-time-o-n-space" target="_blank">https://discuss.leetcode.com/topic/78799/c-beats-100-dp-solution-o-n-2-time-o-n-space</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

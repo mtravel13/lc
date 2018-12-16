@@ -1,0 +1,97 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9311385.html">[LeetCode] Minimum Swaps To Make Sequences Increasing 使得序列递增的最小交换</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>We have two integer sequences&nbsp;<code>A</code>&nbsp;and&nbsp;<code>B</code>&nbsp;of the same non-zero length.</p>
+<p>We are allowed to swap elements&nbsp;<code>A[i]</code>&nbsp;and&nbsp;<code>B[i]</code>.&nbsp; Note that both elements are in the same index position in their respective sequences.</p>
+<p>At the end of some number of swaps,&nbsp;<code>A</code>&nbsp;and&nbsp;<code>B</code>&nbsp;are both strictly increasing.&nbsp; (A sequence is&nbsp;<em>strictly increasing</em>&nbsp;if and only if&nbsp;<code>A[0] &lt; A[1] &lt; A[2] &lt; ... &lt; A[A.length - 1]</code>.)</p>
+<p>Given A and B, return the minimum number of swaps to make both sequences strictly increasing.&nbsp; It is guaranteed that the given input always makes it possible.</p>
+<pre>Example:
+Input: A = [1,3,5,4], B = [1,2,3,7]
+Output: 1
+Explanation: 
+Swap A[3] and B[3].  Then the sequences are:
+A = [1, 3, 5, 7] and B = [1, 2, 3, 4]
+which are both strictly increasing.
+</pre>
+<p>Note:</p>
+<ul>
+<li><code>A, B</code>&nbsp;are arrays with the same length, and that length will be in the range&nbsp;<code>[1, 1000]</code>.</li>
+<li><code>A[i], B[i]</code>&nbsp;are integer values in the range&nbsp;<code>[0, 2000]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们两个长度相等的数组A和B，说是可以在任意位置i交换A[i]和B[i]的值，我们的目标是让数组A和B变成严格递增的数组，让我们求出最少需要交换的次数。博主最先尝试了贪婪算法，就是遍历数组，如果当前数字小于等于前面一个数字，那么就交换一下，但是问题就来了，到底是交换当前位置的数字，还是前一个位置的数字呢，比如下面这个例子：</p>
+<p>0 &nbsp; 4 &nbsp; 4 &nbsp; 5</p>
+<p>0 &nbsp; 1 &nbsp; 6 &nbsp; 8</p>
+<p>我们到底是交换4和1呢，还是4和6呢，虽然两种方法都能让前三个数字严格递增，但是如果交换了4和6，那么第一个数组的最后一个5就又得交换了，那么就要多交换一次，所以这个例子是交换4和1，但是对于下面这个例子：</p>
+<p>0 &nbsp; 4 &nbsp; 4 &nbsp; 7</p>
+<p>0 &nbsp; 1 &nbsp; 6 &nbsp; 5</p>
+<p>那么此时我们就要交换4和6了，这样只要交换一次就能使两个数组都变成严格递增的数组了。所以这道题用贪婪算法不work，我们必须使用别的方法，那么此时动态规划Dynamic Programming就闪亮登场了。</p>
+<p>像这种求极值的题目，不是Greedy就是DP啊，一般难题偏DP的比较多。而DP解法的第一步就是要确定dp数组该怎么定义，如果我们定义一个一维数组dp，其中dp[i]表示使得范围[0, i]的子数组同时严格递增的最小交换次数，这样的话状态转移方程就会十分的难写，因为我们没有解耦合其内在的关联。当前位置i是否交换，只取决于和前面一位是否是严格递增的，而前一位也有交换或者不交换两种状态，那么前一位的不同状态也会影响到当前是否交换，这跟之前那道<a href="http://www.cnblogs.com/grandyang/p/7776979.html">Best Time to Buy and Sell Stock with Transaction Fee</a>就十分到类似了，那道题的股票也有保留或者卖出两种状态不停的切换。那么这里我们也需要维护两种状态，swap和noSwap，那么swap[i]表示范围[0, i]的子数组同时严格递增且当前位置i需要交换的最小交换次数，noSwap[i]表示范围[0, i]的子数组同时严格递增且当前位置i不交换的最小交换次数，两个数组里的值都初始化为n。由于需要跟前一个数字比较，所以我们从第二个数字开始遍历，那么就需要给swap和noSwap数组的第一个数字提前赋值，swap[0]赋值为1，因为其表示i位置需要交换，noSwap[0]赋值为0，因为其表示i位置不需要交换。</p>
+<p>好，下面来分析最难的部分，状态转移方程。由于这道题限制了一定能通过交换生成两个同时严格递增的数组，那么两个数组当前位置和前一个位置之间的关系只有两种，一种是不用交换，当前位置的数字已经分别大于前一个位置，另一种是需要交换后，当前位置的数字才能分别大于前一个数字。那么我们来分别分析一下，如果当前位置已经分别大于前一位置的数了，那么讲道理我们是不需要再进行交换的，但是swap[i]限定了我们必须要交换当前位置i，那么既然当前位置要交换，那么前一个位置i-1也要交换，同时交换才能继续保证同时递增，这样我们的swap[i]就可以赋值为swap[i-1] + 1了。而noSwap[i]直接赋值为noSwap[i-1]即可，因为不需要交换了。第二种情况是需要交换当前位置，才能保证递增。那么swap[i]正好也是要交换当前位置，而前一个位置不能交换，那么即可以用noSwap[i-1] + 1来更新swap[i]，而noSwap[i]是不能交换当前位置，那么我们可以通过交换前一个位置来同样实现递增，即可以用swap[i-1]来更新noSwap[i]，当循环结束后，我们在swap[n-1]和noSwap[n-1]中返回较小值即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSwap(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; A, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> A.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> swap(n, n), noSwap(n, n);
+        swap[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span>; noSwap[<span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (A[i] &gt; A[i - <span style="color: #800080;">1</span>] &amp;&amp; B[i] &gt; B[i - <span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                swap[i] </span>= swap[i - <span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                noSwap[i] </span>= noSwap[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            }
+            </span><span style="color: #0000ff;">if</span> (A[i] &gt; B[i - <span style="color: #800080;">1</span>] &amp;&amp; B[i] &gt; A[i - <span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                swap[i] </span>= min(swap[i], noSwap[i - <span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                noSwap[i] </span>= min(noSwap[i], swap[i - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> min(swap[n - <span style="color: #800080;">1</span>], noSwap[n - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以优化上面解法的空间复杂度，由于当前位置的值只跟前一个位置相关，所以我们并不需要保存整个数组，用四个变量来分别表示当前位置和前一个位置的各两种状态，可以实现同样的效果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSwap(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; A, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">int</span> n1 = <span style="color: #800080;">0</span>, s1 = <span style="color: #800080;">1</span>, n =<span style="color: #000000;"> A.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> n2 = INT_MAX, s2 =<span style="color: #000000;"> INT_MAX;
+            </span><span style="color: #0000ff;">if</span> (A[i - <span style="color: #800080;">1</span>] &lt; A[i] &amp;&amp; B[i - <span style="color: #800080;">1</span>] &lt;<span style="color: #000000;"> B[i]) {
+                n2 </span>=<span style="color: #000000;"> min(n2, n1);
+                s2 </span>= min(s2, s1 + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+            </span><span style="color: #0000ff;">if</span> (A[i - <span style="color: #800080;">1</span>] &lt; B[i] &amp;&amp; B[i - <span style="color: #800080;">1</span>] &lt;<span style="color: #000000;"> A[i]) {
+                n2 </span>=<span style="color: #000000;"> min(n2, s1);
+                s2 </span>= min(s2, n1 + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+            n1 </span>=<span style="color: #000000;"> n2;
+            s1 </span>=<span style="color: #000000;"> s2;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> min(n1, s1);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7776979.html">Best Time to Buy and Sell Stock with Transaction Fee</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/solution/">https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/solution/</a></p>
+<p><a href="https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution">https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution</a></p>
+<p><a href="https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/120516/C++-solution-with-explanation">https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/120516/C++-solution-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

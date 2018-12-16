@@ -1,0 +1,88 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5740864.html">[LeetCode] Insert Delete GetRandom O(1) 常数时间内插入删除和获得随机数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a data structure that supports all following operations in&nbsp;<em>average</em>&nbsp;O(1)&nbsp;time.</p>
+<p>&nbsp;</p>
+<ol>
+<li><code>insert(val)</code>: Inserts an item val to the set if not already present.</li>
+<li><code>remove(val)</code>: Removes an item val from the set if present.</li>
+<li><code>getRandom</code>: Returns a random element from current set of elements. Each element must have the&nbsp;same probability&nbsp;of being returned.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example:</p>
+<pre>// Init an empty set.
+RandomizedSet randomSet = new RandomizedSet();
+
+// Inserts 1 to the set. Returns true as 1 was inserted successfully.
+randomSet.insert(1);
+
+// Returns false as 2 does not exist in the set.
+randomSet.remove(2);
+
+// Inserts 2 to the set, returns true. Set now contains [1,2].
+randomSet.insert(2);
+
+// getRandom should return either 1 or 2 randomly.
+randomSet.getRandom();
+
+// Removes 1 from the set, returns true. Set now contains [2].
+randomSet.remove(1);
+
+// 2 was already in the set, so return false.
+randomSet.insert(2);
+
+// Since 1 is the only number in the set, getRandom always return 1.
+randomSet.getRandom();</pre>
+<p>&nbsp;</p>
+<p>这道题让我们在常数时间范围内实现插入删除和获得随机数操作，如果这道题没有常数时间的限制，那么将会是一道非常简单的题，我们直接用一个set就可以搞定所有的操作。但是由于时间的限制，我们无法在常数时间内实现获取随机数，所以只能另辟蹊径。此题的正确解法是利用到了一个一维数组和一个哈希表，其中数组用来保存数字，哈希表用来建立每个数字和其在数组中的位置之间的映射，对于插入操作，我们先看这个数字是否已经在哈希表中存在，如果存在的话直接返回false，不存在的话，我们将其插入到数组的末尾，然后建立数字和其位置的映射。删除操作是比较tricky的，我们还是要先判断其是否在哈希表里，如果没有，直接返回false。由于哈希表的删除是常数时间的，而数组并不是，为了使数组删除也能常数级，我们实际上将要删除的数字和数组的最后一个数字调换个位置，然后修改对应的哈希表中的值，这样我们只需要删除数组的最后一个元素即可，保证了常数时间内的删除。而返回随机数对于数组来说就很简单了，我们只要随机生成一个位置，返回该位置上的数字即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> RandomizedSet {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    RandomizedSet() {}
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Inserts a value to the set. Returns true if the set did not already contain the specified element. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> insert(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (m.count(val)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        nums.push_back(val);
+        m[val] </span>= nums.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Removes a value from the set. Returns true if the set contained the specified element. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (!m.count(val)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> last =<span style="color: #000000;"> nums.back();
+        m[last] </span>=<span style="color: #000000;"> m[val];
+        nums[m[val]] </span>=<span style="color: #000000;"> last;
+        nums.pop_back();
+        m.erase(val);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get a random element from the set. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> getRandom() {
+        </span><span style="color: #0000ff;">return</span> nums[rand() %<span style="color: #000000;"> nums.size()];
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums;
+    unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="link_post_title" class="link-post-title" href="http://www.cnblogs.com/grandyang/p/5756148.html">Insert Delete GetRandom O(1) - Duplicates allowed</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/53286/ac-c-solution-unordered_map-vector" target="_blank">https://discuss.leetcode.com/topic/53286/ac-c-solution-unordered_map-vector</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

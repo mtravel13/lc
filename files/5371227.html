@@ -1,0 +1,61 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5371227.html">[LeetCode] Delete Duplicate Emails 删除重复邮箱</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a SQL query to delete all duplicate email entries in a table named&nbsp;<code>Person</code>, keeping only unique emails based on its&nbsp;<em>smallest</em>&nbsp;Id.</p>
+<pre>+----+------------------+
+| Id | Email            |
++----+------------------+
+| 1  | john@example.com |
+| 2  | bob@example.com  |
+| 3  | john@example.com |
++----+------------------+
+Id is the primary key column for this table.
+</pre>
+<p>For example, after running your query, the above&nbsp;<code>Person</code>&nbsp;table should have the following rows:</p>
+<pre>+----+------------------+
+| Id | Email            |
++----+------------------+
+| 1  | john@example.com |
+| 2  | bob@example.com  |
++----+------------------+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们删除重复邮箱，那我们可以首先找出所有不重复的邮箱，然后取个反就是重复的邮箱，都删掉即可，那么我们如何找出所有不重复的邮箱呢，我们可以按照邮箱群组起来，然后用Min关键字挑出较小的，然后取补集删除即可：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DELETE</span> <span style="color: #0000ff;">FROM</span> Person <span style="color: #0000ff;">WHERE</span> Id <span style="color: #808080;">NOT</span> <span style="color: #808080;">IN</span><span style="color: #000000;">
+(</span><span style="color: #0000ff;">SELECT</span> Id <span style="color: #0000ff;">FROM</span> (<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MIN</span>(Id) Id <span style="color: #0000ff;">FROM</span> Person <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span> Email) p);</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用内交让两个表以邮箱关联起来，然后把相同邮箱且Id大的删除掉，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DELETE</span> p2 <span style="color: #0000ff;">FROM</span> Person p1 <span style="color: #808080;">JOIN</span><span style="color: #000000;"> Person p2 
+</span><span style="color: #0000ff;">ON</span> p2.Email <span style="color: #808080;">=</span> p1.Email <span style="color: #0000ff;">WHERE</span> p2.Id <span style="color: #808080;">&gt;</span> p1.Id;</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以不用Join，而直接用where将两表关联起来也行：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DELETE</span> p2 <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Person p1, Person p2
+</span><span style="color: #0000ff;">WHERE</span> p1.Email <span style="color: #808080;">=</span> p2.Email <span style="color: #808080;">AND</span> p2.Id <span style="color: #808080;">&gt;</span> p1.Id;</pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_3" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5361967.html">Duplicate Emails</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/61176/simple-solution-using-a-self-join" target="_blank"><span style="line-height: 1.5;">https://leetcode.com/discuss/61176/simple-solution-using-a-self-join</span></a></p>
+<p><a href="https://leetcode.com/discuss/48403/my-answer-delete-duplicate-emails-with-double-nested-query" target="_blank">https://leetcode.com/discuss/48403/my-answer-delete-duplicate-emails-with-double-nested-query</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,57 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4270008.html">[LeetCode] Palindrome Partitioning 拆分回文串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string&nbsp;<em>s</em>, partition&nbsp;<em>s</em>&nbsp;such that every substring of the partition is a palindrome.</p>
+<p>Return all possible palindrome partitioning of&nbsp;<em>s</em>.</p>
+<p>For example, given&nbsp;<em>s</em>&nbsp;=&nbsp;<code>"aab"</code>,<br />Return</p>
+<pre>  [
+    ["aa","b"],
+    ["a","a","b"]
+  ]</pre>
+<p>&nbsp;</p>
+<p>这又是一道需要用DFS来解的题目，既然题目要求找到所有可能拆分成回文数的情况，那么肯定是所有的情况都要遍历到，对于每一个子字符串都要分别判断一次是不是回文数，那么肯定有一个判断回文数的子函数，还需要一个DFS函数用来递归，再加上原本的这个函数，总共需要三个函数来求解。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; partition(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        partitionDFS(s, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> partitionDFS(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span> start, vector&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (start ==<span style="color: #000000;"> s.size()) {
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isPalindrome(s, start, i)) {
+                </span><span style="color: #0000ff;">out</span>.push_back(s.substr(start, i - start + <span style="color: #800080;">1</span><span style="color: #000000;">));
+                partitionDFS(s, i </span>+ <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+                </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">bool</span> isPalindrome(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span><span style="color: #000000;"> end) {
+        </span><span style="color: #0000ff;">while</span> (start &lt;<span style="color: #000000;"> end) {
+            </span><span style="color: #0000ff;">if</span> (s[start] != s[end]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span>++<span style="color: #000000;">start;
+            </span>--<span style="color: #000000;">end;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>那么，对原字符串的所有子字符串的访问顺序是什么呢，如果原字符串是 abcd, 那么访问顺序为: a -&gt; b&nbsp;-&gt; c&nbsp;-&gt; d&nbsp;-&gt; cd&nbsp;-&gt; bc&nbsp;-&gt; bcd-&gt; ab&nbsp;-&gt; abc&nbsp;-&gt; abcd, 这是对于没有两个或两个以上子回文串的情况。那么假如原字符串是 aabc，那么访问顺序为：a&nbsp;-&gt; a&nbsp;-&gt; b&nbsp;-&gt; c&nbsp;-&gt; bc&nbsp;-&gt; ab&nbsp;-&gt; abc&nbsp;-&gt; aa&nbsp;-&gt; b&nbsp;-&gt; c&nbsp;-&gt; bc&nbsp;-&gt; aab&nbsp;-&gt; aabc，中间当检测到aa时候，发现是回文串，那么对于剩下的bc当做一个新串来检测，于是有&nbsp;b&nbsp;-&gt; c&nbsp;-&gt; bc，这样扫描了所有情况，即可得出最终答案。</p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

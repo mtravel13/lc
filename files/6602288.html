@@ -1,0 +1,113 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6602288.html">[LeetCode] 01 Matrix 零一矩阵</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a matrix consists of 0 and 1, find the distance of the nearest 0 for each cell.</p>
+<p>The distance between two adjacent cells is 1.</p>
+<p>Example 1:&nbsp;<br />Input:</p>
+<pre>0 0 0
+0 1 0
+0 0 0
+</pre>
+<p>Output:</p>
+<pre>0 0 0
+0 1 0
+0 0 0
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:&nbsp;<br />Input:</p>
+<pre>0 0 0
+0 1 0
+1 1 1
+</pre>
+<p>Output:</p>
+<pre>0 0 0
+0 1 0
+1 2 1
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The number of elements of the given matrix will not exceed 10,000.</li>
+<li>There are at least one 0 in the given matrix.</li>
+<li>The cells are adjacent in only four directions: up, down, left and right.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个只有0和1的矩阵，让我们求每一个1到离其最近的0的距离，其实也就是求一个距离场，而求距离场那么BFS将是不二之选。刚看到此题时，我以为这跟之前那道<a href="http://www.cnblogs.com/grandyang/p/5297683.html" target="_blank">Shortest Distance from All Buildings</a>是一样的，从每一个0开始遍历，不停的更新每一个1的距离，但是这样写下来TLE了。后来我又改变思路，从每一个1开始BFS，找到最近的0，结果还是TLE，气死人。后来逛论坛发现思路是对的，就是写法上可以进一步优化，我们可以首先遍历一次矩阵，将值为0的点都存入queue，将值为1的点改为INT_MAX。之前像什么遍历迷宫啊，起点只有一个，而这道题所有为0的点都是起点，这想法，叼！然后开始BFS遍历，从queue中取出一个数字，遍历其周围四个点，如果越界或者周围点的值小于等于当前值，则直接跳过。因为周围点的距离更小的话，就没有更新的必要，否则将周围点的值更新为当前值加1，然后把周围点的坐标加入queue，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; updateMatrix(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (matrix[i][j] == <span style="color: #800080;">0</span><span style="color: #000000;">) q.push({i, j});
+                </span><span style="color: #0000ff;">else</span> matrix[i][j] =<span style="color: #000000;"> INT_MAX;
+            }
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                </span><span style="color: #0000ff;">int</span> x = t.first + dir[<span style="color: #800080;">0</span>], y = t.second + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n ||<span style="color: #000000;">
+                matrix[x][y] </span>&lt;= matrix[t.first][t.second]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                matrix[x][y] </span>= matrix[t.first][t.second] + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                q.push({x, y});
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> matrix;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是参考的<span class="username"><a href="https://discuss.leetcode.com/topic/83558/java-33ms-solution-with-two-sweeps-in-o-n" target="_blank">qswawrq大神的帖子</a>，他想出了一种二次扫描的解法，从而不用使用BFS了。这种解法也相当的巧妙，我们首先建立一个和matrix大小相等的矩阵res，初始化为很大的值，这里我们用INT_MAX-1，为甚么要减1呢，后面再说。然后我们遍历matrix矩阵，当遇到为0的位置，我们将结果res矩阵的对应位置也设为0，这make sense吧，就不多说了。然后就是这个解法的精髓了，如果不是0的地方，我们在第一次扫描的时候，比较其左边和上边的位置，取其中较小的值，再加上1，来更新结果res中的对应位置。这里就明白了为啥我们要初始化为INT_MAX-1了吧，因为这里要加1，如果初始化为INT_MAX就会整型溢出，不过放心，由于是取较小值，res[i][j]永远不会取到INT_MAX，所以不会有再加1溢出的风险。第一次遍历我们比较了左和上的方向，那么我们第二次遍历就要比较右和下的方向，注意两种情况下我们不需要比较，一种是当值为0时，还有一种是当值为1时，这两种情况下值都不可能再变小了，所以没有更新的必要，参见代码如下：<br /></span></p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; updateMatrix(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, INT_MAX - <span style="color: #800080;">1</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (matrix[i][j] == <span style="color: #800080;">0</span>) res[i][j] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span>) res[i][j] = min(res[i][j], res[i - <span style="color: #800080;">1</span>][j] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">if</span> (j &gt; <span style="color: #800080;">0</span>) res[i][j] = min(res[i][j], res[i][j - <span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = m - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = n - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (res[i][j] != <span style="color: #800080;">0</span> &amp;&amp; res[i][j] != <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (i &lt; m - <span style="color: #800080;">1</span>) res[i][j] = min(res[i][j], res[i + <span style="color: #800080;">1</span>][j] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">if</span> (j &lt; n - <span style="color: #800080;">1</span>) res[i][j] = min(res[i][j], res[i][j + <span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>在<a href="https://discuss.leetcode.com/topic/83574/short-solution-each-path-needs-at-most-one-turn" target="_blank">史蒂芬大神的帖子</a>中，他提出了一种变型的方法，没有再区分左上右下，而是每次都跟左边相比，但是需要每次把矩阵旋转90度。他用python写的解法异常的简洁，貌似python中可以一行代码进行矩阵旋转，但是貌似C++没有这么叼，矩阵旋转写起来还是需要两个for循环，写出来估计也不短，这里就不写了，有兴趣的童鞋可以自己试试写一下，可以贴到留言板上哈～</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/83453/java-solution-bfs" target="_blank">https://discuss.leetcode.com/topic/83453/java-solution-bfs</a></p>
+<p><a href="https://discuss.leetcode.com/topic/83558/java-33ms-solution-with-two-sweeps-in-o-n">https://discuss.leetcode.com/topic/83558/java-33ms-solution-with-two-sweeps-in-o-n</a></p>
+<p><a href="https://discuss.leetcode.com/topic/83472/18-line-c-dp-solution-o-n-easy-to-understand" target="_blank">https://discuss.leetcode.com/topic/83472/18-line-c-dp-solution-o-n-easy-to-understand</a></p>
+<p><a href="https://discuss.leetcode.com/topic/83574/short-solution-each-path-needs-at-most-one-turn">https://discuss.leetcode.com/topic/83574/short-solution-each-path-needs-at-most-one-turn</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

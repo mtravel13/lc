@@ -1,0 +1,144 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5615583.html">[LeetCode] Nested List Weight Sum II 嵌套链表权重和之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a nested list of integers, return the sum of all integers in the list weighted by their depth.<br /><br />Each element is either an integer, or a list -- whose elements may also be integers or other lists.<br /><br />Different from the previous question where weight is increasing from root to leaf, now the weight is defined from bottom up. i.e., the leaf level integers have weight 1, and the root level integers have the largest weight.<br /><br />Example 1:<br />Given the list [[1,1],2,[1,1]], return 8. (four 1's at depth 1, one 2 at depth 2)<br /><br />Example 2:<br />Given the list [1,[4,[6]]], return 17. (one 1 at depth 3, one 4 at depth 2, and one 6 at depth 1; 1*3 + 4*2 + 6*1 = 17)&nbsp; </p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a>的拓展，与其不同的是，这道题的深度越深，权重越小，和之前刚好相反。但是解题思路没有变，还可以用DFS来做，那么由于遍历的时候不知道最终的depth有多深，则不能遍历的时候就直接累加结果，我最开始的想法是在遍历的过程中建立一个二维数组，把每层的数字都保存起来，然后最后知道了depth后，再来计算权重和，比如题目中给的两个例子，建立的二维数组分别为：</p>
+<p>[[1,1],2,[1,1]]：</p>
+<p>1 1 1 1<br />2</p>
+<p>[1,[4,[6]]]：</p>
+<p>1<br />4<br />6</p>
+<p>这样我们就能算出权重和了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> depthSumInverse(vector&lt;NestedInteger&gt;&amp;<span style="color: #000000;"> nestedList) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nestedList) {
+            helper(a, </span><span style="color: #800080;">0</span><span style="color: #000000;">, v);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = v.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; v[i].size(); ++<span style="color: #000000;">j) {
+                res </span>+= v[i][j] * (v.size() -<span style="color: #000000;"> i);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(NestedInteger &amp;ni, <span style="color: #0000ff;">int</span> depth, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;<span style="color: #000000;">v) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> t;
+        </span><span style="color: #0000ff;">if</span> (depth &lt; v.size()) t =<span style="color: #000000;"> v[depth];
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> v.push_back(t);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (ni.isInteger()) {
+            t.push_back(ni.getInteger());
+            </span><span style="color: #0000ff;">if</span> (depth &lt; v.size()) v[depth] =<span style="color: #000000;"> t;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> v.push_back(t);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : ni.getList()) {
+                helper(a, depth </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, v);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其实上面的方法可以简化，由于每一层的数字不用分别保存，每个数字分别乘以深度再相加，跟每层数字先相加起来再乘以深度是一样的，这样我们只需要一个一维数组就可以了，只要把各层的数字和保存起来，最后再计算权重和即可：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> depthSumInverse(vector&lt;NestedInteger&gt;&amp;<span style="color: #000000;"> nestedList) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nestedList) {
+            helper(a, </span><span style="color: #800080;">0</span><span style="color: #000000;">, v);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = v.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            res </span>+= v[i] * (v.size() -<span style="color: #000000;"> i);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(NestedInteger ni, <span style="color: #0000ff;">int</span> depth, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">v) {
+        </span><span style="color: #0000ff;">if</span> (depth &gt;= v.size()) v.resize(depth + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (ni.isInteger()) {
+            v[depth] </span>+=<span style="color: #000000;"> ni.getInteger();
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : ni.getList()) {
+                helper(a, depth </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, v);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这个方法就比较巧妙了，由史蒂芬大神提出来的，这个方法用了两个变量unweighted和weighted，非权重和跟权重和，初始化均为0，然后如果<span style="color: #000000;">nestedList</span>不为空开始循环，先声明一个空数组nextLevel，遍历<span style="color: #000000;">nestedList</span>中的元素，如果是数字，则非权重和加上这个数字，如果是数组，就加入nextLevel，这样遍历完成后，第一层的数字和保存在非权重和unweighted中了，其余元素都存入了nextLevel中，此时我们将unweighted加到weighted中，将nextLevel赋给nestedList，这样再进入下一层计算，由于上一层的值还在unweighted中，所以第二层计算完将unweighted加入weighted中时，相当于第一层的数字和被加了两次，这样就完美的符合要求了，这个思路又巧妙又牛B，大神就是大神啊，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> depthSumInverse(vector&lt;NestedInteger&gt;&amp;<span style="color: #000000;"> nestedList) {
+        </span><span style="color: #0000ff;">int</span> unweighted = <span style="color: #800080;">0</span>, weighted = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">nestedList.empty()) {
+            vector</span>&lt;NestedInteger&gt;<span style="color: #000000;"> nextLevel;
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nestedList) {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (a.isInteger()) {
+                    unweighted </span>+=<span style="color: #000000;"> a.getInteger();
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    nextLevel.insert(nextLevel.end(), a.getList().begin(), a.getList().end());
+                }
+            }
+            weighted </span>+=<span style="color: #000000;"> unweighted;
+            nestedList </span>=<span style="color: #000000;"> nextLevel;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> weighted;
+    }
+}; </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种算法是常规的BFS解法，利用上面的建立两个变量unweighted和weighted的思路，大体上没什么区别:</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> depthSumInverse(vector&lt;NestedInteger&gt;&amp;<span style="color: #000000;"> nestedList) {
+        </span><span style="color: #0000ff;">int</span> unweighted = <span style="color: #800080;">0</span>, weighted = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        queue</span>&lt;vector&lt;NestedInteger&gt;&gt;<span style="color: #000000;"> q;
+        q.push(nestedList);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; size; ++<span style="color: #000000;">i) {
+                vector</span>&lt;NestedInteger&gt; t =<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : t) {
+                    </span><span style="color: #0000ff;">if</span> (a.isInteger()) unweighted +=<span style="color: #000000;"> a.getInteger();
+                    </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">a.getList().empty()) q.push(a.getList());
+                }
+            }
+            weighted </span>+=<span style="color: #000000;"> unweighted;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> weighted;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/110000/4ms-one-pass-dfs-c-solution" target="_blank">https://leetcode.com/discuss/110000/4ms-one-pass-dfs-c-solution</a></p>
+<p><a href="https://leetcode.com/discuss/110075/no-depth-variable-no-multiplication" target="_blank">https://leetcode.com/discuss/110075/no-depth-variable-no-multiplication</a></p>
+<p><a href="https://leetcode.com/discuss/110097/standard-rewriting-stefanpochmanns-extra-interpretation" target="_blank">https://leetcode.com/discuss/110097/standard-rewriting-stefanpochmanns-extra-interpretation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

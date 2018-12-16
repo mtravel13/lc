@@ -1,0 +1,78 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5223238.html">[LeetCode] Palindrome Permutation 回文全排列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string, determine if a permutation of the string could form a palindrome.</p>
+<p>For example,<br /><code>"code"</code>&nbsp;-&gt; False,&nbsp;<code>"aab"</code>&nbsp;-&gt; True,&nbsp;<code>"carerac"</code>&nbsp;-&gt; True.</p>
+<p>Hint:</p>
+<ol>
+<li class="hint animated fadeInLeft">Consider the palindromes of odd vs even length. What difference do you notice?</li>
+<li class="hint animated fadeInLeft">Count the frequency of each character.</li>
+<li class="hint animated fadeInLeft">If each character occurs even number of times, then it must be a palindrome. How about character which occurs odd number of times?</li>
+
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们判断一个字符串的全排列有没有是回文字符串的，那么根据题目中的提示，我们分字符串的个数是奇偶的情况来讨论，如果是偶数的话，由于回文字符串的特性，每个字母出现的次数一定是偶数次，当字符串是奇数长度时，只有一个字母出现的次数是奇数，其余均为偶数，那么利用这个特性我们就可以解题，我们建立每个字母和其出现次数的映射，然后我们遍历哈希表，统计出现次数为奇数的字母的个数，那么只有两种情况是回文数，第一种是没有出现次数为奇数的字母，再一个就是字符串长度为奇数，且只有一个出现次数为奇数的字母，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canPermutePalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (auto a : s) ++<span style="color: #000000;">m[a];
+        </span><span style="color: #0000ff;">for</span> (auto it = m.begin(); it != m.end(); ++<span style="color: #000000;">it) {
+            </span><span style="color: #0000ff;">if</span> (it-&gt;second % <span style="color: #800080;">2</span>) ++<span style="color: #000000;">cnt;
+        }
+        </span><span style="color: #0000ff;">return</span> cnt == <span style="color: #800080;">0</span> || (s.size() % <span style="color: #800080;">2</span> == <span style="color: #800080;">1</span> &amp;&amp; cnt == <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>那么我们再来看一种解法，这种方法用到了一个set，我们遍历字符串，如果某个字母不在set中，我们加入这个字母，如果字母已经存在，我们删除该字母，那么最终如果set中没有字母或是只有一个字母时，说明是回文串，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canPermutePalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;"> t;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : s) {
+            </span><span style="color: #0000ff;">if</span> (t.find(a) ==<span style="color: #000000;"> t.end()) t.insert(a);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> t.erase(a);
+        }
+        </span><span style="color: #0000ff;">return</span> t.empty() || t.size() == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种bitset的解法，这种方法也很巧妙，我们建立一个256大小的bitset，每个字母根据其ASCII码值的不同都有其对应的位置，然后我们遍历整个字符串，遇到一个字符，就将其对应的位置的二进制数flip一下，就是0变1，1变0，那么遍历完成后，所有出现次数为偶数的对应位置还应该为0，而出现次数为奇数的时候，对应位置就为1了，那么我们最后只要统计1的个数，就知道出现次数为奇数的字母的个数了，只要个数小于2就是回文数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canPermutePalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        bitset</span>&lt;<span style="color: #800080;">256</span>&gt;<span style="color: #000000;"> b;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : s) {
+            b.flip(a);
+        }
+        </span><span style="color: #0000ff;">return</span> b.count() &lt; <span style="color: #800080;">2</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p class="p1"><span class="s1"><a href="https://leetcode.com/discuss/53180/1-4-lines-python-ruby-c-c-java">https://leetcode.com/discuss/53180/1-4-lines-python-ruby-c-c-java</a></span></p>
+<p class="p1"><span class="s1"><a href="https://leetcode.com/discuss/53295/java-solution-w-set-one-pass-without-counters">https://leetcode.com/discuss/53295/java-solution-w-set-one-pass-without-counters</a></span></p>
+<p class="p1">&nbsp;</p>
+<p class="p1"><span class="s1"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></span></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

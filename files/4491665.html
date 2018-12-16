@@ -1,0 +1,95 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4491665.html">[LeetCode] Implement Trie (Prefix Tree) 实现字典树(前缀树)</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement a trie with&nbsp;<code>insert</code>,&nbsp;<code>search</code>, and&nbsp;<code>startsWith</code>&nbsp;methods.</p>
+<p>Note:<br />You may assume that all inputs are consist of lowercase letters&nbsp;<code>a-z</code>.</p>
+<p>&nbsp;</p>
+<p>这道题让我们实现一个重要但又有些复杂的数据结构-<a href="http://zh.wikipedia.org/wiki/Trie" target="_blank">字典树</a>， 又称前缀树或单词查找树，详细介绍可以参见<a href="http://dongxicheng.org/structure/trietree/" target="_blank">网友董的博客</a>，例如，一个保存了8个键的trie结构，"A", "to", "tea", "ted", "ten", "i", "in", and "inn".如下图所示：</p>
+<p>&nbsp;</p>
+<p><img class="thumbimage" src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/375px-Trie_example.svg.png" alt="" width="250" height="234" data-file-width="400" data-file-height="375" /></p>
+<p>&nbsp;</p>
+<p>字典树主要有如下三点性质：</p>
+<p>1. 根节点不包含字符，除根节点意外每个节点只包含一个字符。</p>
+<p>2. 从根节点到某一个节点，路径上经过的字符连接起来，为该节点对应的字符串。</p>
+<p>3. 每个节点的所有子节点包含的字符串不相同。</p>
+<p>&nbsp;</p>
+<p>字母树的插入（Insert）、删除（ Delete）和查找（Find）都非常简单，用一个一重循环即可，即第i 次循环找到前i 个字母所对应的子树，然后进行相应的操作。实现这棵字母树，我们用最常见的数组保存（静态开辟内存）即可，当然也可以开动态的指针类型（动态开辟内存）。至于结点对儿子的指向，一般有三种方法：</p>
+<p>1、对每个结点开一个字母集大小的数组，对应的下标是儿子所表示的字母，内容则是这个儿子对应在大数组上的位置，即标号；</p>
+<p>2、对每个结点挂一个链表，按一定顺序记录每个儿子是谁；</p>
+<p>3、使用左儿子右兄弟表示法记录这棵树。</p>
+<p>三种方法，各有特点。第一种易实现，但实际的空间要求较大；第二种，较易实现，空间要求相对较小，但比较费时；第三种，空间要求最小，但相对费时且不易写。</p>
+<p>&nbsp;</p>
+<p>我们先来看第一种实现方法，这种方法实现起来简单直观，字母的字典树每个节点要定义一个大小为26的子节点指针数组，然后用一个标志符用来记录到当前位置为止是否为一个词，初始化的时候讲26个子节点都赋为空。那么insert操作只需要对于要插入的字符串的每一个字符算出其的位置，然后找是否存在这个子节点，若不存在则新建一个，然后再查找下一个。查找词和找前缀操作跟insert操作都很类似，不同点在于若不存在子节点，则返回false。查找次最后还要看标识位，而找前缀直接返回true即可。代码如下：</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> TrieNode {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Initialize your data structure here.</span>
+    TrieNode *child[<span style="color: #800080;">26</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isWord;
+    TrieNode() : isWord(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">){
+        </span><span style="color: #0000ff;">for</span> (auto &amp;a : child) a =<span style="color: #000000;"> NULL;
+    }
+};
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Trie {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Trie() {
+        root </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Inserts a word into the trie.</span>
+    <span style="color: #0000ff;">void</span> insert(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        TrieNode </span>*p =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : s) {
+            </span><span style="color: #0000ff;">int</span> i = a - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (!p-&gt;child[i]) p-&gt;child[i] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode();
+            p </span>= p-&gt;<span style="color: #000000;">child[i];
+        }
+        p</span>-&gt;isWord = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Returns if the word is in the trie.</span>
+    <span style="color: #0000ff;">bool</span> search(<span style="color: #0000ff;">string</span><span style="color: #000000;"> key) {
+        TrieNode </span>*p =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : key) {
+            </span><span style="color: #0000ff;">int</span> i = a - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (!p-&gt;child[i]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            p </span>= p-&gt;<span style="color: #000000;">child[i];
+        }
+        </span><span style="color: #0000ff;">return</span> p-&gt;<span style="color: #000000;">isWord;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Returns if there is any word in the trie
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> that starts with the given prefix.</span>
+    <span style="color: #0000ff;">bool</span> startsWith(<span style="color: #0000ff;">string</span><span style="color: #000000;"> prefix) {
+        TrieNode </span>*p =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : prefix) {
+            </span><span style="color: #0000ff;">int</span> i = a - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (!p-&gt;child[i]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            p </span>= p-&gt;<span style="color: #000000;">child[i];
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    TrieNode</span>*<span style="color: #000000;"> root;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="http://dongxicheng.org/structure/trietree/" target="_blank">http://dongxicheng.org/structure/trietree/</a></p>
+<p><a href="http://pisxw.com/algorithm/Implement-Trie-(Prefix%20Tree).html" target="_blank">http://pisxw.com/algorithm/Implement-Trie-(Prefix%20Tree).html</a></p>
+<p><a href="https://leetcode.com/discuss/35048/share-my-java-solution" target="_blank">https://leetcode.com/discuss/35048/share-my-java-solution</a></p>
+<p><a href="http://www.cnblogs.com/easonliu/p/4488522.html" target="_blank">http://www.cnblogs.com/easonliu/p/4488522.html</a></p>
+<p><a href="https://leetcode.com/discuss/35014/ac-c-solution-using-unordered_map-for-next" target="_blank">https://leetcode.com/discuss/35014/ac-c-solution-using-unordered_map-for-next</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

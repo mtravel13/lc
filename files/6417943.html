@@ -1,0 +1,63 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6417943.html">[LeetCode] Base 7 基数七</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer, return its base 7 string representation.</p>
+<p>Example 1:</p>
+<pre>Input: 100
+Output: "202"
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: -7
+Output: "-10"
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;The input will be in range of [-1e7, 1e7].</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数，让我们转为七进制的数，而且这个可正可负。那么我们想如果给一个十进制的100，怎么转为七进制。我会先用100除以49，商2余2。在除以7，商0余2，于是就得到七进制的202。其实我们还可以反过来算，先用100除以7，商14余2，然后用14除以7，商2余0，再用2除以7，商0余2，这样也可以得到202。这种方法更适合于代码实现，要注意的是，我们要处理好负数的情况，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> convertToBase7(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">if</span> (num == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">bool</span> positive = num &gt; <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (num != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            res </span>= to_string(abs(num % <span style="color: #800080;">7</span>)) +<span style="color: #000000;"> res;
+            num </span>/= <span style="color: #800080;">7</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> positive ? res : <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的思路也可以写成迭代方式，非常的简洁，仅要三行就搞定了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> convertToBase7(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">if</span> (num &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> + convertToBase7(-<span style="color: #000000;">num);
+        </span><span style="color: #0000ff;">if</span> (num &lt; <span style="color: #800080;">7</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> to_string(num);
+        </span><span style="color: #0000ff;">return</span> convertToBase7(num / <span style="color: #800080;">7</span>) + to_string(num % <span style="color: #800080;">7</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/78934/1-line" target="_blank">https://discuss.leetcode.com/topic/78934/1-line</a></p>
+<p><a href="https://discuss.leetcode.com/topic/78972/simple-java-oneliner-ruby" target="_blank">https://discuss.leetcode.com/topic/78972/simple-java-oneliner-ruby</a></p>
+<p><a href="https://discuss.leetcode.com/topic/78935/java-1-liner-standard-solution" target="_blank">https://discuss.leetcode.com/topic/78935/java-1-liner-standard-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

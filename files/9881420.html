@@ -1,0 +1,73 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9881420.html">[LeetCode] N-ary Tree Postorder Traversal N叉树的后序遍历</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an n-ary tree, return the&nbsp;<em>postorder</em>&nbsp;traversal of its nodes' values.</p>
+<p>For example, given a&nbsp;<code>3-ary</code>&nbsp;tree:</p>
+<p>&nbsp;</p>
+<p><img src="https://assets.leetcode.com/uploads/2018/10/12/narytreeexample.png" alt="" width="330" height="212" /></p>
+<p>&nbsp;</p>
+<p>Return its postorder traversal as:&nbsp;<code>[5,6,3,2,4,1]</code>.</p>
+<p>&nbsp;</p>
+<p>Note:</p>
+<p>Recursive solution is trivial, could you do it iteratively?</p>
+<p>&nbsp;</p>
+<p>这道题让我们求N叉树的后序遍历，由于有了之前那道<a href="http://www.cnblogs.com/grandyang/p/4251757.html" target="_blank">Binary Tree Postorder Traversal</a>的基础，了解了二叉树的后序遍历，则N叉树的后序遍历也就没有那么难了。首先还是用递归来做，在递归函数中，判空后，遍历子结点数组，对所有的子结点调用递归函数，然后在for循环之外在将当前结点值加入结果res数组，这样才能保证是后序遍历的顺序，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; postorder(Node*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        helper(root, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(Node* node, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (Node* child : node-&gt;<span style="color: #000000;">children) {
+            helper(child, res);
+        }
+        res.push_back(node</span>-&gt;<span style="color: #000000;">val);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用迭代的方法来做，这里有个小trick，写法跟先序遍历十分的像，不同的就是每次把从stack中取的结点的值都加到结果res的最前面，还有就是遍历子结点数组的顺序是正常的顺序，而前序遍历是从子结点数组的后面往前面遍历，这点区别一定要注意，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; postorder(Node*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;Node*&gt;<span style="color: #000000;"> st{{root}};
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">st.empty()) {
+            Node </span>*t =<span style="color: #000000;"> st.top(); st.pop();
+            res.insert(res.begin(), t</span>-&gt;<span style="color: #000000;">val);
+            </span><span style="color: #0000ff;">for</span> (Node* child : t-&gt;<span style="color: #000000;">children) {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (child) st.push(child);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4251757.html" target="_blank">Binary Tree Postorder Traversal</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9881753.html">N-ary Tree Preorder Traversal</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl10_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9672233.html">N-ary Tree Level Order Traversal</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/n-ary-tree-preorder-traversal/" target="_blank">https://leetcode.com/problems/n-ary-tree-preorder-traversal/</a></p>
+<p><a href="https://leetcode.com/problems/n-ary-tree-postorder-traversal/discuss/147959/Java-Iterative-and-Recursive-Solutions" target="_blank">https://leetcode.com/problems/n-ary-tree-postorder-traversal/discuss/147959/Java-Iterative-and-Recursive-Solutions</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

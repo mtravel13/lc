@@ -1,0 +1,61 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7126289.html">[LeetCode] Course Schedule III 课程清单之三</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There are&nbsp;<code>n</code>&nbsp;different online courses numbered from&nbsp;<code>1</code>&nbsp;to&nbsp;<code>n</code>. Each course has some duration(course length)&nbsp;<code>t</code>and closed on&nbsp;<code>dth</code>&nbsp;day. A course should be taken&nbsp;continuously&nbsp;for&nbsp;<code>t</code>&nbsp;days and must be finished before or on the&nbsp;<code>dth</code>&nbsp;day. You will start at the&nbsp;<code>1st</code>&nbsp;day.</p>
+<p>Given&nbsp;<code>n</code>&nbsp;online courses represented by pairs&nbsp;<code>(t,d)</code>, your task is to find the maximal number of courses that can be taken.</p>
+<p>Example:</p>
+<pre>Input: [[100, 200], [200, 1300], [1000, 1250], [2000, 3200]]
+Output: 3
+Explanation: 
+There're totally 4 courses, but you can take 3 courses at most:
+First, take the 1st course, it costs 100 days so you will finish it on the 100th day, and ready to take the next course on the 101st day.
+Second, take the 3rd course, it costs 1000 days so you will finish it on the 1100th day, and ready to take the next course on the 1101st day. 
+Third, take the 2nd course, it costs 200 days so you will finish it on the 1300th day. 
+The 4th course cannot be taken now, since you will finish it on the 3300th day, which exceeds the closed date.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The integer 1 &lt;= d, t, n &lt;= 10,000.</li>
+<li>You can't take two courses simultaneously.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们许多课程，每个课程有两个参数，第一个是课程的持续时间，第二个是课程的最晚结束日期，让我们求最多能上多少门课。博主尝试了递归的暴力破解，TLE了。这道题给的提示是用贪婪算法，那么我们首先给课程排个序，按照结束时间的顺序来排序，我们维护一个当前的时间，初始化为0，再建立一个优先数组，然后我们遍历每个课程，对于每一个遍历到的课程，当前时间加上该课程的持续时间，然后将该持续时间放入优先数组中，然后我们判断如果当前时间大于课程的结束时间，说明这门课程无法被完成，我们并不是直接减去当前课程的持续时间，而是取出优先数组的顶元素，即用时最长的一门课，这也make sense，因为我们的目标是尽可能的多上课，既然非要去掉一门课，那肯定是去掉耗时最长的课，这样省下来的时间说不定能多上几门课呢，最后返回优先队列中元素的个数就是能完成的课程总数啦，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> scheduleCourse(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> courses) {
+        </span><span style="color: #0000ff;">int</span> curTime = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        priority_queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+        sort(courses.begin(), courses.end(), [](vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;&amp; a, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; b) {<span style="color: #0000ff;">return</span> a[<span style="color: #800080;">1</span>] &lt; b[<span style="color: #800080;">1</span><span style="color: #000000;">];});
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto course : courses) {
+            curTime </span>+= course[<span style="color: #800080;">0</span><span style="color: #000000;">];
+            q.push(course[</span><span style="color: #800080;">0</span><span style="color: #000000;">]);
+            </span><span style="color: #0000ff;">if</span> (curTime &gt; course[<span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                curTime </span>-=<span style="color: #000000;"> q.top(); q.pop();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4504793.html" target="_blank">Course Schedule II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4484571.html" target="_blank">Course Schedule</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/93790/short-java-code-using-priorityqueue" target="_blank">https://discuss.leetcode.com/topic/93790/short-java-code-using-priorityqueue</a></p>
+<p><a href="https://discuss.leetcode.com/topic/93712/python-straightforward-with-explanation" target="_blank">https://discuss.leetcode.com/topic/93712/python-straightforward-with-explanation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/93884/c-short-elegant-o-nlogn-time-o-k-space-solution/2" target="_blank">https://discuss.leetcode.com/topic/93884/c-short-elegant-o-nlogn-time-o-k-space-solution/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

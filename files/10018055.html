@@ -1,0 +1,49 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/10018055.html">[LeetCode] To Lower Case 转为小写</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement function ToLowerCase() that has a string parameter str, and returns the same string in lowercase.</p>
+<p>&nbsp;</p>
+<div>
+<p>Example 1:</p>
+<pre>Input: <span id="example-input-1-1">"Hello"
+Output: <span id="example-output-1">"hello"
+</span></span></pre>
+<div>
+<p>Example 2:</p>
+<pre>Input: <span id="example-input-2-1">"here"
+Output: <span id="example-output-2">"here"
+</span></span></pre>
+<div>
+<p>Example 3:</p>
+<pre>Input: <span id="example-input-3-1">"LOVELY"
+Output: <span id="example-output-3">"lovely"</span></span></pre>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>这道题让我们将单词转为小写，是一道比较简单的题目，我们都知道小写字母比其对应的大写字母的ASCII码大32，所以我们只需要遍历字符串，对于所有的大写字母，统统加上32即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> toLowerCase(<span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> &amp;<span style="color: #000000;">c : str) {
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> &amp;&amp; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span>) c += <span style="color: #800080;">32</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> str;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/to-lower-case/" target="_blank">https://leetcode.com/problems/to-lower-case/</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

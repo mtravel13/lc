@@ -1,0 +1,69 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5798275.html">[LeetCode] Lexicographical Numbers 字典顺序的数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer <em>n</em>, return 1 - <em>n</em> in lexicographical order.</p>
+<p>For example, given 13, return: [1,10,11,12,13,2,3,4,5,6,7,8,9].</p>
+<p>Please optimize your algorithm to use less time and space. The input size may be as large as 5,000,000.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个整数n，让我们把区间[1,n]的所有数字按照字典顺序来排列，题目中也给了我们字典顺序的例子。那么我们需要重新排序，我最开始想到的方法是重写sort方法的comparator，思路是把所有数字都转为字符串，然后两个字符串按位相比，然后排好序后再转回数字，这种方法通过不了OJ的大集合，说明本题不是想考我们这种方法。我在论坛里看到大家普遍使用的是下面这种方法，学习了一下，感觉思路十分巧妙，估计我自己肯定想不出来。这种思路是按个位数遍历，在遍历下一个个位数之前，先遍历十位数，十位数的高位为之前的个位数，只要这个多位数并没有超过n，就可以一直往后遍历，如果超过了，我们除以10，然后再加1，如果加1后末尾形成了很多0，那么我们要用个while循环把0都去掉，然后继续运算，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; lexicalOrder(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res(n);
+        </span><span style="color: #0000ff;">int</span> cur = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            res[i] </span>=<span style="color: #000000;"> cur;
+            </span><span style="color: #0000ff;">if</span> (cur * <span style="color: #800080;">10</span> &lt;=<span style="color: #000000;"> n) {
+                cur </span>*= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (cur &gt;= n) cur /= <span style="color: #800080;">10</span><span style="color: #000000;">;
+                cur </span>+= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (cur % <span style="color: #800080;">10</span> == <span style="color: #800080;">0</span>) cur /= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是上面解法的递归形式，思路并没有什么不同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; lexicalOrder(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= <span style="color: #800080;">9</span>; ++<span style="color: #000000;">i) {
+            helper(i, n, res);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> cur, <span style="color: #0000ff;">int</span> n, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (cur &gt; n) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        res.push_back(cur);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= <span style="color: #800080;">9</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (cur * <span style="color: #800080;">10</span> + i &lt;=<span style="color: #000000;"> n) {
+                helper(cur </span>* <span style="color: #800080;">10</span> +<span style="color: #000000;"> i, n, res);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/55131/ac-240ms-c-solution" target="_blank">https://discuss.leetcode.com/topic/55131/ac-240ms-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/55091/java-recursion-backtracking-with-explanation" target="_blank">https://discuss.leetcode.com/topic/55091/java-recursion-backtracking-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

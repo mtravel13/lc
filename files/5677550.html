@@ -1,0 +1,98 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5677550.html">[LeetCode] Guess Number Higher or Lower II 猜数字大小之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>We are playing the Guess Game. The game is as follows:</p>
+<p>&nbsp;</p>
+<p>I pick a number from&nbsp;1&nbsp;to&nbsp;n. You have to guess which number I picked.</p>
+<p>Every time you guess wrong, I'll tell you whether the number I picked is higher or lower.</p>
+<p>However, when you guess a particular number x, and you guess wrong, you pay&nbsp;$x. You win the game when you guess the number I picked.</p>
+<p>Example:</p>
+<pre>n = 10, I pick 8.
+
+First round:  You guess 5, I tell you that it's higher. You pay $5.
+Second round: You guess 7, I tell you that it's higher. You pay $7.
+Third round:  You guess 9, I tell you that it's lower. You pay $9.
+
+Game over. 8 is the number I picked.
+
+You end up paying $5 + $7 + $9 = $21.
+</pre>
+<p>&nbsp;</p>
+<p>Given a particular&nbsp;n &ge; 1, find out how much money you need to have to guarantee a&nbsp;win.</p>
+<p>Hint:</p>
+<ol id="hints">
+<li class="hint animated fadeInLeft">The best strategy to play the game is to minimize the maximum loss you could possibly face. Another strategy is to minimize the expected loss. Here, we are interested in thefirst&nbsp;scenario.</li>
+<li class="hint animated fadeInLeft">Take a small example (n = 3). What do you end up paying in the worst case?</li>
+<li class="hint animated fadeInLeft">Check out&nbsp;<a href="https://en.wikipedia.org/wiki/Minimax">this article</a>&nbsp;if you're still stuck.</li>
+<li class="hint animated fadeInLeft">The purely recursive implementation of minimax would be worthless for even a small n. You MUST use dynamic programming.</li>
+<li class="hint animated fadeInLeft">As a follow-up, how would you modify your code to solve the problem of minimizing the expected loss, instead of the worst-case loss?</li>
+</ol>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/agave/">@agave</a>&nbsp;and&nbsp;<a href="https://leetcode.com/stefanpochmann/">@StefanPochmann</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>此题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5666502.html">Guess Number Higher or Lower</a>的拓展，难度增加了不少，根据题目中的提示，这道题需要用到Minimax极小化极大算法，关于这个算法可以参见<a href="http://univasity.iteye.com/blog/1170216" target="_blank">这篇讲解</a>，并且题目中还说明了要用DP来做，那么我们需要建立一个二维的dp数组，其中dp[i][j]表示从数字i到j之间猜中任意一个数字最少需要花费的钱数，那么我们需要遍历每一段区间[j, i]，维护一个全局最小值global_min变量，然后遍历该区间中的每一个数字，计算局部最大值local_max = k + max(dp[j][k - 1], dp[k + 1][i])，这个正好是将该区间在每一个位置都分为两段，然后取当前位置的花费加上左右两段中较大的花费之和为局部最大值，为啥要取两者之间的较大值呢，因为我们要cover所有的情况，就得取最坏的情况。然后更新全局最小值，最后在更新dp[j][i]的时候看j和i是否是相邻的，相邻的话赋为i，否则赋为global_min。这里为啥又要取较小值呢，因为dp数组是求的[j, i]范围中的最低cost，比如只有两个数字1和2，那么肯定是猜1的cost低，是不有点晕，没关系，博主继续来绕你。我们想，如果只有一个数字，那么我们不用猜，cost为0。如果有两个数字，比如1和2，我们猜1，即使不对，我们cost也比猜2要低。如果有三个数字1，2，3，那么我们就先猜2，根据对方的反馈，就可以确定正确的数字，所以我们的cost最低为2。如果有四个数字1，2，3，4，那么情况就有点复杂了，那么我们的策略是用k来遍历所有的数字，然后再根据k分成的左右两个区间，取其中的较大cost加上k。</p>
+<p>当k为1时，左区间为空，所以cost为0，而右区间2，3，4，根据之前的分析应该取3，所以整个cost就是1+3=4。</p>
+<p>当k为2时，左区间为1，cost为0，右区间为3，4，cost为3，整个cost就是2+3=5。</p>
+<p>当k为3时，左区间为1，2，cost为1，右区间为4，cost为0，整个cost就是3+1=4。</p>
+<p>当k为4时，左区间1，2，3，cost为2，右区间为空，cost为0，整个cost就是4+2=6。</p>
+<p>综上k的所有情况，此时我们应该取整体cost最小的，即4，为最后的答案，这就是极小化极大算法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getMoneyAmount(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(n + <span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i - <span style="color: #800080;">1</span>; j &gt; <span style="color: #800080;">0</span>; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> global_min =<span style="color: #000000;"> INT_MAX;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = j + <span style="color: #800080;">1</span>; k &lt; i; ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">int</span> local_max = k + max(dp[j][k - <span style="color: #800080;">1</span>], dp[k + <span style="color: #800080;">1</span><span style="color: #000000;">][i]);
+                    global_min </span>=<span style="color: #000000;"> min(global_min, local_max);
+                }
+                dp[j][i] </span>= j + <span style="color: #800080;">1</span> == i ?<span style="color: #000000;"> j : global_min;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[<span style="color: #800080;">1</span><span style="color: #000000;">][n];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种是递归解法，建立了记忆数组memo，减少了重复计算，提高了运行效率，核心思想跟上面的解法相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getMoneyAmount(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; memo(n + <span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">return</span> helper(<span style="color: #800080;">1</span><span style="color: #000000;">, n, memo);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span> end, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">if</span> (start &gt;= end) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (memo[start][end] &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[start][end];
+        </span><span style="color: #0000ff;">int</span> res =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = start; k &lt;= end; ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">int</span> t = k + max(helper(start, k - <span style="color: #800080;">1</span>, memo), helper(k + <span style="color: #800080;">1</span><span style="color: #000000;">, end, memo));
+            res </span>=<span style="color: #000000;"> min(res, t);
+        }
+        </span><span style="color: #0000ff;">return</span> memo[start][end] =<span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5666502.html">Guess Number Higher or Lower</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/51353/simple-dp-solution-with-explanation" target="_blank">https://discuss.leetcode.com/topic/51353/simple-dp-solution-with-explanation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/68252/clarification-on-the-problem-description-problem-description-need-to-be-updated">https://discuss.leetcode.com/topic/68252/clarification-on-the-problem-description-problem-description-need-to-be-updated</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

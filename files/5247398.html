@@ -1,0 +1,204 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5247398.html">[LeetCode] Closest Binary Search Tree Value II 最近的二分搜索树的值之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-empty binary search tree and a target value, find&nbsp;<em>k</em>&nbsp;values in the BST that are closest to the target.</p>
+<p>Note:</p>
+<ul>
+<li>Given target value is a floating point.</li>
+<li>You may assume&nbsp;<em>k</em>&nbsp;is always valid, that is:&nbsp;<em>k</em>&nbsp;&le; total nodes.</li>
+<li>You are guaranteed to have only one unique set of&nbsp;<em>k</em>&nbsp;values in the BST that are closest to the target.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Follow up:<br />Assume that the BST is balanced, could you solve it in less than&nbsp;<em>O</em>(<em>n</em>) runtime (where&nbsp;<em>n</em>&nbsp;= total nodes)?</p>
+<p>Hint:</p>
+<p>1. Consider implement these two helper functions:<br />　　i.&nbsp;getPredecessor(N), which returns the next smaller node to N.<br />　　ii.&nbsp;getSuccessor(N), which returns the next larger node to N.<br />2. Try to assume that each node has a parent pointer, it makes the problem much easier.<br />3. Without parent pointer we just need to keep track of the path from the root to the current node using a stack.<br />4. You would need two stacks to track the path in finding predecessor and successor node separately.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5237170.html">Closest Binary Search Tree Value</a>的拓展，那道题只让我们找出离目标值最近的一个节点值，而这道题让我们找出离目标值最近的k个节点值，难度瞬间增加了不少，我最先想到的方法是用中序遍历将所有节点值存入到一个一维数组中，由于二分搜索树的性质，这个一维数组是有序的，然后我们再在有序数组中需要和目标值最近的k个值就简单的多，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; closestKValues(TreeNode* root, <span style="color: #0000ff;">double</span> target, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res, v;
+        inorder(root, v);
+        </span><span style="color: #0000ff;">int</span> idx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">double</span> diff = numeric_limits&lt;<span style="color: #0000ff;">double</span>&gt;<span style="color: #000000;">::max();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; v.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (diff &gt;= abs(target -<span style="color: #000000;"> v[i])) {
+                diff </span>= abs(target -<span style="color: #000000;"> v[i]);
+                idx </span>=<span style="color: #000000;"> i;
+            }
+        }
+        </span><span style="color: #0000ff;">int</span> left = idx - <span style="color: #800080;">1</span>, right = idx + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; k; ++<span style="color: #000000;">i) {
+            res.push_back(v[idx]);
+            </span><span style="color: #0000ff;">if</span> (left &gt;= <span style="color: #800080;">0</span> &amp;&amp; right &lt;<span style="color: #000000;"> v.size()) {
+                </span><span style="color: #0000ff;">if</span> (abs(v[left] - target) &gt; abs(v[right] -<span style="color: #000000;"> target)) {
+                    idx </span>=<span style="color: #000000;"> right;
+                    </span>++<span style="color: #000000;">right;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    idx </span>=<span style="color: #000000;"> left;
+                    </span>--<span style="color: #000000;">left;
+                }
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (left &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                idx </span>=<span style="color: #000000;"> left;
+                </span>--<span style="color: #000000;">left;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (right &lt;<span style="color: #000000;"> v.size()) {
+                idx </span>=<span style="color: #000000;"> right;
+                </span>++<span style="color: #000000;">right;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> inorder(TreeNode *root, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">v) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        inorder(root</span>-&gt;<span style="color: #000000;">left, v);
+        v.push_back(root</span>-&gt;<span style="color: #000000;">val);
+        inorder(root</span>-&gt;<span style="color: #000000;">right, v);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种解法是直接在中序遍历的过程中完成比较，当遍历到一个节点时，如果此时结果数组不到k个，我们直接将此节点值加入res中，如果该节点值和目标值的差值的绝对值小于res的首元素和目标值差值的绝对值，说明当前值更靠近目标值，则将首元素删除，末尾加上当前节点值，反之的话说明当前值比res中所有的值都更偏离目标值，由于中序遍历的特性，之后的值会更加的遍历，所以此时直接返回最终结果即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; closestKValues(TreeNode* root, <span style="color: #0000ff;">double</span> target, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        inorder(root, target, k, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> inorder(TreeNode *root, <span style="color: #0000ff;">double</span> target, <span style="color: #0000ff;">int</span> k, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        inorder(root</span>-&gt;<span style="color: #000000;">left, target, k, res);
+        </span><span style="color: #0000ff;">if</span> (res.size() &lt; k) res.push_back(root-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (abs(root-&gt;val - target) &lt; abs(res[<span style="color: #800080;">0</span>] -<span style="color: #000000;"> target)) {
+            res.erase(res.begin());
+            res.push_back(root</span>-&gt;<span style="color: #000000;">val);
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        inorder(root</span>-&gt;<span style="color: #000000;">right, target, k, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是上面那种方法的迭代写法，原理一模一样，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; closestKValues(TreeNode* root, <span style="color: #0000ff;">double</span> target, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s;
+        TreeNode </span>*p =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">while</span> (p || !<span style="color: #000000;">s.empty()) {
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (p) {
+                s.push(p);
+                p </span>= p-&gt;<span style="color: #000000;">left;
+            }
+            p </span>=<span style="color: #000000;"> s.top(); s.pop();
+            </span><span style="color: #0000ff;">if</span> (res.size() &lt; k) res.push_back(p-&gt;<span style="color: #000000;">val);
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (abs(p-&gt;val - target) &lt; abs(res[<span style="color: #800080;">0</span>] -<span style="color: #000000;"> target)) {
+                res.erase(res.begin());
+                res.push_back(p</span>-&gt;<span style="color: #000000;">val);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            p </span>= p-&gt;<span style="color: #000000;">right;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>在来看一种利用最大堆来解题的方法，堆里保存的一个差值diff和节点值的pair，我们中序遍历二叉树(也可以用其他遍历方法)，然后对于每个节点值都计算一下和目标值之差的绝对值，由于最大堆的性质，diff大的自动拍到最前面，我们维护k个pair，如果超过了k个，就把堆前面大的pair删掉，最后留下的k个pair，我们将pair中的节点值取出存入res中返回即可，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; closestKValues(TreeNode* root, <span style="color: #0000ff;">double</span> target, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        priority_queue</span>&lt;pair&lt;<span style="color: #0000ff;">double</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        inorder(root, target, k, q);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            res.push_back(q.top().second);
+            q.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> inorder(TreeNode *root, <span style="color: #0000ff;">double</span> target, <span style="color: #0000ff;">int</span> k, priority_queue&lt;pair&lt;<span style="color: #0000ff;">double</span>, <span style="color: #0000ff;">int</span>&gt;&gt; &amp;<span style="color: #000000;">q) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        inorder(root</span>-&gt;<span style="color: #000000;">left, target, k, q);
+        q.push({abs(root</span>-&gt;val - target), root-&gt;<span style="color: #000000;">val});
+        </span><span style="color: #0000ff;">if</span> (q.size() &gt;<span style="color: #000000;"> k) q.pop();
+        inorder(root</span>-&gt;<span style="color: #000000;">right, target, k, q);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面的这种方法用了两个栈，pre和suc，其中pre存小于目标值的数，suc存大于目标值的数，开始初始化pre和suc的时候，要分别将最接近目标值的稍小值和稍大值压入pre和suc，然后我们循环k次，每次比较pre和suc的栈顶元素，看谁更接近目标值，将其存入结果res中，然后更新取出元素的栈，依次类推直至取完k个数返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法五：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; closestKValues(TreeNode* root, <span style="color: #0000ff;">double</span> target, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> pre, suc;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (root) {
+            </span><span style="color: #0000ff;">if</span> (root-&gt;val &lt;=<span style="color: #000000;"> target) {
+                pre.push(root);
+                root </span>= root-&gt;<span style="color: #000000;">right;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                suc.push(root);
+                root </span>= root-&gt;<span style="color: #000000;">left;
+            }
+        }
+        </span><span style="color: #0000ff;">while</span> (k-- &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (suc.empty() || !pre.empty() &amp;&amp; target - pre.top()-&gt;val &lt; suc.top()-&gt;val -<span style="color: #000000;"> target) {
+                res.push_back(pre.top()</span>-&gt;<span style="color: #000000;">val);
+                getPredecessor(pre);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                res.push_back(suc.top()</span>-&gt;<span style="color: #000000;">val);
+                getSuccessor(suc);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> getPredecessor(stack&lt;TreeNode*&gt; &amp;<span style="color: #000000;">pre) {
+        TreeNode </span>*t =<span style="color: #000000;"> pre.top(); pre.pop();
+        </span><span style="color: #0000ff;">if</span> (t-&gt;<span style="color: #000000;">left) {
+            pre.push(t</span>-&gt;<span style="color: #000000;">left);
+            </span><span style="color: #0000ff;">while</span> (pre.top()-&gt;right) pre.push(pre.top()-&gt;<span style="color: #000000;">right);
+        }
+    }
+    </span><span style="color: #0000ff;">void</span> getSuccessor(stack&lt;TreeNode*&gt; &amp;<span style="color: #000000;">suc) {
+        TreeNode </span>*t =<span style="color: #000000;"> suc.top(); suc.pop();
+        </span><span style="color: #0000ff;">if</span> (t-&gt;<span style="color: #000000;">right) {
+            suc.push(t</span>-&gt;<span style="color: #000000;">right);
+            </span><span style="color: #0000ff;">while</span> (suc.top()-&gt;left) suc.push(suc.top()-&gt;<span style="color: #000000;">left);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5237170.html">Closest Binary Search Tree Value</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/69220/2-ms-o-n-and-6-ms-o-logn-java-solution" target="_blank">https://leetcode.com/discuss/69220/2-ms-o-n-and-6-ms-o-logn-java-solution</a></p>
+<p><a href="https://leetcode.com/discuss/77954/easy-o-n-c-solution-using-priority_queue" target="_blank">https://leetcode.com/discuss/77954/easy-o-n-c-solution-using-priority_queue</a></p>
+<p><a href="https://leetcode.com/discuss/64713/clear-java-solution-with-one-stack-one-linkedlist" target="_blank">https://leetcode.com/discuss/64713/clear-java-solution-with-one-stack-one-linkedlist</a></p>
+<p><a href="https://leetcode.com/discuss/83431/c-simple-inorder-solution-with-o-n-runtime-and-o-k-memory" target="_blank">https://leetcode.com/discuss/83431/c-simple-inorder-solution-with-o-n-runtime-and-o-k-memory</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

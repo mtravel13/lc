@@ -1,0 +1,104 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4523624.html">[LeetCode] Shortest Palindrome 最短回文串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string S, you are allowed to convert it to a palindrome by adding characters in front of it. Find and return the shortest palindrome you can find by performing this transformation.</p>
+<p>For example:</p>
+<p>Given <code>"aacecaaa"</code>, return <code>"aaacecaaa"</code>.</p>
+<p>Given <code>"abcd"</code>, return <code>"dcbabcd"</code>.</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/ifanchu">@ifanchu</a> for adding this problem and creating all test cases. Thanks to <a href="https://leetcode.com/discuss/user/Freezen">@Freezen</a> for additional test cases.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求最短的回文串，LeetCode中关于回文串的其他的题目有<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4125510.html"> Palindrome Number 验证回文数字</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4030114.html"> Validate Palindrome 验证回文字符串</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4270008.html"> Palindrome Partitioning 拆分回文串</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4271456.html">Palindrome Partitioning II 拆分回文串之二</a>和<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4464476.html"> Longest Palindromic Substring 最长回文串</a>。题目让我们在给定字符串s的前面加上最少个字符，使之变成回文串，那么我们来看题目中给的两个例子，最坏的情况下是s中没有相同的字符，那么最小需要添加字符的个数为s.size() - 1个，第一个例子的字符串包含一个回文串，只需再在前面添加一个字符即可，还有一点需要注意的是，前面添加的字符串都是从s的末尾开始，一位一位往前添加的，那么我们只需要知道从s末尾开始需要添加到前面的个数。这道题如果用brute force无法通过OJ，所以我们需要用一些比较巧妙的方法来解。这里我们用到了KMP算法，KMP算法是一种专门用来匹配字符串的高效的算法，具体方法可以参见这篇博文<a href="http://blog.csdn.net/v_july_v/article/details/7041827" target="_blank">从头到尾彻底理解KMP</a>。我们把s和其转置r连接起来，中间加上一个其他字符，形成一个新的字符串t，我们还需要一个和t长度相同的一位数组next，其中next[i]表示从t[i]到开头的子串的相同前缀后缀的个数，具体可参考KMP算法中解释。最后我们把不相同的个数对应的字符串添加到s之前即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> shortestPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">string</span> r =<span style="color: #000000;"> s;
+        reverse(r.begin(), r.end());
+        </span><span style="color: #0000ff;">string</span> t = s + <span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> r;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; next(t.size(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; t.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> j = next[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">while</span> (j &gt; <span style="color: #800080;">0</span> &amp;&amp; t[i] != t[j]) j = next[j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            next[i] </span>= (j += t[i] ==<span style="color: #000000;"> t[j]);
+        }
+        </span><span style="color: #0000ff;">return</span> r.substr(<span style="color: #800080;">0</span>, s.size() - next.back()) +<span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String shortestPalindrome(String s) {
+        String r </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuilder(s).reverse().toString();
+        String t </span>= s + "#" +<span style="color: #000000;"> r;
+        </span><span style="color: #0000ff;">int</span>[] next = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[t.length()];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt; t.length(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> j = next[i - 1<span style="color: #000000;">];
+            </span><span style="color: #0000ff;">while</span> (j &gt; 0 &amp;&amp; t.charAt(i) != t.charAt(j)) j = next[j - 1<span style="color: #000000;">];
+            j </span>+= (t.charAt(i) == t.charAt(j)) ? 1 : 0<span style="color: #000000;">;
+            next[i] </span>=<span style="color: #000000;"> j;
+        }
+        </span><span style="color: #0000ff;">return</span> r.substring(0, s.length() - next[t.length() - 1]) +<span style="color: #000000;"> s;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>从上面的Java和C++的代码中，我们可以看出来C++和Java在使用双等号上的明显的不同，感觉Java对于双等号对使用更加苛刻一些，比如Java中的双等号只对primitive类数据结构(比如int, char等)有效，但是即便有效，也不能将结果直接当1或者0来用。而对于一些从Object派生出来的类，比如Integer或者String等，不能直接用双等号来比较，而是要用其自带的equals()函数来比较，因为双等号判断的是不是同一个对象，而不是他们所表示的值是否相同。同样需要注意的是，Stack的peek()函数取出的也是对象，不能直接和另一个Stack的peek()取出的对象直接双等，而是使用equals或者先将其中一个强行转换成primitive类，再和另一个强行比较。</p>
+<p>下面这种方法的写法比较简洁，虽然不是明显的KMP算法，但是也有其的影子在里面，首先我们还是先将其的翻转字符串搞出来，然后比较原字符串s的前缀后翻转字符串t的对应位置的后缀是否相等，起始位置是比较s和t是否相等，如果相等，说明s本身就是回文串，不用添加任何字符，直接返回即可；如果不想等，s去掉最后一位，t去掉第一位，继续比较，以此类推直至有相等，或者循环结束，这样我们就能将两个字符串在正确的位置拼接起来了。很有意思的是，这种方法对应Java写法却会TLE，无法通过OJ。</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> shortestPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> s;
+        reverse(t.begin(), t.end());
+        </span><span style="color: #0000ff;">int</span> n = s.size(), i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (i = n; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s.substr(<span style="color: #800080;">0</span>, i) == t.substr(n -<span style="color: #000000;"> i)) {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> t.substr(<span style="color: #800080;">0</span>, n - i) +<span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种Java写法也是在找相同的前缀后缀，但是并没有每次把前缀后缀取出来比较，而是用两个指针分别指向对应的位置比较，然后用end指向相同后缀的起始位置，最后再根据end的值来拼接两个字符串。有意思的是这种方法对应的C++写法会TLE，跟上面正好相反，那么我们是否能得出Java的substring操作略慢，而C++的reverse略慢呢，我也仅仅是猜测而已。</p>
+<p>&nbsp;</p>
+<p>Java 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String shortestPalindrome(String s) {
+        </span><span style="color: #0000ff;">int</span> i = 0, end = s.length() - 1, j =<span style="color: #000000;"> end;
+        </span><span style="color: #0000ff;">char</span> arr =<span style="color: #000000;"> s.toCharArray();
+        </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> j) {
+            </span><span style="color: #0000ff;">if</span> (arr[i] ==<span style="color: #000000;"> arr[j]) {
+                </span>++i; --<span style="color: #000000;">j;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                i </span>= 0; --end; j =<span style="color: #000000;"> end;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> StringBuilder(s.substring(end + 1)).reverse().toString() +<span style="color: #000000;"> s;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="http://blog.csdn.net/v_july_v/article/details/7041827" target="_blank">http://blog.csdn.net/v_july_v/article/details/7041827</a></p>
+<p><a href="https://leetcode.com/discuss/36807/c-8-ms-kmp-based-o-n-time-%26-o-n-memory-solution" target="_blank">https://leetcode.com/discuss/36807/c-8-ms-kmp-based-o-n-time-%26-o-n-memory-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/14770/my-easily-understandable-but-time-consuming-c-solution" target="_blank">https://discuss.leetcode.com/topic/14770/my-easily-understandable-but-time-consuming-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/25860/my-9-lines-three-pointers-java-solution-with-explanation" target="_blank">https://discuss.leetcode.com/topic/25860/my-9-lines-three-pointers-java-solution-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

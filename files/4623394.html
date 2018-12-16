@@ -1,0 +1,64 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4623394.html">[LeetCode] Power of Two 判断2的次方数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer, write a function to determine if it is a power of two.</p>
+<p>Example 1:</p>
+<pre>Input: 1
+Output: true</pre>
+<p>Example 2:</p>
+<pre>Input: 16
+Output: true</pre>
+<p>Example 3:</p>
+<pre>Input: 218
+Output: false</pre>
+<p>&nbsp;</p>
+<p>这道题让我们判断一个数是否为2的次方数，而且要求时间和空间复杂度都为常数，那么对于这种玩数字的题，我们应该首先考虑位操作 Bit Operation。在LeetCode中，位操作的题有很多，比如比如&nbsp;<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_24" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4284205.html">Repeated DNA Sequences</a>，<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_57" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4130577.html">Single Number</a>, &nbsp;<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_35" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4263927.html">Single Number II</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4315649.html">&nbsp;Grey Code</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4321355.html"> Reverse Bits</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4431646.html">Bitwise AND of Numbers Range</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4325432.html">Number of 1 Bits</a>&nbsp;和 <a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4431949.html">Divide Two Integers</a>&nbsp;等等。那么我们来观察下2的次方数的二进制写法的特点：</p>
+<p>1&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16 　　....</p>
+<p>1&nbsp;&nbsp;&nbsp; 10&nbsp;&nbsp;&nbsp; 100&nbsp;&nbsp;&nbsp; 1000&nbsp;&nbsp;&nbsp; 10000　....</p>
+<p>那么我们很容易看出来2的次方数都只有一个1，剩下的都是0，所以我们的解题思路就有了，我们只要每次判断最低位是否为1，然后向右移位，最后统计1的个数即可判断是否是2的次方数，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfTwo(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (n &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            cnt </span>+= (n &amp; <span style="color: #800080;">1</span><span style="color: #000000;">);
+            n </span>&gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> cnt == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    } 
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有一个技巧，如果一个数是2的次方数的话，根据上面分析，那么它的二进数必然是最高位为1，其它都为0，那么如果此时我们减1的话，则最高位会降一位，其余为0的位现在都为变为1，那么我们把两数相与，就会得到0，用这个性质也能来解题，而且只需一行代码就可以搞定，如下所示：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfTwo(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">return</span> (n &gt; <span style="color: #800080;">0</span>) &amp;&amp; (!(n &amp; (n - <span style="color: #800080;">1</span><span style="color: #000000;">)));
+    } 
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4325432.html" target="_blank">Number of 1 Bits</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5403783.html" target="_blank">Power of Four</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5138212.html">Power of Three</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/power-of-two/discuss/63974/Using-nand(n-1)-trick">https://leetcode.com/problems/power-of-two/discuss/63974/Using-nand(n-1)-trick</a></p>
+<p><a href="https://leetcode.com/problems/power-of-two/discuss/63972/One-line-java-solution-using-bitCount">https://leetcode.com/problems/power-of-two/discuss/63972/One-line-java-solution-using-bitCount</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

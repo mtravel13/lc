@@ -1,0 +1,118 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7570954.html">[LeetCode] Path Sum IV 二叉树的路径和之四</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>If the depth of a tree is smaller than&nbsp;<code>5</code>, then this tree can be represented by a list of three-digits integers.</p>
+<p>For each integer in this list:</p>
+<ol>
+<li>The hundreds digit represents the depth&nbsp;<code>D</code>&nbsp;of this node,&nbsp;<code>1 &lt;= D &lt;= 4.</code></li>
+<li>The tens digit represents the position&nbsp;<code>P</code>&nbsp;of this node in the level it belongs to,&nbsp;<code>1 &lt;= P &lt;= 8</code>. The position is the same as that in a full binary tree.</li>
+<li>The units digit represents the value&nbsp;<code>V</code>&nbsp;of this node,&nbsp;<code>0 &lt;= V &lt;= 9.</code></li>
+</ol>
+<p>&nbsp;</p>
+<p>Given a list of&nbsp;<code>ascending</code>&nbsp;three-digits integers representing a binary with the depth smaller than 5. You need to return the sum of all paths from the root towards the leaves.</p>
+<p>Example 1:</p>
+<pre>Input: [113, 215, 221]
+Output: 12
+Explanation: 
+The tree that the list represents is:
+    3
+   / \
+  5   1
+
+The path sum is (3 + 5) + (3 + 1) = 12.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [113, 221]
+Output: 4
+Explanation: 
+The tree that the list represents is: 
+    3
+     \
+      1
+
+The path sum is (3 + 1) = 4.</pre>
+<p>&nbsp;</p>
+<p>这道题还是让我们求二叉树的路径之和，但是跟之前不同的是，树的存储方式比较特别，并没有专门的数结点，而是使用一个三位数字来存的，百位数是该结点的深度，十位上是该结点在某一层中的位置，个位数是该结点的结点值。为了求路径之和，我们肯定还是需要遍历树，但是由于没有树结点，所以我们可以用其他的数据结构代替。比如我们可以将每个结点的位置信息和结点值分离开，然后建立两者之间的映射。比如我们可以将百位数和十位数当作key，将个位数当作value，建立映射。由于题目中说了数组是有序的，所以首元素就是根结点，然后我们进行先序遍历即可。在递归函数中，我们先将深度和位置拆分出来，然后算出左右子结点的深度和位置的两位数，我们还要维护一个变量cur，用来保存当前路径之和。如果当前结点的左右子结点不存在，说明此时cur已经是一条完整的路径之和了，加到结果res中，直接返回。否则就是对存在的左右子结点调用递归函数即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> pathSum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            m[num </span>/ <span style="color: #800080;">10</span>] = num % <span style="color: #800080;">10</span><span style="color: #000000;">;
+        }
+        helper(nums[</span><span style="color: #800080;">0</span>] / <span style="color: #800080;">10</span>, m, <span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> num, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp; m, <span style="color: #0000ff;">int</span> cur, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">int</span> level = num / <span style="color: #800080;">10</span>, pos = num % <span style="color: #800080;">10</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = (level + <span style="color: #800080;">1</span>) * <span style="color: #800080;">10</span> + <span style="color: #800080;">2</span> * pos - <span style="color: #800080;">1</span>, right = left + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        cur </span>+=<span style="color: #000000;"> m[num];
+        </span><span style="color: #0000ff;">if</span> (!m.count(left) &amp;&amp; !<span style="color: #000000;">m.count(right)) {
+            res </span>+=<span style="color: #000000;"> cur;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m.count(left)) helper(left, m, cur, res);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m.count(right)) helper(right, m, cur, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是迭代的形式，我们使用的层序遍历，与先序遍历不同的是，我们不能维护一个当前路径之和的变量，这样会重复计算结点值，而是在遍历每一层的结点时，加上其父结点的值，如果某一个结点没有子结点了，才将累加起来的结点值加到结果res中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> pathSum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, cur = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt; q{{nums[<span style="color: #800080;">0</span>] / <span style="color: #800080;">10</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            m[num </span>/ <span style="color: #800080;">10</span>] = num % <span style="color: #800080;">10</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">int</span> level = t / <span style="color: #800080;">10</span>, pos = t % <span style="color: #800080;">10</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> left = (level + <span style="color: #800080;">1</span>) * <span style="color: #800080;">10</span> + <span style="color: #800080;">2</span> * pos - <span style="color: #800080;">1</span>, right = left + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (!m.count(left) &amp;&amp; !<span style="color: #000000;">m.count(right)) {
+                res </span>+=<span style="color: #000000;"> m[t];
+            }
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m.count(left)) {
+                m[left] </span>+=<span style="color: #000000;"> m[t];
+                q.push(left);
+            }
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m.count(right)) {
+                m[right] </span>+=<span style="color: #000000;"> m[t];
+                q.push(right);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6007336.html">Path Sum III</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4280120.html" target="_blank">Binary Tree Maximum Path Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4042156.html" target="_blank">Path Sum II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4036961.html" target="_blank">Path Sum</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/101111/java-solution-represent-tree-using-hashmap/2">https://discuss.leetcode.com/topic/101111/java-solution-represent-tree-using-hashmap</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

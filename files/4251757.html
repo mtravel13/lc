@@ -1,0 +1,133 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4251757.html">[LeetCode] Binary Tree Postorder Traversal 二叉树的后序遍历</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, return the <em>postorder</em> traversal of its nodes' values.</p>
+<p> For example:<br />
+Given binary tree <code>{1,#,2,3}</code>,<br />
+</p>
+<pre>   1
+    \
+     2
+    /
+   3
+</pre>
+<p>return <code>[3,2,1]</code>.</p>
+<p><strong>Note:</strong> Recursive solution is trivial, could you do it iteratively?</p>
+<p>&nbsp;</p>
+<p>经典题目，求二叉树的后序遍历的非递归方法，跟前序，中序，层序一样都需要用到栈，后续的顺序是左-右-根，所以当一个节点值被取出来时，它的左右子节点要么不存在，要么已经被访问过了。我们先将根结点压入栈，然后定义一个辅助结点head，while循环的条件是栈不为空，在循环中，首先将栈顶结点t取出来，如果栈顶结点没有左右子结点，或者其左子结点是head，或者其右子结点是head的情况下。我们将栈顶结点值加入结果res中，并将栈顶元素移出栈，然后将head指向栈顶元素；否则的话就看如果右子结点不为空，将其加入栈，再看左子结点不为空的话，就加入栈，注意这里先右后左的顺序是因为栈的后入先出的特点，可以使得左子结点先被处理。下面来看为什么是这三个条件呢，首先如果栈顶元素如果没有左右子结点的话，说明其是叶结点，而且我们的入栈顺序保证了左子结点先被处理，所以此时的结点值就可以直接加入结果res了，然后移出栈，将head指向这个叶结点，这样的话head每次就是指向前一个处理过并且加入结果res的结点，那么如果栈顶结点的左子结点或者右子结点是head的话，说明其子结点已经加入结果res了，那么就可以处理当前结点了，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; postorderTraversal(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s{{root}};
+        TreeNode </span>*head =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s.empty()) {
+            TreeNode </span>*t =<span style="color: #000000;"> s.top();
+            </span><span style="color: #0000ff;">if</span> ((!t-&gt;left &amp;&amp; !t-&gt;right) || t-&gt;left == head || t-&gt;right ==<span style="color: #000000;"> head) {
+                res.push_back(t</span>-&gt;<span style="color: #000000;">val);
+                s.pop();
+                head </span>=<span style="color: #000000;"> t;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (t-&gt;right) s.push(t-&gt;<span style="color: #000000;">right);
+                </span><span style="color: #0000ff;">if</span> (t-&gt;left) s.push(t-&gt;<span style="color: #000000;">left);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于后序遍历的顺序是左-右-根，而先序遍历的顺序是根-左-右，二者其实还是很相近的，我们可以先在先序遍历的方法上做些小改动，使其遍历顺序变为根-右-左，然后翻转一下，就是左-右-根啦，翻转的方法我们使用反向Q，哦不，是反向加入结果res，每次都在结果res的开头加入结点值，而改变先序遍历的顺序就只要该遍历一下入栈顺序，先左后右，这样出栈处理的时候就是先右后左啦，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; postorderTraversal(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s{{root}};
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s.empty()) {
+            TreeNode </span>*t =<span style="color: #000000;"> s.top(); s.pop();
+            res.insert(res.begin(), t</span>-&gt;<span style="color: #000000;">val);
+            </span><span style="color: #0000ff;">if</span> (t-&gt;left) s.push(t-&gt;<span style="color: #000000;">left);
+            </span><span style="color: #0000ff;">if</span> (t-&gt;right) s.push(t-&gt;<span style="color: #000000;">right);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>那么在<a href="http://www.cnblogs.com/grandyang/p/4146981.html" target="_blank">Binary Tree Preorder Traversal</a>中的解法二也可以改动一下变成后序遍历，改动的思路跟上面的解法一样，都是先将先序遍历的根-左-右顺序变为根-右-左，再翻转变为后序遍历的左-右-根，翻转还是改变结果res的加入顺序，然后把更新辅助结点p的左右顺序换一下即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; postorderTraversal(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s;
+        TreeNode </span>*p =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">while</span> (!s.empty() ||<span style="color: #000000;"> p) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (p) {
+                s.push(p);
+                res.insert(res.begin(), p</span>-&gt;<span style="color: #000000;">val);
+                p </span>= p-&gt;<span style="color: #000000;">right;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                TreeNode </span>*t =<span style="color: #000000;"> s.top(); s.pop();
+                p </span>= t-&gt;<span style="color: #000000;">left;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>论坛上还有一种双栈的解法，其实本质上跟解法二没什么区别，都是利用了改变先序遍历的顺序来实现后序遍历的，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; postorderTraversal(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s1, s2;
+        s1.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s1.empty()) {
+            TreeNode </span>*t =<span style="color: #000000;"> s1.top(); s1.pop();
+            s2.push(t);
+            </span><span style="color: #0000ff;">if</span> (t-&gt;left) s1.push(t-&gt;<span style="color: #000000;">left);
+            </span><span style="color: #0000ff;">if</span> (t-&gt;right) s1.push(t-&gt;<span style="color: #000000;">right);
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s2.empty()) {
+            res.push_back(s2.top()</span>-&gt;<span style="color: #000000;">val); s2.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4146981.html" target="_blank">Binary Tree Preorder Traversal</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4297300.html" target="_blank">Binary Tree Inorder Traversal</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4051321.html" target="_blank">Binary Tree Level Order Traversal</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/18094/java-solution-using-two-stacks">https://discuss.leetcode.com/topic/18094/java-solution-using-two-stacks</a></p>
+<p><a href="https://discuss.leetcode.com/topic/30632/preorder-inorder-and-postorder-iteratively-summarization">https://discuss.leetcode.com/topic/30632/preorder-inorder-and-postorder-iteratively-summarization</a></p>
+<p><a href="https://discuss.leetcode.com/topic/44231/preorder-inorder-and-postorder-traversal-iterative-java-solution">https://discuss.leetcode.com/topic/44231/preorder-inorder-and-postorder-traversal-iterative-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

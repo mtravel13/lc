@@ -1,0 +1,58 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5875509.html">[LeetCode] Random Pick Index 随机拾取序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of integers with possible duplicates, randomly output the index of a given target number. You can assume that the given target number must exist in the array.</p>
+<p> <strong>Note:</strong><br />
+The array size can be very large. Solution that uses too much extra space will not pass the judge.
+</p>
+<p><strong>Example:</strong>
+</p>
+<pre>int[] nums = new int[] {1,2,3,3,3};
+Solution solution = new Solution(nums);
+
+// pick(3) should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+solution.pick(3);
+
+// pick(1) should return 0. Since in the array only nums[0] is equal to 1.
+solution.pick(1);
+</pre>
+<div>&nbsp;</div>
+<div>这道题指明了我们不能用太多的空间，那么省空间的随机方法只有<a href="https://zh.wikipedia.org/wiki/%E6%B0%B4%E5%A1%98%E6%8A%BD%E6%A8%A3" target="_blank">水塘抽样Reservoir Sampling</a>了，LeetCode之前有过两道需要用这种方法的题目<a href="http://www.cnblogs.com/grandyang/p/5783392.html">Shuffle an Array</a>和<a href="http://www.cnblogs.com/grandyang/p/5759926.html">Linked List Random Node</a>。那么如果了解了水塘抽样，这道题就不算一道难题了，我们定义两个变量，计数器cnt和返回结果res，我们遍历整个数组，如果数组的值不等于target，直接跳过；如果等于target，计数器加1，然后我们在[0,cnt)范围内随机生成一个数字，如果这个数字是0，我们将res赋值为i即可，参见代码如下：</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Solution(vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums): v(nums) {}
+    
+    </span><span style="color: #0000ff;">int</span> pick(<span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span>, res = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; v.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (v[i] != target) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span>++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">if</span> (rand() % cnt == <span style="color: #800080;">0</span>) res =<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5783392.html">Shuffle an Array</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5759926.html">Linked List Random Node</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/58371/c-o-n-solution/2" target="_blank">https://discuss.leetcode.com/topic/58371/c-o-n-solution/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/58297/share-c-o-n-time-solution/2" target="_blank">https://discuss.leetcode.com/topic/58297/share-c-o-n-time-solution/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/58403/bruce-force-java-with-o-n-time-o-1-space" target="_blank">https://discuss.leetcode.com/topic/58403/bruce-force-java-with-o-n-time-o-1-space</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

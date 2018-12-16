@@ -1,0 +1,57 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4741934.html">[LeetCode] Ugly Number 丑陋数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a program to check whether a given number is an ugly number.</p>
+<p>Ugly numbers are positive numbers whose prime factors only include&nbsp;<code>2, 3, 5</code>. For example,&nbsp;<code>6, 8</code>&nbsp;are ugly while&nbsp;<code>14</code>&nbsp;is not ugly since it includes another prime factor&nbsp;<code>7</code>.</p>
+<p>Note that&nbsp;<code>1</code>&nbsp;is typically treated as an ugly number.</p>
+<p>&nbsp;</p>
+<p>这道题让我们检测一个数是否为丑陋数，所谓丑陋数就是其质数因子只能是2,3,5。那么最直接的办法就是不停的除以这些质数，如果剩余的数字是1的话就是丑陋数了，有两种写法，如下所示：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isUgly(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">while</span> (num &gt;= <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (num % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span>) num /= <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (num % <span style="color: #800080;">3</span> == <span style="color: #800080;">0</span>) num /= <span style="color: #800080;">3</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (num % <span style="color: #800080;">5</span> == <span style="color: #800080;">0</span>) num /= <span style="color: #800080;">5</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> num == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isUgly(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">if</span> (num &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (num % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span>) num /= <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (num % <span style="color: #800080;">3</span> == <span style="color: #800080;">0</span>) num /= <span style="color: #800080;">3</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (num % <span style="color: #800080;">5</span> == <span style="color: #800080;">0</span>) num /= <span style="color: #800080;">5</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> num == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5144918.html" target="_blank">Super Ugly Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4743837.html" target="_blank">Ugly Number II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/60914/my-2ms-java-solution" target="_blank">https://leetcode.com/discuss/60914/my-2ms-java-solution</a></p>
+<p><a href="https://leetcode.com/discuss/52703/2-4-lines-every-language" target="_blank">https://leetcode.com/discuss/52703/2-4-lines-every-language</a></p>
+<p><a href="https://leetcode.com/discuss/78281/4ms-recursive-solution-in-c" target="_blank">https://leetcode.com/discuss/78281/4ms-recursive-solution-in-c</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>New Tab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+        crossorigin="anonymous">
+    <style>
+        a:visited {
+  color: gray;
+}
+    </style>
+    <script>
+    
+    
+
+    function filterQuestions(company, difficulty){
+        var filtered = []
+        var nonFiltered = []
+        var companyQuestions = filters[company];
+        for (var i = 0; i < allQuestions.length; i++) {
+            var element = allQuestions[i];
+            var valid = companyQuestions.includes(element.titleHash) && element.difficulty == difficulty;
+            if (valid) {
+              filtered.push(element);
+            } 
+        }
+
+        allQsHash = {}
+        allQuestions.forEach(element => {
+            allQsHash[element.titleHash] = true;
+        });
+        companyQuestions.forEach(q => {
+            if (!(q in allQsHash) ){
+                nonFiltered.push(q);
+            }
+        });
+        return [filtered,nonFiltered];
+    }
+
+    function createTableHtml(tableData){
+        var html = '<table class="table">';
+        var dirPrefix = './files/';
+        var i =1;
+        tableData.forEach(element => {
+            if (!element['id']) {
+                html+='<p>' + i +' ' + element + '</p>';
+            } else {
+                html+='<tr><td>'+i+'</td><td><a target="_blank" href="'+dirPrefix + element.url +'">' + element.title + '</a></td></tr>';
+            }
+            i+=1
+        });
+        return html;
+    }
+
+    function updateHtmlTable(html, id){
+        document.getElementById(id).innerHTML = html;
+    }
+
+    function filter(){
+        var difficulty = document.getElementById(levelselectId).value;
+        var company = document.getElementById(companyselectId).value;
+        var qs = filterQuestions(company, difficulty);
+        var html = createTableHtml(qs[0]);
+        updateHtmlTable(html, 'questionsTable')
+        
+        //not found questions
+        var html = createTableHtml(qs[1]);
+        updateHtmlTable(html,'extraQuestionsTable')
+
+    }
+
+    function createOptions(options,elementId){
+        var sel = document.getElementById(elementId);
+        for (var i = 0; i < options.length; i++) {
+            var opt = document.createElement('option');
+            opt.innerHTML = options[i];
+            opt.value =  options[i];
+            sel.appendChild(opt);
+        }
+    }
+
+
+    function init(){
+        createOptions(levels, levelselectId);
+        createOptions(companies, companyselectId);
+    }
+
+
+/** USE GET LINKS FROM WEBPAGE **/
+        // var myRows = []
+        // $('table tbody tr').each(function (i, tr) {
+        //     var obj = {}, $tds = $(tr).find('td');
+        //     obj['id'] = $tds.eq(0).text();
+        //     obj['title'] = $tds.eq(1).text();
+        //     obj['url'] = $($tds.eq(1)).find('a')[0] && $($tds.eq(1)).find('a')[0].href;
+        //     obj['difficulty'] = $tds.eq(3).text().toLowerCase();
+        //     obj['titleHash'] = obj['title'].toLowerCase().trim().split(' ').join('-');
+        //     myRows.push(obj);
+        // });
+        // copy((myRows));    
+
+// LEETCODE GET URL ETC FROM PAGE 
+    // var myRows = []
+    // $('table tbody tr').each(function (i, tr) {
+    //     $tds = $(tr).find('td');
+    //     t = $tds.eq(2).text().toLowerCase().trim().split(' ').join('-');
+    //     myRows.push(t);
+    // });
+    // copy((myRows));
+    
+    </script>
+</head>
+<body>
+
+    <div class="form">
+        <select id="companyBox"></select>
+        <select id="levelBox"></select>
+        <button onclick="filter()" class="button">Go</button>
+    </div>
+    <div id="questionsTable" ></div>
+    <hr/>
+    <b>Following were not found in the question bank but were asked</b>
+    <div id="extraQuestionsTable" ></div>
+<script src="allQuestions.js"></script>
+<script src="allFilters.js"></script>
+<script>
+
+    function getAllCompanies(){
+        var out = [];
+        for (var key in allFilters) {
+            out.push(key);
+        }
+        return out
+    }
+    function getAllFilters(){
+        return  allFilters;
+    }
+    function getAllQuestions(){
+        return allQuestions;
+    }
+    var allQuestions = getAllQuestions();
+
+        var filters = getAllFilters();
+
+        var companies = getAllCompanies();
+        var companyselectId = 'companyBox';
+        var levelselectId = 'levelBox';
+        var levels = ['easy', 'medium', 'hard'];
+    init();
+    
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4682458.html">[LeetCode] Different Ways to Add Parentheses 添加括号的不同方式</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. The valid operators are&nbsp;<code>+</code>,&nbsp;<code>-</code>and&nbsp;<code>*</code>.</p>
+<p><br />Example 1</p>
+<p>Input:&nbsp;<code>"2-1-1"</code>.</p>
+<pre>((2-1)-1) = 0
+(2-(1-1)) = 2</pre>
+<p>Output:&nbsp;<code>[0, 2]</code></p>
+<p><br />Example 2</p>
+<p>Input:&nbsp;<code>"2*3-4*5"</code></p>
+<pre>(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10</pre>
+<p>Output:&nbsp;<code>[-34, -14, -10, -10, 10]</code></p>
+<p>&nbsp;</p>
+<p>这道题让给我们一个可能含有加减乘的表达式，让我们在任意位置添加括号，求出所有可能表达式的不同值。这道题跟之前的那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4301096.html">Unique Binary Search Trees II 独一无二的二叉搜索树之二</a>用的方法一样，用递归来解，划分左右子树，递归构造。</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; diffWaysToCompute(<span style="color: #0000ff;">string</span><span style="color: #000000;"> input) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; input.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (input[i] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || input[i] == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> || input[i] == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; left = diffWaysToCompute(input.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i));
+                vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; right = diffWaysToCompute(input.substr(i + <span style="color: #800080;">1</span><span style="color: #000000;">));
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; left.size(); ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; right.size(); ++<span style="color: #000000;">k) {
+                        </span><span style="color: #0000ff;">if</span> (input[i] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span>) res.push_back(left[j] +<span style="color: #000000;"> right[k]);
+                        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (input[i] == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>) res.push_back(left[j] -<span style="color: #000000;"> right[k]);
+                        </span><span style="color: #0000ff;">else</span> res.push_back(left[j] *<span style="color: #000000;"> right[k]);
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (res.empty()) res.push_back(atoi(input.c_str()));
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4944875.html">Remove Invalid Parentheses 移除非法括号</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424731.html" target="_blank">Longest Valid Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4444160.html" target="_blank">Generate Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424587.html" target="_blank">Valid Parentheses</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="http://www.cnblogs.com/ganganloveu/p/4681439.html" target="_blank">http://www.cnblogs.com/ganganloveu/p/4681439.html</a></p>
+<p><a href="https://leetcode.com/discuss/48488/c-4ms-recursive-method" target="_blank">https://leetcode.com/discuss/48488/c-4ms-recursive-method</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

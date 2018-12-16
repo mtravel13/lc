@@ -1,0 +1,58 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4537983.html">[LeetCode] Combination Sum III 组合之和之三</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div>
+<p>Find all possible combinations of <em><strong>k</strong></em> numbers that add up to a number <em><strong>n</strong></em>, given that only numbers from 1 to 9 can be used and each combination should be a unique set of numbers.</p>
+<p>Ensure that numbers within the set are sorted in ascending order.</p>
+</div>
+<div><br />
+<p> <em><strong>Example 1:</strong></em></p>
+<p>Input:  <em><strong>k</strong></em> = 3,  <em><strong>n</strong></em> = 7</p>
+<p>Output: </p>
+<pre>[[1,2,4]]
+</pre>
+<br />
+<p> <em><strong>Example 2:</strong></em></p>
+<p>Input:  <em><strong>k</strong></em> = 3,  <em><strong>n</strong></em> = 9</p>
+<p>Output: </p>
+<pre>[[1,2,6], [1,3,5], [2,3,4]]
+</pre>
+</div>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/mithmatt">@mithmatt</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题题是组合之和系列的第三道题，跟之前两道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4419259.html">Combination Sum 组合之和</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4419386.html">Combination Sum II 组合之和之二</a>都不太一样，那两道的联系比较紧密，变化不大，而这道跟它们最显著的不同就是这道题的个数是固定的，为k。个人认为这道题跟那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4332522.html">Combinations 组合项</a>更相似一些，但是那道题只是排序，对k个数字之和又没有要求。所以实际上这道题是它们的综合体，两者杂糅到一起就是这道题的解法了，n是k个数字之和，如果n小于0，则直接返回，如果n正好等于0，而且此时out中数字的个数正好为k，说明此时是一个正确解，将其存入结果res中，具体实现参见代码入下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; combinationSum3(<span style="color: #0000ff;">int</span> k, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        combinationSum3DFS(k, n, </span><span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> combinationSum3DFS(<span style="color: #0000ff;">int</span> k, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span> level, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (n &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span> &amp;&amp; <span style="color: #0000ff;">out</span>.size() == k) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = level; i &lt;= <span style="color: #800080;">9</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(i);
+            combinationSum3DFS(k, n </span>- i, i + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4419386.html" target="_blank">Combination Sum II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4419259.html" target="_blank">Combination Sum</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

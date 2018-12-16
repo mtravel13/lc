@@ -1,0 +1,206 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4579693.html">[LeetCode] Max Points on a Line 共线点个数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given <em>n</em> points on a 2D plane, find the maximum number of points that lie on the same straight line.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一堆二维点，然后让我们求最大的共线点的个数，根据初中数学我们知道，两点确定一条直线，而且可以写成y = ax + b的形式，所有共线的点都满足这个公式。所以这些给定点两两之间都可以算一个斜率，每个斜率代表一条直线，对每一条直线，带入所有的点看是否共线并计算个数，这是整体的思路。但是还有两点特殊情况需要考虑，二是当两个点重合时，无法确定一条直线，但这也是共线的情况，需要特殊处理。二是斜率不存在的情况，由于两个点(x1, y1)和(x2, y2)的斜率k表示为(y2 - y1) / (x2 - x1)，那么当x1 = x2时斜率不存在，这种共线情况需要特殊处理。我们需要用到哈希表来记录斜率和共线点个数之间的映射，其中第一种重合点的情况我们假定其斜率为INT_MIN，第二种情况我们假定其斜率为INT_MAX，这样都可以用map映射了。我们还需要顶一个变量duplicate来记录重合点的个数，最后只需和哈希表中的数字相加即为共线点的总数，这种方法现在已经无法通过OJ了，贴出来权当纪念。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Failed on case: [[0,0],[94911151,94911150],[94911152,94911151]]</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxPoints(vector&lt;Point&gt;&amp;<span style="color: #000000;"> points) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; points.size(); ++<span style="color: #000000;">i) {
+            unordered_map</span>&lt;<span style="color: #0000ff;">float</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+            </span><span style="color: #0000ff;">int</span> duplicate = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; points.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (points[i].x == points[j].x &amp;&amp; points[i].y ==<span style="color: #000000;"> points[j].y) {
+                    </span>++<span style="color: #000000;">duplicate;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (points[i].x ==<span style="color: #000000;"> points[j].x) {
+                    </span>++<span style="color: #000000;">m[INT_MAX];
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">float</span> slope = (<span style="color: #0000ff;">float</span>)(points[j].y - points[i].y) / (points[j].x -<span style="color: #000000;"> points[i].x);
+                    </span>++<span style="color: #000000;">m[slope];
+                }
+            }
+            res </span>=<span style="color: #000000;"> max(res, duplicate);
+            </span><span style="color: #0000ff;">for</span> (auto it = m.begin(); it != m.end(); ++<span style="color: #000000;">it) {
+                res </span>= max(res, it-&gt;second +<span style="color: #000000;"> duplicate);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Failed on case: [[0,0],[94911151,94911150],[94911152,94911151]]</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> maxPoints(Point[] points) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; points.length; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> duplicate = <span style="color: #800080;">1</span>, vertical = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            Map</span>&lt;Double, Integer&gt; m = <span style="color: #0000ff;">new</span> HashMap&lt;&gt;<span style="color: #000000;">();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; points.length; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (points[i].x == points[j].x &amp;&amp; points[i].y ==<span style="color: #000000;"> points[j].y) {
+                    </span>++<span style="color: #000000;">duplicate;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (points[i].x ==<span style="color: #000000;"> points[j].x) {
+                    m.put(Double.MAX_VALUE, m.getOrDefault(Double.MAX_VALUE, </span><span style="color: #800080;">0</span>) + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (points[i].y ==<span style="color: #000000;"> points[j].y) {
+                    m.put(</span><span style="color: #800080;">0.0</span>, m.getOrDefault(<span style="color: #800080;">0.0</span>, <span style="color: #800080;">0</span>) + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">double</span> slope = (<span style="color: #0000ff;">double</span>)(points[j].y - points[i].y) / (points[j].x -<span style="color: #000000;"> points[i].x);
+                    m.put(slope, m.getOrDefault(slope, </span><span style="color: #800080;">0</span>) + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+            res </span>=<span style="color: #000000;"> Math.max(res, duplicate);
+            </span><span style="color: #0000ff;">for</span> (Map.Entry&lt;Double, Integer&gt;<span style="color: #000000;"> e : m.entrySet()) {
+                res </span>= Math.max(res, e.getValue() +<span style="color: #000000;"> duplicate);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于通过斜率来判断共线需要用到除法，而用double表示的双精度小数在有的系统里不一定准确，为了更加精确无误的计算共线，我们应当避免除法，从而避免无线不循环小数的出现，那么怎么办呢，我们把除数和被除数都保存下来，不做除法，但是我们要让这两数分别除以它们的最大公约数，这样例如8和4，4和2，2和1，这三组商相同的数就都会存到一个映射里面，同样也能实现我们的目标，而求GCD的函数如果用递归来写那么一行就搞定了，叼不叼，这个方法能很好的避免除法的出现，算是牺牲了空间来保证精度吧，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxPoints(vector&lt;Point&gt;&amp;<span style="color: #000000;"> points) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; points.size(); ++<span style="color: #000000;">i) {
+            map</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+            </span><span style="color: #0000ff;">int</span> duplicate = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; points.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (points[i].x == points[j].x &amp;&amp; points[i].y ==<span style="color: #000000;"> points[j].y) {
+                    </span>++duplicate; <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                } 
+                </span><span style="color: #0000ff;">int</span> dx = points[j].x -<span style="color: #000000;"> points[i].x;
+                </span><span style="color: #0000ff;">int</span> dy = points[j].y -<span style="color: #000000;"> points[i].y;
+                </span><span style="color: #0000ff;">int</span> d =<span style="color: #000000;"> gcd(dx, dy);
+                </span>++m[{dx / d, dy /<span style="color: #000000;"> d}];
+            }
+            res </span>=<span style="color: #000000;"> max(res, duplicate);
+            </span><span style="color: #0000ff;">for</span> (auto it = m.begin(); it != m.end(); ++<span style="color: #000000;">it) {
+                res </span>= max(res, it-&gt;second +<span style="color: #000000;"> duplicate);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> gcd(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b) {
+        </span><span style="color: #0000ff;">return</span> (b == <span style="color: #800080;">0</span>) ? a : gcd(b, a %<span style="color: #000000;"> b);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> maxPoints(Point[] points) {
+        </span><span style="color: #0000ff;">int</span> res = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; points.length; ++<span style="color: #000000;">i) {
+            Map</span>&lt;Map&lt;Integer, Integer&gt;, Integer&gt; m = <span style="color: #0000ff;">new</span> HashMap&lt;&gt;<span style="color: #000000;">();
+            </span><span style="color: #0000ff;">int</span> duplicate = 1<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + 1; j &lt; points.length; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (points[i].x == points[j].x &amp;&amp; points[i].y ==<span style="color: #000000;"> points[j].y) {
+                    </span>++duplicate; <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">int</span> dx = points[j].x -<span style="color: #000000;"> points[i].x;
+                </span><span style="color: #0000ff;">int</span> dy = points[j].y -<span style="color: #000000;"> points[i].y;
+                </span><span style="color: #0000ff;">int</span> d =<span style="color: #000000;"> gcd(dx, dy);
+                Map</span>&lt;Integer, Integer&gt; t = <span style="color: #0000ff;">new</span> HashMap&lt;&gt;<span style="color: #000000;">();
+                t.put(dx </span>/ d, dy /<span style="color: #000000;"> d);
+                m.put(t, m.getOrDefault(t, </span>0) + 1<span style="color: #000000;">);
+            }
+            res </span>=<span style="color: #000000;"> Math.max(res, duplicate);
+            </span><span style="color: #0000ff;">for</span> (Map.Entry&lt;Map&lt;Integer, Integer&gt;, Integer&gt;<span style="color: #000000;"> e : m.entrySet()) {
+                res </span>= Math.max(res, e.getValue() +<span style="color: #000000;"> duplicate);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> gcd(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b) {
+        </span><span style="color: #0000ff;">return</span> (b == 0) ? a : gcd(b, a %<span style="color: #000000;"> b);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>令我惊奇的是，这道题的OJ居然容忍brute force的方法通过，那么我感觉下面这种O(n<sup>3</sup>)的解法之所以能通过OJ，可能还有一个原因就是用了比较高效的判断三点共线的方法。一般来说判断三点共线有三种方法，斜率法，周长法，面积法(请参见<a href="http://yiminghe.iteye.com/blog/568666" target="_blank">这个帖子</a>)。而其中通过判断叉积为零的面积法是坠好的。比如说有三个点A(x1, y1)、B(x2, y2)、C(x3, y3)，那么判断三点共线就是判断下面这个等式是否成立：</p>
+<p><img src="https://images2015.cnblogs.com/blog/391947/201701/391947-20170111141450088-1765227618.jpg" alt="" /></p>
+<p>行列式的求法不用多说吧，不会的话回去翻线性代数，当初少打点刀塔不就好啦~</p>
+<p>&nbsp;</p>
+<p>C++ 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxPoints(vector&lt;Point&gt;&amp;<span style="color: #000000;"> points) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; points.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> duplicate = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; points.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> x1 = points[i].x, y1 =<span style="color: #000000;"> points[i].y;
+                </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> x2 = points[j].x, y2 =<span style="color: #000000;"> points[j].y;
+                </span><span style="color: #0000ff;">if</span> (x1 == x2 &amp;&amp; y1 == y2) {++duplicate; <span style="color: #0000ff;">continue</span><span style="color: #000000;">;}
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; points.size(); ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">int</span> x3 = points[k].x, y3 =<span style="color: #000000;"> points[k].y;
+                    </span><span style="color: #0000ff;">if</span> (x1 * y2 + x2 * y3 + x3 * y1 - x3 * y2 - x2 * y1 - x1 * y3 == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                        </span>++<span style="color: #000000;">cnt;
+                    }
+                }
+                res </span>=<span style="color: #000000;"> max(res, cnt);
+            }
+            res </span>=<span style="color: #000000;"> max(res, duplicate);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p><span style="color: #0000ff;">&nbsp;</span></p>
+<p>Java 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> maxPoints(Point[] points) {
+        </span><span style="color: #0000ff;">int</span> res = 0, n =<span style="color: #000000;"> points.length;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> duplicate = 1<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + 1; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> cnt = 0<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">long</span> x1 = points[i].x, y1 =<span style="color: #000000;"> points[i].y;
+                </span><span style="color: #0000ff;">long</span> x2 = points[j].x, y2 =<span style="color: #000000;"> points[j].y;
+                </span><span style="color: #0000ff;">if</span> (x1 == x2 &amp;&amp; y1 == y2) {++duplicate;<span style="color: #0000ff;">continue</span><span style="color: #000000;">;}
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = 0; k &lt; n; ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">int</span> x3 = points[k].x, y3 =<span style="color: #000000;"> points[k].y;
+                    </span><span style="color: #0000ff;">if</span> (x1*y2 + x2*y3 + x3*y1 - x3*y2 - x2*y1 - x1 * y3 == 0<span style="color: #000000;">) {
+                        </span>++<span style="color: #000000;">cnt;
+                    }
+                }
+                res </span>=<span style="color: #000000;"> Math.max(res, cnt);
+            }
+            res </span>=<span style="color: #000000;"> Math.max(res, duplicate);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/2979/a-java-solution-with-notes/2" target="_blank">https://discuss.leetcode.com/topic/2979/a-java-solution-with-notes/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/6028/sharing-my-simple-solution-with-explanation" target="_blank">https://discuss.leetcode.com/topic/6028/sharing-my-simple-solution-with-explanation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/18447/16ms-28ms-c-solutions-with-explanations/2" target="_blank">https://discuss.leetcode.com/topic/18447/16ms-28ms-c-solutions-with-explanations/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

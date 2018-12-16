@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5190419.html">[LeetCode] Number of Islands II 岛屿的数量之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A 2d grid map of&nbsp;<code>m</code>&nbsp;rows and&nbsp;<code>n</code>&nbsp;columns is initially filled with water. We may perform an&nbsp;<em>addLand</em>&nbsp;operation which turns the water at position (row, col) into a land. Given a list of positions to operate,&nbsp;count the number of islands after each&nbsp;<em>addLand</em>&nbsp;operation. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
+<p>Example:</p>
+<p>Given&nbsp;<code>m = 3, n = 3</code>,&nbsp;<code>positions = [[0,0], [0,1], [1,2], [2,1]]</code>.<br />Initially, the 2d grid&nbsp;<code>grid</code>&nbsp;is filled with water. (Assume 0 represents water and 1 represents land).</p>
+<pre>0 0 0
+0 0 0
+0 0 0
+</pre>
+<p>Operation #1: addLand(0, 0) turns the water at grid[0][0] into a land.</p>
+<pre>1 0 0
+0 0 0   Number of islands = 1
+0 0 0
+</pre>
+<p>Operation #2: addLand(0, 1) turns the water at grid[0][1] into a land.</p>
+<pre>1 1 0
+0 0 0   Number of islands = 1
+0 0 0
+</pre>
+<p>Operation #3: addLand(1, 2) turns the water at grid[1][2] into a land.</p>
+<pre>1 1 0
+0 0 1   Number of islands = 2
+0 0 0
+</pre>
+<p>Operation #4: addLand(2, 1) turns the water at grid[2][1] into a land.</p>
+<pre>1 1 0
+0 0 1   Number of islands = 3
+0 1 0
+</pre>
+<p>We return the result as an array:&nbsp;<code>[1, 1, 2, 3]</code></p>
+<p>Challenge:</p>
+<p>Can you do it in time complexity O(k log mn), where k is the length of the&nbsp;<code>positions</code>?</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/4402656.html" target="_blank">Number of Islands</a>的拓展，难度增加了不少，因为这次是一个点一个点的增加，每增加一个点，都要统一一下现在总共的岛屿个数，最开始初始化时没有陆地，如下：</p>
+<p>0 0 0<br />0 0 0<br />0 0 0</p>
+<p>假如我们在(0, 0)的位置增加一个陆地，那么此时岛屿数量为1：</p>
+<p>1 0 0<br />0 0 0<br />0 0 0</p>
+<p>假如我们再在(0, 2)的位置增加一个陆地，那么此时岛屿数量为2：</p>
+<p>1 0 1<br />0 0 0<br />0 0 0</p>
+<p>假如我们再在(0, 1)的位置增加一个陆地，那么此时岛屿数量却又变为1：</p>
+<p>1 1 1<br />0 0 0<br />0 0 0</p>
+<p>假如我们再在(1, 1)的位置增加一个陆地，那么此时岛屿数量仍为1：</p>
+<p>1 1 1<br />0 1 0<br />0 0 0</p>
+<p>那么我们为了解决这种陆地之间会合并的情况，最好能够将每个陆地都标记出其属于哪个岛屿，这样就会方便我们统计岛屿个数。这种群组类问题，很适合使用联合查找 Union Find 来做，又叫并查集 Disjoint Set，LeetCode中使用这种解法的题目还不少呢，比如<a href="http://www.cnblogs.com/grandyang/p/6686983.html">Friend Circles</a>，<a href="http://www.cnblogs.com/grandyang/p/5257919.html" target="_blank">Graph Valid Tree</a>，<a href="http://www.cnblogs.com/grandyang/p/8445733.html" target="_blank">Redundant Connection II</a>&nbsp;等等。一般来说，UF算法的思路是每个个体先初始化为不同的群组，然后遍历有关联的两个个体，如果发现其getRoot函数的返回值不同，则手动将二者加入一个群组，然后总群组数自减1。这里就要分别说一下root数组，和getRoot函数。两个同群组的个体，通过getRoot函数一定会返回相同的值，但是其在root 数组中的值不一定相同，我们可以类比成getRoot函数返回的是祖先，如果两个人的祖先相同，那么其是属于一个家族的（这里不是指人类共同的祖先哈）。root可以用数组或者HashMap来表示，如果个体是数字的话，那么数组就OK，如果个体是字符串的话，可能就需要用HashMap了。root数组的初始化可以有两种，可以均初始化为-1，或者都初始化为不同的数字，博主一般喜欢初始化为不同的数字。getRoot函数的写法也可用递归或者迭代的方式，可参见博主之前的帖子<a href="http://www.cnblogs.com/grandyang/p/8445733.html" target="_blank">Redundant Connection II</a>中的讨论部分。这么一说感觉UF算法的东西还蛮多的，啥时候博主写个UF总结贴吧。</p>
+<p>那么具体来看这道题吧，此题跟经典的UF使用场景有一点点的区别，因为一般的场景中两个个体之间只有两种关系，属于一个群组或者不属于同一个群组，而这道题里面由于water的存在，就多了一种情况，我们只需要事先检测一下当前位置是不是岛屿就行了，总之问题不大。一般来说我们的root数组都是使用一维数组，方便一些，那么这里就可以将二维数组encode为一维的，于是我们需要一个长度为m*n的一维数组来标记各个位置属于哪个岛屿，我们假设每个位置都是一个单独岛屿，岛屿编号可以用其坐标位置表示，但是我们初始化时将其都赋为-1，这样方便我们知道哪些位置尚未变成岛屿。然后我们开始遍历陆地数组，将其岛屿编号设置为其坐标位置，然后岛屿计数加1，我们此时开始遍历其上下左右的位置，遇到越界或者岛屿标号为-1的情况直接跳过，现在知道我们初始化为-1的好处了吧，遇到是water的地方直接跳过。否则我们用getRoot来查找邻居位置的岛屿编号，同时也用getRoot来查找当前点的编号，这一步就是经典的UF算法的操作了，因为当前这两个land是相邻的，它们是属于一个岛屿，所以其getRoot函数的返回值suppose应该是相等的，但是如果返回值不同，说明我们需要合并岛屿，将两个返回值建立关联，并将岛屿计数cnt减1。当我们遍历完当前点的所有邻居时，该合并的都合并完了，将此时的岛屿计数cnt存入结果中，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; numIslands2(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> positions) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; roots(m * n, -<span style="color: #800080;">1</span><span style="color: #000000;">);
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>, -<span style="color: #800080;">1</span>}, {-<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>}, {<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>}, {<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : positions) {
+            </span><span style="color: #0000ff;">int</span> id = n * a.first +<span style="color: #000000;"> a.second;
+            </span><span style="color: #0000ff;">if</span> (roots[id] == -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                roots[id] </span>=<span style="color: #000000;"> id;
+                </span>++<span style="color: #000000;">cnt;
+            }
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                </span><span style="color: #0000ff;">int</span> x = a.first + dir[<span style="color: #800080;">0</span>], y = a.second + dir[<span style="color: #800080;">1</span>], cur_id = n * x +<span style="color: #000000;"> y;
+                </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n || roots[cur_id] == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> p = findRoot(roots, cur_id), q =<span style="color: #000000;"> findRoot(roots, id);
+                </span><span style="color: #0000ff;">if</span> (p !=<span style="color: #000000;"> q) {
+                    roots[p] </span>=<span style="color: #000000;"> q;
+                    </span>--<span style="color: #000000;">cnt;
+                }
+            }
+            res.push_back(cnt);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> findRoot(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; roots, <span style="color: #0000ff;">int</span><span style="color: #000000;"> id) {
+        </span><span style="color: #0000ff;">return</span> (id == roots[id]) ?<span style="color: #000000;"> id : findRoot(roots, roots[id]);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4402656.html" target="_blank">Number of Islands</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/number-of-islands-ii/description/">https://leetcode.com/problems/number-of-islands-ii/description/</a></p>
+<p><a href="https://leetcode.com/problems/number-of-islands-ii/discuss/75470/Easiest-Java-Solution-with-Explanations">https://leetcode.com/problems/number-of-islands-ii/discuss/75470/Easiest-Java-Solution-with-Explanations</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,103 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5991673.html">[LeetCode] Valid Word Square 验证单词平方</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a sequence of words, check whether it forms a valid word square.</p>
+<p>A sequence of words forms a valid word square if the&nbsp;<em>k</em>th&nbsp;row and column read the exact same string, where 0 &le;<em>k</em>&nbsp;&lt; max(numRows, numColumns).</p>
+<p>Note:</p>
+<ol>
+<li>The number of words given is at least 1 and does not exceed 500.</li>
+<li>Word length will be at least 1 and does not exceed 500.</li>
+<li>Each word contains only lowercase English alphabet&nbsp;<code>a-z</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input:
+[
+  "abcd",
+  "bnrt",
+  "crmy",
+  "dtye"
+]
+
+Output:
+true
+
+Explanation:
+The first row and first column both read "abcd".
+The second row and second column both read "bnrt".
+The third row and third column both read "crmy".
+The fourth row and fourth column both read "dtye".
+
+Therefore, it is a valid word square.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+[
+  "abcd",
+  "bnrt",
+  "crm",
+  "dt"
+]
+
+Output:
+true
+
+Explanation:
+The first row and first column both read "abcd".
+The second row and second column both read "bnrt".
+The third row and third column both read "crm".
+The fourth row and fourth column both read "dt".
+
+Therefore, it is a valid word square.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input:
+[
+  "ball",
+  "area",
+  "read",
+  "lady"
+]
+
+Output:
+false
+
+Explanation:
+The third row reads "read" while the third column reads "lead".
+
+Therefore, it is NOT a valid word square.</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个二位数组，每行每列都是一个单词，需要满足第k行的单词和第k列的单词要相等，这里不要求每一个单词的长度都一样，只要对应位置的单词一样即可。那么这里实际上也就是一个遍历二维数组，然后验证对应位上的字符是否相等的问题，由于各行的单词长度不一定相等，所以我们在找对应位置的字符时，要先判断是否越界，即对应位置是否有字符存在，遇到不符合要求的地方直接返回false，全部遍历结束后返回true，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> validWordSquare(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">if</span> (words.empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (words.size() != words[<span style="color: #800080;">0</span>].size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; words[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (j &gt;= words.size() || i &gt;= words[j].size() || words[i][j] !=<span style="color: #000000;"> words[j][i]) {
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/63387/java-ac-solution-easy-to-understand" target="_blank">https://discuss.leetcode.com/topic/63387/java-ac-solution-easy-to-understand</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

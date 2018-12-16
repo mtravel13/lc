@@ -1,0 +1,46 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4424587.html">[LeetCode] Valid Parentheses 验证括号</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string containing just the characters&nbsp;<code>'('</code>,&nbsp;<code>')'</code>,&nbsp;<code>'{'</code>,&nbsp;<code>'}'</code>,&nbsp;<code>'['</code>&nbsp;and&nbsp;<code>']'</code>, determine if the input string is valid.</p>
+<p>The brackets must close in the correct order,&nbsp;<code>"()"</code>&nbsp;and&nbsp;<code>"()[]{}"</code>&nbsp;are all valid but&nbsp;<code>"(]"</code>&nbsp;and&nbsp;<code>"([)]"</code>&nbsp;are not.</p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">这道题让我们验证输入的字符串是否为括号字符串，包括大括号，中括号和小括号。这里我们需要用一个栈，我们开始遍历输入字符串，如果当前字符为左半边括号时，则将其压入栈中，如果遇到右半边括号时，若此时栈为空，则直接返回false，如不为空，则取出栈顶元素，若为对应的左半边括号，则继续循环，反之返回false，代码如下：</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isValid(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        stack</span>&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;"> parentheses;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span> || s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">[</span><span style="color: #800000;">'</span> || s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">{</span><span style="color: #800000;">'</span><span style="color: #000000;">) parentheses.push(s[i]);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (parentheses.empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span> &amp;&amp; parentheses.top() != <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">]</span><span style="color: #800000;">'</span> &amp;&amp; parentheses.top() != <span style="color: #800000;">'</span><span style="color: #800000;">[</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">}</span><span style="color: #800000;">'</span> &amp;&amp; parentheses.top() != <span style="color: #800000;">'</span><span style="color: #800000;">{</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                parentheses.pop();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> parentheses.empty();
+    }
+}; </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4944875.html">Remove Invalid Parentheses 移除非法括号</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4682458.html">Different Ways to Add Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424731.html" target="_blank">Longest Valid Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4444160.html" target="_blank">Generate Parentheses</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/27768/short-easy-to-follow-8ms-java-solution" target="_blank">https://discuss.leetcode.com/topic/27768/short-easy-to-follow-8ms-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

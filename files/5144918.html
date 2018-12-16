@@ -1,0 +1,74 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5144918.html">[LeetCode] Super Ugly Number 超级丑陋数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a program to find the nth&nbsp;super ugly number.</p>
+<p>Super ugly numbers are positive numbers whose all prime factors are in the given prime list&nbsp;<code>primes</code>&nbsp;of size<code>k</code>. For example,&nbsp;<code>[1, 2, 4, 7, 8, 13, 14, 16, 19, 26, 28, 32]&nbsp;</code>is the sequence of the first 12 super ugly numbers given&nbsp;<code>primes</code>&nbsp;=&nbsp;<code>[2, 7, 13, 19]</code>&nbsp;of size 4.</p>
+<p>Note:<br />(1)&nbsp;<code>1</code>&nbsp;is a super ugly number for any given&nbsp;<code>primes</code>.<br />(2) The given numbers in&nbsp;<code>primes</code>&nbsp;are in ascending order.<br />(3) 0 &lt;&nbsp;<code>k</code>&nbsp;&le; 100, 0 &lt;&nbsp;<code>n</code>&nbsp;&le; 106, 0 &lt;&nbsp;<code>primes[i]</code>&nbsp;&lt; 1000.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/dietpepsi">@dietpepsi</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求超级丑陋数，是之前那两道<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_34" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4741934.html">Ugly Number 丑陋数</a>和<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_33" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4743837.html">Ugly Number II 丑陋数之二</a>的延伸，质数集合可以任意给定，这就增加了难度。但是本质上和<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_33" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4743837.html">Ugly Number II 丑陋数之二</a>没有什么区别，由于我们不知道质数的个数，我们可以用一个idx数组来保存当前的位置，然后我们从每个子链中取出一个数，找出其中最小值，然后更新idx数组对应位置，注意有可能最小值不止一个，要更新所有最小值的位置，参见代码如下：</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> nthSuperUglyNumber(<span style="color: #0000ff;">int</span> n, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> primes) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(<span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>), idx(primes.size(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">while</span> (res.size() &lt;<span style="color: #000000;"> n) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> tmp;
+            </span><span style="color: #0000ff;">int</span> mn =<span style="color: #000000;"> INT_MAX;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; primes.size(); ++<span style="color: #000000;">i) {
+                tmp.push_back(res[idx[i]] </span>*<span style="color: #000000;"> primes[i]);
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; primes.size(); ++<span style="color: #000000;">i) {
+                mn </span>=<span style="color: #000000;"> min(mn, tmp[i]);
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; primes.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (mn == tmp[i]) ++<span style="color: #000000;">idx[i];
+            }
+            res.push_back(mn);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res.back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述代码可以稍稍改写一下，变得更简洁一些，原理完全相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> nthSuperUglyNumber(<span style="color: #0000ff;">int</span> n, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> primes) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n, <span style="color: #800080;">1</span>), idx(primes.size(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            dp[i] </span>=<span style="color: #000000;"> INT_MAX;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; primes.size(); ++<span style="color: #000000;">j) {
+                dp[i] </span>= min(dp[i], dp[idx[j]] *<span style="color: #000000;"> primes[j]);
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; primes.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (dp[i] == dp[idx[j]] *<span style="color: #000000;"> primes[j]) {
+                    </span>++<span style="color: #000000;">idx[j];
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4743837.html" target="_blank">Ugly Number II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4741934.html" target="_blank">Ugly Number</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/72835/108ms-easy-to-understand-java-solution" target="_blank">https://leetcode.com/discuss/72835/108ms-easy-to-understand-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

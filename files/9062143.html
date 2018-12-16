@@ -1,0 +1,135 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9062143.html">[LeetCode] Minimum Distance Between BST Nodes 二叉搜索树中结点的最小距离</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a Binary Search Tree (BST) with the root node&nbsp;<code>root</code>, return&nbsp;the minimum difference between the values of any two different nodes in the tree.</p>
+<p>Example :</p>
+<pre>Input: root = [4,2,6,1,3,null,null]
+Output: 1
+Explanation:
+Note that root is a TreeNode object, not an array.
+
+The given tree [4,2,6,1,3,null,null] is represented by the following diagram:
+
+          4
+        /   \
+      2      6
+     / \    
+    1   3  
+
+while the minimum difference in this tree is 1, it occurs between node 1 and node 2, also between node 3 and node 2.
+</pre>
+<p>Note:</p>
+<ol>
+<li>The size of the BST will be between 2 and&nbsp;<code>100</code>.</li>
+<li>The BST is always valid, each node's value is an integer, and each node's value is different.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题跟之前那道<a href="http://www.cnblogs.com/grandyang/p/6540165.html">Minimum Absolute Difference in BST</a>没有任何区别，解法完全可以共用，讲解也可以参见之前的帖子，这里就简略的说一下。第一种方法很直接，通过中序遍历按顺序从小到大将所有的结点值都存入到一个数组中，然后就遍历这个数组，找相邻的两个的差值最小的返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minDiffInBST(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res =<span style="color: #000000;"> INT_MAX;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+        helper(root, v);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; v.size(); ++<span style="color: #000000;">i) {
+            res </span>= min(res, v[i] - v[i - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> vals) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        helper(node</span>-&gt;<span style="color: #000000;">left, vals);
+        vals.push_back(node</span>-&gt;<span style="color: #000000;">val);
+        helper(node</span>-&gt;<span style="color: #000000;">right, vals);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以优化上面解法的空间复杂度，并不记录所有的结点值，而是只记录之前的结点值，然后做差值更新结果res即可。</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minDiffInBST(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, pre = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        helper(root, pre, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span>&amp; pre, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        helper(node</span>-&gt;<span style="color: #000000;">left, pre, res);
+        </span><span style="color: #0000ff;">if</span> (pre != -<span style="color: #800080;">1</span>) res = min(res, node-&gt;val -<span style="color: #000000;"> pre);
+        pre </span>= node-&gt;<span style="color: #000000;">val;
+        helper(node</span>-&gt;<span style="color: #000000;">right, pre, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其实我们也不必非要用中序遍历不可，用先序遍历同样可以利用到BST的性质，我们带两个变量low和high来分别表示上下界，初始化为int的极值，然后我们在递归函数中，分别用上下界和当前节点值的绝对差来更新结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minDiffInBST(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res =<span style="color: #000000;"> INT_MAX;
+        helper(root, INT_MIN, INT_MAX, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span> low, <span style="color: #0000ff;">int</span> high, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (low != INT_MIN) res = min(res, node-&gt;val -<span style="color: #000000;"> low);
+        </span><span style="color: #0000ff;">if</span> (high != INT_MAX) res = min(res, high - node-&gt;<span style="color: #000000;">val);
+        helper(node</span>-&gt;left, low, node-&gt;<span style="color: #000000;">val, res);
+        helper(node</span>-&gt;right, node-&gt;<span style="color: #000000;">val, high, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是解法一的迭代的写法，思路跟之前的解法没有什么区别，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minDiffInBST(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, pre = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> st;
+        TreeNode</span>* p =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">while</span> (!st.empty() ||<span style="color: #000000;"> p) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (p) {
+                st.push(p);
+                p </span>= p-&gt;<span style="color: #000000;">left;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                p </span>=<span style="color: #000000;"> st.top(); st.pop();
+                </span><span style="color: #0000ff;">if</span> (pre != -<span style="color: #800080;">1</span>) res = min(res, p-&gt;val -<span style="color: #000000;"> pre);
+                pre </span>= p-&gt;<span style="color: #000000;">val;
+                p </span>= p-&gt;<span style="color: #000000;">right;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6540165.html">Minimum Absolute Difference in BST</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4297300.html" target="_blank">Binary Tree Inorder Traversal</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/minimum-distance-between-bst-nodes/solution/">https://leetcode.com/problems/minimum-distance-between-bst-nodes/solution/</a></p>
+<p><a href="https://leetcode.com/problems/minimum-distance-between-bst-nodes/discuss/114834/Inorder-Traversal-O(N)-time-Recursion-C++JavaPython">https://leetcode.com/problems/minimum-distance-between-bst-nodes/discuss/114834/Inorder-Traversal-O(N)-time-Recursion-C++JavaPython</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

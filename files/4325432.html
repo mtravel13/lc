@@ -1,0 +1,32 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4325432.html">[LeetCode] Number of 1 Bits 位1的个数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Write a function that takes an unsigned integer and returns the number of &rsquo;1' bits it has (also known as the&nbsp;<a href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight</a>).</p>
+<p>For example, the 32-bit integer &rsquo;11' has binary representation&nbsp;<code>00000000000000000000000000001011</code>, so the function should return 3.</p>
+<p>&nbsp;</p>
+<p>很简单的一道位操作Bit Manipulation的题，最近新出的三道题都没有啥难度啊，这样会误导新人的，做了这三道得出个LeetCode没啥难度的结论，其实里面好题真的不少，难题也很多，经典题也多，反正就是赞赞赞，32个赞。</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> hammingWeight(uint32_t n) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            res </span>+= (n &amp; <span style="color: #800080;">1</span><span style="color: #000000;">);
+            n </span>= n &gt;&gt; <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

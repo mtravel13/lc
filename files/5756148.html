@@ -1,0 +1,144 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5756148.html">[LeetCode] Insert Delete GetRandom O(1) - Duplicates allowed 常数时间内插入删除和获得随机数 - 允许重复</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Design a data structure that supports all following operations in&nbsp;<em>average</em>&nbsp;O(1)&nbsp;time.</p>
+Note: Duplicate elements are allowed.
+<p>&nbsp;</p>
+<ol>
+<li><code>insert(val)</code>: Inserts an item val to the collection.</li>
+<li><code>remove(val)</code>: Removes an item val from the collection if present.</li>
+<li><code>getRandom</code>: Returns a random element from current collection of elements. The probability of each element being returned is&nbsp;linearly related&nbsp;to the number of same value the collection contains.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example:</p>
+<pre>// Init an empty collection.
+RandomizedCollection collection = new RandomizedCollection();
+
+// Inserts 1 to the collection. Returns true as the collection did not contain 1.
+collection.insert(1);
+
+// Inserts another 1 to the collection. Returns false as the collection contained 1. Collection now contains [1,1].
+collection.insert(1);
+
+// Inserts 2 to the collection, returns true. Collection now contains [1,1,2].
+collection.insert(2);
+
+// getRandom should return 1 with the probability 2/3, and returns 2 with the probability 1/3.
+collection.getRandom();
+
+// Removes 1 from the collection, returns true. Collection now contains [1,2].
+collection.remove(1);
+
+// getRandom should return 1 and 2 both equally likely.
+collection.getRandom();
+</pre>
+<p>&nbsp;</p>
+<p>这题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5740864.html">Insert Delete GetRandom O(1)</a>的拓展，与其不同的是，之前那道题不能有重复数字，而这道题可以有，那么就不能像之前那道题那样建立每个数字和其坐标的映射了，但是我们可以建立数字和其所有出现位置的集合之间的映射，虽然写法略有不同，但是思路和之前那题完全一样，都是将数组最后一个位置的元素和要删除的元素交换位置，然后删掉最后一个位置上的元素。对于insert函数，我们将要插入的数字在nums中的位置加入m[val]数组的末尾，然后在数组nums末尾加入val，我们判断是否有重复只要看m[val]数组只有刚加的val一个值还是有多个值。remove函数是这题的难点，我们首先看哈希表中有没有val，没有的话直接返回false。然后我们取出nums的尾元素，把尾元素哈希表中的位置数组中的最后一个位置更新为m[val]的尾元素，这样我们就可以删掉m[val]的尾元素了，如果m[val]只有一个元素，那么我们把这个映射直接删除。然后我们将nums数组中的尾元素删除，并把尾元素赋给val所在的位置，注意我们在建立哈希表的映射的时候需要用堆而不是普通的vector数组，因为我们每次remove操作后都会移除nums数组的尾元素，如果我们用vector来保存数字的坐标，而且只移出末尾数字的话，有可能出现前面的坐标大小超过了此时nums的大小的情况，就会出错，所以我们用优先队列对所有的相同数字的坐标进行自动排序，每次把最大位置的坐标移出即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> RandomizedCollection {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    RandomizedCollection() {}
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Inserts a value to the collection. Returns true if the collection did not already contain the specified element. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> insert(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        m[val].push(nums.size());
+        nums.push_back(val);
+        </span><span style="color: #0000ff;">return</span> m[val].size() == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Removes a value from the collection. Returns true if the collection contained the specified element. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (m[val].empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> idx =<span style="color: #000000;"> m[val].top();
+        m[val].pop();
+        </span><span style="color: #0000ff;">if</span> (nums.size() - <span style="color: #800080;">1</span> !=<span style="color: #000000;"> idx) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> nums.back();
+            nums[idx] </span>=<span style="color: #000000;"> t;
+            m[t].pop();
+            m[t].push(idx);
+        }
+        nums.pop_back();
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get a random element from the collection. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> getRandom() {
+        </span><span style="color: #0000ff;">return</span> nums[rand() %<span style="color: #000000;"> nums.size()];
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums;
+    unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, priority_queue&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>有网友指出上面的方法其实不是真正的O(1)时间复杂度，因为优先队列的push不是常数级的，博主一看果然是这样的，为了严格的遵守O(1)的时间复杂度，我们将优先队列换成unordered_set，其插入删除的操作都是常数量级的，其他部分基本不用变，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> RandomizedCollection {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    RandomizedCollection() {}
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Inserts a value to the collection. Returns true if the collection did not already contain the specified element. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> insert(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        m[val].insert(nums.size());
+        nums.push_back(val);
+        </span><span style="color: #0000ff;">return</span> m[val].size() == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Removes a value from the collection. Returns true if the collection contained the specified element. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (m[val].empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> idx = *<span style="color: #000000;">m[val].begin();
+        m[val].erase(idx);
+        </span><span style="color: #0000ff;">if</span> (nums.size() - <span style="color: #800080;">1</span> !=<span style="color: #000000;"> idx) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> nums.back();
+            nums[idx] </span>=<span style="color: #000000;"> t;
+            m[t].erase(nums.size() </span>- <span style="color: #800080;">1</span><span style="color: #000000;">);
+            m[t].insert(idx);
+        } 
+        nums.pop_back();
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get a random element from the collection. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> getRandom() {
+        </span><span style="color: #0000ff;">return</span> nums[rand() %<span style="color: #000000;"> nums.size()];
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums;
+    unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, unordered_set&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5740864.html">Insert Delete GetRandom O(1)</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/53659/c-two-solutions" target="_blank">https://discuss.leetcode.com/topic/53659/c-two-solutions</a></p>
+<p><a href="https://discuss.leetcode.com/topic/54381/c-128m-solution-real-o-1-solution" target="_blank">https://discuss.leetcode.com/topic/54381/c-128m-solution-real-o-1-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

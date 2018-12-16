@@ -1,0 +1,37 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4694988.html">[LeetCode] Valid Anagram 验证变位词</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two strings <em>s</em> and <em>t</em>, write a function to determine if <em>t</em> is an anagram of <em>s</em>.</p>
+<p>For example,<br />
+<em>s</em> = "anagram", <em>t</em> = "nagaram", return true.<br />
+<em>s</em> = "rat", <em>t</em> = "car", return false.
+</p>
+<p><strong>Note:</strong><br />
+You may assume the string contains only lowercase alphabets.</p>
+<p>&nbsp;</p>
+<p>这不算一道难题，核心点就在于使用哈希表映射，我们还是用一个数组来代替哈希表，使用类似方法的题目有<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4340948.html">Minimum Window Substring 最小窗口子串</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4465779.html">Isomorphic Strings 同构字符串</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4480780.html">Longest Substring Without Repeating Characters 最长无重复子串</a> 和 <a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4648044.html">1.1 Unique Characters of a String 字符串中不同的字符</a>。我们先判断两个字符串长度是否相同，不相同直接返回false。然后把s中所有的字符出现个数统计起来，存入一个大小为26的数组中，因为题目中限定了输入字符串为小写字母组成。然后我们再来统计t字符串，如果发现不匹配则返回false。 参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isAnagram(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">string</span><span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (s.size() != t.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m[<span style="color: #800080;">26</span>] = {<span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++i) ++m[s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; t.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (--m[t[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>] &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

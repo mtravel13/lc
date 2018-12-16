@@ -1,0 +1,108 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7439616.html">[LeetCode] 2 Keys Keyboard 两键的键盘</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Initially on a notepad only one character 'A' is present. You can perform two operations on this notepad for each step:</p>
+<ol>
+<li><code>Copy All</code>: You can copy all the characters present on the notepad (partial copy is not allowed).</li>
+<li><code>Paste</code>: You can paste the characters which are copied&nbsp;last time.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Given a number&nbsp;<code>n</code>. You have to get&nbsp;exactly&nbsp;<code>n</code>&nbsp;'A' on the notepad by performing the minimum number of steps permitted. Output the minimum number of steps to get&nbsp;<code>n</code>&nbsp;'A'.</p>
+<p>Example 1:</p>
+<pre>Input: 3
+Output: 3
+Explanation:
+Intitally, we have one character 'A'.
+In step 1, we use Copy All operation.
+In step 2, we use Paste operation to get 'AA'.
+In step 3, we use Paste operation to get 'AAA'.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The&nbsp;<code>n</code>&nbsp;will be in the range [1, 1000].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题只给了我们两个按键，如果只能选择两个按键，那么博主一定会要复制和粘贴，此二键在手，天下我有！！！果然，这道题就是给了我们复制和粘贴这两个按键，然后给了我们了一个A，我们的目标时利用这两个键来打印出n个A，注意复制的时候时全部复制，不能选择部分来复制，然后复制和粘贴都算操作步骤，问我们打印出n个A需要多少步操作。对于这种有明显的递推特征的题，我们要有隐约的感觉，一定要尝试递归和DP。递归解法一般接近于暴力搜索，但是有时候是可以优化的，从而能够通过OJ。而一旦递归不行的话，那么一般来说DP这个大杀器都能解的。还有一点，对于这种题，找规律最重要，DP要找出递推公式，而如果无法发现内在的联系，那么递推公式就比较难写出来了。所以，我们需要从简单的例子开始分析，试图找规律：</p>
+<p>当n = 1时，已经有一个A了，我们不需要其他操作，返回0</p>
+<p>当n = 2时，我们需要复制一次，粘贴一次，返回2</p>
+<p>当n = 3时，我们需要复制一次，粘贴两次，返回3</p>
+<p>当n = 4时，这就有两种做法，一种是我们需要复制一次，粘贴三次，共4步，另一种是先复制一次，粘贴一次，得到AA，然后再复制一次，粘贴一次，得到AAAA，两种方法都是返回4</p>
+<p>当n = 5时，我们需要复制一次，粘贴四次，返回5</p>
+<p>当n = 6时，我们需要复制一次，粘贴两次，得到AAA，再复制一次，粘贴一次，得到AAAAAA，共5步，返回5</p>
+<p>通过分析上面这6个简单的例子，我想我们已经可以总结出一些规律了，首先对于任意一个n(除了1以外)，我们最差的情况就是用n步，不会再多于n步，但是有可能是会小于n步的，比如n=6时，就只用了5步，仔细分析一下，发现时先拼成了AAA，再复制粘贴成了AAAAAA。那么什么情况下可以利用这种方法来减少步骤呢，分析发现，小模块的长度必须要能整除n，这样才能拆分。对于n=6，我们其实还可先拼出AA，然后再复制一次，粘贴两次，得到的还是5。分析到这里，我想解题的思路应该比较清晰了，我们要找出n的所有因子，然后这个因子可以当作模块的个数，我们再算出模块的长度n/i，调用递归，加上模块的个数i来更新结果res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSteps(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt; <span style="color: #800080;">1</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (n % i == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                res </span>= min(res, minSteps(n / i) +<span style="color: #000000;"> i);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是用DP来做的，我们可以看出来，其实就是上面递归解法的迭代形式，思路没有任何区别，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSteps(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            dp[i] </span>=<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i - <span style="color: #800080;">1</span>; j &gt; <span style="color: #800080;">1</span>; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (i % j == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    dp[i] </span>= min(dp[i], dp[j] + i /<span style="color: #000000;"> j);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[n];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看一种省空间的方法，我们不需要记录每一个中间值，而是通过改变n的值来实时累加结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSteps(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">while</span> (n % i == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                res </span>+=<span style="color: #000000;"> i;
+                n </span>/=<span style="color: #000000;"> i;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/97590/java-dp-solution">https://discuss.leetcode.com/topic/97590/java-dp-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/97623/loop-best-case-log-n-no-dp-no-extra-space-no-recursion-with-explanation">https://discuss.leetcode.com/topic/97623/loop-best-case-log-n-no-dp-no-extra-space-no-recursion-with-explanation</a></p>
+</div>
+<div id="interviewed-div">&nbsp;</div>
+<div id="cnblogs_post_body">
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

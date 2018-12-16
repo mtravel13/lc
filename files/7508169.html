@@ -1,0 +1,89 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7508169.html">[LeetCode] Two Sum IV - Input is a BST 两数之和之四 - 输入是二叉搜索树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a Binary Search Tree and a target number, return true if there exist two elements in the BST such that their sum is equal to the given target.</p>
+<p>Example 1:</p>
+<pre>Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+
+Output: True
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+
+Output: False</pre>
+<p>&nbsp;</p>
+<p>这道题又是一道2sum的变种题，博主一直强调，平生不识TwoSum，刷尽LeetCode也枉然！只要是两数之和的题，一定要记得用哈希表来做，这道题只不过是把数组变成了一棵二叉树而已，换汤不换药，我们遍历二叉树就行，然后用一个哈希set，在递归函数函数中，如果node为空，返回false。如果k减去当前结点值在哈希set中存在，直接返回true；否则就将当前结点值加入哈希set，然后对左右子结点分别调用递归函数并且或起来返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> findTarget(TreeNode* root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> helper(root, k, s);
+    }
+    </span><span style="color: #0000ff;">bool</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span> k, unordered_set&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (s.count(k - node-&gt;val)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        s.insert(node</span>-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">return</span> helper(node-&gt;left, k, s) || helper(node-&gt;<span style="color: #000000;">right, k, s);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用层序遍历来做，这样就是迭代的写法了，但是利用哈希表的精髓还是没变的，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> findTarget(TreeNode* root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        queue</span>&lt;TreeNode*&gt;<span style="color: #000000;"> q{{root}};
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+          auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+          </span><span style="color: #0000ff;">if</span> (s.count(k - t-&gt;val)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+          s.insert(t</span>-&gt;<span style="color: #000000;">val);
+          </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push(t-&gt;<span style="color: #000000;">left);
+          </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push(t-&gt;<span style="color: #000000;">right);
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5184143.html" target="_blank">Two Sum III - Data structure design</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5185815.html" target="_blank">Two Sum II - Input array is sorted</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4130379.html" target="_blank">Two Sum</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/98440/java-c-three-simple-methods-choose-one-you-like">https://discuss.leetcode.com/topic/98440/java-c-three-simple-methods-choose-one-you-like</a></p>
+<p><a href="https://discuss.leetcode.com/topic/100110/my-c-non-recursive-solution-using-unordered_set-and-stack">https://discuss.leetcode.com/topic/100110/my-c-non-recursive-solution-using-unordered_set-and-stack</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

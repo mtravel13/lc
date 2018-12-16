@@ -1,0 +1,98 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4358848.html">[LeetCode] Permutations 全排列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a collection of numbers, return all possible permutations.</p>
+<p>For example,<br /><code>[1,2,3]</code>&nbsp;have the following permutations:<br /><code>[1,2,3]</code>,&nbsp;<code>[1,3,2]</code>,&nbsp;<code>[2,1,3]</code>,&nbsp;<code>[2,3,1]</code>,&nbsp;<code>[3,1,2]</code>, and&nbsp;<code>[3,2,1]</code>.</p>
+<p>&nbsp;</p>
+<p>这道题是求全排列问题，给的输入数组没有重复项，这跟之前的那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4332522.html">&nbsp;Combinations 组合项</a>&nbsp;和类似，解法基本相同，但是不同点在于那道不同的数字顺序只算一种，是一道典型的组合题，而此题是求全排列问题，还是用递归DFS来求解。这里我们需要用到一个visited数组来标记某个数字是否访问过，然后在DFS递归函数从的循环应从头开始，而不是从level开始，这是和<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4332522.html">&nbsp;Combinations 组合项</a>&nbsp;不同的地方，其余思路大体相同，代码如下：</p>
+<p>解法一</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; permute(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">num) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; visited(num.size(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+        permuteDFS(num, </span><span style="color: #800080;">0</span>, visited, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> permuteDFS(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;num, <span style="color: #0000ff;">int</span> level, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;visited, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (level == num.size()) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; num.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (visited[i] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    visited[i] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(num[i]);
+                    permuteDFS(num, level </span>+ <span style="color: #800080;">1</span>, visited, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+                    </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+                    visited[i] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种递归的写法，更简单一些，这里是每次交换num里面的两个数字，经过递归可以生成所有的排列情况，代码如下：</p>
+<p>解法二</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; permute(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">num) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        permuteDFS(num, </span><span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> permuteDFS(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;num, <span style="color: #0000ff;">int</span> start, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (start &gt;=<span style="color: #000000;"> num.size()) res.push_back(num);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start; i &lt; num.size(); ++<span style="color: #000000;">i) {
+            swap(num[start], num[i]);
+            permuteDFS(num, start </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+            swap(num[start], num[i]);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后再来看一种方法，这种方法是CareerCup书上的方法，也挺不错的，这道题是思想是这样的：</p>
+<p>当n=1时，数组中只有一个数a<sub>1</sub>，其全排列只有一种，即为a<sub>1</sub></p>
+<p>当n=2时，数组中此时有a<sub>1</sub>a<sub>2</sub>，其全排列有两种，a<sub>1</sub>a<sub>2</sub>和a<sub>2</sub>a<sub>1</sub>，那么此时我们考虑和上面那种情况的关系，我们发现，其实就是在a<sub>1</sub>的前后两个位置分别加入了a<sub>2</sub></p>
+<p>当n=3时，数组中有a<sub>1</sub>a<sub>2</sub>a<sub>3</sub>，此时全排列有六种，分别为a<sub>1</sub>a<sub>2</sub>a<sub>3</sub>, a<sub>1</sub>a<sub>3</sub>a<sub>2</sub>, a<sub>2</sub>a<sub>1</sub>a<sub>3</sub>, a<sub>2</sub>a<sub>3</sub>a<sub>1</sub>, a<sub>3</sub>a<sub>1</sub>a<sub>2</sub>, 和 a<sub>3</sub>a<sub>2</sub>a<sub>1</sub>。那么根据上面的结论，实际上是在a<sub>1</sub>a<sub>2</sub>和a<sub>2</sub>a<sub>1</sub>的基础上在不同的位置上加入a<sub>3</sub>而得到的。</p>
+<p>_ a<sub>1&nbsp;</sub>_ a<sub>2&nbsp;</sub>_ :&nbsp;a<sub>3</sub>a<sub>1</sub>a<sub>2</sub>, a<sub>1</sub>a<sub>3</sub>a<sub>2</sub>,&nbsp;a<sub>1</sub>a<sub>2</sub>a<sub>3</sub></p>
+<p>_ a<sub>2&nbsp;</sub>_ a<sub>1&nbsp;</sub>_ :&nbsp;a<sub>3</sub>a<sub>2</sub>a<sub>1</sub>, a<sub>2</sub>a<sub>3</sub>a<sub>1</sub>,&nbsp;a<sub>2</sub>a<sub>1</sub>a<sub>3</sub></p>
+<p>&nbsp;</p>
+<p>解法三:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; permute(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">num) {
+        </span><span style="color: #0000ff;">if</span> (num.empty()) <span style="color: #0000ff;">return</span> vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;(<span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">());
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> first = num[<span style="color: #800080;">0</span><span style="color: #000000;">];
+        num.erase(num.begin());
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; words =<span style="color: #000000;"> permute(num);
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : words) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= a.size(); ++<span style="color: #000000;">i) {
+                a.insert(a.begin() </span>+<span style="color: #000000;"> i, first);
+                res.push_back(a);
+                a.erase(a.begin() </span>+<span style="color: #000000;"> i);
+            }
+        }   
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4428207.html" target="_blank">Next Permutation</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4359825.html" target="_blank">Permutations II</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

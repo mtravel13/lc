@@ -1,0 +1,78 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8387593.html">[LeetCode] Largest Number At Least Twice of Others 至少是其他数字两倍的最大数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>In a given integer array&nbsp;<code>nums</code>, there is always exactly one largest element.</p>
+<p>Find whether the largest element in the array is at least twice as much as every other number in the array.</p>
+<p>If it is, return the&nbsp;index&nbsp;of the largest element, otherwise return -1.</p>
+<p>Example 1:</p>
+<pre>Input: nums = [3, 6, 1, 0]
+Output: 1
+Explanation: 6 is the largest integer, and for every other number in the array x,
+6 is more than twice as big as x.  The index of value 6 is 1, so we return 1.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: nums = [1, 2, 3, 4]
+Output: -1
+Explanation: 4 isn't at least as big as twice the value of 3, so we return -1.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li><code>nums</code>&nbsp;will have a length in the range&nbsp;<code>[1, 50]</code>.</li>
+<li>Every&nbsp;<code>nums[i]</code>&nbsp;will be an integer in the range&nbsp;<code>[0, 99]</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们找一个至少是其他数字两倍的最大数字，那么我们想，首先明确的一点是这个要求的数字一定是数组中的最大数字，因为其是其他所有的数字的至少两倍。然后就是，如果该数字是数组中第二大的数字至少两倍的话，那么它一定是其他所有数字的至少两倍，所以我们可以遍历一次数组分别求出最大数字和第二大数字，然后判断一下最大数字是否是第二大数字的两倍即可，注意这里我们判断两倍的方法并不是直接相除，为了避免除以零的情况，我们采用减法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> dominantIndex(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> mx = INT_MIN, secondMx = INT_MIN, mxId = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] &gt;<span style="color: #000000;"> mx) {
+                secondMx </span>=<span style="color: #000000;"> mx;
+                mx </span>=<span style="color: #000000;"> nums[i];
+                mxId </span>=<span style="color: #000000;"> i;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (nums[i] &gt;<span style="color: #000000;"> secondMx) {
+                secondMx </span>=<span style="color: #000000;"> nums[i];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> (mx - secondMx &gt;= secondMx) ? mxId : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>当然我们也可以使用更straightforward的方法，首先遍历一遍数组找出最大数字，然后再遍历一遍数组，验证这个数字是否是其他数字的至少两倍，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> dominantIndex(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> mx = INT_MIN, mxId = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (mx &lt;<span style="color: #000000;"> nums[i]) {
+                mx </span>=<span style="color: #000000;"> nums[i];
+                mxId </span>=<span style="color: #000000;"> i;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            </span><span style="color: #0000ff;">if</span> (mx != num &amp;&amp; mx - num &lt; num) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mxId;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

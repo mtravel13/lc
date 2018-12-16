@@ -1,0 +1,130 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8053934.html">[LeetCode] Sentence Similarity II 句子相似度之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two sentences&nbsp;<code>words1, words2</code>&nbsp;(each represented as an array of strings), and a list of similar word pairs&nbsp;<code>pairs</code>, determine if two sentences are similar.</p>
+<p>For example,&nbsp;<code>words1 = ["great", "acting", "skills"]</code>&nbsp;and&nbsp;<code>words2 = ["fine", "drama", "talent"]</code>&nbsp;are similar, if the similar word pairs are&nbsp;<code>pairs = [["great", "good"], ["fine", "good"], ["acting","drama"], ["skills","talent"]]</code>.</p>
+<p>Note that the similarity relation&nbsp;is&nbsp;transitive. For example, if "great" and "good" are similar, and "fine" and "good" are similar, then "great" and "fine"&nbsp;are similar.</p>
+<p>Similarity is also symmetric. For example, "great" and "fine" being similar is the same as "fine" and "great" being similar.</p>
+<p>Also, a word is always similar with itself. For example, the sentences&nbsp;<code>words1 = ["great"], words2 = ["great"], pairs = []</code>&nbsp;are similar, even though there are no specified similar word pairs.</p>
+<p>Finally, sentences can only be similar if they have the same number of words. So a sentence like&nbsp;<code>words1 = ["great"]</code>&nbsp;can never be similar to&nbsp;<code>words2 = ["doubleplus","good"]</code>.</p>
+<p>Note:</p>
+<ul>
+<li>The length of&nbsp;<code>words1</code>&nbsp;and&nbsp;<code>words2</code>&nbsp;will not exceed&nbsp;<code>1000</code>.</li>
+<li>The length of&nbsp;<code>pairs</code>&nbsp;will not exceed&nbsp;<code>2000</code>.</li>
+<li>The length of each&nbsp;<code>pairs[i]</code>&nbsp;will be&nbsp;<code>2</code>.</li>
+<li>The length of each&nbsp;<code>words[i]</code>&nbsp;and&nbsp;<code>pairs[i][j]</code>&nbsp;will be in the range&nbsp;<code>[1, 20]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl05_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8016251.html">Sentence Similarity</a>的拓展，那道题说单词之间不可传递，于是乎这道题就变成可以传递了，那么难度就增加了。不过没有关系，还是用我们的经典老三样来解，BFS，DFS，和Union Find。我们先来看BFS的解法，其实这道题的本质是无向连通图的问题，那么首先要做的就是建立这个连通图的数据结构，对于每个结点来说，我们要记录所有和其相连的结点，所以我们建立每个结点和其所有相连结点集合之间的映射，比如对于这三个相似对(a, b), (b, c)，和(c, d)，我们有如下的映射关系：</p>
+<p>a -&gt; {b}</p>
+<p>b -&gt; {a, c}</p>
+<p>c -&gt; {b, d}</p>
+<p>d -&gt; {c}</p>
+<p>那么如果我们要验证a和d是否相似，就需要用到传递关系，a只能找到b，b可以找到a，c，为了不陷入死循环，我们将访问过的结点加入一个集合visited，那么此时b只能去，c只能去d，那么说明a和d是相似的了。那么我们用for循环来比较对应位置上的两个单词，如果二者相同，那么直接跳过去比较接下来的。否则就建一个访问即可visited，建一个队列queue，然后把words1中的单词放入queue，建一个布尔型变量succ，标记是否找到，然后就是传统的BFS遍历的写法了，从队列中取元素，如果和其相连的结点中有words2中的对应单词，标记succ为true，并break掉。否则就将取出的结点加入队列queue，并且遍历其所有相连结点，将其中未访问过的结点加入队列queue继续循环，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> areSentencesSimilarTwo(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words1, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words2, vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> pairs) {
+        </span><span style="color: #0000ff;">if</span> (words1.size() != words2.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto pair : pairs) {
+            m[pair.first].insert(pair.second);
+            m[pair.second].insert(pair.first);
+        }    
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words1.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (words1[i] == words2[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> visited;
+            queue</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> q{{words1[i]}};
+            </span><span style="color: #0000ff;">bool</span> succ = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+                auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m[t].count(words2[i])) {
+                    succ </span>= <span style="color: #0000ff;">true</span>; <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+                visited.insert(t);
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m[t]) {
+                    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">visited.count(a)) q.push(a);
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (!succ) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }    
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看递归的写法，解题思路跟上面的完全一样，把主要操作都放到了一个递归函数中来写，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> areSentencesSimilarTwo(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words1, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words2, vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> pairs) {
+        </span><span style="color: #0000ff;">if</span> (words1.size() != words2.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto pair : pairs) {
+            m[pair.first].insert(pair.second);
+            m[pair.second].insert(pair.first);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words1.size(); ++<span style="color: #000000;">i) {</span><span style="color: #000000;">
+            unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> visited;
+            </span><span style="color: #0000ff;">if</span> (!helper(m, words1[i], words2[i], visited)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">bool</span> helper(unordered_map&lt;<span style="color: #0000ff;">string</span>, unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&gt;&amp; m, <span style="color: #0000ff;">string</span>&amp; cur, <span style="color: #0000ff;">string</span>&amp; target, unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> visited) {
+        </span><span style="color: #0000ff;">if</span> (cur == target) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        visited.insert(cur);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : m[cur]) {
+            </span><span style="color: #0000ff;">if</span> (!visited.count(word) &amp;&amp; helper(m, word, target, visited)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法就是碉堡了的联合查找Union Find了，这种解法的核心是一个getRoot函数，如果两个元素属于同一个群组的话，调用getRoot函数会返回相同的值。主要分为两部，第一步是建立群组关系，suppose开始时每一个元素都是独立的个体，各自属于不同的群组。然后对于每一个给定的关系对，我们对两个单词分别调用getRoot函数，找到二者的祖先结点，如果从未建立过联系的话，那么二者的祖先结点时不同的，此时就要建立二者的关系。等所有的关系都建立好了以后，第二步就是验证两个任意的元素是否属于同一个群组，就只需要比较二者的祖先结点都否相同啦。是不是有点深度学习的赶脚，先建立模型training，然后再test。哈哈，博主乱扯的，二者并没有什么联系。我们保存群组关系的数据结构，有时用数组，有时用哈希map，看输入的数据类型吧，如果输入元素的整型数的话，用root数组就可以了，如果是像本题这种的字符串的话，需要用哈希表来建立映射，建立每一个结点和其祖先结点的映射。注意这里的祖先结点不一定是最终祖先结点，而最终祖先结点的映射一定是最重祖先结点，所以我们的getRoot函数的设计思路就是要找到最终祖先结点，那么就是当结点和其映射结点相同时返回，否则继续循环，可以递归写，也可以迭代写，这无所谓。注意这里第一行判空是相当于初始化，这个操作可以在外面写，就是要让初始时每个元素属于不同的群组，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> areSentencesSimilarTwo(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words1, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words2, vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> pairs) {
+        </span><span style="color: #0000ff;">if</span> (words1.size() != words2.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> m;       
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto pair : pairs) {
+            </span><span style="color: #0000ff;">string</span> x = getRoot(pair.first, m), y =<span style="color: #000000;"> getRoot(pair.second, m);
+            </span><span style="color: #0000ff;">if</span> (x != y) m[x] =<span style="color: #000000;"> y;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words1.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (getRoot(words1[i], m) != getRoot(words2[i], m)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">string</span> getRoot(<span style="color: #0000ff;">string</span> word, unordered_map&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> m) {
+        </span><span style="color: #0000ff;">if</span> (!m.count(word)) m[word] =<span style="color: #000000;"> word;
+        </span><span style="color: #0000ff;">return</span> word == m[word] ?<span style="color: #000000;"> word : getRoot(m[word], m);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6686983.html">Friend Circles</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7829169.html">Accounts Merge</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl05_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8016251.html">Sentence Similarity</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/112146/c-dfs-solution">https://discuss.leetcode.com/topic/112146/c-dfs-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/112183/java-c-clean-code-with-explanation">https://discuss.leetcode.com/topic/112183/java-c-clean-code-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

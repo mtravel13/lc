@@ -1,0 +1,94 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8452361.html">[LeetCode] Cracking the Safe 破解密码</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There is a box protected by a password. The password is&nbsp;<code>n</code>&nbsp;digits, where each letter can be one of the first&nbsp;<code>k</code>&nbsp;digits&nbsp;<code>0, 1, ..., k-1</code>.</p>
+<p>You can keep inputting the password, the password will automatically be matched against the last&nbsp;<code>n</code>&nbsp;digits entered.</p>
+<p>For example, assuming the password is&nbsp;<code>"345"</code>, I can open it when I type&nbsp;<code>"012345"</code>, but I enter a total of 6 digits.</p>
+<p>Please return any string of minimum length that is guaranteed to open the box after the entire string is inputted.</p>
+<p>Example 1:</p>
+<pre>Input: n = 1, k = 2
+Output: "01"
+Note: "10" will be accepted too.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: n = 2, k = 2
+Output: "00110"
+Note: "01100", "10011", "11001" will be accepted too.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li><code>n</code>&nbsp;will be in the range&nbsp;<code>[1, 4]</code>.</li>
+<li><code>k</code>&nbsp;will be in the range&nbsp;<code>[1, 10]</code>.</li>
+<li><code>k^n</code>&nbsp;will be at most&nbsp;<code>4096</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题说的是给了k个数字，值为0到k-1，让我们组成n位密码。让我们找一个万能钥匙串，能破解任意的n位密码组合，这里对于破解的定义为只要密码是钥匙串的子串就可以破解了，然我们求出最短的一个万能钥匙串。来看一个例子，n=2，k=2，那么密码的组合有四种，</p>
+<p><span style="color: #ff0000;">00</span>，<span style="color: #008000;">01</span>，<span style="color: #0000ff;">10</span>，<span style="color: #ff6600;">11</span></p>
+<p>所以 00110 就是一种钥匙串，因为密码&nbsp;<span style="color: #ff0000;">00</span> (<span style="color: #ff0000;">00</span>110),&nbsp;<span style="color: #008000;">01</span> (0<span style="color: #008000;">01</span>10), <span style="color: #0000ff;">10</span>&nbsp;(001<span style="color: #0000ff;">10</span>), <span style="color: #ff6600;">11</span>&nbsp;(00<span style="color: #ff6600;">11</span>0), 分别都包括在钥匙串中。我们可以发现，为了尽可能的使钥匙串变短，所以我们的密码之间尽可能要相互重叠，比如00和01，就共享一个0，如果是3个数，012和120共享两个数"12"，那么我们可以发现，两个长度为n的密码最好能共享n-1个数字，这样累加出来的钥匙串肯定是最短的。</p>
+<p>密码共有n位，每一个位可以有k个数字，那么总共不同的密码总数就有k的n次方个。我们的思路是先从n位都是0的密码开始，取出钥匙串的最后n个数字，然后将最后一个数字依次换成其他数字，我们用一个HashSet来记录所有遍历过的密码，这样如果不在集合中，说明是一个新密码，而生成这个新密码也只是多加了一个数字，这样能保证我们的钥匙串最短，这是一种贪婪的解法，相当的巧妙，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> crackSafe(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #0000ff;">string</span>(n, <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> visited{{res}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; pow(k, n); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> pre = res.substr(res.size() - n + <span style="color: #800080;">1</span>, n - <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = k - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">string</span> cur = pre +<span style="color: #000000;"> to_string(j);
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">visited.count(cur)) {
+                    visited.insert(cur);
+                    res </span>+=<span style="color: #000000;"> to_string(j);
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>来看同一种解法的递归写法，思路和迭代的写法一模一样，写法略有不同而已，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> crackSafe(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #0000ff;">string</span>(n, <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> visited{{res}};
+        helper(n, k, pow(k, n), visited, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span> k, <span style="color: #0000ff;">int</span> total, unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&amp; visited, <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (visited.size() == total) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> pre = res.substr(res.size() - n + <span style="color: #800080;">1</span>, n - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = k - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> cur = pre +<span style="color: #000000;"> to_string(i);
+            </span><span style="color: #0000ff;">if</span> (visited.count(cur)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            visited.insert(cur);
+            res </span>+=<span style="color: #000000;"> to_string(i);
+            helper(n, k, total, visited, res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/cracking-the-safe/" target="_blank">https://leetcode.com/problems/cracking-the-safe/</a></p>
+<p><a href="https://leetcode.com/problems/cracking-the-safe/discuss/110264/Easy-DFS" target="_blank">https://leetcode.com/problems/cracking-the-safe/discuss/110264/Easy-DFS</a></p>
+<p><a href="https://leetcode.com/problems/cracking-the-safe/discuss/112966/C++-greedy-loop-from-backward-with-explaination" target="_blank">https://leetcode.com/problems/cracking-the-safe/discuss/112966/C++-greedy-loop-from-backward-with-explaination</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

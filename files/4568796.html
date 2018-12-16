@@ -1,0 +1,109 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4568796.html">[LeetCode] Implement Stack using Queues 用队列来实现栈</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement the following operations of a stack using queues.</p>
+<ul>
+<li>push(x) -- Push element x onto stack.</li>
+<li>pop() -- Removes the element on top of the stack.</li>
+<li>top() -- Get the top element.</li>
+<li>empty() -- Return whether the stack is empty.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>You may assume that all operations are valid (for example, no pop or top operations will be called on an empty stack).</li>
+<li>Depending on your language, queue may not be supported natively. You may simulate a queue by using a list or deque (double-ended queue), as long as you use only standard operations of a queue -- which means only&nbsp;<code>push to back</code>,&nbsp;<code>pop from front</code>,&nbsp;<code>size</code>, and&nbsp;<code>is empty</code>&nbsp;operations are valid.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/jianchao.li.fighter">@jianchao.li.fighter</a>&nbsp;for adding this problem and all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题让我们用队列来实现栈，队列和栈作为两种很重要的数据结构，它们最显著的区别就是，队列是先进先出，而栈是先进后出。题目要求中又给定了限制条件只能用queue的最基本的操作，像back()这样的操作是禁止使用的。那么怎么样才能让先进先出的特性模拟出先进后出呢，这里就需要另外一个队列来辅助操作，我们总共需要两个队列，其中一个队列用来放最后加进来的数，模拟栈顶元素。剩下所有的数都按顺序放入另一个队列中。当push操作时，将新数字先加入模拟栈顶元素的队列中，如果此时队列中有数字，则将原本有的数字放入另一个队中，让新数字在这队中，用来模拟栈顶元素。当top操作时，如果模拟栈顶的队中有数字则直接返回，如果没有则到另一个队列中通过平移数字取出最后一个数字加入模拟栈顶的队列中。当pop操作时，先执行下top()操作，保证模拟栈顶的队列中有数字，然后再将该数字移除即可。当empty操作时，当两个队列都为空时，栈为空。代码如下：</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Stack {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Push element x onto stack.</span>
+    <span style="color: #0000ff;">void</span> push(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        q2.push(x);
+        </span><span style="color: #0000ff;">while</span> (q2.size() &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            q1.push(q2.front());
+            q2.pop();
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Removes the element on top of the stack.</span>
+    <span style="color: #0000ff;">void</span> pop(<span style="color: #0000ff;">void</span><span style="color: #000000;">) {
+        top();
+        q2.pop();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Get the top element.</span>
+    <span style="color: #0000ff;">int</span> top(<span style="color: #0000ff;">void</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (q2.empty()) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; (<span style="color: #0000ff;">int</span>)q1.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+                q1.push(q1.front());
+                q1.pop();
+            }
+            q2.push(q1.front());
+            q1.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q2.front();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Return whether the stack is empty.</span>
+    <span style="color: #0000ff;">bool</span> empty(<span style="color: #0000ff;">void</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span> q1.empty() &amp;&amp;<span style="color: #000000;"> q2.empty();
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q1, q2;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有另一种解法，可以参见另一道类似的题<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4626238.html">Implement Queue using Stacks 用栈来实现队列</a>，我个人来讲比较偏爱下面这种方法，比较好记，只要实现对了push函数，后面三个直接调用队列的函数即可。这种方法的原理就是每次把新加入的数插到前头，这样队列保存的顺序和栈的顺序是相反的，它们的取出方式也是反的，那么反反得正，就是我们需要的顺序了。我们需要一个辅助队列tmp，把s的元素也逆着顺序存入tmp中，此时加入新元素x，再把tmp中的元素存回来，这样就是我们要的顺序了，其他三个操作也就直接调用队列的操作即可，参见代码如下：</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Stack {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Push element x onto stack.</span>
+    <span style="color: #0000ff;">void</span> push(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> tmp;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            tmp.push(q.front());
+            q.pop();
+        }
+        q.push(x);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">tmp.empty()) {
+            q.push(tmp.front());
+            tmp.pop();
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Removes the element on top of the stack.</span>
+    <span style="color: #0000ff;">void</span><span style="color: #000000;"> pop() {
+        q.pop();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Get the top element.</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> top() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q.front();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Return whether the stack is empty.</span>
+    <span style="color: #0000ff;">bool</span><span style="color: #000000;"> empty() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q.empty();
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

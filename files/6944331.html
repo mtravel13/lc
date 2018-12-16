@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6944331.html">[LeetCode] Design In-Memory File System 设计内存文件系统</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design an in-memory file system to simulate the following functions:</p>
+<p><code>ls</code>: Given a path in string format. If it is a file path, return a list that only contains this file's name. If it is a directory path, return the list of file and directory names&nbsp;in this directory. Your output (file and directory names together) should in&nbsp;lexicographic order.</p>
+<p><code>mkdir</code>: Given a&nbsp;directory path&nbsp;that does not exist, you should make a new directory according to the path. If the middle directories in the path don't exist either, you should create them as well. This function has void return type.</p>
+<p><code>addContentToFile</code>: Given a&nbsp;file path&nbsp;and&nbsp;file content&nbsp;in string format. If the file doesn't exist, you need to create that file containing given content. If the file already exists, you need to&nbsp;append&nbsp;given content to original content. This function has void return type.</p>
+<p><code>readContentFromFile</code>: Given a&nbsp;file path, return its&nbsp;content&nbsp;in string format.</p>
+<p>Example:</p>
+<pre>Input: 
+["FileSystem","ls","mkdir","addContentToFile","ls","readContentFromFile"]
+[[],["/"],["/a/b/c"],["/a/b/c/d","hello"],["/"],["/a/b/c/d"]]
+Output:
+[null,[],null,null,["a"],"hello"]
+Explanation:
+</pre>
+<p><img src="https://leetcode.com/static/images/problemset/filesystem.png" alt="filesystem" width="66%" /></p>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>You can assume all file or directory paths are absolute paths which begin with&nbsp;<code>/</code>&nbsp;and do not end with&nbsp;<code>/</code>except that the path is just&nbsp;<code>"/"</code>.</li>
+<li>You can assume that all operations will be passed valid parameters and users will not attempt to retrieve file content or list a directory or file that does not exist.</li>
+<li>You can assume that all directory names and file names only contain lower-case letters, and same names won't exist in the same directory.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们设计一个内存文件系统，实现显示当前文件，创建文件，添加内容到文件，读取文件内容等功能，感觉像是模拟一个terminal的一些命令。这道题比较tricky的地方是ls这个命令，题目中的例子其实不能很好的展示出ls的要求，其对文件和文件夹的处理方式是不同的。由于这里面的文件没有后缀，所以最后一个字符串有可能是文件，也有可能是文件夹。比如a/b/c，那么最后的c有可能是文件夹，也有可能好是文件，如果c是文件夹的话，ls命令要输出文件夹c中的所有文件和文件夹，而当c是文件的话，只需要输出文件c即可。另外需要注意的是在创建文件夹的时候，路径上没有的文件夹都要创建出来，还有就是在给文件添加内容时，路径中没有的文件夹都要创建出来。论坛上这道题的高票解法都新建了一个自定义类，但是博主一般不喜欢用自定义类来解题，而且感觉那些使用了自定义类的解法并没有更简洁易懂，所以这里博主就不创建自定义类了，而是使用两个哈希表来做，其中dirs建立了路径和其对应的包含所有文件和文件夹的集合之间的映射，files建立了文件的路径跟其内容之间的映射。</p>
+<p>最开始时将根目录"/"放入dirs中，然后看ls的实现方法，如果该路径存在于files中，说明最后一个字符串是文件，那么我们将文件名取出来返回即可，如果不存在，说明最后一个字符串是文件夹，那么我们到dirs中取出该文件夹内所有的东西返回即可。再来看mkdir函数，我们的处理方法就是根据"/"来分隔分隔字符串，如果是Java，那么直接用String自带的split函数就好了，但是C++没有Java那么多自带函数，所以只能借助字符串流类来处理，处理方法就是将每一层的路径分离出来，然后将该层的文件或者文件夹加入对应的集合中，注意的地方就是处理根目录时，要先加上"/"，其他情况都是后加。下面来看addContentToFile函数，首先分离出路径和文件名，如果路径为空，说明是根目录，需要加上"/"，然后看这个路径是否已经在dirs中存在，如果不存在，调用mkdir来创建该路径，然后把文件加入该路径对应的集合中，再把内容加入该文件路径的映射中。最后的读取文件内容就相当简单了，直接在files中返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> FileSystem {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    FileSystem() {
+        dirs[</span><span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">];
+    }
+    
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; ls(<span style="color: #0000ff;">string</span><span style="color: #000000;"> path) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (files.count(path)) {
+            </span><span style="color: #0000ff;">int</span> idx = path.find_last_of(<span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span> {path.substr(idx + <span style="color: #800080;">1</span><span style="color: #000000;">)};
+        }
+        auto t </span>=<span style="color: #000000;"> dirs[path];
+        </span><span style="color: #0000ff;">return</span> vector&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">(t.begin(), t.end());
+    }
+    
+    </span><span style="color: #0000ff;">void</span> mkdir(<span style="color: #0000ff;">string</span><span style="color: #000000;"> path) {
+        istringstream </span><span style="color: #0000ff;">is</span><span style="color: #000000;">(path);
+        </span><span style="color: #0000ff;">string</span> t = <span style="color: #800000;">""</span>, dir = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (getline(<span style="color: #0000ff;">is</span>, t, <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">)) {
+            </span><span style="color: #0000ff;">if</span> (t.empty()) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (dir.empty()) dir += <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            dirs[dir].insert(t);
+            </span><span style="color: #0000ff;">if</span> (dir.size() &gt; <span style="color: #800080;">1</span>) dir += <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            dir </span>+=<span style="color: #000000;"> t;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">void</span> addContentToFile(<span style="color: #0000ff;">string</span> filePath, <span style="color: #0000ff;">string</span><span style="color: #000000;"> content) {
+        </span><span style="color: #0000ff;">int</span> idx = filePath.find_last_of(<span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">string</span> dir = filePath.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, idx);
+        </span><span style="color: #0000ff;">string</span> file = filePath.substr(idx + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (dir.empty()) dir = <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">dirs.count(dir)) mkdir(dir);
+        dirs[dir].insert(file);
+        files[filePath].append(content);
+    }
+    
+    </span><span style="color: #0000ff;">string</span> readContentFromFile(<span style="color: #0000ff;">string</span><span style="color: #000000;"> filePath) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> files[filePath];
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> dirs;
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> files;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4587511.html" target="_blank">LRU Cache</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6258459.html" target="_blank">LFU Cache</a>&nbsp;</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/90250/c-fast-no-user-defined-types-needed" target="_blank">https://discuss.leetcode.com/topic/90250/c-fast-no-user-defined-types-needed</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

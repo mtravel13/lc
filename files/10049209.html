@@ -1,0 +1,55 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/10049209.html">Solve Error: MissingSchemaError: Schema hasn&#39;t been registered for model &quot;YourModel&quot;.</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>使用MongoDB的时候，如果遇到下面这个错误：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>/home/ec2-user/YourProject/node_modules/mongoose/lib/index.js:<span style="color: #800080;">391</span><span style="color: #000000;">
+      throw new mongoose.Error.MissingSchemaError(name);
+      </span>^<span style="color: #ff0000;">
+MissingSchemaError: Schema hasn't been registered for model "YourModel".
+Use mongoose.model(name, schema)
+    at new MissingSchemaError (/home/ec2-user/YourProject/node_modules/mongoose/lib/error/missingSchema.js:20:11)
+    at Mongoose.model (/home/ec2-user/YourProject/node_modules/mongoose/lib/index.js:391:13)
+    at Object.&lt;anonymous&gt; (/home/ec2-user/YourProject/YourScript.js:4:27)
+    at Module._compile (internal/modules/cjs/loader.js:722:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:733:10)
+    at Module.load (internal/modules/cjs/loader.js:620:32)
+    at tryModuleLoad (internal/modules/cjs/loader.js:560:12)
+    at Function.Module._load (internal/modules/cjs/loader.js:552:3)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:775:12)
+    at startup (internal/bootstrap/node.js:300:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:826:3)</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>一般来说是MongoDB数据库的Model没有链上，在YourScript.js的开头，一般下面几行不能少：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>require('./yourModel.js'<span style="color: #000000;">);
+const mongoose </span>= require('mongoose'<span style="color: #000000;">);
+mongoose.connect(</span>"mongodb://localhost/YourDatabase"<span style="color: #000000;">);
+const YourModel </span>= mongoose.model('YourModel');</pre>
+</div>
+<p>&nbsp;</p>
+<p>然后yourModel.js的内容可以为：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>const mongoose = require('mongoose'<span style="color: #000000;">);
+const Schema </span>=<span style="color: #000000;"> mongoose.Schema;
+
+const YourModelSchema </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Schema({
+    something1: { type: String, required: </span>'`something1` must be filled', unique: <span style="color: #0000ff;">true</span><span style="color: #000000;"> },
+    something2: { type: String</span><span style="color: #000000;"> },</span><span style="color: #000000;">
+});
+
+module.exports </span>= mongoose.model('YourModel', YourModelSchema);</pre>
+</div>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

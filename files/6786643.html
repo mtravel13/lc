@@ -1,0 +1,78 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6786643.html">[LeetCode] Binary Tree Tilt  二叉树的坡度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, return the tilt of the&nbsp;whole tree.</p>
+<p>The tilt of a&nbsp;tree node&nbsp;is defined as the&nbsp;absolute difference&nbsp;between the sum of all left subtree node values and the sum of all right subtree node values. Null node has tilt 0.</p>
+<p>The tilt of the&nbsp;whole tree&nbsp;is defined as the sum of all nodes' tilt.</p>
+<p>Example:</p>
+<pre>Input: 
+         1
+       /   \
+      2     3
+Output: 1
+Explanation: 
+Tilt of node 2 : 0
+Tilt of node 3 : 0
+Tilt of node 1 : |2-3| = 1
+Tilt of binary tree : 0 + 0 + 1 = 1
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The sum of node values in any subtree won't exceed the range of 32-bit integer.</li>
+<li>All the tilt values won't exceed the range of 32-bit integer.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求二叉树的坡度，某个结点的坡度的定义为该结点的左子树之和与右子树之和的差的绝对值，这道题让我们求所有结点的坡度之和。我开始的想法就是老老实实的按定义去做，用先序遍历，对于每个遍历到的结点，先计算坡度，根据定义就是左子树之和与右子树之和的差的绝对值，然后返回的是当前结点的tilt加上对其左右子结点调用求坡度的递归函数即可。其中求子树之和用另外一个函数来求，也是用先序遍历来求结点之和，为了避免重复运算，这里用哈希表来保存已经算过的结点，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    unordered_map</span>&lt;TreeNode*, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+    </span><span style="color: #0000ff;">int</span> findTilt(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> tilt = abs(getSum(root-&gt;left, m) - getSum(root-&gt;<span style="color: #000000;">right, m));
+        </span><span style="color: #0000ff;">return</span> tilt + findTilt(root-&gt;left) + findTilt(root-&gt;<span style="color: #000000;">right);
+    }
+    </span><span style="color: #0000ff;">int</span> getSum(TreeNode* node, unordered_map&lt;TreeNode*, <span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> m) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (m.count(node)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> m[node];
+        </span><span style="color: #0000ff;">return</span> m[node] = getSum(node-&gt;left, m) + getSum(node-&gt;right, m) + node-&gt;<span style="color: #000000;">val;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但是在论坛中看了大神们的帖子后，发现这道题最好的解法应该是用后序遍历来做，因为后序遍历的顺序是左-右-根，那么就会从叶结点开始处理，这样我们就能很方便的计算结点的累加和，同时也可以很容易的根据子树和来计算tilt，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findTilt(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        postorder(root, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> postorder(TreeNode* node, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> leftSum = postorder(node-&gt;<span style="color: #000000;">left, res);
+        </span><span style="color: #0000ff;">int</span> rightSum = postorder(node-&gt;<span style="color: #000000;">right, res);
+        res </span>+= abs(leftSum -<span style="color: #000000;"> rightSum);
+        </span><span style="color: #0000ff;">return</span> leftSum + rightSum + node-&gt;<span style="color: #000000;">val;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/87191/java-o-n-postorder-traversal" target="_blank">https://discuss.leetcode.com/topic/87191/java-o-n-postorder-traversal</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

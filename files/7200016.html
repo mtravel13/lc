@@ -1,0 +1,103 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7200016.html">[LeetCode] Smallest Range 最小的范围</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You have&nbsp;<code>k</code>&nbsp;lists of sorted integers in ascending order. Find the&nbsp;smallest&nbsp;range that includes at least one number from each of the&nbsp;<code>k</code>&nbsp;lists.</p>
+<p>We define the range [a,b] is smaller than range [c,d] if&nbsp;<code>b-a &lt; d-c</code>&nbsp;or&nbsp;<code>a &lt; c</code>&nbsp;if&nbsp;<code>b-a == d-c</code>.</p>
+<p>Example 1:</p>
+<pre>Input:[[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]
+Output: [20,24]
+Explanation: 
+List 1: [4, 10, 15, 24,26], 24 is in range [20,24].
+List 2: [0, 9, 12, 20], 20 is in range [20,24].
+List 3: [5, 18, 22, 30], 22 is in range [20,24].
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The given list may contain duplicates, so ascending order means &gt;= here.</li>
+<li>1 &lt;=&nbsp;<code>k</code>&nbsp;&lt;= 3500</li>
+<li>-105&nbsp;&lt;=&nbsp;<code>value of elements</code>&nbsp;&lt;= 105.</li>
+<li>For Java users, please note that the input type has been changed to List&lt;List&lt;Integer&gt;&gt;. And after you reset the code template, you'll see this point.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一些数组，都是排好序的，让我们求一个最小的范围，使得这个范围内至少会包括每个数组中的一个数字。虽然每个数组都是有序的，但是考虑到他们之间的数字差距可能很大，所以我们最好还是合并成一个数组统一处理比较好，但是合并成一个大数组还需要保留其原属数组的序号，所以我们大数组中存pair对，同时保存数字和原数组的序号。然后我们重新按照数字大小进行排序，这样我们的问题实际上就转换成了求一个最小窗口，使其能够同时包括所有数组中的至少一个数字。这不就变成了那道<a href="http://www.cnblogs.com/grandyang/p/4340948.html" target="_blank">Minimum Window Substring</a>。所以说啊，这些题目都是换汤不换药的，总能变成我们见过的类型。我们用两个指针left和right来确定滑动窗口的范围，我们还要用一个哈希表来建立每个数组与其数组中数字出现的个数之间的映射，变量cnt表示当前窗口中的数字覆盖了几个数组，diff为窗口的大小，我们让right向右滑动，然后判断如果right指向的数字所在数组没有被覆盖到，cnt自增1，然后哈希表中对应的数组出现次数自增1，然后我们循环判断如果cnt此时为k(数组的个数)且left不大于right，那么我们用当前窗口的范围来更新结果，然后此时我们想缩小窗口，通过将left向右移，移动之前需要减小哈希表中的映射值，因为我们去除了数字，如果此时映射值为0了，说明我们有个数组无法覆盖到了，cnt就要自减1。这样遍历后我们就能得到最小的范围了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; smallestRange(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> v;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums[i]) {
+                v.push_back({num, i});
+            }
+        }
+        sort(v.begin(), v.end());
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, n = v.size(), k = nums.size(), cnt = <span style="color: #800080;">0</span>, diff =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> right = <span style="color: #800080;">0</span>; right &lt; n; ++<span style="color: #000000;">right) {
+            </span><span style="color: #0000ff;">if</span> (m[v[right].second] == <span style="color: #800080;">0</span>) ++<span style="color: #000000;">cnt;
+            </span>++<span style="color: #000000;">m[v[right].second];
+            </span><span style="color: #0000ff;">while</span> (cnt == k &amp;&amp; left &lt;=<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">if</span> (diff &gt; v[right].first -<span style="color: #000000;"> v[left].first) {
+                    diff </span>= v[right].first -<span style="color: #000000;"> v[left].first;
+                    res </span>=<span style="color: #000000;"> {v[left].first, v[right].first};
+                } 
+                </span><span style="color: #0000ff;">if</span> (--m[v[left].second] == <span style="color: #800080;">0</span>) --<span style="color: #000000;">cnt;
+                </span>++<span style="color: #000000;">left;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有一种使用priority_queue来做的，优先队列默认情况是最大堆，但是这道题我们需要使用最小堆，我们可以重新写一下comparator就行了。解题的主要思路很上面的解法很相似，只是具体的数据结构的使用上略有不同，这curMax表示当前遇到的最大数字，用一个idx数组表示每个list中遍历到的位置，然后就是我们的优先队列了，里面放一个pair，是数字和其所属list组成的对儿。然后我们遍历所有的list，将每个list的首元素和该list序号组成pair放入队列中，然后idx数组中每个位置都赋值为1，因为0的位置已经放入队列了，所以指针向后移一个位置，还要更新当前最大值curMax。此时我们的queue中是每个list各有一个数字，由于是最小堆，所以最小的数字就在队首，再加上最大值curMax，就可以初始化结果res了。然后我们进行循环，注意这里循环的条件不是队列不为空，而是当某个list的数字遍历完了就结束循环，因为我们的范围要cover每个list至少一个数字。所以我们的while循环条件即是队首数字所在的list的遍历位置小于该list的总个数，在循环中，取出队首数字所在的list序号t，然后将该list中下一个位置的数字和该list序号t组成pair，加入队列中，然后用这个数字更新curMax，同时idx中t对应的位置也自增1。现在来更新结果res，如果结果res中两数之差大于curMax和队首数字之差，则我们更新结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; smallestRange(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> curMax = INT_MIN, n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; idx(n, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        auto cmp </span>= [](pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp; a, pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp; b) {<span style="color: #0000ff;">return</span> a.first &gt;<span style="color: #000000;"> b.first;};
+        priority_queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;, vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;, decltype(cmp) &gt;<span style="color: #000000;"> q(cmp);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            q.push({nums[i][</span><span style="color: #800080;">0</span><span style="color: #000000;">], i});
+            idx[i] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            curMax </span>= max(curMax, nums[i][<span style="color: #800080;">0</span><span style="color: #000000;">]);
+        }
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res{q.top().first, curMax};
+        </span><span style="color: #0000ff;">while</span> (idx[q.top().second] &lt;<span style="color: #000000;"> nums[q.top().second].size()) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> q.top().second; q.pop();
+            q.push({nums[t][idx[t]], t});
+            curMax </span>=<span style="color: #000000;"> max(curMax, nums[t][idx[t]]);
+            </span>++<span style="color: #000000;">idx[t];
+            </span><span style="color: #0000ff;">if</span> (res[<span style="color: #800080;">1</span>] - res[<span style="color: #800080;">0</span>] &gt; curMax -<span style="color: #000000;"> q.top().first) {
+                res </span>=<span style="color: #000000;"> {q.top().first, curMax};
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4340948.html" target="_blank">Minimum Window Substring</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/94448/c-solution-with-priority_queue">https://discuss.leetcode.com/topic/94448/c-solution-with-priority_queue</a></p>
+<p><a href="https://discuss.leetcode.com/topic/96509/c-45ms-o-n-space-o-n-time-sol-without-priority-queue-iterators-just-vectors">https://discuss.leetcode.com/topic/96509/c-45ms-o-n-space-o-n-time-sol-without-priority-queue-iterators-just-vectors</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

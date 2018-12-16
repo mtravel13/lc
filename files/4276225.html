@@ -1,0 +1,116 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4276225.html">[LeetCode] Longest Consecutive Sequence 求最长连续序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an unsorted array of integers, find the length of the longest consecutive elements sequence.</p>
+<p> For example,<br />
+Given <code>[100, 4, 200, 1, 3, 2]</code>,<br />
+The longest consecutive elements sequence is <code>[1, 2, 3, 4]</code>. Return its length: <code>4</code>.
+</p>
+<p>
+Your algorithm should run in O(<em>n</em>) complexity.
+</p>
+<p>&nbsp;</p>
+<p>这道题要求求最长连续序列，并给定了O(n)复杂度限制，我们的思路是，使用一个集合set存入所有的数字，然后遍历数组中的每个数字，如果其在集合中存在，那么将其移除，然后分别用两个变量pre和next算出其前一个数跟后一个数，然后在集合中循环查找，如果pre在集合中，那么将pre移除集合，然后pre再自减1，直至pre不在集合之中，对next采用同样的方法，那么next-pre-1就是当前数字的最长连续序列，更新res即可。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestConsecutive(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> val : nums) {
+            </span><span style="color: #0000ff;">if</span> (!s.count(val)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            s.erase(val);
+            </span><span style="color: #0000ff;">int</span> pre = val - <span style="color: #800080;">1</span>, next = val + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (s.count(pre)) s.erase(pre--<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">while</span> (s.count(next)) s.erase(next++<span style="color: #000000;">);
+            res </span>= max(res, next - pre - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> longestConsecutive(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        Set</span>&lt;Integer&gt; s = <span style="color: #0000ff;">new</span> HashSet&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) s.add(num);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (s.remove(num)) {
+                </span><span style="color: #0000ff;">int</span> pre = num - <span style="color: #800080;">1</span>, next = num + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (s.remove(pre)) --<span style="color: #000000;">pre;
+                </span><span style="color: #0000ff;">while</span> (s.remove(next)) ++<span style="color: #000000;">next;
+                res </span>= Math.max(res, next - pre - <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以采用哈希表来做，刚开始哈希表为空，然后遍历所有数字，如果该数字不在哈希表中，那么我们分别看其左右两个数字是否在哈希表中，如果在，则返回其哈希表中映射值，若不在，则返回0，然后我们将left+right+1作为当前数字的映射，并更新res结果，然后更新d-left和d-right的映射值，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestConsecutive(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> d : nums) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">m.count(d)) {
+                </span><span style="color: #0000ff;">int</span> left = m.count(d - <span style="color: #800080;">1</span>) ? m[d - <span style="color: #800080;">1</span>] : <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> right = m.count(d + <span style="color: #800080;">1</span>) ? m[d + <span style="color: #800080;">1</span>] : <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> sum = left + right + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                m[d] </span>=<span style="color: #000000;"> sum;
+                res </span>=<span style="color: #000000;"> max(res, sum);
+                m[d </span>- left] =<span style="color: #000000;"> sum;
+                m[d </span>+ right] =<span style="color: #000000;"> sum;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> longestConsecutive(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] nums) {
+        </span><span style="color: #0000ff;">int</span> res = 0<span style="color: #000000;">;
+        Map</span>&lt;Integer, Integer&gt; m = <span style="color: #0000ff;">new</span> HashMap&lt;Integer, Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            </span><span style="color: #0000ff;">if</span> (m.containsKey(num)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> left = m.containsKey(num - 1) ? m.get(num - 1) : 0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> right = m.containsKey(num + 1) ? m.get(num + 1) : 0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> sum = left + right + 1<span style="color: #000000;">;
+            m.put(num, sum);
+            res </span>=<span style="color: #000000;"> Math.max(res, sum);
+            m.put(num </span>-<span style="color: #000000;"> left, sum);
+            m.put(num </span>+<span style="color: #000000;"> right, sum);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5252599.html" target="_blank">Binary Tree Longest Consecutive Sequence</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/6148/my-really-simple-java-o-n-solution-accepted" target="_blank">https://discuss.leetcode.com/topic/6148/my-really-simple-java-o-n-solution-accepted</a></p>
+<p><a href="https://discuss.leetcode.com/topic/16483/a-simple-c-solution-using-unordered_set-and-simple-consideration-about-this-problem" target="_blank">https://discuss.leetcode.com/topic/16483/a-simple-c-solution-using-unordered_set-and-simple-consideration-about-this-problem</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

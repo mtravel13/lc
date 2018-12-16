@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4507286.html">[LeetCode] Add and Search Word - Data structure design 添加和查找单词-数据结构设计</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a data structure that supports the following two operations:</p>
+<pre>void addWord(word)
+bool search(word)
+</pre>
+<p>search(word) can search a literal word or a regular expression string containing only letters&nbsp;<code>a-z</code>&nbsp;or&nbsp;<code>.</code>. A&nbsp;<code>.</code>&nbsp;means it can represent any one letter.</p>
+<p>For example:</p>
+<pre>addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -&gt; false
+search("bad") -&gt; true
+search(".ad") -&gt; true
+search("b..") -&gt; true
+</pre>
+<p>Note:<br />You may assume that all words are consist of lowercase letters&nbsp;<code>a-z</code>.</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/add-and-search-word-data-structure-design/">click to show hint.</a></p>
+<div class="spoilers">You should be familiar with how a Trie works. If not, please work on this problem:&nbsp;<a href="https://leetcode.com/problems/implement-trie-prefix-tree/">Implement Trie (Prefix Tree)</a>&nbsp;first.</div>
+<p>&nbsp;</p>
+<p>LeetCode出新题的速度越来越快了，有点跟不上节奏的感觉了。这道题如果做过之前的那道<a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4491665.html">&nbsp;Implement Trie (Prefix Tree) 实现字典树(前缀树)</a>的话就没有太大的难度了，还是要用到字典树的结构，唯一不同的地方就是search的函数需要重新写一下，因为这道题里面'.'可以代替任意字符，所以一旦有了'.'，就需要查找所有的子树，只要有一个返回true，整个search函数就返回true，典型的DFS的问题，其他部分跟上一道实现字典树没有太大区别，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> WordDictionary {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> TrieNode {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+        TrieNode </span>*child[<span style="color: #800080;">26</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isWord;
+        TrieNode() : isWord(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (auto &amp;a : child) a =<span style="color: #000000;"> NULL;
+        }
+    };
+    
+    WordDictionary() {
+        root </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode();
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Adds a word into the data structure.</span>
+    <span style="color: #0000ff;">void</span> addWord(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        TrieNode </span>*p =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : word) {
+            </span><span style="color: #0000ff;">int</span> i = a - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (!p-&gt;child[i]) p-&gt;child[i] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode();
+            p </span>= p-&gt;<span style="color: #000000;">child[i];
+        }
+        p</span>-&gt;isWord = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Returns if the word is in the data structure. A word could
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> contain the dot character '.' to represent any one letter.</span>
+    <span style="color: #0000ff;">bool</span> search(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        </span><span style="color: #0000ff;">return</span> searchWord(word, root, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+    
+    </span><span style="color: #0000ff;">bool</span> searchWord(<span style="color: #0000ff;">string</span> &amp;word, TrieNode *p, <span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #0000ff;">if</span> (i == word.size()) <span style="color: #0000ff;">return</span> p-&gt;<span style="color: #000000;">isWord;
+        </span><span style="color: #0000ff;">if</span> (word[i] == <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (auto &amp;a : p-&gt;<span style="color: #000000;">child) {
+                </span><span style="color: #0000ff;">if</span> (a &amp;&amp; searchWord(word, a, i + <span style="color: #800080;">1</span>)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">return</span> p-&gt;child[word[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>] &amp;&amp; searchWord(word, p-&gt;child[word[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>], i + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    TrieNode </span>*<span style="color: #000000;">root;
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Your WordDictionary object will be instantiated and called as such:
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> WordDictionary wordDictionary;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> wordDictionary.addWord("word");
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> wordDictionary.search("pattern");</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>讨论：这道题有个很好的Follow up，就是当搜索的单词中存在星号怎么搞，星号的定义和<a href="http://www.cnblogs.com/grandyang/p/4401196.html" target="_blank">Wildcard Matching</a>中一样，可以代表任意的字符串，包括空字符串，请参见评论区1楼。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4491665.html" target="_blank">Implement Trie (Prefix Tree)</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4401196.html" target="_blank">Wildcard Matching</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/36246/my-java-trie-based-solution" target="_blank">https://leetcode.com/discuss/36246/my-java-trie-based-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

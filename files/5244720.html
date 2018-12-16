@@ -1,0 +1,86 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5244720.html">[LeetCode] Meeting Rooms II 会议室之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of meeting time intervals consisting of start and end times&nbsp;<code>[[s1,e1],[s2,e2],...]</code>&nbsp;(si&nbsp;&lt; ei), find the minimum number of conference rooms required.</p>
+<p>For example,<br />Given&nbsp;<code>[[0, 30],[5, 10],[15, 20]]</code>,<br />return&nbsp;<code>2</code>.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5240774.html">Meeting Rooms</a>的拓展，那道题只让我们是否能参加所有的会，也就是看会议之间有没有时间冲突，而这道题让我们求最少需要安排几个会议室，有时间冲突的肯定需要安排在不同的会议室。这道题有好几种解法，我们先来看使用TreeMap来做的，我们遍历时间区间，对于起始时间，映射值自增1，对于结束时间，映射值自减1，然后我们定义结果变量res，和房间数rooms，我们遍历TreeMap，时间从小到大，房间数每次加上映射值，然后更新结果res，遇到起始时间，映射是正数，则房间数会增加，如果一个时间是一个会议的结束时间，也是另一个会议的开始时间，则映射值先减后加仍为0，并不用分配新的房间，而结束时间的映射值为负数更不会增加房间数，利用这种思路我们可以写出代码如下:</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMeetingRooms(vector&lt;Interval&gt;&amp;<span style="color: #000000;"> intervals) {
+        map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : intervals) {
+            </span>++<span style="color: #000000;">m[a.start];
+            </span>--<span style="color: #000000;">m[a.end];
+        }
+        </span><span style="color: #0000ff;">int</span> rooms = <span style="color: #800080;">0</span>, res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto it : m) {
+            res </span>= max(res, rooms +=<span style="color: #000000;"> it.second);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>第二种方法是用两个一维数组来做，分别保存起始时间和结束时间，然后各自排个序，我们定义结果变量res和结束时间指针endpos，然后我们开始遍历，如果当前起始时间小于结束时间指针的时间，则结果自增1，反之结束时间指针自增1，这样我们可以找出重叠的时间段，从而安排新的会议室，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMeetingRooms(vector&lt;Interval&gt;&amp;<span style="color: #000000;"> intervals) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> starts, ends;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, endpos = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : intervals) {
+            starts.push_back(a.start);
+            ends.push_back(a.end);
+        }
+        sort(starts.begin(), starts.end());
+        sort(ends.begin(), ends.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; intervals.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (starts[i] &lt; ends[endpos]) ++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">else</span> ++<span style="color: #000000;">endpos;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来一看一种使用最小堆来解题的方法，这种方法先把所有的时间区间按照起始时间排序，然后新建一个最小堆，开始遍历时间区间，如果堆不为空，且首元素小于等于当前区间的起始时间，我们去掉堆中的首元素，把当前区间的结束时间压入堆，由于最小堆是小的在前面，那么假如首元素小于等于起始时间，说明上一个会议已经结束，可以用该会议室开始下一个会议了，所以不用分配新的会议室，遍历完成后堆中元素的个数即为需要的会议室的个数，参见代码如下；</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMeetingRooms(vector&lt;Interval&gt;&amp;<span style="color: #000000;"> intervals) {
+        sort(intervals.begin(), intervals.end(), [](</span><span style="color: #0000ff;">const</span> Interval &amp;a, <span style="color: #0000ff;">const</span> Interval &amp;b){<span style="color: #0000ff;">return</span> a.start &lt;<span style="color: #000000;"> b.start;});
+        priority_queue</span>&lt;<span style="color: #0000ff;">int</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;, greater&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : intervals) {
+            </span><span style="color: #0000ff;">if</span> (!q.empty() &amp;&amp; q.top() &lt;=<span style="color: #000000;"> a.start) q.pop();
+            q.push(a.end);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5240774.html">Meeting Rooms</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/50948/c-o-n-log-n-584-ms-3-solutions" target="_blank">https://leetcode.com/discuss/50948/c-o-n-log-n-584-ms-3-solutions</a></p>
+<p><a href="https://leetcode.com/discuss/71846/super-easy-java-solution-beats-98-8%25" target="_blank">https://leetcode.com/discuss/71846/super-easy-java-solution-beats-98-8%25</a></p>
+<p><a href="https://leetcode.com/discuss/64686/concise-c-solution-with-min_heap-sort-greedy" target="_blank">https://leetcode.com/discuss/64686/concise-c-solution-with-min_heap-sort-greedy</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

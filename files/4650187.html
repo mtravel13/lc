@@ -1,0 +1,106 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4650187.html">[LeetCode] Product of Array Except Self 除本身之外的数组之积</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of <em>n</em> integers where <em>n</em> &gt; 1, <code>nums</code>, return an array <code>output</code> such that <code>output[i]</code> is equal to the product of all the elements of <code>nums</code> except <code>nums[i]</code>.</p>
+<p>Solve it <strong>without division</strong> and in O(<em>n</em>).</p>
+<p>For example, given <code>[1,2,3,4]</code>, return <code>[24,12,8,6]</code>.</p>
+<p><strong>Follow up:</strong><br />
+Could you solve it with constant space complexity? (Note: The output array <strong>does not</strong> count as extra space for the purpose of space complexity analysis.)</p>
+<p>&nbsp;</p>
+<p>这道题给定我们一个数组，让我们返回一个新数组，对于每一个位置上的数是其他位置上数的乘积，并且限定了时间复杂度O(n)，并且不让我们用除法。如果让用除法的话，那这道题就应该属于Easy，因为可以先遍历一遍数组求出所有数字之积，然后除以对应位置的上的数字。但是这道题禁止我们使用除法，那么我们只能另辟蹊径。我们想，对于某一个数字，如果我们知道其前面所有数字的乘积，同时也知道后面所有的数乘积，那么二者相乘就是我们要的结果，所以我们只要分别创建出这两个数组即可，分别从数组的两个方向遍历就可以分别创建出乘积累积数组。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; productExceptSelf(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; fwd(n, <span style="color: #800080;">1</span>), bwd(n, <span style="color: #800080;">1</span><span style="color: #000000;">), res(n);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            fwd[i </span>+ <span style="color: #800080;">1</span>] = fwd[i] *<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt; <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            bwd[i </span>- <span style="color: #800080;">1</span>] = bwd[i] *<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            res[i] </span>= fwd[i] *<span style="color: #000000;"> bwd[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span>[] productExceptSelf(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.length;
+        </span><span style="color: #0000ff;">int</span>[] res = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[n];
+        </span><span style="color: #0000ff;">int</span>[] fwd = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[n], bwd = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[n];
+        fwd[</span>0] = 1; bwd[n - 1] = 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt; n; ++<span style="color: #000000;">i) {
+            fwd[i] </span>= fwd[i - 1] * nums[i - 1<span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - 2; i &gt;= 0; --<span style="color: #000000;">i) {
+            bwd[i] </span>= bwd[i + 1] * nums[i + 1<span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; n; ++<span style="color: #000000;">i) {
+            res[i] </span>= fwd[i] *<span style="color: #000000;"> bwd[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对上面的方法进行空间上的优化，由于最终的结果都是要乘到结果res中，所以我们可以不用单独的数组来保存乘积，而是直接累积到res中，我们先从前面遍历一遍，将乘积的累积存入res中，然后从后面开始遍历，用到一个临时变量right，初始化为1，然后每次不断累积，最终得到正确结果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; productExceptSelf(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(nums.size(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            res[i] </span>= res[i - <span style="color: #800080;">1</span>] * nums[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">int</span> right = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = nums.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            res[i] </span>*=<span style="color: #000000;"> right;
+            right </span>*=<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span>[] productExceptSelf(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] nums) {
+        </span><span style="color: #0000ff;">int</span> n = nums.length, right = 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span>[] res = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[n];
+        res[</span>0] = 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt; n; ++<span style="color: #000000;">i) {
+            res[i] </span>= res[i - 1] * nums[i - 1<span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - 1; i &gt;= 0; --<span style="color: #000000;">i) {
+            res[i] </span>*=<span style="color: #000000;"> right;
+            right </span>*=<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/18864/simple-java-solution-in-o-n-without-extra-space" target="_blank">https://discuss.leetcode.com/topic/18864/simple-java-solution-in-o-n-without-extra-space</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

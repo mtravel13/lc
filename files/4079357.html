@@ -1,0 +1,100 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4079357.html">[LeetCode] Plus One 加一运算</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>Given a non-negative number represented as an array of digits, plus one to the number.</p>
+<p>The digits are stored such that the most significant digit is at the head of the list.</p>
+<p>&nbsp;</p>
+<p>将一个数字的每个位上的数字分别存到一个一维向量中，最高位在最开头，我们需要给这个数字加一，即在末尾数字加一，如果末尾数字是9，那么则会有进位问题，而如果前面位上的数字仍为9，则需要继续向前进位。具体算法如下：首先判断最后一位是否为9，若不是，直接加一返回，若是，则该位赋0，再继续查前一位，同样的方法，知道查完第一位。如果第一位原本为9，加一后会产生新的一位，那么最后要做的是，查运算完的第一位是否为0，如果是，则在最前头加一个1。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; plusOne(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">digits) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> digits.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (digits[i] == <span style="color: #800080;">9</span>) digits[i] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                digits[i] </span>+= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+            }
+        }
+        </span><span style="color: #0000ff;">if</span> (digits.front() == <span style="color: #800080;">0</span>) digits.insert(digits.begin(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span>[] plusOne(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] digits) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> digits.length;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = digits.length - 1; i &gt;= 0; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (digits[i] &lt; 9<span style="color: #000000;">) {
+                </span>++<span style="color: #000000;">digits[i];
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+            }
+            digits[i] </span>= 0<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">int</span>[] res = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[n + 1<span style="color: #000000;">];
+        res[</span>0] = 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用跟之前那道<a href="http://www.cnblogs.com/grandyang/p/4084971.html" target="_blank">Add Binary</a>类似的做法，我们将carry初始化为1，然后相当于digits加了一个0，处理方法跟之前那道题一样，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二 ：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; plusOne(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> digits) {
+        </span><span style="color: #0000ff;">if</span> (digits.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+        </span><span style="color: #0000ff;">int</span> carry = <span style="color: #800080;">1</span>, n =<span style="color: #000000;"> digits.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (carry == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+            </span><span style="color: #0000ff;">int</span> sum = digits[i] +<span style="color: #000000;"> carry;
+            digits[i] </span>= sum % <span style="color: #800080;">10</span><span style="color: #000000;">;
+            carry </span>= sum / <span style="color: #800080;">10</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (carry == <span style="color: #800080;">1</span>) digits.insert(digits.begin(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二 ：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span>[] plusOne(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] digits) {
+        </span><span style="color: #0000ff;">if</span> (digits.length == 0) <span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+        </span><span style="color: #0000ff;">int</span> carry = 1, n =<span style="color: #000000;"> digits.length;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = digits.length - 1; i &gt;= 0; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (carry == 0) <span style="color: #0000ff;">return</span><span style="color: #000000;"> digits;
+            </span><span style="color: #0000ff;">int</span> sum = digits[i] +<span style="color: #000000;"> carry;
+            digits[i] </span>= sum % 10<span style="color: #000000;">;
+            carry </span>= sum / 10<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">int</span>[] res = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[n + 1<span style="color: #000000;">];
+        res[</span>0] = 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> carry == 0 ?<span style="color: #000000;"> digits : res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4084971.html" target="_blank">Add Binary</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/24288/my-simple-java-solution" target="_blank">https://discuss.leetcode.com/topic/24288/my-simple-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

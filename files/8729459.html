@@ -1,0 +1,82 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8729459.html">[LeetCode] Toeplitz Matrix 托普利兹矩阵</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A matrix is&nbsp;<em>Toeplitz</em>&nbsp;if every diagonal from top-left to bottom-right has the same element.</p>
+<p>Now given an&nbsp;<code>M x N</code>&nbsp;matrix, return&nbsp;<code>True</code>&nbsp;if and only if the matrix is&nbsp;<em>Toeplitz</em>.<br />&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: matrix = [[1,2,3,4],[5,1,2,3],[9,5,1,2]]
+Output: True
+Explanation:
+1234
+5123
+9512
+
+In the above grid, the&nbsp;diagonals are "[9]", "[5, 5]", "[1, 1, 1]", "[2, 2, 2]", "[3, 3]", "[4]", and in each diagonal all elements are the same, so the answer is True.
+</pre>
+<p>Example 2:</p>
+<pre>Input: matrix = [[1,2],[2,2]]
+Output: False
+Explanation:
+The diagonal "[1, 2]" has different elements.
+</pre>
+<p>Note:</p>
+<ol>
+<li><code>matrix</code>&nbsp;will be a 2D array of integers.</li>
+<li><code>matrix</code>&nbsp;will have a number of rows and columns in range&nbsp;<code>[1, 20]</code>.</li>
+<li><code>matrix[i][j]</code>&nbsp;will be integers in range&nbsp;<code>[0, 99]</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们验证一个矩阵是否是托普利兹矩阵Toeplitz Matrix，所谓的这个托普利兹矩阵，就是看每条从左上到右下的对角线是否是值都相等。注意矩阵的行数列数不一定相等，要验证所有的对角线。那么其实这道题的本质是让我们斜向遍历矩阵，就是按对角线来。那么博主最先想到的方法就是按照对角线来遍历矩阵，起点是最左下的数字，对于mxn的矩阵，最左下角数字的坐标为(m-1, 0)，然后我们开始往右下角遍历，我们先记录每条对角线左上角的数字为val，然后再往右下角遍历的时候，如果同一条对角线上的数字不等于val，直接返回false。当我们遍历完一条对角线的时候，切换一条对角线的时候，是根据起点数字的坐标移动的，如果细心观察会发现，起点位置是先从第一列往上移动，然后在第一行往右移动，那么只要根据起点位置的行坐标是否为0来判断移动的方向即可，比如对于题目中的例子1:</p>
+<p><span style="color: #ff0000;">1</span> <span style="color: #0000ff;">2 3 4</span><br /><span style="color: #ff0000;">5</span>  1  2  3<br /><span style="color: #ff0000;">9</span>  5  1  2</p>
+<p>起点移动的方向是9 -&gt; 5 -&gt; 1 -&gt; 2 -&gt; 3 -&gt; 4，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isToeplitzMatrix(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), p = m - <span style="color: #800080;">1</span>, q = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (p &gt;= <span style="color: #800080;">0</span> &amp;&amp; q &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">int</span> val = matrix[p][q], i = p, j =<span style="color: #000000;"> q;
+            </span><span style="color: #0000ff;">while</span> (i + <span style="color: #800080;">1</span> &lt; m &amp;&amp; j + <span style="color: #800080;">1</span> &lt;<span style="color: #000000;"> n) {
+                </span><span style="color: #0000ff;">if</span> (matrix[++i][++j] != val) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+            (p </span>&gt; <span style="color: #800080;">0</span>) ? --p : ++<span style="color: #000000;">q;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其实并不需要像上面解法写的那么复杂，我们还可以按正常顺序来遍历数组，对于每个遍历到的数字，都跟其右下方的数字对比，如果不相同，直接返回false即可。为了防止越界，我们不遍历最后一行和最后一列，遍历完成后，返回true，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isToeplitzMatrix(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; matrix.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; matrix[i].size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (matrix[i][j] != matrix[i + <span style="color: #800080;">1</span>][j + <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5991673.html">Valid Word Square</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/toeplitz-matrix/discuss/113417/Java-solution-4-liner.">https://leetcode.com/problems/toeplitz-matrix/discuss/113417/Java-solution-4-liner.</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

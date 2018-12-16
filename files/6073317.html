@@ -1,0 +1,82 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6073317.html">[LeetCode] 4Sum II 四数之和之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given four lists A, B, C, D of integer values, compute how many tuples&nbsp;<code>(i, j, k, l)</code>&nbsp;there are such that&nbsp;<code>A[i] + B[j] + C[k] + D[l]</code>&nbsp;is zero.</p>
+<p>To make problem a bit easier, all A, B, C, D have same length of N where 0 &le; N &le; 500. All integers are in the range of -228&nbsp;to 228&nbsp;- 1 and the result is guaranteed to be at most 231&nbsp;- 1.</p>
+<p>Example:</p>
+<pre>Input:
+A = [ 1, 2]
+B = [-2,-1]
+C = [-1, 2]
+D = [ 0, 2]
+
+Output:
+2
+
+Explanation:
+The two tuples are:
+1. (0, 0, 0, 1) -&gt; A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+2. (1, 1, 0, 0) -&gt; A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0</pre>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/4515925.html" target="_blank">4Sum</a>的延伸，让我们在四个数组中各取一个数字，使其和为0。那么坠傻的方法就是遍历所有的情况，时间复杂度为O(n<sup>4</sup>)。但是我们想想既然<a href="http://www.cnblogs.com/grandyang/p/4130379.html" target="_blank">Two Sum</a>那道都能将时间复杂度缩小一倍，那么这道题我们使用哈希表是否也能将时间复杂度降到O(n<sup>2</sup>)呢？答案是肯定的，我们如果把A和B的两两之和都求出来，在哈希表中建立两数之和跟其出现次数之间的映射，那么我们再遍历C和D中任意两个数之和，我们只要看哈希表存不存在这两数之和的相反数就行了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> fourSumCount(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; A, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; B, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; C, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> D) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; A.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; B.size(); ++<span style="color: #000000;">j) {
+                </span>++m[A[i] +<span style="color: #000000;"> B[j]];
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; C.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; D.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> target = -<span style="color: #800080;">1</span> * (C[i] +<span style="color: #000000;"> D[j]);
+                res </span>+=<span style="color: #000000;"> m[target];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这种方法用了两个哈希表分别记录AB和CB的两两之和出现次数，然后遍历其中一个哈希表，并在另一个哈希表中找和的相反数出现的次数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> fourSumCount(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; A, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; B, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; C, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> D) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> A.size();
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m1, m2;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span>++m1[A[i] +<span style="color: #000000;"> B[j]];
+                </span>++m2[C[i] +<span style="color: #000000;"> D[j]];
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (auto a : m1) res += a.second * m2[-<span style="color: #000000;">a.first];
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4515925.html" target="_blank">4Sum</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/67593/clean-java-solution-o-n-2" target="_blank">https://discuss.leetcode.com/topic/67593/clean-java-solution-o-n-2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/67729/concise-8-line-c-solution-with-hashmap-simple-and-clean/2" target="_blank">https://discuss.leetcode.com/topic/67729/concise-8-line-c-solution-with-hashmap-simple-and-clean/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

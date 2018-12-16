@@ -1,0 +1,71 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8005054.html">[LeetCode] My Calendar III 我的日历之三</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Implement a&nbsp;<code>MyCalendarThree</code>&nbsp;class to store your events. A new event can&nbsp;always&nbsp;be added.</p>
+<p>Your class will have one method,&nbsp;<code>book(int start, int end)</code>. Formally, this represents a booking on the half open interval&nbsp;<code>[start, end)</code>, the range of real numbers&nbsp;<code>x</code>&nbsp;such that&nbsp;<code>start &lt;= x &lt; end</code>.</p>
+<p>A&nbsp;<em>K-booking</em>&nbsp;happens when&nbsp;K&nbsp;events have some non-empty intersection (ie., there is some time that is common to all K events.)</p>
+<p>For each call to the method&nbsp;<code>MyCalendar.book</code>, return an integer&nbsp;<code>K</code>&nbsp;representing the largest integer such that there exists a&nbsp;<code>K</code>-booking in the calendar.</p>
+Your class will be called like this:&nbsp;<code>MyCalendarThree cal = new MyCalendarThree();</code>&nbsp;<code>MyCalendarThree.book(start, end)</code>
+<p>Example 1:</p>
+<pre>MyCalendarThree();
+MyCalendarThree.book(10, 20); // returns 1
+MyCalendarThree.book(50, 60); // returns 1
+MyCalendarThree.book(10, 40); // returns 2
+MyCalendarThree.book(5, 15); // returns 3
+MyCalendarThree.book(5, 10); // returns 3
+MyCalendarThree.book(25, 55); // returns 3
+Explanation: 
+The first two events can be booked and are disjoint, so the maximum K-booking is a 1-booking.
+The third event [10, 40) intersects the first event, and the maximum K-booking is a 2-booking.
+The remaining events cause the maximum K-booking to be only a 3-booking.
+Note that the last event locally causes a 2-booking, but the answer is still 3 because
+eg. [10, 20), [10, 40), and [5, 15) are still triple booked.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The number of calls to&nbsp;<code>MyCalendarThree.book</code>&nbsp;per test case will be at most&nbsp;<code>400</code>.</li>
+<li>In calls to&nbsp;<code>MyCalendarThree.book(start, end)</code>,&nbsp;<code>start</code>&nbsp;and&nbsp;<code>end</code>&nbsp;are integers in the range&nbsp;<code>[0, 10^9]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题是之前那两道题<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7968035.html">My Calendar II</a>，<a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7920253.html">My Calendar I</a>的拓展，论坛上有人说这题不应该算是Hard类的，但实际上如果没有之前那两道题做铺垫，直接上这道其实还是还蛮有难度的。这道题博主在做完之前那道，再做这道一下子就做出来了，因为用的就是之前那道<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7968035.html">My Calendar II</a>的解法二，具体的讲解可以参见那道题，反正博主写完那道题再来做这道题就是秒解啊，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCalendarThree {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    MyCalendarThree() {}
+    
+    </span><span style="color: #0000ff;">int</span> book(<span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span><span style="color: #000000;"> end) {
+        </span>++<span style="color: #000000;">freq[start];
+        </span>--<span style="color: #000000;">freq[end];
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span>, mx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto f : freq) {
+            cnt </span>+=<span style="color: #000000;"> f.second;
+            mx </span>=<span style="color: #000000;"> max(mx, cnt);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mx;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> freq;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7968035.html">My Calendar II</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7920253.html">My Calendar I</a></p>
+</div>
+<div id="interviewed-div">&nbsp;</div>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/111978/java-c-clean-code">https://discuss.leetcode.com/topic/111978/java-c-clean-code</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,88 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6108158.html">[LeetCode] Optimal Account Balancing 最优账户平衡</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A group of friends went on holiday and sometimes lent each other money. For example, Alice paid for Bill's lunch for $10. Then later Chris gave Alice $5 for a taxi ride. We can model each transaction as a tuple (x, y, z) which means person x gave person y $z. Assuming Alice, Bill, and Chris are person 0, 1, and 2 respectively (0, 1, 2 are the person's ID), the transactions can be represented as&nbsp;<code>[[0, 1, 10], [2, 0, 5]]</code>.</p>
+<p>Given a list of transactions between a group of people, return the minimum number of transactions required to settle the debt.</p>
+<p>Note:</p>
+<ol>
+<li>A transaction will be given as a tuple (x, y, z). Note that&nbsp;<code>x &ne; y</code>&nbsp;and&nbsp;<code>z &gt; 0</code>.</li>
+<li>Person's IDs may not be linear, e.g. we could have the persons 0, 1, 2 or we could also have the persons 0, 2, 6.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input:
+[[0,1,10], [2,0,5]]
+
+Output:
+2
+
+Explanation:
+Person #0 gave person #1 $10.
+Person #2 gave person #0 $5.
+
+Two transactions are needed. One way to settle the debt is person #1 pays person #0 and #2 $5 each.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+[[0,1,10], [1,0,1], [1,2,5], [2,0,5]]
+
+Output:
+1
+
+Explanation:
+Person #0 gave person #1 $10.
+Person #1 gave person #0 $1.
+Person #1 gave person #2 $5.
+Person #2 gave person #0 $5.
+
+Therefore, person #1 only need to give person #0 $4, and all debt is settled.</pre>
+<p>&nbsp;</p>
+<p>这道题给了一堆某人欠某人多少钱这样的账单，问我们经过优化后最少还剩几个。其实就相当于一堆人出去玩，某些人可能帮另一些人垫付过花费，最后结算总花费的时候可能你欠着别人的钱，其他人可能也欠你的欠。我们需要找出简单的方法把所有欠账都还清就行了。这道题的思路跟之前那道<a href="http://www.cnblogs.com/grandyang/p/5880133.html">Evaluate Division</a>有些像，都需要对一组数据颠倒顺序处理。我们使用一个哈希表来建立每个人和其账户的映射，其中账户若为正数，说明其他人欠你钱；如果账户为负数，说明你欠别人钱。我们对于每份账单，前面的人就在哈希表中减去钱数，后面的人在哈希表中加上钱数。这样我们每个人就都有一个账户了，然后我们接下来要做的就是合并账户，看最少需要多少次汇款。我们先统计出账户值不为0的人数，因为如果为0了，表明你既不欠别人钱，别人也不欠你钱，如果不为0，我们把钱数放入一个数组accnt中，然后调用递归函数。在递归函数中，我们初始化结果res为整型最大值，然后我们跳过为0的账户，然后我们开始遍历之后的账户，如果当前账户和之前账户的钱数正负不同的话，我们将前一个账户的钱数加到当前账户上，这很好理解，比如前一个账户钱数是-5，表示张三欠了别人五块钱，当前账户钱数是5，表示某人欠了李四五块钱，那么张三给李四五块，这两人的账户就都清零了。然后我们调用递归函数，此时从当前改变过的账户开始找，num表示当前的转账数，需要加1，然后我们用这个递归函数返回的结果来更新res，后面别忘了复原当前账户的值。遍历结束后，我们看res的值如果还是整型的最大值，说明没有改变过，我们返回num，否则返回res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minTransfers(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> transactions) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto t : transactions) {
+            m[t[</span><span style="color: #800080;">0</span>]] -= t[<span style="color: #800080;">2</span><span style="color: #000000;">];
+            m[t[</span><span style="color: #800080;">1</span>]] += t[<span style="color: #800080;">2</span><span style="color: #000000;">];
+        }
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> accnt(m.size());
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            </span><span style="color: #0000ff;">if</span> (a.second != <span style="color: #800080;">0</span>) accnt[cnt++] =<span style="color: #000000;"> a.second;
+        }
+        </span><span style="color: #0000ff;">return</span> helper(accnt, <span style="color: #800080;">0</span>, cnt, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; accnt, <span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">int</span> res =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">while</span> (start &lt; n &amp;&amp; accnt[start] == <span style="color: #800080;">0</span>) ++<span style="color: #000000;">start;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start + <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> ((accnt[i] &lt; <span style="color: #800080;">0</span> &amp;&amp; accnt[start] &gt; <span style="color: #800080;">0</span>) || (accnt[i] &gt; <span style="color: #800080;">0</span> &amp;&amp; accnt[start] &lt; <span style="color: #800080;">0</span><span style="color: #000000;">)) {
+                accnt[i] </span>+=<span style="color: #000000;"> accnt[start];
+                res </span>= min(res, helper(accnt, start + <span style="color: #800080;">1</span>, n, num + <span style="color: #800080;">1</span><span style="color: #000000;">));
+                accnt[i] </span>-=<span style="color: #000000;"> accnt[start];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> res == INT_MAX ?<span style="color: #000000;"> num : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5880133.html">Evaluate Division</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/68755/share-my-o-n-npc-solution-tle-for-large-case/6" target="_blank">https://discuss.leetcode.com/topic/68755/share-my-o-n-npc-solution-tle-for-large-case/6</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

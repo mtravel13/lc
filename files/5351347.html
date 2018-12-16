@@ -1,0 +1,64 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5351347.html">[LeetCode] Longest Substring with At Most K Distinct Characters 最多有K个不同字符的最长子串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string, find the length of the longest substring T that contains at most <em>k</em> distinct characters.</p>
+<p>For example, Given s = <code>&ldquo;eceba&rdquo;</code> and k = 2,</p>
+<p>T is "ece" which its length is 3.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/5185561.html" target="_blank">Longest Substring with At Most Two Distinct Characters</a>的拓展，而且那道题中的解法一和解法二直接将2换成k就行了，具体讲解请参考之前那篇博客：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLongestSubstringKDistinct(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, left = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span>++<span style="color: #000000;">m[s[i]];
+            </span><span style="color: #0000ff;">while</span> (m.size() &gt;<span style="color: #000000;"> k) {
+                </span><span style="color: #0000ff;">if</span> (--m[s[left]] == <span style="color: #800080;">0</span><span style="color: #000000;">) m.erase(s[left]);
+                </span>++<span style="color: #000000;">left;
+            }
+            res </span>= max(res, i - left + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>具体讲解请参考之前那篇博客<a href="http://www.cnblogs.com/grandyang/p/5185561.html" target="_blank">Longest Substring with At Most Two Distinct Characters</a>，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLongestSubstringKDistinct(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, left = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            m[s[i]] </span>=<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">while</span> (m.size() &gt;<span style="color: #000000;"> k) {
+                </span><span style="color: #0000ff;">if</span> (m[s[left]] ==<span style="color: #000000;"> left) m.erase(s[left]);
+                </span>++<span style="color: #000000;">left;
+            }
+            res </span>= max(res, i - left + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5185561.html" target="_blank">Longest Substring with At Most Two Distinct Characters</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

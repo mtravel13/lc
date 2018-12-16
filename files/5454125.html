@@ -1,0 +1,86 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5454125.html">[LeetCode] Top K Frequent Elements 前K个高频元素</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-empty array of integers, return the&nbsp;<em>k</em>&nbsp;most frequent elements.</p>
+<p>Example 1:</p>
+<pre>Input: nums = <span id="example-input-1-1">[1,1,1,2,2,3], k = <span id="example-input-1-2">2
+Output: <span id="example-output-1">[1,2]
+</span></span></span></pre>
+<div>
+<p>Example 2:</p>
+<pre>Input: nums = <span id="example-input-2-1">[1], k = <span id="example-input-2-2">1
+Output: <span id="example-output-2">[1]</span></span></span></pre>
+</div>
+<p>Note:</p>
+<ul>
+<li>You may assume&nbsp;<em>k</em>&nbsp;is always valid, 1 &le;&nbsp;<em>k</em>&nbsp;&le; number of unique elements.</li>
+<li>Your algorithm's time complexity&nbsp;must be&nbsp;better than O(<em>n</em>&nbsp;log&nbsp;<em>n</em>), where&nbsp;<em>n</em>&nbsp;is the array's size.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，让我们统计前k个高频的数字，那么对于这类的统计数字的问题，首先应该考虑用HashMap来做，建立数字和其出现次数的映射，然后再按照出现次数进行排序。我们可以用堆排序来做，使用一个最大堆来按照映射次数从大到小排列，在C++中使用priority_queue来实现，默认是最大堆，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; topKFrequent(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        priority_queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (auto a : nums) ++<span style="color: #000000;">m[a];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto it : m) q.push({it.second, it.first});
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; k; ++<span style="color: #000000;">i) {
+            res.push_back(q.top().second); q.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>当然，既然可以使用最大堆，还有一种可以自动排序的数据结构TreeMap，也是可以的，这里就不写了，因为跟上面的写法基本没啥区别，就是换了一个数据结构。</p>
+<p>我们还可以使用桶排序，在建立好数字和其出现次数的映射后，我们按照其出现次数将数字放到对应的位置中去，这样我们从桶的后面向前面遍历，最先得到的就是出现次数最多的数字，我们找到k个后返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; topKFrequent(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; bucket(nums.size() + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (auto a : nums) ++<span style="color: #000000;">m[a];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto it : m) {
+            bucket[it.second].push_back(it.first);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = nums.size(); i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; bucket[i].size(); ++<span style="color: #000000;">j) {
+                res.push_back(bucket[i][j]);
+                </span><span style="color: #0000ff;">if</span> (res.size() == k) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4539757.html" target="_blank">Kth Largest Element in an Array</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5386475.html" target="_blank">Word Frequency</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6231504.html">Sort Characters By Frequency</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7525821.html">Split Array into Consecutive Subsequences</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7689927.html">Top K Frequent Words</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank">https://leetcode.com/problems/top-k-frequent-elements/</a></p>
+<p><a href="https://leetcode.com/problems/top-k-frequent-elements/discuss/81602/Java-O(n)-Solution-Bucket-Sort" target="_blank">https://leetcode.com/problems/top-k-frequent-elements/discuss/81602/Java-O(n)-Solution-Bucket-Sort</a></p>
+<p><a href="https://leetcode.com/problems/top-k-frequent-elements/discuss/81635/3-Java-Solution-using-Array-MaxHeap-TreeMap" target="_blank">https://leetcode.com/problems/top-k-frequent-elements/discuss/81635/3-Java-Solution-using-Array-MaxHeap-TreeMap</a></p>
+<p>&nbsp;&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

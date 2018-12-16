@@ -1,0 +1,74 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4504793.html">[LeetCode] Course Schedule II 课程清单之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There are a total of <em>n</em> courses you have to take, labeled from <code>0</code> to <code>n - 1</code>.</p>
+<p>Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: <code>[0,1]</code></p>
+<p>Given the total number of courses and a list of prerequisite <strong>pairs</strong>, return the ordering of courses you should take to finish all courses.</p>
+<p>There may be multiple correct orders, you just need to return one of them. If it is impossible to finish all courses, return an empty array.</p>
+<p>For example:</p>
+<pre>2, [[1,0]]</pre>
+<p>There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is <code>[0,1]</code></p>
+<pre>4, [[1,0],[2,0],[3,1],[3,2]]</pre>
+<p>There are a total of 4 courses to take. To take course 3 you should have finished both courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0. So one correct course order is <code>[0,1,2,3]</code>. Another correct ordering is<code>[0,2,1,3]</code>.</p>
+<p><strong>Note:</strong><br />
+The input prerequisites is a graph represented by <strong>a list of edges</strong>, not adjacency matrices. Read more about <a href="https://www.khanacademy.org/computing/computer-science/algorithms/graph-representation/a/representing-graphs" target="_blank">how a graph is represented</a>.
+</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/course-schedule-ii/">click to show more hints.</a></p>
+<div class="spoilers" style="display: block;"><strong>Hints:</strong><ol>
+<li>This problem is equivalent to finding the topological order in a 
+directed graph. If a cycle exists, no topological ordering exists and 
+therefore it will be impossible to take all courses.</li>
+<li><a href="https://class.coursera.org/algo-003/lecture/52" target="_blank">Topological Sort via DFS</a> - A great video tutorial (21 minutes) on Coursera explaining the basic concepts of Topological Sort.</li>
+<li>Topological sort could also be done via <a href="http://en.wikipedia.org/wiki/Topological_sorting#Algorithms" target="_blank">BFS</a>.</li>
+
+
+
+
+</ol>
+</div>
+<p>&nbsp;</p>
+<p>这题是之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4484571.html"> Course Schedule 课程清单</a>的扩展，那道题只让我们判断是否能完成所有课程，即检测有向图中是否有环，而这道题我们得找出要上的课程的顺序，即有向图的拓扑排序，这样一来，难度就增加了，但是由于我们有之前那道的基础，而此题正是基于之前解法的基础上稍加修改，我们从queue中每取出一个数组就将其存在结果中，最终若有向图中有环，则结果中元素的个数不等于总课程数，那我们将结果清空即可。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findOrder(<span style="color: #0000ff;">int</span> numCourses, vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> prerequisites) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; graph(numCourses, vector&lt;<span style="color: #0000ff;">int</span>&gt;(<span style="color: #800080;">0</span><span style="color: #000000;">));
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">in</span>(numCourses, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : prerequisites) {
+            graph[a.second].push_back(a.first);
+            </span>++<span style="color: #0000ff;">in</span><span style="color: #000000;">[a.first];
+        }
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; numCourses; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">in</span>[i] == <span style="color: #800080;">0</span><span style="color: #000000;">) q.push(i);
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> q.front();
+            res.push_back(t);
+            q.pop();
+            </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : graph[t]) {
+                </span>--<span style="color: #0000ff;">in</span><span style="color: #000000;">[a];
+                </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">in</span>[a] == <span style="color: #800080;">0</span><span style="color: #000000;">) q.push(a);
+            }
+        }
+        </span><span style="color: #0000ff;">if</span> (res.size() !=<span style="color: #000000;"> numCourses) res.clear();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5000291.html">Minimum Height Trees</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4484571.html" target="_blank">Course Schedule</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

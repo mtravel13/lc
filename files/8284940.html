@@ -1,0 +1,85 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8284940.html">[LeetCode] Find Smallest Letter Greater Than Target 找比目标值大的最小字母</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of sorted characters&nbsp;<code>letters</code>&nbsp;containing only lowercase letters, and given a target letter&nbsp;<code>target</code>, find the smallest element in the list that is larger than the given target.</p>
+<p>Letters also wrap around. For example, if the target is&nbsp;<code>target = 'z'</code>&nbsp;and&nbsp;<code>letters = ['a', 'b']</code>, the answer is&nbsp;<code>'a'</code>.</p>
+<p>Examples:</p>
+<pre>Input:
+letters = ["c", "f", "j"]
+target = "a"
+Output: "c"
+
+Input:
+letters = ["c", "f", "j"]
+target = "c"
+Output: "f"
+
+Input:
+letters = ["c", "f", "j"]
+target = "d"
+Output: "f"
+
+Input:
+letters = ["c", "f", "j"]
+target = "g"
+Output: "j"
+
+Input:
+letters = ["c", "f", "j"]
+target = "j"
+Output: "c"
+
+Input:
+letters = ["c", "f", "j"]
+target = "k"
+Output: "c"
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li><code>letters</code>&nbsp;has a length in range&nbsp;<code>[2, 10000]</code>.</li>
+<li><code>letters</code>&nbsp;consists of lowercase letters, and contains at least 2 unique letters.</li>
+<li><code>target</code>&nbsp;is a lowercase letter.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一堆有序的字母，然后又给了我们一个target字母，让我们求字母数组中第一个大于target的字母，数组是循环的，如果没有，那就返回第一个字母。像这种在有序数组中找数字，二分法简直不要太适合啊。题目中说了数组至少有两个元素，那么我们首先用数组的尾元素来跟target比较，如果target大于等于尾元素的话，直接返回数组的首元素即可。否则就利用二分法来做，这里是查找第一个大于目标值的数组，博主之前做过二分法的总结，参见这个帖子<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_1" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/6854825.html">LeetCode Binary Search Summary 二分搜索法小结</a>，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">char</span> nextGreatestLetter(vector&lt;<span style="color: #0000ff;">char</span>&gt;&amp; letters, <span style="color: #0000ff;">char</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">if</span> (target &gt;= letters.back()) <span style="color: #0000ff;">return</span> letters[<span style="color: #800080;">0</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">int</span> n = letters.size(), left = <span style="color: #800080;">0</span>, right =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (letters[mid] &lt;= target) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> letters[right];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用STL自带的upper_bound函数来做，这个就是找第一个大于目标值的数字，如果返回end()，说明没找到，返回首元素即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">char</span> nextGreatestLetter(vector&lt;<span style="color: #0000ff;">char</span>&gt;&amp; letters, <span style="color: #0000ff;">char</span><span style="color: #000000;"> target) {
+        auto it </span>=<span style="color: #000000;"> upper_bound(letters.begin(), letters.end(), target);
+        </span><span style="color: #0000ff;">return</span> it == letters.end() ? *letters.begin() : *<span style="color: #000000;">it;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

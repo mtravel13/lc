@@ -1,0 +1,84 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7639798.html">[LeetCode] Employee Importance 员工重要度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given a data structure of employee information, which includes the employee's <strong>unique id</strong>, his <strong>importance value</strong> and his <strong>direct</strong> subordinates' id.</p>
+<p>For example, employee 1 is the leader of employee 2, and employee 2 is the leader of employee 3. They have importance value 15, 10 and 5, respectively. Then employee 1 has a data structure like [1, 15, [2]], and employee 2 has [2, 10, [3]], and employee 3 has [3, 5, []]. Note that although employee 3 is also a subordinate of employee 1, the relationship is <strong>not direct</strong>.</p>
+<p>Now given the employee information of a company, and an employee id, you need to return the total importance value of this employee and all his subordinates.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1
+<strong>Output:</strong> 11
+<strong>Explanation:</strong>
+Employee 1 has importance value 5, and he has two direct subordinates: employee 2 and employee 3. They both have importance value 3. So the total importance value of employee 1 is 5 + 3 + 3 = 11.
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol><ol>
+<li>One employee has at most one <strong>direct</strong> leader and may have several subordinates.</li>
+<li>The maximum number of employees won't exceed 2000.</li>
+
+
+</ol></ol>
+<p>&nbsp;</p>
+<p>这道题定义了一种员工类，有id，重要度，和direct report的员工，让我们求某个员工的总重要度。我们要明白的是就算某个员工不直接向你汇报工作，而是向你手下人汇报，这个人的重要度也会算进你的重要度中。这其实就是之前那道<a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a>的变化形式，我们可以用DFS来做。首先我们想，为了快速的通过id来定位到员工类，需要建立一个id和员工类的映射，然后我们根据给定的员工id来算其重要度。计算方法当然是其本身的重要度加上其所有手下人的重要度，对于手下人，还要累加其手下人的重要度，为了不重复计算某个员工的重要度，我们建立一个集合，将遍历过的员工id放到集合中，这样一旦我们遍历到集合中有的员工，直接返回0即可；否则就将该员工id加入集合中，然后建立一个结果res变量，加上当前员工的重要度，然后遍历其所有手下，对其每个手下人调用递归函数加到res上，最后返回res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getImportance(vector&lt;Employee*&gt; employees, <span style="color: #0000ff;">int</span><span style="color: #000000;"> id) {
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, Employee*&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (auto e : employees) m[e-&gt;id] =<span style="color: #000000;"> e;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> helper(id, m, s);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">int</span> id, unordered_map&lt;<span style="color: #0000ff;">int</span>, Employee*&gt;&amp; m, unordered_set&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">if</span> (s.count(id)) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        s.insert(id);
+        </span><span style="color: #0000ff;">int</span> res = m[id]-&gt;<span style="color: #000000;">importance;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> num : m[id]-&gt;<span style="color: #000000;">subordinates) {
+            res </span>+=<span style="color: #000000;"> helper(num, m, s);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用BFS来做，使用一个queue来辅助运算，开始将给定员工id放入，然后当queue不为空进行循环，每次取出队首员工，如果已经访问过了，直接跳过，否则加入集合中，然后累加上当前员工的复杂度到结果res，然后将其所有手下人加入队列等待遍历，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getImportance(vector&lt;Employee*&gt; employees, <span style="color: #0000ff;">int</span><span style="color: #000000;"> id) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q{{id}};
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, Employee*&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (auto e : employees) m[e-&gt;id] =<span style="color: #000000;"> e;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">if</span> (s.count(t)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            s.insert(t);
+            res </span>+= m[t]-&gt;<span style="color: #000000;">importance;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> num : m[t]-&gt;<span style="color: #000000;">subordinates) {
+                q.push(num);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

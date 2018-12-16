@@ -1,0 +1,69 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4997417.html">[LeetCode] Best Time to Buy and Sell Stock with Cooldown 买股票的最佳时间含冷冻期</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Say you have an array for which the <em>i</em><sup>th</sup> element is the price of a given stock on day <em>i</em>.</p>
+<p>Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times) with the following restrictions:</p>
+<ul>
+<li>You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).</li>
+<li>After you sell your stock, you cannot buy stock on next day. (ie, cooldown 1 day)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre>prices = [1, 2, 3, 0, 2]
+maxProfit = 3
+transactions = [buy, sell, cooldown, buy, sell]
+</pre>
+<p>&nbsp;</p>
+<p>这道题又是关于买卖股票的问题，之前有四道类似的题目<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4280131.html">Best Time to Buy and Sell Stock 买卖股票的最佳时间</a>，<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_9" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4280803.html">Best Time to Buy and Sell Stock II 买股票的最佳时间之二</a>，<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_8" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4281975.html">&nbsp;Best Time to Buy and Sell Stock III 买股票的最佳时间之三</a>和<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4295761.html">Best Time to Buy and Sell Stock IV 买卖股票的最佳时间之四</a>。而这道题与上面这些不同之处在于加入了一个冷冻期Cooldown之说，就是如果某天卖了股票，那么第二天不能买股票，有一天的冷冻期。这道题我不太会，于是看到了网上大神的解法，点<a href="https://leetcode.com/discuss/71354/share-my-thinking-process" target="_blank">这里</a>。根据他的解法，此题需要维护三个一维数组buy, sell，和rest。其中：</p>
+<p>buy[i]表示在第i天之前最后一个操作是买，此时的最大收益。</p>
+<p>sell[i]表示在第i天之前最后一个操作是卖，此时的最大收益。</p>
+<p>rest[i]表示在第i天之前最后一个操作是冷冻期，此时的最大收益。</p>
+<p>我们写出递推式为：</p>
+<div class="cnblogs_code">
+<pre>buy[i]  = max(rest[i-<span style="color: #800080;">1</span>] - price, buy[i-<span style="color: #800080;">1</span><span style="color: #000000;">]) 
+sell[i] </span>= max(buy[i-<span style="color: #800080;">1</span>] + price, sell[i-<span style="color: #800080;">1</span><span style="color: #000000;">])
+rest[i] </span>= max(sell[i-<span style="color: #800080;">1</span>], buy[i-<span style="color: #800080;">1</span>], rest[i-<span style="color: #800080;">1</span>])</pre>
+</div>
+<p><br />上述递推式很好的表示了在买之前有冷冻期，买之前要卖掉之前的股票。一个小技巧是如何保证[buy, rest, buy]的情况不会出现，这是由于buy[i] &lt;= rest[i]， 即rest[i] = max(sell[i-1], rest[i-1])，这保证了[buy, rest, buy]不会出现。</p>
+<p>另外，由于冷冻期的存在，我们可以得出rest[i] = sell[i-1]，这样，我们可以将上面三个递推式精简到两个：</p>
+<div class="cnblogs_code">
+<pre>buy[i]  = max(sell[i-<span style="color: #800080;">2</span>] - price, buy[i-<span style="color: #800080;">1</span><span style="color: #000000;">]) 
+sell[i] </span>= max(buy[i-<span style="color: #800080;">1</span>] + price, sell[i-<span style="color: #800080;">1</span>])</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们还可以做进一步优化，由于i只依赖于i-1和i-2，所以我们可以在O(1)的空间复杂度完成算法，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxProfit(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> prices) {
+        </span><span style="color: #0000ff;">int</span> buy = INT_MIN, pre_buy = <span style="color: #800080;">0</span>, sell = <span style="color: #800080;">0</span>, pre_sell = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> price : prices) {
+            pre_buy </span>=<span style="color: #000000;"> buy;
+            buy </span>= max(pre_sell -<span style="color: #000000;"> price, pre_buy);
+            pre_sell </span>=<span style="color: #000000;"> sell;
+            sell </span>= max(pre_buy +<span style="color: #000000;"> price, pre_sell);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sell;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4295761.html" target="_blank">Best Time to Buy and Sell Stock IV</a></p>
+<p><a style="line-height: 1.5;" href="http://www.cnblogs.com/grandyang/p/4281975.html" target="_blank">Best Time to Buy and Sell Stock III</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4280803.html" target="_blank">Best Time to Buy and Sell Stock II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4280131.html" target="_blank">Best Time to Buy and Sell Stock</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/71354/share-my-thinking-process" target="_blank">https://leetcode.com/discuss/71354/share-my-thinking-process</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

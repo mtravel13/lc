@@ -1,0 +1,132 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6686983.html">[LeetCode] Friend Circles 朋友圈</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There are&nbsp;N&nbsp;students in a class. Some of them are friends, while some are not. Their friendship is transitive in nature. For example, if A is a&nbsp;direct&nbsp;friend of B, and B is a&nbsp;direct&nbsp;friend of C, then A is an&nbsp;indirect&nbsp;friend of C. And we defined a friend circle is a group of students who are direct or indirect friends.</p>
+<p>Given a&nbsp;N*N&nbsp;matrix&nbsp;M&nbsp;representing the friend relationship between students in the class. If M[i][j] = 1, then the ithand jth&nbsp;students are&nbsp;direct&nbsp;friends with each other, otherwise not. And you have to output the total number of friend circles among all the students.</p>
+<p>Example 1:</p>
+<pre>Input: 
+[[1,1,0],
+ [1,1,0],
+ [0,0,1]]
+Output: 2
+Explanation:The 0th and 1st students are direct friends, so they are in a friend circle. <br />The 2nd student himself is in a friend circle. So return 2.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: 
+[[1,1,0],
+ [1,1,1],
+ [0,1,1]]
+Output: 1
+Explanation:The 0th and 1st students are direct friends, the 1st and 2nd students are direct friends, <br />so the 0th and 2nd students are indirect friends. All of them are in the same friend circle, so return 1.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>N is in range [1,200].</li>
+<li>M[i][i] = 1 for all students.</li>
+<li>If M[i][j] = 1, then M[j][i] = 1.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求朋友圈的个数，题目中对于朋友圈的定义是可以传递的，比如A和B是好友，B和C是好友，那么即使A和C不是好友，那么他们三人也属于一个朋友圈。那么比较直接的解法就是DFS搜索，对于某个人，遍历其好友，然后再遍历其好友的好友，那么我们就能把属于同一个朋友圈的人都遍历一遍，我们同时标记出已经遍历过的人，然后累积朋友圈的个数，再去对于没有遍历到的人在找其朋友圈的人，这样就能求出个数。其实这道题的本质是之前那道题<a href="http://www.cnblogs.com/grandyang/p/5166356.html" target="_blank">Number of Connected Components in an Undirected Graph</a>，其实许多题目的本质都是一样的，就是看我们有没有一双慧眼能把它们识别出来：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findCircleNum(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> M) {
+        </span><span style="color: #0000ff;">int</span> n = M.size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; visited(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (visited[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            helper(M, i, visited);
+            </span>++<span style="color: #000000;">res;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; M, <span style="color: #0000ff;">int</span> k, vector&lt;<span style="color: #0000ff;">bool</span>&gt;&amp;<span style="color: #000000;"> visited) {
+        visited[k] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; M.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!M[k][i] || visited[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            helper(M, i, visited);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用BFS来遍历朋友圈中的所有人，解题思路和上面大同小异，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findCircleNum(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> M) {
+        </span><span style="color: #0000ff;">int</span> n = M.size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; visited(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (visited[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            q.push(i);
+            </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+                </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> q.front(); q.pop();
+                visited[t] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">if</span> (!M[t][j] || visited[j]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                    q.push(j);
+                }
+            }
+            </span>++<span style="color: #000000;">res;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法叫联合查找Union Find，也是一种很经典的解题思路，在之前的两道道题<a href="http://www.cnblogs.com/grandyang/p/5257919.html" target="_blank">Graph Valid Tree</a>和<a href="http://www.cnblogs.com/grandyang/p/5166356.html" target="_blank">Number of Connected Components in an Undirected Graph</a>中也有过应用，核心思想是初始时给每一个对象都赋上不同的标签，然后对于属于同一类的对象，在root中查找其标签，如果不同，那么将其中一个对象的标签赋值给另一个对象，注意root数组中的数字跟数字的坐标是有很大关系的，root存的是属于同一组的另一个对象的坐标，这样通过getRoot函数可以使同一个组的对象返回相同的值，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findCircleNum(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> M) {
+        </span><span style="color: #0000ff;">int</span> n = M.size(), res =<span style="color: #000000;"> n;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> root(n);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++i) root[i] =<span style="color: #000000;"> i;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (M[i][j] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">int</span> p1 =<span style="color: #000000;"> getRoot(root, i);
+                    </span><span style="color: #0000ff;">int</span> p2 =<span style="color: #000000;"> getRoot(root, j);
+                    </span><span style="color: #0000ff;">if</span> (p1 !=<span style="color: #000000;"> p2) {
+                        </span>--<span style="color: #000000;">res;
+                        root[p2] </span>=<span style="color: #000000;"> p1;
+                    }
+                }
+            }   
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> getRoot(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #0000ff;">while</span> (i !=<span style="color: #000000;"> root[i]) {
+            root[i] </span>=<span style="color: #000000;"> root[root[i]];
+            i </span>=<span style="color: #000000;"> root[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/85204/c-bfs" target="_blank">https://discuss.leetcode.com/topic/85204/c-bfs</a></p>
+<p><a href="https://discuss.leetcode.com/topic/85050/clean-java-union-find" target="_blank">https://discuss.leetcode.com/topic/85050/clean-java-union-find</a></p>
+<p><a href="https://discuss.leetcode.com/topic/85091/c-concise-dfs-solution" target="_blank">https://discuss.leetcode.com/topic/85091/c-concise-dfs-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

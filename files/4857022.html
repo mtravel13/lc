@@ -1,0 +1,89 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4857022.html">[LeetCode] Word Pattern 词语模式</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a <code>pattern</code> and a string <code>str</code>, find if <code>str</code> follows the same pattern.</p>
+<p> <strong>Examples:</strong><br />
+</p>
+<ol>
+<li>pattern = <code>"abba"</code>, str = <code>"dog cat cat dog"</code> should return true.</li>
+<li>pattern = <code>"abba"</code>, str = <code>"dog cat cat fish"</code> should return false.</li>
+<li>pattern = <code>"aaaa"</code>, str = <code>"dog cat cat dog"</code> should return false.</li>
+<li>pattern = <code>"abba"</code>, str = <code>"dog dog dog dog"</code> should return false.</li>
+
+
+
+</ol>
+<p>
+<strong>Notes:</strong><br />
+</p>
+<ol>
+<li>Both <code>pattern</code> and <code>str</code> contains only lowercase alphabetical letters.</li>
+<li>Both <code>pattern</code> and <code>str</code> do not have leading or trailing spaces.</li>
+<li>Each word in <code>str</code> is separated by a single space.</li>
+<li>Each letter in <code>pattern</code> must map to a word with length that is at least 1.</li>
+
+
+
+</ol>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/minglotus6">@minglotus6</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给我们一个模式字符串，又给我们一个单词字符串，让我们求单词字符串中单词出现的规律是否符合模式字符串中的规律。那么首先想到就是用哈希表来做，建立模式字符串中每个字符和单词字符串每个单词之间的映射，而且这种映射必须是一对一关系的，不能'a&lsquo;和&rsquo;b'同时对应&lsquo;dog'，所以我们在碰到一个新字符时，首先检查其是否在哈希表中出现，若出现，其映射的单词若不是此时对应的单词，则返回false。如果没有在哈希表中出现，我们还要遍历一遍哈希表，看新遇到的单词是否已经是哈希表中的映射，如果没有，再跟新遇到的字符建立映射，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> wordPattern(<span style="color: #0000ff;">string</span> pattern, <span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> m;
+        istringstream </span><span style="color: #0000ff;">in</span><span style="color: #000000;">(str);
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> word; <span style="color: #0000ff;">in</span> &gt;&gt; word; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (m.find(pattern[i]) !=<span style="color: #000000;"> m.end()) {
+                </span><span style="color: #0000ff;">if</span> (m[pattern[i]] != word) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">for</span> (unordered_map&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">string</span>&gt;::iterator it = m.begin(); it != m.end(); ++<span style="color: #000000;">it) {
+                    </span><span style="color: #0000ff;">if</span> (it-&gt;second == word) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+                m[pattern[i]] </span>=<span style="color: #000000;"> word;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> i ==<span style="color: #000000;"> pattern.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>当然这道题也可以用两个哈希表来完成，分别将字符和单词都映射到当前的位置，那么我们在遇到新字符和单词时，首先看两个哈希表是否至少有一个映射存在，如果有一个存在，则比较两个哈希表映射值是否相同，不同则返回false。如果两个表都不存在映射，则同时添加两个映射，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> wordPattern(<span style="color: #0000ff;">string</span> pattern, <span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m1;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m2;
+        istringstream </span><span style="color: #0000ff;">in</span><span style="color: #000000;">(str);
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> word; <span style="color: #0000ff;">in</span> &gt;&gt; word; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (m1.find(pattern[i]) != m1.end() || m2.find(word) !=<span style="color: #000000;"> m2.end()) {
+                </span><span style="color: #0000ff;">if</span> (m1[pattern[i]] != m2[word]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                m1[pattern[i]] </span>= m2[word] = i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> i ==<span style="color: #000000;"> pattern.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/62476/short-c-read-words-on-the-fly" target="_blank">https://leetcode.com/discuss/62476/short-c-read-words-on-the-fly</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

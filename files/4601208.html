@@ -1,0 +1,98 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4601208.html">[LeetCode] Basic Calculator II 基本计算器之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement a basic calculator to evaluate a simple expression string.</p>
+<p>The expression string contains only <strong>non-negative</strong> integers, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code> operators and empty spaces <code> </code>. The integer division should truncate toward zero.</p>
+<p>You may assume that the given expression is always valid.</p>
+<p>Some examples:<br />
+</p>
+<pre>"3+2*2" = 7
+" 3/2 " = 1
+" 3+5 / 2 " = 5
+</pre>
+<p><strong>Note:</strong> <strong>Do not</strong> use the <code>eval</code> built-in library function.</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/ts">@ts</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4570699.html">Basic Calculator 基本计算器</a>的拓展，不同之处在于那道题的计算符号只有加和减，而这题加上了乘除，那么就牵扯到了运算优先级的问题，好在这道题去掉了括号，还适当的降低了难度，估计再出一道的话就该加上括号了。不管那么多，这道题先按木有有括号来处理，由于存在运算优先级，我们采取的措施是使用一个栈保存数字，如果该数字之前的符号是加或减，那么把当前数字压入栈中，注意如果是减号，则加入当前数字的相反数，因为减法相当于加上一个相反数。如果之前的符号是乘或除，那么从栈顶取出一个数字和当前数字进行乘或除的运算，再把结果压入栈中，那么完成一遍遍历后，所有的乘或除都运算完了，再把栈中所有的数字都加起来就是最终结果了。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> calculate(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, num = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">char</span> op = <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                num </span>= num * <span style="color: #800080;">10</span> + s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> ((s[i] &lt; <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; s[i] != <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) || i == n - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (op == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span><span style="color: #000000;">) st.push(num);
+                </span><span style="color: #0000ff;">if</span> (op == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>) st.push(-<span style="color: #000000;">num);
+                </span><span style="color: #0000ff;">if</span> (op == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span> || op == <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">int</span> tmp = (op == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span>) ? st.top() * num : st.top() /<span style="color: #000000;"> num;
+                    st.pop();
+                    st.push(tmp);
+                }
+                op </span>=<span style="color: #000000;"> s[i];
+                num </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            } 
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">st.empty()) {
+            res </span>+=<span style="color: #000000;"> st.top();
+            st.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>在做了<a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8873471.html">Basic Calculator III</a>之后，再反过头来看这道题，发现只要将处理括号的部分去掉直接就可以在这道题上使用，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> calculate(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, curRes = <span style="color: #800080;">0</span>, num = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">char</span> op = <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> s[i];
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                num </span>= num * <span style="color: #800080;">10</span> + c - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span> || i == n - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (op) {
+                    </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span>: curRes += num; <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>: curRes -= num; <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span>: curRes *= num; <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span>: curRes /= num; <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> || i == n - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    res </span>+=<span style="color: #000000;"> curRes;
+                    curRes </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }
+                op </span>=<span style="color: #000000;"> c;
+                num </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            } 
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/basic-calculator-ii/discuss/63003/Share-my-java-solution">https://leetcode.com/problems/basic-calculator-ii/discuss/63003/Share-my-java-solution</a></p>
+<p><a href="https://leetcode.com/problems/basic-calculator-ii/discuss/63004/17-lines-C++-easy-20-ms">https://leetcode.com/problems/basic-calculator-ii/discuss/63004/17-lines-C++-easy-20-ms</a></p>
+<p><a href="https://leetcode.com/problems/basic-calculator-ii/discuss/63031/Simple-C++-solution-beats-85-submissions-with-detailed-explanations">https://leetcode.com/problems/basic-calculator-ii/discuss/63031/Simple-C++-solution-beats-85-submissions-with-detailed-explanations</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

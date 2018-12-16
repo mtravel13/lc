@@ -1,0 +1,94 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6927921.html">[LeetCode] Out of Boundary Paths 出界的路径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There is an&nbsp;m&nbsp;by&nbsp;n&nbsp;grid with a ball. Given the start coordinate&nbsp;(i,j)&nbsp;of the ball, you can move the ball to&nbsp;adjacent&nbsp;cell or cross the grid boundary in four directions (up, down, left, right). However, you can&nbsp;at most&nbsp;move&nbsp;N&nbsp;times. Find out the number of paths to move the ball out of grid boundary. The answer may be very large, return it after mod 10<sup>9</sup>&nbsp;+ 7.</p>
+<p>Example 1:</p>
+<pre>Input:m = 2, n = 2, N = 2, i = 0, j = 0
+Output: 6
+Explanation:
+</pre>
+<p><img src="https://leetcode.com/static/images/problemset/out_of_boundary_paths_1.png" alt="" width="40%" /></p>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:m = 1, n = 3, N = 3, i = 0, j = 1
+Output: 12
+Explanation:
+</pre>
+<p><img src="https://leetcode.com/static/images/problemset/out_of_boundary_paths_2.png" alt="" width="37%" /></p>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>Once you move the ball out of boundary, you cannot move it back.</li>
+<li>The length and height of the grid is in range [1,50].</li>
+<li>N is in range [0,50].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个二维的数组，某个位置放个足球，每次可以在上下左右四个方向中任意移动一步，总共可以移动N步，问我们总共能有多少种移动方法能把足球移除边界，由于结果可能是个巨大的数，所以让我们对一个大数取余。那么我们知道对于这种结果很大的数如果用递归解法很容易爆栈，所以最好考虑使用DP来解。那么我们使用一个三维的DP数组，其中dp[k][i][j]表示总共走k步，从(i,j)位置走出边界的总路径数。那么我们来找递推式，对于dp[k][i][j]，走k步出边界的总路径数等于其周围四个位置的走k-1步出边界的总路径数之和，如果周围某个位置已经出边界了，那么就直接加上1，否则就在dp数组中找出该值，这样整个更新下来，我们就能得出每一个位置走任意步数的出界路径数了，最后只要返回dp[N][i][j]就是所求结果了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findPaths(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span> N, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        vector</span>&lt;vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&gt; dp(N + <span style="color: #800080;">1</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">)));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">1</span>; k &lt;= N; ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> x = <span style="color: #800080;">0</span>; x &lt; m; ++<span style="color: #000000;">x) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> y = <span style="color: #800080;">0</span>; y &lt; n; ++<span style="color: #000000;">y) {
+                    </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> v1 = (x == <span style="color: #800080;">0</span>) ? <span style="color: #800080;">1</span> : dp[k - <span style="color: #800080;">1</span>][x - <span style="color: #800080;">1</span><span style="color: #000000;">][y];
+                    </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> v2 = (x == m - <span style="color: #800080;">1</span>) ? <span style="color: #800080;">1</span> : dp[k - <span style="color: #800080;">1</span>][x + <span style="color: #800080;">1</span><span style="color: #000000;">][y];
+                    </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> v3 = (y == <span style="color: #800080;">0</span>) ? <span style="color: #800080;">1</span> : dp[k - <span style="color: #800080;">1</span>][x][y - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> v4 = (y == n - <span style="color: #800080;">1</span>) ? <span style="color: #800080;">1</span> : dp[k - <span style="color: #800080;">1</span>][x][y + <span style="color: #800080;">1</span><span style="color: #000000;">];
+                    dp[k][x][y] </span>= (v1 + v2 + v3 + v4) % <span style="color: #800080;">1000000007</span><span style="color: #000000;">;
+                }
+            }
+        } 
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[N][i][j];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法虽然也是用的DP解法，但是DP数组的定义和上面的不一样，这种解法相当于使用了BFS搜索，以(i, j)为起始点，其中dp[k][x][y]表示用了k步，进入(x, y)位置的路径数，由于dp[k][x][y]只依赖于dp[k-1][x][y]，所以我们可以用一个二维dp数组来代替，初始化dp[i][j]为1，总共N步，进行N次循环，每次都新建一个mxn大小的临时数组t，然后就是对于遍历到的每个位置，都遍历其四个相邻位置，如果相邻位置越界了，那么我们用当前位置的dp值更新结果res，因为此时dp值的意义就是从(i,j)到越界位置的路径数。如果没有，我们将当前位置的dp值赋给t数组的对应位置，这样在遍历完所有的位置时，将数组t整个赋值给dp，然后进入下一步的循环，参加代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findPaths(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span> N, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        dp[i][j] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; N; ++<span style="color: #000000;">k) {
+            vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; t(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> r = <span style="color: #800080;">0</span>; r &lt; m; ++<span style="color: #000000;">r) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> c = <span style="color: #800080;">0</span>; c &lt; n; ++<span style="color: #000000;">c) {
+                    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                        </span><span style="color: #0000ff;">int</span> x = r + dir[<span style="color: #800080;">0</span>], y = c + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                        </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;=<span style="color: #000000;"> n) {
+                            res </span>= (res + dp[r][c]) % <span style="color: #800080;">1000000007</span><span style="color: #000000;">;
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            t[x][y] </span>= (t[x][y] + dp[r][c]) % <span style="color: #800080;">1000000007</span><span style="color: #000000;">;
+                        }
+                    }
+                }
+            }
+            dp </span>=<span style="color: #000000;"> t;
+        } 
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/88492/c-6-lines-dp-o-n-m-n-6-ms" target="_blank">https://discuss.leetcode.com/topic/88492/c-6-lines-dp-o-n-m-n-6-ms</a></p>
+<p><a href="https://discuss.leetcode.com/topic/88570/java-solution-dp-with-space-compression" target="_blank">https://discuss.leetcode.com/topic/88570/java-solution-dp-with-space-compression</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,79 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4452220.html">[LeetCode] Letter Combinations of a Phone Number 电话号码的字母组合</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a digit string, return all possible letter combinations that the number could represent.</p>
+<p>A mapping of digit to letters (just like on the telephone buttons) is given below.</p>
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" alt="" /></p>
+<pre><strong>Input:</strong>Digit string "23"
+<strong>Output:</strong> ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+</pre>
+<p> <strong>Note:</strong><br />
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+</p>
+<p>&nbsp;</p>
+<p>这道题让我们求电话号码的字母组合，即数字2到9中每个数字可以代表若干个字母，然后给一串数字，求出所有可能的组合，相类似的题目有<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4042156.html">Path Sum II</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4310964.html">Subsets II</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4358848.html">Permutations</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4359825.html">Permutations II</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4332522.html">Combinations</a>，<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4419259.html">Combination Sum</a>&nbsp;和<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4419386.html">Combination Sum II</a>&nbsp;等等。我们用递归Recursion来解，我们需要建立一个字典，用来保存每个数字所代表的字符串，然后我们还需要一个变量level，记录当前生成的字符串的字符个数，实现套路和上述那些题十分类似。在递归函数中我们首先判断level，如果跟digits中数字的个数相等了，我们将当前的组合加入结果res中，然后返回。否则我们通过digits中的数字到dict中取出字符串，然后遍历这个取出的字符串，将每个字符都加到当前的组合后面，并调用递归函数即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; letterCombinations(<span style="color: #0000ff;">string</span><span style="color: #000000;"> digits) {
+        </span><span style="color: #0000ff;">if</span> (digits.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">string</span> dict[] = {<span style="color: #800000;">""</span>, <span style="color: #800000;">""</span>, <span style="color: #800000;">"</span><span style="color: #800000;">abc</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">def</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">ghi</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">jkl</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">mno</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">pqrs</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">tuv</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">wxyz</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+        letterCombinationsDFS(digits, dict, </span><span style="color: #800080;">0</span>, <span style="color: #800000;">""</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> letterCombinationsDFS(<span style="color: #0000ff;">string</span> digits, <span style="color: #0000ff;">string</span> dict[], <span style="color: #0000ff;">int</span> level, <span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span>, vector&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (level == digits.size()) {res.push_back(<span style="color: #0000ff;">out</span>); <span style="color: #0000ff;">return</span><span style="color: #000000;">;}
+        </span><span style="color: #0000ff;">string</span> str = dict[digits[level] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; str.size(); ++<span style="color: #000000;">i) {
+            letterCombinationsDFS(digits, dict, level </span>+ <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span> + <span style="color: #0000ff;">string</span>(<span style="color: #800080;">1</span><span style="color: #000000;">, str[i]), res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题我们也可以用迭代Iterative来解，在遍历digits中所有的数字时，我们先建立一个临时的字符串数组t，然后跟上面解法的操作一样，通过数字到dict中取出字符串str，然后遍历取出字符串中的所有字符，再遍历当前结果res中的每一个字符串，将字符加到后面，并加入到临时字符串数组t中。取出的字符串str遍历完成后，将临时字符串数组赋值给结果res，具体实现参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; letterCombinations(<span style="color: #0000ff;">string</span><span style="color: #000000;"> digits) {
+        </span><span style="color: #0000ff;">if</span> (digits.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; res{<span style="color: #800000;">""</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">string</span> dict[] = {<span style="color: #800000;">""</span>, <span style="color: #800000;">""</span>, <span style="color: #800000;">"</span><span style="color: #800000;">abc</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">def</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">ghi</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">jkl</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">mno</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">pqrs</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">tuv</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">wxyz</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; digits.size(); ++<span style="color: #000000;">i) {
+            vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> t;
+            </span><span style="color: #0000ff;">string</span> str = dict[digits[i] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; str.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> s : res) t.push_back(s +<span style="color: #000000;"> str[j]);
+            }
+            res </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4444160.html" target="_blank">Generate Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4419259.html" target="_blank">Combination Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5896454.html">Binary Watch</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/" target="_blank">https://leetcode.com/problems/letter-combinations-of-a-phone-number/</a></p>
+<p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/discuss/8109/My-recursive-solution-using-Java" target="_blank">https://leetcode.com/problems/letter-combinations-of-a-phone-number/discuss/8109/My-recursive-solution-using-Java</a></p>
+<p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/discuss/8097/My-iterative-sollution-very-simple-under-15-lines" target="_blank">https://leetcode.com/problems/letter-combinations-of-a-phone-number/discuss/8097/My-iterative-sollution-very-simple-under-15-lines</a></p>
+<p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/discuss/8207/Concise-15-line-Java-Iterative-Solution-very-Straight-Forward-with-Brief-Explanation" target="_blank">https://leetcode.com/problems/letter-combinations-of-a-phone-number/discuss/8207/Concise-15-line-Java-Iterative-Solution-very-Straight-Forward-with-Brief-Explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

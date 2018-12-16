@@ -1,0 +1,207 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4309345.html">[LeetCode] Subsets 子集合</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a set of distinct integers,&nbsp;<em>S</em>, return all possible subsets.</p>
+<p>Note:</p>
+<ul>
+<li>Elements in a subset must be in non-descending order.</li>
+<li>The solution set must not contain duplicate subsets.</li>
+</ul>
+<p>&nbsp;</p>
+<p>For example,<br />If&nbsp;<em>S</em>&nbsp;=&nbsp;<code>[1,2,3]</code>, a solution is:</p>
+<pre>[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]</pre>
+<p>&nbsp;</p>
+<p>这道求子集合的问题，由于其要列出所有结果，按照以往的经验，肯定要是要用递归来做。这道题其实它的非递归解法相对来说更简单一点，下面我们先来看非递归的解法，由于题目要求子集合中数字的顺序是非降序排列的，所有我们需要预处理，先给输入数组排序，然后再进一步处理，最开始我在想的时候，是想按照子集的长度由少到多全部写出来，比如子集长度为0的就是空集，空集是任何集合的子集，满足条件，直接加入。下面长度为1的子集，直接一个循环加入所有数字，子集长度为2的话可以用两个循环，但是这种想法到后面就行不通了，因为循环的个数不能无限的增长，所以我们必须换一种思路。我们可以一位一位的网上叠加，比如对于题目中给的例子[1,2,3]来说，最开始是空集，那么我们现在要处理1，就在空集上加1，为[1]，现在我们有两个自己[]和[1]，下面我们来处理2，我们在之前的子集基础上，每个都加个2，可以分别得到[2]，[1, 2]，那么现在所有的子集合为[], [1], [2], [1, 2]，同理处理3的情况可得[3], [1, 3], [2, 3], [1, 2, 3], 再加上之前的子集就是所有的子集合了，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Non-recursion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; subsets(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">S) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; res(<span style="color: #800080;">1</span><span style="color: #000000;">);
+        sort(S.begin(), S.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; S.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> res.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; size; ++<span style="color: #000000;">j) {
+                res.push_back(res[j]);
+                res.back().push_back(S[i]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>整个添加的顺序为：</p>
+<p>[]<br />[1]<br />[2]<br />[1 2]<br />[3]<br />[1 3]<br />[2 3]<br />[1 2 3]</p>
+<p>&nbsp;</p>
+<p>下面来看递归的解法，相当于一种深度优先搜索，参见网友<a href="http://www.cnblogs.com/TenosDoIt/p/3451902.html" target="_blank">JustDoIt的博客</a>，由于原集合每一个数字只有两种状态，要么存在，要么不存在，那么在构造子集时就有选择和不选择两种情况，所以可以构造一棵二叉树，左子树表示选择该层处理的节点，右子树表示不选择，最终的叶节点就是所有子集合，树的结构如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">                        []        
+                   </span>/<span style="color: #000000;">          \        
+                  </span>/<span style="color: #000000;">            \     
+                 </span>/<span style="color: #000000;">              \
+              [</span><span style="color: #800080;">1</span><span style="color: #000000;">]                []
+           </span>/       \           /<span style="color: #000000;">    \
+          </span>/         \         /<span style="color: #000000;">      \        
+       [</span><span style="color: #800080;">1</span> <span style="color: #800080;">2</span>]       [<span style="color: #800080;">1</span>]       [<span style="color: #800080;">2</span><span style="color: #000000;">]     []
+      </span>/     \     /   \     /   \    /<span style="color: #000000;"> \
+  [</span><span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">3</span>] [<span style="color: #800080;">1</span> <span style="color: #800080;">2</span>] [<span style="color: #800080;">1</span> <span style="color: #800080;">3</span>] [<span style="color: #800080;">1</span>] [<span style="color: #800080;">2</span> <span style="color: #800080;">3</span>] [<span style="color: #800080;">2</span>] [<span style="color: #800080;">3</span>] []    </pre>
+</div>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; subsets(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">S) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        sort(S.begin(), S.end());
+        getSubsets(S, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> getSubsets(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;S, <span style="color: #0000ff;">int</span> pos, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">res) {
+        res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = pos; i &lt; S.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(S[i]);
+            getSubsets(S, i </span>+ <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>整个添加的顺序为：</p>
+<p>[]<br />[1]<br />[1 2]<br />[1 2 3]<br />[1 3]<br />[2]<br />[2 3]<br />[3]</p>
+<p>&nbsp;</p>
+<p>最后我们再来看一种解法，这种解法是CareerCup书上给的一种解法，想法也比较巧妙，把数组中所有的数分配一个状态，true表示这个数在子集中出现，false表示在子集中不出现，那么对于一个长度为n的数组，每个数字都有出现与不出现两种情况，所以共有2<sup>n</sup>中情况，那么我们把每种情况都转换出来就是子集了，我们还是用题目中的例子, [1 2 3]这个数组共有8个子集，每个子集的序号的二进制表示，把是1的位对应原数组中的数字取出来就是一个子集，八种情况都取出来就是所有的子集了，参见代码如下：</p>
+<table border="0">
+<tbody>
+<tr>
+<td>&nbsp;</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>Subset</td>
+
+</tr>
+<tr>
+<td>0</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>[]</td>
+
+</tr>
+<tr>
+<td>1</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>3</td>
+
+</tr>
+<tr>
+<td>2</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>2</td>
+
+</tr>
+<tr>
+<td>3</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>23</td>
+
+</tr>
+<tr>
+<td>4</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>1</td>
+
+</tr>
+<tr>
+<td>5</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>13</td>
+
+</tr>
+<tr>
+<td>6</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>12</td>
+
+</tr>
+<tr>
+<td>7</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>123</td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; subsets(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">S) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        sort(S.begin(), S.end());
+        </span><span style="color: #0000ff;">int</span> max = <span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> S.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; max; ++<span style="color: #000000;">k) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span> =<span style="color: #000000;"> convertIntToSet(S, k);
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; convertIntToSet(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;S, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> sub;
+        </span><span style="color: #0000ff;">int</span> idx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = k; i &gt; <span style="color: #800080;">0</span>; i &gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> ((i &amp; <span style="color: #800080;">1</span>) == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                sub.push_back(S[idx]);
+            }
+            </span>++<span style="color: #000000;">idx;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sub;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>此题的拓展请参见我的另一篇博客<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4310964.html">Subsets II 子集合之二</a>。</p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

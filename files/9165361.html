@@ -1,0 +1,87 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9165361.html">[LeetCode] Escape The Ghosts 逃离鬼魂</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description__3U1T">
+<div>
+<p>You are playing a simplified Pacman game. You&nbsp;start at the point&nbsp;<code>(0, 0)</code>, and your destination is<code>&nbsp;(target[0], target[1])</code>. There are several ghosts on the map, the i-th ghost starts at<code>&nbsp;(ghosts[i][0], ghosts[i][1])</code>.</p>
+<p>Each turn, you and all ghosts simultaneously *may* move in one of 4 cardinal directions: north, east, west, or south, going from the previous point to a new point 1 unit of distance away.</p>
+<p>You escape if and only if you can reach the target before any ghost reaches you (for any given moves the ghosts may take.)&nbsp; If you reach any square (including the target) at the same time as a ghost, it doesn't count as an escape.</p>
+<p>Return True if and only if it is possible to escape.</p>
+<pre>Example 1:
+Input: 
+ghosts = [[1, 0], [0, 3]]
+target = [0, 1]
+Output: true
+Explanation: 
+You can directly reach the destination (0, 1) at time 1, while the ghosts located at (1, 0) or (0, 3) have no way to catch up with you.
+</pre>
+<pre>Example 2:
+Input: 
+ghosts = [[1, 0]]
+target = [2, 0]
+Output: false
+Explanation: 
+You need to reach the destination (2, 0), but the ghost at (1, 0) lies between you and the destination.
+</pre>
+<pre>Example 3:
+Input: 
+ghosts = [[2, 0]]
+target = [1, 0]
+Output: false
+Explanation: 
+The ghost can reach the target at the same time as you.
+</pre>
+<p>Note:</p>
+<ul>
+<li>All points have coordinates with absolute value &lt;=&nbsp;<code>10000</code>.</li>
+<li>The number of ghosts will not exceed&nbsp;<code>100</code>.</li>
+</ul>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>这道题就是经典的吃豆人游戏啦，不过是简化版，小人只能躲开鬼魂，并不能吃大力丸，反干鬼魂。小人在原点，有若干个鬼魂在不同的位置，给了一个目标点，问小人能不能安全到达目标点。这里的鬼魂的设定跟游戏中的一样，都是很智能的，会朝着你移动，而且这里设定了如果跟鬼魂同时到达目标点也算输。那么实际上这道题就是要求出小人到目标点的最短距离，注意这里的距离不是两点之间的Euclidean距离，而应该是曼哈顿距离，即横纵坐标分别求差的绝对值再相加。求出小人到目标点到最短距离后，我们还要求每个鬼魂到目标点的最短距离，如果有一个鬼魂到目标带你的最短距离小于等于小人到目标点到最短距的话，那么就返回false，否则返回true，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> escapeGhosts(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; ghosts, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> dist = abs(target[<span style="color: #800080;">0</span>]) + abs(target[<span style="color: #800080;">1</span>]), mn =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto ghost : ghosts) {
+            </span><span style="color: #0000ff;">int</span> t = abs(ghost[<span style="color: #800080;">0</span>] - target[<span style="color: #800080;">0</span>]) + abs(ghost[<span style="color: #800080;">1</span>] - target[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+            mn </span>=<span style="color: #000000;"> min(mn, t);
+        }
+        </span><span style="color: #0000ff;">return</span> dist &lt;<span style="color: #000000;"> mn;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对上面的解法进行一个小优化，就是我们其实并不需要算完每一个鬼魂到目标点到最短距离，而是每算一个就进行比较，只要小于等于小人到目标点的最短距离了，就直接返回false。循环退出后返回true，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> escapeGhosts(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; ghosts, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> dist = abs(target[<span style="color: #800080;">0</span>]) + abs(target[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto ghost : ghosts) {
+            </span><span style="color: #0000ff;">int</span> t = abs(ghost[<span style="color: #800080;">0</span>] - target[<span style="color: #800080;">0</span>]) + abs(ghost[<span style="color: #800080;">1</span>] - target[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+            </span><span style="color: #0000ff;">if</span> (t &lt;= dist) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/escape-the-ghosts/discuss/116507/Java-5-liner">https://leetcode.com/problems/escape-the-ghosts/discuss/116507/Java-5-liner</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,75 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5090058.html">[LeetCode] Maximum Product of Word Lengths 单词长度的最大积</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string array&nbsp;<code>words</code>, find the maximum value of&nbsp;<code>length(word[i]) * length(word[j])</code>&nbsp;where the two words do not share common letters. You may assume that each word will contain only lower case letters. If no such two words exist, return 0.</p>
+<p>Example 1:</p>
+<p>Given&nbsp;<code>["abcw", "baz", "foo", "bar", "xtfn", "abcdef"]</code><br />Return&nbsp;<code>16</code><br />The two words can be&nbsp;<code>"abcw", "xtfn"</code>.</p>
+<p>Example 2:</p>
+<p>Given&nbsp;<code>["a", "ab", "abc", "d", "cd", "bcd", "abcd"]</code><br />Return&nbsp;<code>4</code><br />The two words can be&nbsp;<code>"ab", "cd"</code>.</p>
+<p>Example 3:</p>
+<p>Given&nbsp;<code>["a", "aa", "aaa", "aaaa"]</code><br />Return&nbsp;<code>0</code><br />No such pair of words.</p>
+<p>&nbsp;</p>
+<p>这道题给我们了一个单词数组，让我们求两个没有相同字母的单词的长度之积的最大值。我开始想的方法是每两个单词先比较，如果没有相同字母，则计算其长度之积，然后每次更新结果就能找到最大值。但是我开始想的两个单词比较的方法是利用哈希表先将一个单词的所有出现的字母存入哈希表，然后检查另一个单词的各个字母是否在哈希表出现过，若都没出现过，则说明两个单词没有相同字母，则计算两个单词长度之积并更新结果。但是这种判断方法无法通过OJ的大数据集，上网搜大神们的解法，都是用了mask，因为题目中说都是小写字母，那么只有26位，一个整型数int有32位，我们可以用后26位来对应26个字母，若为1，说明该对应位置的字母出现过，那么每个单词的都可由一个int数字表示，两个单词没有共同字母的条件是这两个int数想与为0，用这个判断方法可以通过OJ，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxProduct(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; mask(words.size(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : words[i]) {
+                mask[i] </span>|= <span style="color: #800080;">1</span> &lt;&lt; (c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (!(mask[i] &amp;<span style="color: #000000;"> mask[j])) {
+                    res </span>= max(res, <span style="color: #0000ff;">int</span>(words[i].size() *<span style="color: #000000;"> words[j].size()));
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种写法，借助哈希表，映射每个mask的值和其单词的长度，每算出一个单词的mask，遍历哈希表里的值，如果和其中的mask值相与为0，则将当前单词的长度和哈希表中存的单词长度相乘并更新结果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxProduct(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">int</span> mask = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : word) {
+                mask </span>|= <span style="color: #800080;">1</span> &lt;&lt; (c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            }
+            m[mask] </span>= max(m[mask], <span style="color: #0000ff;">int</span><span style="color: #000000;">(word.size()));
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+                </span><span style="color: #0000ff;">if</span> (!(mask &amp;<span style="color: #000000;"> a.first)) {
+                    res </span>= max(res, (<span style="color: #0000ff;">int</span>)word.size() *<span style="color: #000000;"> a.second);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p class="p1"><span class="s1"><a href="https://leetcode.com/discuss/74580/bit-shorter-c">https://leetcode.com/discuss/74580/bit-shorter-c</a></span></p>
+<p class="p1"><span class="s1"><a href="https://leetcode.com/discuss/75034/clear-and-easily-understanding">https://leetcode.com/discuss/75034/clear-and-easily-understanding</a></span></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

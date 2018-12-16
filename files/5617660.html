@@ -1,0 +1,104 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5617660.html">[LeetCode] Max Sum of Rectangle No Larger Than K 最大矩阵和不超过K</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-empty 2D matrix&nbsp;<em>matrix</em>&nbsp;and an integer&nbsp;<em>k</em>, find the max sum of a rectangle in the&nbsp;<em>matrix</em>&nbsp;such that its sum is no larger than&nbsp;<em>k</em>.</p>
+<p>Example:</p>
+<pre>Given matrix = [
+  [1,  0, 1],
+  [0, -2, 3]
+]
+k = 2
+</pre>
+<p>&nbsp;</p>
+<p>The answer is&nbsp;<code>2</code>. Because the sum of rectangle&nbsp;<code>[[0, 1], [-2, 3]]</code>&nbsp;is 2 and 2 is the max number no larger than k (k = 2).</p>
+<p>Note:</p>
+<ol>
+<li>The rectangle inside the matrix must have an area &gt; 0.</li>
+<li>What if the number of rows is much larger than the number of columns?</li>
+</ol>
+<p>&nbsp;</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://discuss.leetcode.com/user/fujiaozhu">@fujiaozhu</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个二维数组，让我们求和不超过的K的最大子矩形，那么我们首先可以考虑使用brute force来解，就是遍历所有的子矩形，然后计算其和跟K比较，找出不超过K的最大值即可。就算是暴力搜索，我们也可以使用优化的算法，比如建立累加和，参见之前那道题<a href="http://www.cnblogs.com/grandyang/p/4958789.html">Range Sum Query 2D - Immutable</a>，我们可以快速求出任何一个区间和，那么下面的方法就是这样的，当遍历到(i, j)时，我们计算sum(i, j)，表示矩形(0, 0)到(i, j)的和，然后我们遍历这个矩形中所有的子矩形，计算其和跟K相比，这样既可遍历到原矩形的所有子矩形，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxSumSubmatrix(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; matrix, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), res =<span style="color: #000000;"> INT_MIN;
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> sum[m][n];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> matrix[i][j];
+                </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span>) t += sum[i - <span style="color: #800080;">1</span><span style="color: #000000;">][j];
+                </span><span style="color: #0000ff;">if</span> (j &gt; <span style="color: #800080;">0</span>) t += sum[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span> &amp;&amp; j &gt; <span style="color: #800080;">0</span>) t -= sum[i - <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                sum[i][j] </span>=<span style="color: #000000;"> t;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> r = <span style="color: #800080;">0</span>; r &lt;= i; ++<span style="color: #000000;">r) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> c = <span style="color: #800080;">0</span>; c &lt;= j; ++<span style="color: #000000;">c) {
+                        </span><span style="color: #0000ff;">int</span> d =<span style="color: #000000;"> sum[i][j];
+                        </span><span style="color: #0000ff;">if</span> (r &gt; <span style="color: #800080;">0</span>) d -= sum[r - <span style="color: #800080;">1</span><span style="color: #000000;">][j];
+                        </span><span style="color: #0000ff;">if</span> (c &gt; <span style="color: #800080;">0</span>) d -= sum[i][c - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                        </span><span style="color: #0000ff;">if</span> (r &gt; <span style="color: #800080;">0</span> &amp;&amp; c &gt; <span style="color: #800080;">0</span>) d += sum[r - <span style="color: #800080;">1</span>][c - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                        </span><span style="color: #0000ff;">if</span> (d &lt;= k) res =<span style="color: #000000;"> max(res, d);
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这个算法进一步的优化了运行时间，这个算法是基于计算二维数组中最大子矩阵和的算法，可以参见youtube上的这个视频<a href="https://www.youtube.com/watch?v=yCQN096CwWM" target="_blank">Maximum Sum Rectangular Submatrix in Matrix dynamic programming/2D kadane</a>。这个算法巧妙在把二维数组按行或列拆成多个一维数组，然后利用一维数组的累加和来找符合要求的数字，这里用了lower_bound来加快我们的搜索速度，也可以使用二分搜索法来替代。我们建立一个集合set，然后开始先放个0进去，为啥要放0呢，因为我们要找lower_bound(curSum - k)，当curSum和k相等时，0就可以被返回了，这样我们就能更新结果了。由于我们对于一维数组建立了累积和，那么sum[i,j] = sum[i] - sum[j]，其中sums[i,j]就是目标子数组需要其和小于等于k，然后sums[j]是curSum，而sum[i]就是我们要找值，当我们使用二分搜索法找sum[i]时，sum[i]的和需要&gt;=sum[j] - k，所以也可以使用lower_bound来找，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxSumSubmatrix(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; matrix, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), res =<span style="color: #000000;"> INT_MIN;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; sum(m, <span style="color: #800080;">0</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; m; ++<span style="color: #000000;">k) {
+                    sum[k] </span>+=<span style="color: #000000;"> matrix[k][j];
+                }
+                </span><span style="color: #0000ff;">int</span> curSum = <span style="color: #800080;">0</span>, curMax =<span style="color: #000000;"> INT_MIN;
+                </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+                s.insert(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : sum) {
+                    curSum </span>+=<span style="color: #000000;"> a;
+                    auto it </span>= s.lower_bound(curSum -<span style="color: #000000;"> k);
+                    </span><span style="color: #0000ff;">if</span> (it != s.end()) curMax = max(curMax, curSum - *<span style="color: #000000;">it);
+                    s.insert(curSum);
+                }
+                res </span>=<span style="color: #000000;"> max(res, curMax);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4377150.html" target="_blank">Maximum Subarray</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4958789.html">Range Sum Query 2D - Immutable</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5336668.html" target="_blank">Maximum Size Subarray Sum Equals k</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/109847/2-accepted-java-solution" target="_blank">https://leetcode.com/discuss/109847/2-accepted-java-solution</a></p>
+<p><a href="https://leetcode.com/discuss/109749/accepted-c-codes-with-explanation-and-references" target="_blank">https://leetcode.com/discuss/109749/accepted-c-codes-with-explanation-and-references</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

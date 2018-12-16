@@ -1,0 +1,62 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4128268.html">[LeetCode] ZigZag Converesion  之字型转换字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The string&nbsp;<code>"PAYPALISHIRING"</code>&nbsp;is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)</p>
+<pre>P   A   H   N
+A P L S I I G
+Y   I   R
+</pre>
+<p>And then read line by line:&nbsp;<code>"PAHNAPLSIIGYIR"</code></p>
+<p>&nbsp;</p>
+<p>Write the code that will take a string and make this conversion given a number of rows:</p>
+<pre>string convert(string text, int nRows);</pre>
+<p><code>convert("PAYPALISHIRING", 3)</code>&nbsp;should return&nbsp;<code>"PAHNAPLSIIGYIR"</code>.</p>
+<p>&nbsp;</p>
+<p>这道题刚开始看了半天没看懂是咋样变换的，上网查了些资料，终于搞懂了，就是要把字符串摆成一个之字型的，参考了网上这位仁兄的解法 (<a href="http://www.cnblogs.com/springfor/p/3889414.html" target="_blank">http://www.cnblogs.com/springfor/p/3889414.html</a>)。</p>
+<p>比如有一个字符串 &ldquo;0123456789ABCDEF&rdquo;，转为zigzag</p>
+<p>当 n = 2 时：</p>
+<p>0 2 4 6 8 A C E</p>
+<p>1 3 5 7 9 B D F</p>
+<p>当 n = 3 时：</p>
+<p>0 &nbsp; 4 &nbsp; &nbsp;8 &nbsp; &nbsp; C</p>
+<p>1 <span style="color: #ff0000;">3</span> 5 <span style="color: #ff0000;">7</span> 9 <span style="color: #ff0000;">B</span> D <span style="color: #ff0000;">F</span></p>
+<p>2 &nbsp; &nbsp;6 &nbsp; A &nbsp; &nbsp; E</p>
+<p>当 n = 4 时：</p>
+<p>0 &nbsp; &nbsp; 6 &nbsp; &nbsp; &nbsp; &nbsp;C</p>
+<p>1 &nbsp; <span style="color: #ff0000;">5</span> 7 &nbsp; <span style="color: #ff0000;">B</span> &nbsp;D</p>
+<p>2 <span style="color: #ff0000;">4</span> &nbsp; 8 <span style="color: #ff0000;">A</span> &nbsp; &nbsp;E</p>
+<p>3 &nbsp; &nbsp; &nbsp;9 &nbsp; &nbsp; &nbsp; F</p>
+<p>&nbsp;</p>
+<p>我们发现，除了第一行和最后一行没有中间形成之字型的数字外，其他都有，而首位两行中相邻两个元素的index之差跟行数是相关的，为 2*nRows - 2, 根据这个特点，我们可以按顺序找到所有的黑色元素在元字符串的位置，将他们按顺序加到新字符串里面。对于红色元素出现的位置也是有规律的，每个红色元素的位置为 j + 2*nRows-2 - 2*i, 其中，j为前一个黑色元素的列数，i为当前行数。 比如当n = 4中的那个红色5，它的位置为 1 + 2*4-2 - 2*1 = 5，为原字符串的正确位置。当我们知道所有黑色元素和红色元素位置的正确算法，我们就可以一次性的把它们按顺序都加到新的字符串里面。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> convert(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> nRows) {
+        </span><span style="color: #0000ff;">if</span> (nRows &lt;= <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> size = <span style="color: #800080;">2</span> * nRows - <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nRows; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; s.size(); j +=<span style="color: #000000;"> size) {
+                res </span>+=<span style="color: #000000;"> s[j];
+                </span><span style="color: #0000ff;">int</span> tmp = j + size - <span style="color: #800080;">2</span> *<span style="color: #000000;"> i;
+                </span><span style="color: #0000ff;">if</span> (i != <span style="color: #800080;">0</span> &amp;&amp; i != nRows - <span style="color: #800080;">1</span> &amp;&amp; tmp &lt; s.size()) res +=<span style="color: #000000;"> s[tmp];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/zigzag-conversion/description/" target="_blank">https://leetcode.com/problems/zigzag-conversion/description/</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

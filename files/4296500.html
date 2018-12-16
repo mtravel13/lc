@@ -1,0 +1,77 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4296500.html">[LeetCode] Construct Binary Tree from Preorder and Inorder Traversal  由先序和中序遍历建立二叉树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given preorder and inorder traversal of a tree, construct the binary tree.</p>
+<p>Note:<br />You may assume that duplicates do not exist in the tree.</p>
+<p>&nbsp;</p>
+<p>这道题要求用先序和中序遍历来建立二叉树，跟之前那道<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4296193.html">Construct Binary Tree from Inorder and Postorder Traversal 由中序和后序遍历建立二叉树</a>原理基本相同，针对这道题，由于先序的顺序的第一个肯定是根，所以原二叉树的根节点可以知道，题目中给了一个很关键的条件就是树中没有相同元素，有了这个条件我们就可以在中序遍历中也定位出根节点的位置，并以根节点的位置将中序遍历拆分为左右两个部分，分别对其递归调用原函数。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode </span>*buildTree(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;preorder, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">inorder) {
+        </span><span style="color: #0000ff;">return</span> buildTree(preorder, <span style="color: #800080;">0</span>, preorder.size() - <span style="color: #800080;">1</span>, inorder, <span style="color: #800080;">0</span>, inorder.size() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    TreeNode </span>*buildTree(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;preorder, <span style="color: #0000ff;">int</span> pLeft, <span style="color: #0000ff;">int</span> pRight, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;inorder, <span style="color: #0000ff;">int</span> iLeft, <span style="color: #0000ff;">int</span><span style="color: #000000;"> iRight) {
+        </span><span style="color: #0000ff;">if</span> (pLeft &gt; pRight || iLeft &gt; iRight) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (i = iLeft; i &lt;= iRight; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (preorder[pLeft] == inorder[i]) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        TreeNode </span>*cur = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TreeNode(preorder[pLeft]);
+        cur</span>-&gt;left = buildTree(preorder, pLeft + <span style="color: #800080;">1</span>, pLeft + i - iLeft, inorder, iLeft, i - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        cur</span>-&gt;right = buildTree(preorder, pLeft + i - iLeft + <span style="color: #800080;">1</span>, pRight, inorder, i + <span style="color: #800080;">1</span><span style="color: #000000;">, iRight);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cur;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们下面来看一个例子, 某一二叉树的中序和后序遍历分别为：</p>
+<p>Preorder:　 &nbsp;　5　　4　　11　　8　　13　　9</p>
+<p>Inorder:　　 　11　　4　　5　　13　　8　　9</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5</span>　　4　　11　　8　　13　　9　　　　　　=&gt;　　　　　　　　　 5</p>
+<p>11　　4　　<span style="color: #ff0000;">5</span>　　13　　8　　9　　　　　　　　　　　　　　　　/　　\</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">4</span>　　11　　 　　<span style="color: #ff0000;">8</span>　　&nbsp;13　　9　　　　　　=&gt;　　　　　　　　　5</p>
+<p>11　　<span style="color: #ff0000;">4</span>　　　　 13　　<span style="color: #ff0000;">8</span>　　9　　 　　　　　　　　　　　　　&nbsp; /　　\</p>
+<p>　　　　　　　　　　　　　　　　　　　　　　　　　　　　　4　　　8</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">11　　　　 　　13　　　　9</span>　　　　　　　　=&gt;　　　　　　　　　5</p>
+<p><span style="color: #ff0000;">11　　　　　　&nbsp;13　　　　9</span>　　　　 　　　　　　　　　　　　 &nbsp; /　　\</p>
+<p>　　　　　　　　　　　　　　　　　　　　　　　　　　　　　4　　　8</p>
+<p>　　　　　　　　　　　　　　　　　　　　　　　　　　　　/　　　 /&nbsp;&nbsp;&nbsp;&nbsp; \</p>
+<p>　　　　　　　　　　　　　　　　　　　　　　　　　　　11　　&nbsp; 13　　&nbsp; 9</p>
+<p>&nbsp;</p>
+<p>做完这道题后，大多人可能会有个疑问，怎么没有由先序和后序遍历建立二叉树呢，这是因为先序和后序遍历不能唯一的确定一个二叉树，比如下面五棵树：</p>
+<p>&nbsp; &nbsp; 1　　　　　　preorder:　　 &nbsp;1　　2　　3<br />&nbsp; &nbsp;/ \　　　　　 &nbsp;inorder:　　 &nbsp; &nbsp; <span style="color: #ff0000;">2　　1　　3</span><br />&nbsp;2 &nbsp; &nbsp;3　　 &nbsp;　　 postorder:　　 2　　3　　1</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;1 &nbsp;&nbsp;　　　　preorder:　　 &nbsp; 1　　2　　3<br />&nbsp; &nbsp; &nbsp; / 　　　　　 inorder:　　 &nbsp; &nbsp; <span style="color: #ff0000;">3　　2　　1</span><br />&nbsp; &nbsp; 2 　　　　 &nbsp;&nbsp;&nbsp; postorder:&nbsp;　　3　　2　　1<br />&nbsp; &nbsp;/<br />&nbsp;3</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;1　　　　 &nbsp; &nbsp;preorder:　　 &nbsp;1　　2　　3<br />&nbsp; &nbsp; &nbsp; / 　　　　　 &nbsp;inorder:　　 &nbsp; &nbsp;<span style="color: #ff0000;">2　　3　　1</span><br />&nbsp; &nbsp; 2 　　　　　　postorder:　　3　　2　　1<br />&nbsp; &nbsp; &nbsp; \<br />&nbsp; &nbsp; &nbsp; &nbsp;3</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;1　　　　 &nbsp; &nbsp;&nbsp;preorder:　　 &nbsp;1　　2　　3<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;\ 　　　　 &nbsp; inorder:　　 &nbsp; &nbsp;<span style="color: #ff0000;">1　　3　　2</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2 　　　　 postorder:　　3　　2　　1<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/<br />&nbsp; &nbsp; &nbsp; &nbsp;3</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;1　　　　 &nbsp; &nbsp; preorder:　　 &nbsp;1　　2　　3<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;\ 　　　　　inorder:　　 &nbsp; &nbsp;<span style="color: #ff0000;">1　　2　　3</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2 　　　　 postorder:　　3　　2　　1<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; \<br />		          　　　　3</p>
+<p>&nbsp;</p>
+<p>&nbsp;从上面我们可以看出，对于先序遍历都为1 2 3的五棵二叉树，它们的中序遍历都不相同，而它们的后序遍历却有相同的，所以只有和中序遍历一起才能唯一的确定一棵二叉树。</p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

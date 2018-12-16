@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5174322.html">[LeetCode] Read N Characters Given Read4 用Read4来读取N个字符</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The API: int read4(char *buf) reads 4 characters at a time from a file.<br />The return value is the actual number of characters read. For example, it returns 3 if there is only 3 characters left in the file.<br />By using the read4 API, implement the function int read(char *buf, int n) that reads n characters from the file.<br />Note:<br />The read function will only be called once for each test case.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个Read4函数，每次可以从一个文件中最多读出4个字符，如果文件中的字符不足4个字符时，返回准确的当前剩余的字符数。现在让我们实现一个最多能读取n个字符的函数。这题有迭代和递归的两种解法，我们先来看迭代的方法，思路是我们每4个读一次，然后把读出的结果判断一下，如果为0的话，说明此时的buf已经被读完，跳出循环，直接返回res和n之中的较小值。否则一直读入，直到读完n个字符，循环结束，最后再返回res和n之中的较小值，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Forward declaration of the read4 API.</span>
+<span style="color: #0000ff;">int</span> read4(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">buf);
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> read(<span style="color: #0000ff;">char</span> *buf, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= n / <span style="color: #800080;">4</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> cur = read4(buf +<span style="color: #000000;"> res);
+            </span><span style="color: #0000ff;">if</span> (cur == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            res </span>+=<span style="color: #000000;"> cur;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> min(res, n);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看递归的解法，这个也不难，我们对buf调用read4函数，然后判断返回值t，如果返回值t大于等于n，说明此时n不大于4，直接返回n即可，如果此返回值t小于4，直接返回t即可，如果都不是，则直接返回调用递归函数加上4，其中递归函数的buf应往后推4个字符，此时n变成n-4即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Forward declaration of the read4 API.</span>
+<span style="color: #0000ff;">int</span> read4(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">buf);
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> read(<span style="color: #0000ff;">char</span> *buf, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> read4(buf);
+        </span><span style="color: #0000ff;">if</span> (t &gt;= n) <span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">if</span> (t &lt; <span style="color: #800080;">4</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> t;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">4</span> + read(&amp;buf[<span style="color: #800080;">4</span>], n - <span style="color: #800080;">4</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5181672.html" target="_blank">Read N Characters Given Read4 II - Call multiple times</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/61941/ap-solution-c-0ms-4lines" target="_blank">https://leetcode.com/discuss/61941/ap-solution-c-0ms-4lines</a></p>
+<p><a href="https://leetcode.com/discuss/65714/my-solution-using-recursion" target="_blank">https://leetcode.com/discuss/65714/my-solution-using-recursion</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

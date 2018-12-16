@@ -1,0 +1,70 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4383775.html">[LeetCode] Pow(x, n) 求x的n次方</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement pow(<em>x</em>,&nbsp;<em>n</em>).</p>
+<p>&nbsp;</p>
+<p>这道题让我们求x的n次方，如果我们只是简单的用个for循环让x乘以自己n次的话，未免也把LeetCode上的题想的太简单了，一句话形容图样图森破啊。OJ因超时无法通过，所以我们需要优化我们的算法，使其在更有效的算出结果来。我们可以用递归来折半计算，每次把n缩小一半，这样n最终会缩小到0，任何数的0次方都为1，这时候我们再往回乘，如果此时n是偶数，直接把上次递归得到的值算个平方返回即可，如果是奇数，则还需要乘上个x的值。还有一点需要引起我们的注意的是n有可能为负数，对于n是负数的情况，我们可以先用其绝对值计算出一个结果再取其倒数即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">double</span> myPow(<span style="color: #0000ff;">double</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> / power(x, -<span style="color: #000000;">n);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> power(x, n);
+    }
+    </span><span style="color: #0000ff;">double</span> power(<span style="color: #0000ff;">double</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">double</span> half = power(x, n / <span style="color: #800080;">2</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (n % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> half *<span style="color: #000000;"> half;
+        </span><span style="color: #0000ff;">return</span> x * half *<span style="color: #000000;"> half;
+    }
+};</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p>还有一种写法可以只用一个函数即可，在每次递归中处理n的正负，然后做相应的变换即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">double</span> myPow(<span style="color: #0000ff;">double</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">double</span> half = myPow(x, n / <span style="color: #800080;">2</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (n % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> half *<span style="color: #000000;"> half;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (n &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> half * half *<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> half * half /<span style="color: #000000;"> x;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有迭代的解法，我们让i初始化为n，然后看i是否是2的倍数，是的话x乘以自己，否则res乘以x，i每次循环缩小一半，直到为0停止循环。最后看n的正负，如果为负，返回其倒数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">double</span> myPow(<span style="color: #0000ff;">double</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">double</span> res = <span style="color: #800080;">1.0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n; i != <span style="color: #800080;">0</span>; i /= <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">2</span> != <span style="color: #800080;">0</span>) res *=<span style="color: #000000;"> x;
+            x </span>*=<span style="color: #000000;"> x;
+        }
+        </span><span style="color: #0000ff;">return</span> n &lt; <span style="color: #800080;">0</span> ? <span style="color: #800080;">1</span> /<span style="color: #000000;"> res : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/2836/o-logn-solution-in-java" target="_blank">https://discuss.leetcode.com/topic/2836/o-logn-solution-in-java</a></p>
+<p><a href="https://discuss.leetcode.com/topic/4165/simple-iterative-lg-n-solution/3" target="_blank">https://discuss.leetcode.com/topic/4165/simple-iterative-lg-n-solution/3</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

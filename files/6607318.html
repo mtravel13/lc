@@ -1,0 +1,98 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6607318.html">[LeetCode] Diameter of Binary Tree 二叉树的直径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, you need to compute the length of the diameter of the tree. The diameter of a binary tree is the length of the&nbsp;longestpath between any two nodes in a tree. This path may or may not pass through the root.</p>
+<p>Example:<br />Given a binary tree&nbsp;</p>
+<pre>          1
+         / \
+        2   3
+       / \     
+      4   5    
+</pre>
+<p>&nbsp;</p>
+<p>Return&nbsp;3, which is the length of the path [4,2,1,3] or [5,2,1,3].</p>
+<p>Note:&nbsp;The length of path between two nodes is represented by the number of edges between them.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求二叉树的直径，并告诉了我们直径就是两点之间的最远距离，根据题目中的例子也不难理解题意。我们再来仔细观察例子中的那两个最长路径[4,2,1,3] 和 [5,2,1,3]，我们转换一种角度来看，是不是其实就是根结点1的左右两个子树的深度之和再加1呢。那么我们只要对每一个结点求出其左右子树深度之和，再加上1就可以更新结果res了。为了减少重复计算，我们用哈希表建立每个结点和其深度之间的映射，这样某个结点的深度之前计算过了，就不用再次计算了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> diameterOfBinaryTree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = getHeight(root-&gt;left) + getHeight(root-&gt;<span style="color: #000000;">right);
+        </span><span style="color: #0000ff;">return</span> max(res, max(diameterOfBinaryTree(root-&gt;left), diameterOfBinaryTree(root-&gt;<span style="color: #000000;">right)));
+    }
+    </span><span style="color: #0000ff;">int</span> getHeight(TreeNode*<span style="color: #000000;"> node) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (m.count(node)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> m[node];
+        </span><span style="color: #0000ff;">int</span> h = <span style="color: #800080;">1</span> + max(getHeight(node-&gt;left), getHeight(node-&gt;<span style="color: #000000;">right));
+        </span><span style="color: #0000ff;">return</span> m[node] =<span style="color: #000000;"> h;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;TreeNode*, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的方法貌似有两个递归函数，其实我们只需要用一个递归函数就可以了，我们再求深度的递归函数中顺便就把直径算出来了，而且貌似不用进行优化也能通过OJ，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> diameterOfBinaryTree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        maxDepth(root, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> maxDepth(TreeNode* node, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = maxDepth(node-&gt;<span style="color: #000000;">left, res);
+        </span><span style="color: #0000ff;">int</span> right = maxDepth(node-&gt;<span style="color: #000000;">right, res);
+        res </span>= max(res, left +<span style="color: #000000;"> right);
+        </span><span style="color: #0000ff;">return</span> max(left, right) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>虽说不用进行优化也能通过OJ，但是毕竟还是优化一下好一点啊，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> diameterOfBinaryTree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        maxDepth(root, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> maxDepth(TreeNode* node, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (m.count(node)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> m[node];
+        </span><span style="color: #0000ff;">int</span> left = maxDepth(node-&gt;<span style="color: #000000;">left, res);
+        </span><span style="color: #0000ff;">int</span> right = maxDepth(node-&gt;<span style="color: #000000;">right, res);
+        res </span>= max(res, left +<span style="color: #000000;"> right);
+        </span><span style="color: #0000ff;">return</span> m[node] = (max(left, right) + <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;TreeNode*, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/diameter-of-binary-tree/description/" target="_blank">https://leetcode.com/problems/diameter-of-binary-tree/description/</a></p>
+<p><a href="https://discuss.leetcode.com/topic/83456/java-solution-maxdepth" target="_blank">https://discuss.leetcode.com/topic/83456/java-solution-maxdepth</a></p>
+<p><a href="https://discuss.leetcode.com/topic/83569/543-diameter-of-binary-tree-c-_recursive_with-brief-explanation" target="_blank">https://discuss.leetcode.com/topic/83569/543-diameter-of-binary-tree-c-_recursive_with-brief-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

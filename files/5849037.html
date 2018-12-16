@@ -1,0 +1,90 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5849037.html">[LeetCode] Decode String 解码字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an encoded string, return it's decoded string.</p>
+<p>The encoding rule is:&nbsp;<code>k[encoded_string]</code>, where the&nbsp;<em>encoded_string</em>&nbsp;inside the square brackets is being repeated exactly&nbsp;<em>k</em>&nbsp;times. Note that&nbsp;<em>k</em>&nbsp;is guaranteed to be a positive integer.</p>
+<p>You may assume that the input string is always valid; No extra white spaces, square brackets are well-formed, etc.</p>
+<p>Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers,&nbsp;<em>k</em>. For example, there won't be input like&nbsp;<code>3a</code>&nbsp;or&nbsp;<code>2[4]</code>.</p>
+<p>Examples:</p>
+<pre>s = "3[a]2[bc]", return "aaabcbc".
+s = "3[a2[c]]", return "accaccacc".
+s = "2[abc]3[cd]ef", return "abcabccdcdcdef".</pre>
+<p>&nbsp;</p>
+<p>这道题让我们把一个按一定规则编码后的字符串解码成其原来的模样，编码的方法很简单，就是把重复的字符串放在一个括号里，把重复的次数放在括号的前面，注意括号里面有可能会嵌套括号，这题可以用递归和迭代两种方法来解，我们首先来看递归的解法，我们把一个括号中的所有内容看做一个整体，一次递归函数返回一对括号中解码后的字符串。给定的编码字符串实际上只有四种字符，数字，字母，左括号，和右括号。那么我们开始用一个变量i从0开始遍历到字符串的末尾，由于左括号都是跟在数字后面，所以我们首先遇到的字符只能是数字或者字母，如果是字母，我们直接存入结果中，如果是数字，我们循环读入所有的数字，并正确转换，那么下一位非数字的字符一定是左括号，我们指针右移跳过左括号，对之后的内容调用递归函数求解，注意我们循环的停止条件是遍历到末尾和遇到右括号，由于递归调用的函数返回了子括号里解码后的字符串，而我们之前把次数也已经求出来了，那么循环添加到结果中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> decodeString(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> decode(s, i);
+    }
+    </span><span style="color: #0000ff;">string</span> decode(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> i) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; s[i] != <span style="color: #800000;">'</span><span style="color: #800000;">]</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (s[i] &lt; <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> || s[i] &gt; <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                res </span>+= s[i++<span style="color: #000000;">];
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (s[i] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; s[i] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    cnt </span>= cnt * <span style="color: #800080;">10</span> + s[i++] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                }
+                </span>++<span style="color: #000000;">i;
+                </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> decode(s, i);
+                </span>++<span style="color: #000000;">i;
+                </span><span style="color: #0000ff;">while</span> (cnt-- &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    res </span>+=<span style="color: #000000;"> t;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用迭代的方法写出来，当然需要用stack来辅助运算，我们用两个stack，一个用来保存个数，一个用来保存字符串，我们遍历输入字符串，如果遇到数字，我们更新计数变量cnt；如果遇到左括号，我们把当前cnt压入数字栈中，把当前t压入字符串栈中；如果遇到右括号时，我们取出数字栈中顶元素，存入变量k，然后给字符串栈的顶元素循环加上k个t字符串，然后取出顶元素存入字符串t中；如果遇到字母，我们直接加入字符串t中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> decodeString(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span>, t = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s_num;
+        stack</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s_str;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; s[i] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                cnt </span>= <span style="color: #800080;">10</span> * cnt + s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">[</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                s_num.push(cnt);
+                s_str.push(t);
+                cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">; t.clear();
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">]</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">int</span> k =<span style="color: #000000;"> s_num.top(); s_num.pop();
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; k; ++j) s_str.top() +=<span style="color: #000000;"> t;
+                t </span>=<span style="color: #000000;"> s_str.top(); s_str.pop();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                t </span>+=<span style="color: #000000;"> s[i];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> s_str.empty() ?<span style="color: #000000;"> t : s_str.top();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/decode-string/discuss/87728/share-my-c-solution" target="_blank">https://leetcode.com/problems/decode-string/discuss/87728/share-my-c-solution</a></p>
+<p><a href="https://leetcode.com/problems/decode-string/discuss/87543/0ms-simple-C%2B%2B-solution" target="_blank">https://leetcode.com/problems/decode-string/discuss/87543/0ms-simple-C%2B%2B-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

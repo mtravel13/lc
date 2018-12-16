@@ -1,0 +1,84 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9941357.html">[LeetCode] Kth Largest Element in a Stream 数据流中的第K大的元素</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a class to find&nbsp;the&nbsp;kth largest element in a stream. Note that it is the kth largest element in the sorted order, not the kth distinct element.</p>
+<p>Your&nbsp;<code>KthLargest</code>&nbsp;class will have a constructor which accepts an integer&nbsp;<code>k</code>&nbsp;and an integer array&nbsp;<code>nums</code>, which contains initial elements from&nbsp;the stream. For each call to the method&nbsp;<code>KthLargest.add</code>, return the element representing the kth largest element in the stream.</p>
+<p>Example:</p>
+<pre>int k = 3;
+int[] arr = [4,5,8,2];
+KthLargest kthLargest = new KthLargest(3, arr);
+kthLargest.add(3);&nbsp; &nbsp;// returns 4
+kthLargest.add(5);&nbsp; &nbsp;// returns 5
+kthLargest.add(10);&nbsp; // returns 5
+kthLargest.add(9);&nbsp; &nbsp;// returns 8
+kthLargest.add(4);&nbsp; &nbsp;// returns 8
+</pre>
+<p>Note:&nbsp;<br />You may assume that&nbsp;<code>nums</code>' length&nbsp;&ge;&nbsp;<code>k-1</code>&nbsp;and&nbsp;<code>k</code>&nbsp;&ge;&nbsp;1.</p>
+<p>&nbsp;</p>
+<p>这道题让我们在数据流中求第K大的元素，跟之前那道<a href="http://www.cnblogs.com/grandyang/p/4539757.html" target="_blank">Kth Largest Element in an Array</a>很类似，但不同的是，那道题的数组是确定的，不会再增加元素，这样确定第K大的数字就比较简单。而这道题的数组是不断在变大的，所以每次第K大的数字都在不停的变化。那么我们其实只关心前K大个数字就可以了，所以我们可以使用一个最小堆来保存前K个数字，当再加入新数字后，最小堆会自动排序，然后把排序后的最小的那个数字去除，则堆中还是K个数字，返回的时候只需返回堆顶元素即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> KthLargest {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    KthLargest(</span><span style="color: #0000ff;">int</span> k, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            q.push(num);
+            </span><span style="color: #0000ff;">if</span> (q.size() &gt;<span style="color: #000000;"> k) q.pop();
+        }
+        K </span>=<span style="color: #000000;"> k;
+    }
+    
+    </span><span style="color: #0000ff;">int</span> add(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        q.push(val);
+        </span><span style="color: #0000ff;">if</span> (q.size() &gt;<span style="color: #000000;"> K) q.pop();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q.top();
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    priority_queue</span>&lt;<span style="color: #0000ff;">int</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;, greater&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> K;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用multiset来做，利用其可重复，且自动排序的功能，这样也可以达到最小堆的效果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> KthLargest {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    KthLargest(</span><span style="color: #0000ff;">int</span> k, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            st.insert(num);
+            </span><span style="color: #0000ff;">if</span> (st.size() &gt;<span style="color: #000000;"> k) st.erase(st.begin());
+        }
+        K </span>=<span style="color: #000000;"> k;
+    }
+    
+    </span><span style="color: #0000ff;">int</span> add(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        st.insert(val);
+        </span><span style="color: #0000ff;">if</span> (st.size() &gt;<span style="color: #000000;"> K) st.erase(st.begin());
+        </span><span style="color: #0000ff;">return</span> *<span style="color: #000000;">st.begin();
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    multiset</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> K;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4539757.html" target="_blank">Kth Largest Element in an Array</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/kth-largest-element-in-a-stream" target="_blank">https://leetcode.com/problems/kth-largest-element-in-a-stream</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

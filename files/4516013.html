@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4516013.html">[LeetCode] Word Search II 词语搜索之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a 2D board and a list of words from the dictionary, find all words in the board.</p>
+<p>Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.</p>
+<p> For example,<br />
+Given <strong>words</strong> = <code>["oath","pea","eat","rain"]</code> and <strong>board</strong> = 
+</p>
+<pre>[
+  ['<span style="color: #d70;">o','<span style="color: #d70;">a','a','n'],
+  ['e','<span style="color: #d30;">t','<span style="color: #d00;">a','<span style="color: #d00;">e'],
+  ['i','<span style="color: #d70;">h','k','r'],
+  ['i','f','l','v']
+]
+</span></span></span></span></span></span></pre>
+<p>Return <code>["eat","oath"]</code>.</p>
+<p> <strong>Note:</strong><br />
+You may assume that all inputs are consist of lowercase letters <code>a-z</code>.
+</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/word-search-ii/">click to show hint.</a></p>
+<div class="spoilers" style="display: block;">
+<p>You would need to optimize your backtracking to pass the larger test. Could you stop backtracking earlier?</p>
+<p>If the current candidate does not exist in all words' prefix, you 
+could stop backtracking immediately. What kind of data structure could 
+answer such query efficiently? Does a hash table work? Why or why not? 
+How about a Trie? If you would like to learn how to implement a basic 
+trie, please work on this problem: <a href="https://leetcode.com/problems/implement-trie-prefix-tree/">Implement Trie (Prefix Tree)</a> first.</p>
+
+
+
+
+
+</div>
+<p>&nbsp;</p>
+<p>这道题是在之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4332313.html">Word Search 词语搜索</a>的基础上做了些拓展，之前是给一个单词让判断是否存在，现在是给了一堆单词，让返回所有存在的单词，在这道题最开始更新的几个小时内，用brute force是可以通过OJ的，就是在之前那题的基础上多加一个for循环而已，但是后来出题者其实是想考察字典树的应用，所以加了一个超大的test case，以至于brute force无法通过，强制我们必须要用字典树来求解。LeetCode中有关字典树的题还有<a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4491665.html">&nbsp;Implement Trie (Prefix Tree) 实现字典树(前缀树)</a>和<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4507286.html">Add and Search Word - Data structure design 添加和查找单词-数据结构设计</a>，那么我们在这题中只要实现字典树中的insert功能就行了，查找单词和前缀就没有必要了，然后DFS的思路跟之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4332313.html">Word Search 词语搜索</a>基本相同，请参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> TrieNode {
+        TrieNode </span>*child[<span style="color: #800080;">26</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> str;
+        TrieNode() : str(</span><span style="color: #800000;">""</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (auto &amp;a : child) a =<span style="color: #000000;"> NULL;
+        }
+    };
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Trie {
+        TrieNode </span>*<span style="color: #000000;">root;
+        Trie() : root(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode()) {}
+        </span><span style="color: #0000ff;">void</span> insert(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+            TrieNode </span>*p =<span style="color: #000000;"> root;
+            </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : s) {
+                </span><span style="color: #0000ff;">int</span> i = a - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (!p-&gt;child[i]) p-&gt;child[i] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode();
+                p </span>= p-&gt;<span style="color: #000000;">child[i];
+            }
+            p</span>-&gt;str =<span style="color: #000000;"> s;
+        }
+    };
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findWords(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt;&amp; board, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">if</span> (words.empty() || board.empty() || board[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt; &gt; visit(board.size(), vector&lt;<span style="color: #0000ff;">bool</span>&gt;(board[<span style="color: #800080;">0</span>].size(), <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        Trie T;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : words) T.insert(a);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; board.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; board[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (T.root-&gt;child[board[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">]) {
+                    search(board, T.root</span>-&gt;child[board[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">], i, j, visit, res);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> search(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt; &amp;board, TrieNode *p, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> j, vector&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt; &gt; &amp;visit, vector&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">res) { 
+        </span><span style="color: #0000ff;">if</span> (!p-&gt;<span style="color: #000000;">str.empty()) {
+            res.push_back(p</span>-&gt;<span style="color: #000000;">str);
+            p</span>-&gt;<span style="color: #000000;">str.clear();
+        }
+        </span><span style="color: #0000ff;">int</span> d[][<span style="color: #800080;">2</span>] = {{-<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>}, {<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>}, {<span style="color: #800080;">0</span>, -<span style="color: #800080;">1</span>}, {<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">}};
+        visit[i][j] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : d) {
+            </span><span style="color: #0000ff;">int</span> nx = a[<span style="color: #800080;">0</span>] + i, ny = a[<span style="color: #800080;">1</span>] +<span style="color: #000000;"> j;
+            </span><span style="color: #0000ff;">if</span> (nx &gt;= <span style="color: #800080;">0</span> &amp;&amp; nx &lt; board.size() &amp;&amp; ny &gt;= <span style="color: #800080;">0</span> &amp;&amp; ny &lt; board[<span style="color: #800080;">0</span>].size() &amp;&amp; !visit[nx][ny] &amp;&amp; p-&gt;child[board[nx][ny] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">]) {
+                search(board, p</span>-&gt;child[board[nx][ny] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">], nx, ny, visit, res);
+            }
+        }
+        visit[i][j] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/36367/simple-c-solution-using-trie" target="_blank">https://leetcode.com/discuss/36367/simple-c-solution-using-trie</a></p>
+<p><a href="http://blog.csdn.net/ljiabin/article/details/45846527" target="_blank">http://blog.csdn.net/ljiabin/article/details/45846527</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

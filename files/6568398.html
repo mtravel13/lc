@@ -1,0 +1,104 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6568398.html">[LeetCode] Minimum Time Difference 最短时间差</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of 24-hour clock time points in "Hour:Minutes" format, find the minimum&nbsp;minutes&nbsp;difference between any two time points in the list.</p>
+<p>Example 1:</p>
+<pre>Input: ["23:59","00:00"]
+Output: 1
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The number of time points in the given list is at least 2 and won't exceed 20000.</li>
+<li>The input time is legal and ranges from 00:00 to 23:59.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一系列无序的时间点，让我们求最短的两个时间点之间的差值。那么最简单直接的办法就是给数组排序，这样时间点小的就在前面了，然后我们分别把小时和分钟提取出来，计算差值，注意唯一的特殊情况就是第一个和末尾的时间点进行比较，第一个时间点需要加上24小时再做差值，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findMinDifference(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> timePoints) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, n = timePoints.size(), diff = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        sort(timePoints.begin(), timePoints.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> t1 = timePoints[i], t2 = timePoints[(i + <span style="color: #800080;">1</span>) %<span style="color: #000000;"> n];
+            </span><span style="color: #0000ff;">int</span> h1 = (t1[<span style="color: #800080;">0</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) * <span style="color: #800080;">10</span> + t1[<span style="color: #800080;">1</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> m1 = (t1[<span style="color: #800080;">3</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) * <span style="color: #800080;">10</span> + t1[<span style="color: #800080;">4</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> h2 = (t2[<span style="color: #800080;">0</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) * <span style="color: #800080;">10</span> + t2[<span style="color: #800080;">1</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> m2 = (t2[<span style="color: #800080;">3</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) * <span style="color: #800080;">10</span> + t2[<span style="color: #800080;">4</span>] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            diff </span>= (h2 - h1) * <span style="color: #800080;">60</span> + (m2 -<span style="color: #000000;"> m1);
+            </span><span style="color: #0000ff;">if</span> (i == n - <span style="color: #800080;">1</span>) diff += <span style="color: #800080;">24</span> * <span style="color: #800080;">60</span><span style="color: #000000;">;
+            res </span>=<span style="color: #000000;"> min(res, diff);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种写法跟上面的大体思路一样，写法上略有不同，是在一开始就把小时和分钟数提取出来并计算总分钟数存入一个新数组，然后再对新数组进行排序，再计算两两之差，最后还是要处理首尾之差，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findMinDifference(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> timePoints) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, n =<span style="color: #000000;"> timePoints.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> str : timePoints) {
+            </span><span style="color: #0000ff;">int</span> h = stoi(str.substr(<span style="color: #800080;">0</span>, <span style="color: #800080;">2</span>)), m = stoi(str.substr(<span style="color: #800080;">3</span><span style="color: #000000;">));
+            nums.push_back(h </span>* <span style="color: #800080;">60</span> +<span style="color: #000000;"> m);
+        }
+        sort(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            res </span>= min(res, nums[i] - nums[i - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">return</span> min(res, <span style="color: #800080;">1440</span> + nums[<span style="color: #800080;">0</span>] -<span style="color: #000000;"> nums.back());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面两种方法的时间复杂度都是O(nlgn)，我们来看一种O(n)时间复杂度的方法，由于时间点并不是无穷多个，而是只有1440个，所以我们建立一个大小为1440的数组来标记某个时间点是否出现过，如果之前已经出现过，说明有两个相同的时间点，直接返回0即可；若没有，将当前时间点标记为出现过。我们还需要一些辅助变量，pre表示之前遍历到的时间点，first表示按顺序排的第一个时间点，last表示按顺序排的最后一个时间点，然后我们再遍历这个mask数组，如果当前时间点出现过，再看如果first不为初始值的话，说明pre已经被更新过了，我们用当前时间点减去pre来更新结果res，然后再分别更新first，last，和pre即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findMinDifference(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> timePoints) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, pre = <span style="color: #800080;">0</span>, first = INT_MAX, last =<span style="color: #000000;"> INT_MIN;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; mask(<span style="color: #800080;">1440</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> str : timePoints) {
+            </span><span style="color: #0000ff;">int</span> h = stoi(str.substr(<span style="color: #800080;">0</span>, <span style="color: #800080;">2</span>)), m = stoi(str.substr(<span style="color: #800080;">3</span><span style="color: #000000;">));
+            </span><span style="color: #0000ff;">if</span> (mask[h * <span style="color: #800080;">60</span> + m] == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+            mask[h </span>* <span style="color: #800080;">60</span> + m] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">1440</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (mask[i] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (first !=<span style="color: #000000;"> INT_MAX) {
+                    res </span>= min(res, i -<span style="color: #000000;"> pre);
+                }
+                first </span>=<span style="color: #000000;"> min(first, i);
+                last </span>=<span style="color: #000000;"> max(last, i);
+                pre </span>=<span style="color: #000000;"> i;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> min(res, <span style="color: #800080;">1440</span> + first -<span style="color: #000000;"> last);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/83250/easy-c-solution" target="_blank">https://discuss.leetcode.com/topic/83250/easy-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/82573/verbose-java-solution-bucket" target="_blank">https://discuss.leetcode.com/topic/82573/verbose-java-solution-bucket</a></p>
+<p><a href="https://discuss.leetcode.com/topic/82575/java-o-nlog-n-o-n-time-o-1-space-solutions" target="_blank">https://discuss.leetcode.com/topic/82575/java-o-nlog-n-o-n-time-o-1-space-solutions</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

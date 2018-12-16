@@ -1,0 +1,127 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7489097.html">[LeetCode] Print Binary Tree 打印二叉树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Print a binary tree in an m*n 2D string array following these rules:</p>
+<ol>
+<li>The row number&nbsp;<code>m</code>&nbsp;should be equal to the height of the given binary tree.</li>
+<li>The column number&nbsp;<code>n</code>&nbsp;should always be an odd number.</li>
+<li>The root node's value (in string format) should be put in the exactly middle of the first row it can be put. The column and the row where the root node belongs will separate the rest space into two parts (left-bottom part and right-bottom part). You should print the left subtree in the left-bottom part and print the right subtree in the right-bottom part. The left-bottom part and the right-bottom part should have the same size. Even if one subtree is none while the other is not, you don't need to print anything for the none subtree but still need to leave the space as large as that for the other subtree. However, if two subtrees are none, then you don't need to leave space for both of them.</li>
+<li>Each unused space should contain an empty string&nbsp;<code>""</code>.</li>
+<li>Print the subtrees following the same rules.</li>
+</ol>
+<p>Example 1:</p>
+<pre>Input:
+     1
+    /
+   2
+Output:
+[["", "1", ""],
+ ["2", "", ""]]
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+     1
+    / \
+   2   3
+    \
+     4
+Output:
+[["", "", "", "1", "", "", ""],
+ ["", "2", "", "", "", "3", ""],
+ ["", "", "4", "", "", "", ""]]
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input:
+      1
+     / \
+    2   5
+   / 
+  3 
+ / 
+4 
+Output:
+
+[["",  "",  "", "",  "", "", "", "1", "",  "",  "",  "",  "", "", ""]
+ ["",  "",  "", "2", "", "", "", "",  "",  "",  "",  "5", "", "", ""]
+ ["",  "3", "", "",  "", "", "", "",  "",  "",  "",  "",  "", "", ""]
+ ["4", "",  "", "",  "", "", "", "",  "",  "",  "",  "",  "", "", ""]]
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;The height of binary tree is in the range of [1, 10].</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一棵二叉树，让我们以数组的形式打印出来。数组每一行的宽度是二叉树的最底层数所能有的最多结点数，存在的结点需要填入到正确的位置上。那么这道题我们就应该首先要确定返回数组的宽度，由于宽度跟数组的深度有关，所以我们首先应该算出二叉树的最大深度，直接写一个子函数返回这个最大深度，从而计算出宽度。下面就是要遍历二叉树从而在数组中加入结点值。我们先来看第一行，由于根结点只有一个，所以第一行只需要插入一个数字，不管这一行多少个位置，我们都是在最中间的位置插入结点值。下面来看第二行，我们仔细观察可以发现，如果我们将这一行分为左右两部分，那么插入的位置还是在每一部分的中间位置，这样我们只要能确定分成的部分的左右边界位置，就知道插入结点的位置了，所以应该是使用分治法的思路。在递归函数中，如果当前node不存在或者当前深度超过了最大深度直接返回，否则就给中间位置赋值为结点值，然后对于左子结点，范围是左边界到中间位置，调用递归函数，注意当前深度加1；同理对于右子结点，范围是中间位置加1到右边界，调用递归函数，注意当前深度加1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; printTree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> h = getHeight(root), w = pow(<span style="color: #800080;">2</span>, h) - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; res(h, vector&lt;<span style="color: #0000ff;">string</span>&gt;(w, <span style="color: #800000;">""</span><span style="color: #000000;">));
+        helper(root, </span><span style="color: #800080;">0</span>, w - <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, h, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> j, <span style="color: #0000ff;">int</span> curH, <span style="color: #0000ff;">int</span> height, vector&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node || curH == height) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        res[curH][(i </span>+ j) / <span style="color: #800080;">2</span>] = to_string(node-&gt;<span style="color: #000000;">val);
+        helper(node</span>-&gt;left, i, (i + j) / <span style="color: #800080;">2</span>, curH + <span style="color: #800080;">1</span><span style="color: #000000;">, height, res);
+        helper(node</span>-&gt;right, (i + j) / <span style="color: #800080;">2</span> + <span style="color: #800080;">1</span>, j, curH + <span style="color: #800080;">1</span><span style="color: #000000;">, height, res);
+    }
+    </span><span style="color: #0000ff;">int</span> getHeight(TreeNode*<span style="color: #000000;"> node) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> + max(getHeight(node-&gt;left), getHeight(node-&gt;<span style="color: #000000;">right));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是层序遍历二叉树，使用了两个辅助队列来做，思路都一样，只不过是迭代的写法而已，关键还是在于左右边界的处理上，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; printTree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> h = getHeight(root), w = pow(<span style="color: #800080;">2</span>, h) - <span style="color: #800080;">1</span>, curH = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; res(h, vector&lt;<span style="color: #0000ff;">string</span>&gt;(w, <span style="color: #800000;">""</span><span style="color: #000000;">));
+        queue</span>&lt;TreeNode*&gt;<span style="color: #000000;"> q{{root}};
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt; idxQ{{{<span style="color: #800080;">0</span>, w - <span style="color: #800080;">1</span><span style="color: #000000;">}}};
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> q.size();
+            </span>++<span style="color: #000000;">curH;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+                auto idx </span>=<span style="color: #000000;"> idxQ.front(); idxQ.pop();
+                </span><span style="color: #0000ff;">if</span> (!t) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> left = idx.first, right =<span style="color: #000000;"> idx.second;
+                </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                res[curH][mid] </span>= to_string(t-&gt;<span style="color: #000000;">val);
+                q.push(t</span>-&gt;<span style="color: #000000;">left);
+                q.push(t</span>-&gt;<span style="color: #000000;">right);
+                idxQ.push({left, mid});
+                idxQ.push({mid </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, right});
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> getHeight(TreeNode*<span style="color: #000000;"> node) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> + max(getHeight(node-&gt;left), getHeight(node-&gt;<span style="color: #000000;">right));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/98381/java-recursive-solution">https://discuss.leetcode.com/topic/98381/java-recursive-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/98503/java-iterative-level-order-traversal-with-queue">https://discuss.leetcode.com/topic/98503/java-iterative-level-order-traversal-with-queue</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

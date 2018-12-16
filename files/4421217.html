@@ -1,0 +1,46 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4421217.html">[LeetCode] Valid Sudoku 验证数独</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Determine if a Sudoku is valid, according to:&nbsp;<a href="http://sudoku.com.au/TheRules.aspx">Sudoku Puzzles - The Rules</a>.</p>
+<p>The Sudoku board could be partially filled, where empty cells are filled with the character&nbsp;<code>'.'</code>.</p>
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/250px-Sudoku-by-L2G-20050714.svg.png" alt="" /></p>
+<p>A partially filled sudoku which is valid.</p>
+<p>&nbsp;</p>
+<p>Note:<br />A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.</p>
+<p>&nbsp;</p>
+<p>这道题让我们验证一个方阵是否为<a href="http://zh.wikipedia.org/wiki/%E6%95%B8%E7%8D%A8" target="_blank">数独矩阵</a>，判断标准是看各行各列是否有重复数字，以及每个小的3x3的小方阵里面是否有重复数字，如果都无重复，则当前矩阵是数独矩阵，但不代表待数独矩阵有解，只是单纯的判断当前未填完的矩阵是否是数独矩阵。那么根据数独矩阵的定义，我们在遍历每个数字的时候，就看看包含当前位置的行和列以及3x3小方阵中是否已经出现该数字，那么我们需要三个标志矩阵，分别记录各行，各列，各小方阵是否出现某个数字，其中行和列标志下标很好对应，就是小方阵的下标需要稍稍转换一下，具体代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isValidSudoku(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt; &amp;<span style="color: #000000;">board) {
+        </span><span style="color: #0000ff;">if</span> (board.empty() || board[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = board.size(), n = board[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt; &gt; rowFlag(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt; &gt; colFlag(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt; &gt; cellFlag(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span> &amp;&amp; board[i][j] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">int</span> c = board[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (rowFlag[i][c] || colFlag[c][j] || cellFlag[<span style="color: #800080;">3</span> * (i / <span style="color: #800080;">3</span>) + j / <span style="color: #800080;">3</span>][c]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    rowFlag[i][c] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    colFlag[c][j] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    cellFlag[</span><span style="color: #800080;">3</span> * (i / <span style="color: #800080;">3</span>) + j / <span style="color: #800080;">3</span>][c] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

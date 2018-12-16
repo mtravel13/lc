@@ -1,0 +1,130 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6395843.html">[LeetCode] Target Sum 目标和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given a list of non-negative integers, a1, a2, ..., an, and a target, S. Now you have 2 symbols <code>+</code> and <code>-</code>. For each integer, you should choose one from <code>+</code> and <code>-</code> as its new symbol.</p>
+<p>Find out how many ways to assign symbols to make sum of integers equal to target S.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> nums is [1, 1, 1, 1, 1], S is 3. 
+<strong>Output:</strong> 5
+<strong>Explanation:</strong> 
+
+-1+1+1+1+1 = 3
++1-1+1+1+1 = 3
++1+1-1+1+1 = 3
++1+1+1-1+1 = 3
++1+1+1+1-1 = 3
+
+There are 5 ways to assign symbols to make the sum of nums be target 3.
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol><ol>
+<li>The length of the given array is positive and will not exceed 20. </li>
+<li>The sum of elements in the given array will not exceed 1000.</li>
+<li>Your output answer is guaranteed to be fitted in a 32-bit integer.</li>
+
+
+</ol></ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，和一个目标值，让我们给数组中每个数字加上正号或负号，然后求和要和目标值相等，求有多少中不同的情况。那么对于这种求多种情况的问题，我最想到的方法使用递归来做。我们从第一个数字，调用递归函数，在递归函数中，分别对目标值进行加上当前数字调用递归，和减去当前数字调用递归，这样会涵盖所有情况，并且当所有数字遍历完成后，我们看若目标值为0了，则结果res自增1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findTargetSumWays(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        helper(nums, S, </span><span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> S, <span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (start &gt;=<span style="color: #000000;"> nums.size()) {
+            </span><span style="color: #0000ff;">if</span> (S == <span style="color: #800080;">0</span>) ++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        helper(nums, S </span>- nums[start], start + <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+        helper(nums, S </span>+ nums[start], start + <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们对上面的递归方法进行优化，使用dp数组来记录中间值，这样可以避免重复运算，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findTargetSumWays(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> S) {
+        vector</span>&lt;unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> dp(nums.size());
+        </span><span style="color: #0000ff;">return</span> helper(nums, S, <span style="color: #800080;">0</span><span style="color: #000000;">, dp);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> sum, <span style="color: #0000ff;">int</span> start, vector&lt;unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> dp) {
+        </span><span style="color: #0000ff;">if</span> (start == nums.size()) <span style="color: #0000ff;">return</span> sum == <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (dp[start].count(sum)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[start][sum];
+        </span><span style="color: #0000ff;">int</span> cnt1 = helper(nums, sum - nums[start], start + <span style="color: #800080;">1</span><span style="color: #000000;">, dp);
+        </span><span style="color: #0000ff;">int</span> cnt2 = helper(nums, sum + nums[start], start + <span style="color: #800080;">1</span><span style="color: #000000;">, dp);
+        </span><span style="color: #0000ff;">return</span> dp[start][sum] = cnt1 +<span style="color: #000000;"> cnt2;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用迭代的方法来解，还是要用dp数组，其中dp[i][j]表示到第i-1个数字且和为j的情况总数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findTargetSumWays(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt; dp(n + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        dp[</span><span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : dp[i]) {
+                </span><span style="color: #0000ff;">int</span> sum = a.first, cnt =<span style="color: #000000;"> a.second;
+                dp[i </span>+ <span style="color: #800080;">1</span>][sum + nums[i]] +=<span style="color: #000000;"> cnt;
+                dp[i </span>+ <span style="color: #800080;">1</span>][sum - nums[i]] +=<span style="color: #000000;"> cnt;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[n][S];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以对上面的方法进行空间上的优化，只用一个哈希表，而不是用一个数组的哈希表，我们在遍历数组中的每一个数字时，新建一个哈希表，我们在遍历原哈希表中的项时更新这个新建的哈希表，最后把新建的哈希表整个赋值和原哈希表，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findTargetSumWays(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> S) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> dp;
+        dp[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> t;
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : dp) {
+                </span><span style="color: #0000ff;">int</span> sum = a.first, cnt =<span style="color: #000000;"> a.second;
+                t[sum </span>+ num] +=<span style="color: #000000;"> cnt;
+                t[sum </span>- num] +=<span style="color: #000000;"> cnt;
+            }
+            dp </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[S];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/76373/evolve-from-brute-force-to-dp" target="_blank">https://discuss.leetcode.com/topic/76373/evolve-from-brute-force-to-dp</a></p>
+<p><a href="https://discuss.leetcode.com/topic/76397/c-iterative-with-unordered_map" target="_blank">https://discuss.leetcode.com/topic/76397/c-iterative-with-unordered_map</a></p>
+<p><a href="https://discuss.leetcode.com/topic/76361/backtracking-solution-java-easy" target="_blank">https://discuss.leetcode.com/topic/76361/backtracking-solution-java-easy</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

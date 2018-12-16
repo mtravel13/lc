@@ -1,0 +1,50 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5628836.html">[LeetCode] Water and Jug Problem 水罐问题</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given two jugs with capacities <em>x</em> and <em>y</em> litres. There is an infinite amount of water supply available. You need to determine whether it is possible to measure exactly <em>z</em> litres using these two jugs.</p>
+<p>If <em>z</em> liters of water is measurable, you must have <em>z</em> liters of water contained within <strong>one or both buckets</strong> by the end.</p>
+<p>Operations allowed:</p>
+<ul>
+<li>Fill any of the jugs completely with water.</li>
+<li>Empty any of the jugs.</li>
+<li>Pour water from one jug into another till the other jug is completely full or the first jug itself is empty.</li>
+</ul>
+<p><strong>Example 1:</strong> (From the famous <a href="https://www.youtube.com/watch?v=BVtQNK_ZUJg" target="_blank"><em>"Die Hard"</em> example</a>)</p>
+<pre>Input: x = 3, y = 5, z = 4
+Output: True
+</pre>
+<p><strong>Example 2:</strong></p>
+<pre>Input: x = 2, y = 6, z = 5
+Output: False
+</pre>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://discuss.leetcode.com/user/vinod23">@vinod23</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这是一道脑筋急转弯题，我想很多人以前应该听过这道题目，有一个容量为3升和一个容量为5升的水罐，问我们如何准确的称出4升的水。我想很多人都知道怎么做，先把5升水罐装满水，倒到3升水罐里，这时5升水罐里还有2升水，然后把3升水罐里的水都倒掉，把5升水罐中的2升水倒入3升水罐中，这时候把5升水罐解满，然后往此时有2升水的3升水罐里倒水，这样5升水罐倒出1升后还剩4升即为所求。这个很多人都知道，但是这道题随意给我们了三个参数，问有没有解法，这就比较难了。这里我就照搬<a href="https://leetcode.com/discuss/111528/clear-explanation-of-why-using-gcd" target="_blank">网上大神的讲解</a>吧：</p>
+<p>这道问题其实可以转换为有一个很大的容器，我们有两个杯子，容量分别为x和y，问我们通过用两个杯子往里倒水，和往出舀水，问能不能使容器中的水刚好为z升。那么我们可以用一个公式来表达：</p>
+<p>z = m * x + n * y</p>
+<p>其中m，n为舀水和倒水的次数，正数表示往里舀水，负数表示往外倒水，那么题目中的例子可以写成: 4 = (-2) * 3 + 2 * 5，即3升的水罐往外倒了两次水，5升水罐往里舀了两次水。那么问题就变成了对于任意给定的x,y,z，存不存在m和n使得上面的等式成立。根据<a href="https://zh.wikipedia.org/wiki/%E8%B2%9D%E7%A5%96%E7%AD%89%E5%BC%8F" target="_blank">裴蜀定理</a>，ax + by = d的解为 d = gcd(x, y)，那么我们只要只要z % d == 0，上面的等式就有解，所以问题就迎刃而解了，我们只要看z是不是x和y的最大公约数的倍数就行了，别忘了还有个限制条件x + y &gt;= z，因为x和y不可能称出比它们之和还多的水，参见代码如下；</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canMeasureWater(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> y, <span style="color: #0000ff;">int</span><span style="color: #000000;"> z) {
+        </span><span style="color: #0000ff;">return</span> z == <span style="color: #800080;">0</span> || (x + y &gt;= z &amp;&amp; z % gcd(x, y) == <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">int</span> gcd(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">return</span> y == <span style="color: #800080;">0</span> ? x : gcd(y, x %<span style="color: #000000;"> y);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/111528/clear-explanation-of-why-using-gcd" target="_blank">https://leetcode.com/discuss/111528/clear-explanation-of-why-using-gcd</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,82 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4086298.html">[LeetCode] Length of Last Word 求末尾单词的长度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string&nbsp;<em>s</em>&nbsp;consists of upper/lower-case alphabets and empty space characters&nbsp;<code>' '</code>, return the length of last word in the string.</p>
+<p>If the last word does not exist, return 0.</p>
+<p>Note:&nbsp;A word is defined as a character sequence consists of non-space characters only.</p>
+<p>For example,&nbsp;<br />Given&nbsp;<em>s</em>&nbsp;=&nbsp;<code>"Hello World"</code>,<br />return&nbsp;<code>5</code>.</p>
+<p>&nbsp;</p>
+<p>这道题难度不是很大。先对输入字符串做预处理，去掉开头和结尾的空格，然后用一个计数器来累计非空格的字符串的长度，遇到空格则将计数器清零。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLastWord(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *<span style="color: #000000;">s) {
+        </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> strlen(s);
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> right = len - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> count = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (s[left] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) ++<span style="color: #000000;">left;
+        </span><span style="color: #0000ff;">while</span> (s[right] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) --<span style="color: #000000;">right;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = left; i &lt;= right; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) count = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> ++<span style="color: #000000;">count;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> count;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>昨晚睡觉前又想到了一种解法，其实不用上面那么复杂的，我们关心的主要是非空格的字符，那么我们实际上在遍历字符串的时候，如果遇到非空格的字符，我们只需要判断其前面一个位置的字符是否为空格，如果是的话，那么当前肯定是一个新词的开始，将计数器重置为1，如果不是的话，说明正在统计一个词的长度，计数器自增1即可。但是需要注意的是，当i=0的时候，无法访问前一个字符，所以这种情况要特别判断一下，归为计数器自增1那类。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLastWord(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] != <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (i != <span style="color: #800080;">0</span> &amp;&amp; s[i - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) res = <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> ++<span style="color: #000000;">res;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是第一种解法的优化版本，由于我们只关于最后一个单词的长度，所以开头有多少个空格起始我们并不在意，我们从字符串末尾开始，先将末尾的空格都去掉，然后开始找非空格的字符的长度即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLastWord(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> right = s.size() - <span style="color: #800080;">1</span>, res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (right &gt;= <span style="color: #800080;">0</span> &amp;&amp; s[right] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) --<span style="color: #000000;">right;
+        </span><span style="color: #0000ff;">while</span> (right &gt;= <span style="color: #800080;">0</span> &amp;&amp; s[right] != <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;"> ) {
+            </span>--<span style="color: #000000;">right; 
+            </span>++<span style="color: #000000;">res;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题用Java来做可以一行搞定，请参见<a href="https://discuss.leetcode.com/topic/6055/a-single-line-of-code-in-java" target="_blank">这个帖子</a>.</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/17312/7-lines-4ms-c-solution" target="_blank">https://discuss.leetcode.com/topic/17312/7-lines-4ms-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/6055/a-single-line-of-code-in-java" target="_blank">https://discuss.leetcode.com/topic/6055/a-single-line-of-code-in-java</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

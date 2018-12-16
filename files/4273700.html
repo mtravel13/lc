@@ -1,0 +1,53 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4273700.html">[LeetCode] Sum Root to Leaf Numbers 求根到叶节点数字之和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree containing digits from <code>0-9</code> only, each root-to-leaf path could represent a number.</p>
+<p>An example is the root-to-leaf path <code>1-&gt;2-&gt;3</code> which represents the number <code>123</code>.</p>
+<p>Find the total sum of all root-to-leaf numbers.</p>
+<p>For example,</p>
+<pre>    1
+   / \
+  2   3
+</pre>
+<p> The root-to-leaf path <code>1-&gt;2</code> represents the number <code>12</code>.<br />
+The root-to-leaf path <code>1-&gt;3</code> represents the number <code>13</code>.
+</p>
+<p>
+Return the sum = 12 + 13 = <code>25</code>.
+</p>
+<p>&nbsp;</p>
+<p>这道求根到叶节点数字之和的题跟之前的求<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4036961.html">Path Sum 二叉树的路径和</a><span class="postTitle2">很类似，都是利用DFS递归来解，这道题由于不是单纯的把各个节点的数字相加，而是每到一个新的数字，要把原来的数字扩大10倍之后再相加。代码如下：</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> sumNumbers(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">return</span> sumNumbersDFS(root, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">int</span> sumNumbersDFS(TreeNode *root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> sum) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        sum </span>= sum * <span style="color: #800080;">10</span> + root-&gt;<span style="color: #000000;">val;
+        </span><span style="color: #0000ff;">if</span> (!root-&gt;left &amp;&amp; !root-&gt;right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+        </span><span style="color: #0000ff;">return</span> sumNumbersDFS(root-&gt;left, sum) + sumNumbersDFS(root-&gt;<span style="color: #000000;">right, sum);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

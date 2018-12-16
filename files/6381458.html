@@ -1,0 +1,134 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6381458.html">[LeetCode] The Maze 迷宫</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="col-md-12">
+<div class="question-content">
+<p>There is a&nbsp;ball&nbsp;in a maze with empty spaces and walls. The ball can go through empty spaces by rolling&nbsp;up,&nbsp;down,&nbsp;left&nbsp;or&nbsp;right, but it won't stop rolling until hitting a wall. When the ball stops, it could choose the next direction.</p>
+<p>Given the ball's&nbsp;start position, the&nbsp;destination&nbsp;and the&nbsp;maze, determine whether the ball could stop at the destination.</p>
+<p>The maze is represented by a binary 2D array. 1 means the wall and 0 means the empty space. You may assume that the borders of the maze are all walls. The start and destination coordinates are represented by row and column indexes.</p>
+<p>Example 1</p>
+<pre>Input 1: a maze represented by a 2D array
+
+0 0 1 0 0
+0 0 0 0 0
+0 0 0 1 0
+1 1 0 1 1
+0 0 0 0 0
+
+Input 2: start coordinate (rowStart, colStart) = (0, 4)
+Input 3: destination coordinate (rowDest, colDest) = (4, 4)
+
+Output: true
+Explanation: One possible way is : left -&gt; down -&gt; left -&gt; down -&gt; right -&gt; down -&gt; right.
+</pre>
+<img src="https://leetcode.com/static/images/problemset/maze_1_example_1.png" alt="" width="258" height="143" />
+<p>&nbsp;</p>
+<p>Example 2</p>
+<pre>Input 1: a maze represented by a 2D array
+
+0 0 1 0 0
+0 0 0 0 0
+0 0 0 1 0
+1 1 0 1 1
+0 0 0 0 0
+
+Input 2: start coordinate (rowStart, colStart) = (0, 4)
+Input 3: destination coordinate (rowDest, colDest) = (3, 2)
+
+Output: false
+Explanation: There is no way for the ball to stop at the destination.
+</pre>
+<img src="https://leetcode.com/static/images/problemset/maze_1_example_2.png" alt="" width="262" height="145" />
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>There is only one ball and one destination in the maze.</li>
+<li>Both the ball and the destination exist on an empty space, and they will not be at the same position initially.</li>
+<li>The given maze does not contain border (like the red rectangle in the example pictures), but you could assume the border of the maze are all walls.</li>
+<li>The maze contains at least 2 empty spaces, and both the width and height of the maze won't exceed 100.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们遍历迷宫，但是与以往不同的是，这次迷宫是有一个滚动的小球，这样就不是每次只走一步了，而是朝某一个方向一直滚，直到遇到墙或者边缘才停下来，我记得貌似之前在手机上玩过类似的游戏。那么其实还是要用DFS或者BFS来解，只不过需要做一些修改。先来看DFS的解法，我们用DFS的同时最好能用上优化，即记录中间的结果，这样可以避免重复运算，提高效率。我们用二维数组dp来保存中间结果，然后用maze数组本身通过将0改为-1来记录某个点是否被访问过，这道题的难点是在于处理一直滚的情况，其实也不难，只要我们有了方向，只要一直在那个方向上往前走，每次判读是否越界了或者是否遇到墙了即可，然后对于新位置继续调用递归函数，参见代码如下：</p>
+<p>&nbsp;&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+    </span><span style="color: #0000ff;">bool</span> hasPath(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; maze, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; start, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> destination) {
+        </span><span style="color: #0000ff;">if</span> (maze.empty() || maze[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = maze.size(), n = maze[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, -<span style="color: #800080;">1</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">return</span> helper(maze, dp, start[<span style="color: #800080;">0</span>], start[<span style="color: #800080;">1</span>], destination[<span style="color: #800080;">0</span>], destination[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+    }
+    </span><span style="color: #0000ff;">bool</span> helper(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; maze, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; dp, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> j, <span style="color: #0000ff;">int</span> di, <span style="color: #0000ff;">int</span><span style="color: #000000;"> dj) {
+        </span><span style="color: #0000ff;">if</span> (i == di &amp;&amp; j == dj) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (dp[i][j] != -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[i][j];
+        </span><span style="color: #0000ff;">bool</span> res = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = maze.size(), n = maze[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        maze[i][j] </span>= -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+            </span><span style="color: #0000ff;">int</span> x = i, y =<span style="color: #000000;"> j;
+            </span><span style="color: #0000ff;">while</span> (x &gt;= <span style="color: #800080;">0</span> &amp;&amp; x &lt; m &amp;&amp; y &gt;= <span style="color: #800080;">0</span> &amp;&amp; y &lt; n &amp;&amp; maze[x][y] != <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                x </span>+= dir[<span style="color: #800080;">0</span>]; y += dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+            }
+            x </span>-= dir[<span style="color: #800080;">0</span>]; y -= dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">if</span> (maze[x][y] != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                res </span>|=<span style="color: #000000;"> helper(maze, dp, x, y, di, dj);
+            }
+        }
+        dp[i][j] </span>=<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>同样的道理，对于BFS的实现需要用到队列queue，在对于一直滚的处理跟上面相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> hasPath(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; maze, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; start, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> destination) {
+        </span><span style="color: #0000ff;">if</span> (maze.empty() || maze[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = maze.size(), n = maze[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; visited(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        q.push({start[</span><span style="color: #800080;">0</span>], start[<span style="color: #800080;">1</span><span style="color: #000000;">]});
+        visited[start[</span><span style="color: #800080;">0</span>]][start[<span style="color: #800080;">1</span>]] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">if</span> (t.first == destination[<span style="color: #800080;">0</span>] &amp;&amp; t.second == destination[<span style="color: #800080;">1</span>]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                </span><span style="color: #0000ff;">int</span> x = t.first, y =<span style="color: #000000;"> t.second;
+                </span><span style="color: #0000ff;">while</span> (x &gt;= <span style="color: #800080;">0</span> &amp;&amp; x &lt; m &amp;&amp; y &gt;= <span style="color: #800080;">0</span> &amp;&amp; y &lt; n &amp;&amp; maze[x][y] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    x </span>+= dir[<span style="color: #800080;">0</span>]; y += dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                }
+                x </span>-= dir[<span style="color: #800080;">0</span>]; y -= dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">visited[x][y]) {
+                    visited[x][y] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    q.push({x, y});
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/77495/java-bfs-solution" target="_blank">https://discuss.leetcode.com/topic/77495/java-bfs-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77496/java-dfs-solution-could-anyone-tell-me-how-to-calculate-the-time-complexity" target="_blank">https://discuss.leetcode.com/topic/77496/java-dfs-solution-could-anyone-tell-me-how-to-calculate-the-time-complexity</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p>
+</div>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

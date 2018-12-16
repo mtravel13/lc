@@ -1,0 +1,154 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6746528.html">[LeetCode] The Maze III 迷宫之三</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There is a&nbsp;ball&nbsp;in a maze with empty spaces and walls. The ball can go through empty spaces by rolling&nbsp;up&nbsp;(u),&nbsp;down&nbsp;(d),&nbsp;left&nbsp;(l) or&nbsp;right&nbsp;(r), but it won't stop rolling until hitting a wall. When the ball stops, it could choose the next direction. There is also a&nbsp;hole&nbsp;in this maze. The ball will drop into the hole if it rolls on to the hole.</p>
+<p>Given the&nbsp;ball position, the&nbsp;hole position&nbsp;and the&nbsp;maze, find out how the ball could drop into the hole by moving the&nbsp;shortest distance. The distance is defined by the number of&nbsp;empty spaces&nbsp;traveled by the ball from the start position (excluded) to the hole (included). Output the moving&nbsp;directions&nbsp;by using 'u', 'd', 'l' and 'r'. Since there could be several different shortest ways, you should output the&nbsp;lexicographically smallest&nbsp;way. If the ball cannot reach the hole, output "impossible".</p>
+<p>The maze is represented by a binary 2D array. 1 means the wall and 0 means the empty space. You may assume that the borders of the maze are all walls. The ball and the hole coordinates are represented by row and column indexes.</p>
+<p>Example 1</p>
+<pre>Input 1: a maze represented by a 2D array
+
+0 0 0 0 0
+1 1 0 0 1
+0 0 0 0 0
+0 1 0 0 1
+0 1 0 0 0
+
+Input 2: ball coordinate (rowBall, colBall) = (4, 3)
+Input 3: hole coordinate (rowHole, colHole) = (0, 1)
+
+Output: "lul"
+Explanation: There are two shortest ways for the ball to drop into the hole.
+The first way is left -&gt; up -&gt; left, represented by "lul".
+The second way is up -&gt; left, represented by 'ul'.
+Both ways have shortest distance 6, but the first way is lexicographically smaller because 'l' &lt; 'u'. So the output is "lul".
+</pre>
+<p><img src="https://leetcode.com/static/images/problemset/maze_2_example_1.png" alt="" width="30%" /></p>
+<p>&nbsp;</p>
+<p>Example 2</p>
+<pre>Input 1: a maze represented by a 2D array
+
+0 0 0 0 0
+1 1 0 0 1
+0 0 0 0 0
+0 1 0 0 1
+0 1 0 0 0
+
+Input 2: ball coordinate (rowBall, colBall) = (4, 3)
+Input 3: hole coordinate (rowHole, colHole) = (3, 0)
+Output: "impossible"
+Explanation: The ball cannot reach the hole.
+</pre>
+<p><img src="https://leetcode.com/static/images/problemset/maze_2_example_2.png" alt="" width="30%" /></p>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>There is only one ball and one hole in the maze.</li>
+<li>Both the ball and hole exist on an empty space, and they will not be at the same position initially.</li>
+<li>The given maze does not contain border (like the red rectangle in the example pictures), but you could assume the border of the maze are all walls.</li>
+<li>The maze contains at least 2 empty spaces, and the width and the height of the maze won't exceed 30.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题在之前的两道<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/6725380.html">The Maze II</a>和<a href="http://www.cnblogs.com/grandyang/p/6381458.html">The Maze</a>的基础上又做了些改变，在路径中间放了个陷阱，让球在最小步数内滚到陷阱之中，此时返回的并不是最小步数，而是滚动的方向，用u, r, d, l 这四个字母来分别表示上右下左，而且在步数相等的情况下，让我们返回按字母排序小的答案。相对于迷宫二那题来说，难度是增加了一些，但我们还是可以借鉴之前那道题的思路，我们还是需要用一个二位数组dists，其中dists[i][j]表示到达(i,j)这个位置时需要的最小步数，我们都初始化为整型最大值，在后在遍历的过程中不断用较小值来更新每个位置的步数值。我们还需要用一个哈希表来建立每个位置跟滚到该位置的方向字符串之间的映射，这里我们用一个trick，将二维坐标转(i,j)为一个数字i*n+j，这实际上就是把二维数组拉成一维数组的操作，matlab中很常见的操作。还有需要注意的是，一滚到底的操作需要稍作修改，之前我们都是一直滚到墙里面或者界外才停止，然后做退一步处理，就是小球能滚到的位置，这里我们滚的时候要判断陷阱，如果滚到了陷阱，那么我们也停下来，注意这时候不需要做后退一步处理。然后我们还是比较当前步数是否小于dists中的原有步数，小于的话就更新dists，然后更新哈希表中的映射方向字符串，然后对于不是陷阱的点，我们加入队列queue中继续滚。另一点跟迷宫二不同的之处在于，这里还要处理另一种情况，就是当最小步数相等的时候，并且新的滚法的方向字符串的字母顺序要小于原有的字符串的时候，我们也需要更新哈希表的映射，并且判断是否需要加入队列queue中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> findShortestWay(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; maze, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; ball, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> hole) {
+        </span><span style="color: #0000ff;">int</span> m = maze.size(), n = maze[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dists(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">(n, INT_MAX));
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        vector</span>&lt;<span style="color: #0000ff;">char</span>&gt; way{<span style="color: #800000;">'</span><span style="color: #800000;">l</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">d</span><span style="color: #800000;">'</span><span style="color: #000000;">};
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> u;
+        dists[ball[</span><span style="color: #800080;">0</span>]][ball[<span style="color: #800080;">1</span>]] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        q.push({ball[</span><span style="color: #800080;">0</span>], ball[<span style="color: #800080;">1</span><span style="color: #000000;">]});
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">4</span>; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> x = t.first, y = t.second, dist =<span style="color: #000000;"> dists[x][y];
+                </span><span style="color: #0000ff;">string</span> path = u[x * n +<span style="color: #000000;"> y];
+                </span><span style="color: #0000ff;">while</span> (x &gt;= <span style="color: #800080;">0</span> &amp;&amp; x &lt; m &amp;&amp; y &gt;= <span style="color: #800080;">0</span> &amp;&amp; y &lt; n &amp;&amp; maze[x][y] == <span style="color: #800080;">0</span> &amp;&amp; (x != hole[<span style="color: #800080;">0</span>] || y != hole[<span style="color: #800080;">1</span><span style="color: #000000;">])) {
+                    x </span>+= dirs[i][<span style="color: #800080;">0</span>]; y += dirs[i][<span style="color: #800080;">1</span>]; ++<span style="color: #000000;">dist;
+                }
+                </span><span style="color: #0000ff;">if</span> (x != hole[<span style="color: #800080;">0</span>] || y != hole[<span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                    x </span>-= dirs[i][<span style="color: #800080;">0</span>]; y -= dirs[i][<span style="color: #800080;">1</span>]; --<span style="color: #000000;">dist;
+                }
+                path.push_back(way[i]);
+                </span><span style="color: #0000ff;">if</span> (dists[x][y] &gt;<span style="color: #000000;"> dist) {
+                    dists[x][y] </span>=<span style="color: #000000;"> dist;
+                    u[x </span>* n + y] =<span style="color: #000000;"> path;
+                    </span><span style="color: #0000ff;">if</span> (x != hole[<span style="color: #800080;">0</span>] || y != hole[<span style="color: #800080;">1</span><span style="color: #000000;">]) q.push({x, y});
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (dists[x][y] == dist &amp;&amp; u[x * n + y].compare(path) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    u[x </span>* n + y] =<span style="color: #000000;"> path;
+                    </span><span style="color: #0000ff;">if</span> (x != hole[<span style="color: #800080;">0</span>] || y != hole[<span style="color: #800080;">1</span><span style="color: #000000;">]) q.push({x, y});
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">string</span> res = u[hole[<span style="color: #800080;">0</span>] * n + hole[<span style="color: #800080;">1</span><span style="color: #000000;">]];
+        </span><span style="color: #0000ff;">return</span> res.empty() ? <span style="color: #800000;">"</span><span style="color: #800000;">impossible</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种写法是DFS的解法，可以看出来思路基本上跟上面的解法没有啥区别，写法上稍有不同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+    vector</span>&lt;<span style="color: #0000ff;">char</span>&gt; way{<span style="color: #800000;">'</span><span style="color: #800000;">l</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">d</span><span style="color: #800000;">'</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">string</span> findShortestWay(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; maze, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; ball, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> hole) {
+        </span><span style="color: #0000ff;">int</span> m = maze.size(), n = maze[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dists(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">(n, INT_MAX));
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> u;
+        dists[ball[</span><span style="color: #800080;">0</span>]][ball[<span style="color: #800080;">1</span>]] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        helper(maze, ball[</span><span style="color: #800080;">0</span>], ball[<span style="color: #800080;">1</span><span style="color: #000000;">], hole, dists, u);
+        </span><span style="color: #0000ff;">string</span> res = u[hole[<span style="color: #800080;">0</span>] * n + hole[<span style="color: #800080;">1</span><span style="color: #000000;">]];
+        </span><span style="color: #0000ff;">return</span> res.empty() ? <span style="color: #800000;">"</span><span style="color: #800000;">impossible</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; maze, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> j, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; hole, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; dists, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> u) {
+        </span><span style="color: #0000ff;">if</span> (i == hole[<span style="color: #800080;">0</span>] &amp;&amp; j == hole[<span style="color: #800080;">1</span>]) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = maze.size(), n = maze[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; <span style="color: #800080;">4</span>; ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">int</span> x = i, y = j, dist =<span style="color: #000000;"> dists[x][y];
+            </span><span style="color: #0000ff;">string</span> path = u[x * n +<span style="color: #000000;"> y];
+            </span><span style="color: #0000ff;">while</span> (x &gt;= <span style="color: #800080;">0</span> &amp;&amp; x &lt; m &amp;&amp; y &gt;= <span style="color: #800080;">0</span> &amp;&amp; y &lt; n &amp;&amp; maze[x][y] == <span style="color: #800080;">0</span> &amp;&amp; (x != hole[<span style="color: #800080;">0</span>] || y != hole[<span style="color: #800080;">1</span><span style="color: #000000;">])) {
+                x </span>+= dirs[k][<span style="color: #800080;">0</span>]; y += dirs[k][<span style="color: #800080;">1</span>]; ++<span style="color: #000000;">dist;
+            }
+            </span><span style="color: #0000ff;">if</span> (x != hole[<span style="color: #800080;">0</span>] || y != hole[<span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                x </span>-= dirs[k][<span style="color: #800080;">0</span>]; y -= dirs[k][<span style="color: #800080;">1</span>]; --<span style="color: #000000;">dist;
+            }
+            path.push_back(way[k]);
+            </span><span style="color: #0000ff;">if</span> (dists[x][y] &gt;<span style="color: #000000;"> dist) {
+                dists[x][y] </span>=<span style="color: #000000;"> dist;
+                u[x </span>* n + y] =<span style="color: #000000;"> path;
+                helper(maze, x, y, hole, dists, u);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (dists[x][y] == dist &amp;&amp; u[x * n + y].compare(path) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                u[x </span>* n + y] =<span style="color: #000000;"> path;
+                helper(maze, x, y, hole, dists, u);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/6725380.html">The Maze II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6381458.html">The Maze</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/77116/bfs-solution-using-a-queue" target="_blank">https://discuss.leetcode.com/topic/77116/bfs-solution-using-a-queue</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77074/clear-java-accepted-dfs-solution-with-explanation" target="_blank">https://discuss.leetcode.com/topic/77074/clear-java-accepted-dfs-solution-with-explanation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77474/similar-to-the-maze-ii-easy-understanding-java-bfs-solution" target="_blank">https://discuss.leetcode.com/topic/77474/similar-to-the-maze-ii-easy-understanding-java-bfs-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

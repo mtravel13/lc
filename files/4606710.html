@@ -1,0 +1,87 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4606710.html">[LeetCode] Merge k Sorted Lists 合并k个有序链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
+<p>&nbsp;</p>
+<p>这道题让我们合并k个有序链表，之前我们做过一道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4086297.html">Merge Two Sorted Lists 混合插入有序链表</a>，是混合插入两个有序链表。这道题增加了难度，变成合并k个有序链表了，但是不管合并几个，基本还是要两两合并。那么我们首先考虑的方法是能不能利用之前那道题的解法来解答此题。答案是肯定的，但是需要修改，怎么修改呢，最先想到的就是两两合并，就是前两个先合并，合并好了再跟第三个，然后第四个直到第k个。这样的思路是对的，但是效率不高，没法通过OJ，所以我们只能换一种思路，这里就需要用到分治法 <span class="st">Divide and Conquer Approach。简单来说就是不停的对半划分，比如k个链表先划分为合并两个k/2个链表的任务，再不停的往下划分，直到划分成只有一个或两个链表的任务，开始合并。举个例子来说比如合并6个链表，那么按照分治法，我们首先分别合并1和4,2和5,3和6。这样下一次只需合并3个链表，我们再合并1和3，最后和2合并就可以了。参见代码如下：</span></p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*mergeKLists(vector&lt;ListNode *&gt; &amp;<span style="color: #000000;">lists) {
+        </span><span style="color: #0000ff;">if</span> (lists.size() == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> lists.size();
+        </span><span style="color: #0000ff;">while</span> (n &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> k = (n + <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n / <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+                lists[i] </span>= mergeTwoLists(lists[i], lists[i +<span style="color: #000000;"> k]);
+            }
+            n </span>=<span style="color: #000000;"> k;
+        }
+        </span><span style="color: #0000ff;">return</span> lists[<span style="color: #800080;">0</span><span style="color: #000000;">];
+    }
+    
+    ListNode </span>*mergeTwoLists(ListNode *l1, ListNode *<span style="color: #000000;">l2) {
+        ListNode </span>*head = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        ListNode </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (l1 &amp;&amp;<span style="color: #000000;"> l2) {
+            </span><span style="color: #0000ff;">if</span> (l1-&gt;val &lt; l2-&gt;<span style="color: #000000;">val) {
+                cur</span>-&gt;next =<span style="color: #000000;"> l1;
+                l1 </span>= l1-&gt;<span style="color: #000000;">next;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur</span>-&gt;next =<span style="color: #000000;"> l2;
+                l2 </span>= l2-&gt;<span style="color: #000000;">next;
+            }
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">if</span> (l1) cur-&gt;next =<span style="color: #000000;"> l1;
+        </span><span style="color: #0000ff;">if</span> (l2) cur-&gt;next =<span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">return</span> head-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们再来看另一种解法，这种解法利用了<a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E2%80%94%E6%9C%80%E5%B0%8F%E5%A0%86" target="_blank">最小堆</a>这种数据结构，我们首先把k个链表的首元素都加入最小堆中，它们会自动排好序。然后我们每次取出最小的那个元素加入我们最终结果的链表中，然后把取出元素的下一个元素再加入堆中，下次仍从堆中取出最小的元素做相同的操作，以此类推，直到堆中没有元素了，此时k个链表也合并为了一个链表，返回首节点即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">struct</span><span style="color: #000000;"> cmp {
+    </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span> () (ListNode *a, ListNode *<span style="color: #000000;">b) {
+        </span><span style="color: #0000ff;">return</span> a-&gt;val &gt; b-&gt;<span style="color: #000000;">val;
+    }
+};
+ 
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {  
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:  
+    ListNode </span>*mergeKLists(vector&lt;ListNode *&gt; &amp;<span style="color: #000000;">lists) {  </span>
+        priority_queue&lt;ListNode*, vector&lt;ListNode*&gt;, cmp&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; lists.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (lists[i]) q.push(lists[i]);
+        }
+        ListNode </span>*head = NULL, *pre = NULL, *tmp =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            tmp </span>=<span style="color: #000000;"> q.top();
+            q.pop();
+            </span><span style="color: #0000ff;">if</span> (!pre) head =<span style="color: #000000;"> tmp;
+            </span><span style="color: #0000ff;">else</span> pre-&gt;next =<span style="color: #000000;"> tmp;
+            pre </span>=<span style="color: #000000;"> tmp;
+            </span><span style="color: #0000ff;">if</span> (tmp-&gt;next) q.push(tmp-&gt;<span style="color: #000000;">next);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+    }  
+};  </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="http://www.cnblogs.com/TenosDoIt/p/3673188.html" target="_blank">http://www.cnblogs.com/TenosDoIt/p/3673188.html</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

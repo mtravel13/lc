@@ -1,0 +1,128 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7817011.html">[LeetCode] Longest Word in Dictionary 字典中的最长单词</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of strings&nbsp;<code>words</code>&nbsp;representing an English Dictionary, find the longest word in&nbsp;<code>words</code>&nbsp;that can be built one character at a time by other words in&nbsp;<code>words</code>. If there is more than one possible answer, return the longest word with the smallest lexicographical order.</p>
+<p>If there is no answer, return the empty string.</p>
+<p>Example 1:</p>
+<pre>Input: 
+words = ["w","wo","wor","worl", "world"]
+Output: "world"
+Explanation: 
+The word "world" can be built one character at a time by "w", "wo", "wor", and "worl".
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: 
+words = ["a", "banana", "app", "appl", "ap", "apply", "apple"]
+Output: "apple"
+Explanation: 
+Both "apply" and "apple" can be built from other words in the dictionary. However, "apple" is lexicographically smaller than "apply".
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>All the strings in the input will only contain lowercase letters.</li>
+<li>The length of&nbsp;<code>words</code>&nbsp;will be in the range&nbsp;<code>[1, 1000]</code>.</li>
+<li>The length of&nbsp;<code>words[i]</code>&nbsp;will be in the range&nbsp;<code>[1, 30]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们一个字典，是个字符串数组，然后问我们从单个字符开始拼，最长能组成啥单词，注意中间生成的字符串也要在字典中存在，而且当组成的单词长度相等时，返回字母顺序小的那个。好，看到这么多前缀一样多字符串，是不是很容易想到用前缀树来做，其实我们并不需要真正的建立前缀树结点，可以借鉴查找的思想来做。那么为了快速的查找某个单词是否在字典中存在，我们将所有单词放到哈希集合中，在查找的时候，可以采用BFS或者DFS都行。先来看BFS的做法，使用一个queue来辅助，我们先把所有长度为1的单词找出排入queue中，当作种子选手，然后我们进行循环，每次从队首取一个元素出来，如果其长度大于我们维护的最大值mxLen，则更新mxLen和结果res，如果正好相等，也要更新结果res，取字母顺序小的那个。然后我们试着增加长度，做法就是遍历26个字母，将每个字母都加到单词后面，然后看是否在字典中存在，存在的话，就加入queue中等待下一次遍历，完了以后记得要恢复状态，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> longestWord(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> mxLen = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s(words.begin(), words.end());
+        queue</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">if</span> (word.size() == <span style="color: #800080;">1</span><span style="color: #000000;">) q.push(word);
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">if</span> (t.size() &gt;<span style="color: #000000;"> mxLen) {
+                mxLen </span>=<span style="color: #000000;"> t.size();
+                res </span>=<span style="color: #000000;"> t;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (t.size() ==<span style="color: #000000;"> mxLen) {
+                res </span>=<span style="color: #000000;"> min(res, t);
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c = <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;">c) {
+                t.push_back(c);
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (s.count(t)) q.push(t);
+                t.pop_back();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看递归的解法，前面都一样，不同在于直接对长度为1的单词调用递归函数，在递归中，还是先判断单词和mxLen关系来更新结果res，然后就是遍历所有字符，加到单词后面，如果在集合中存在，调用递归函数，结束后恢复状态，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> longestWord(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> mxLen = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s(words.begin(), words.end());</span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">if</span> (word.size() == <span style="color: #800080;">1</span><span style="color: #000000;">) helper(s, word, mxLen, res);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&amp; s, <span style="color: #0000ff;">string</span> word, <span style="color: #0000ff;">int</span>&amp; mxLen, <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (word.size() &gt;<span style="color: #000000;"> mxLen) {
+            mxLen </span>=<span style="color: #000000;"> word.size();
+            res </span>=<span style="color: #000000;"> word;
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (word.size() ==<span style="color: #000000;"> mxLen) {
+            res </span>=<span style="color: #000000;"> min(res, word);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c = <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;">c) {
+            word.push_back(c);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (s.count(word)) helper(s, word, mxLen, res);
+            word.pop_back();
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是论坛上的高分解法，其实我们只要给数组排个序，就可以使用贪婪算法来做了，并不需要什么DFS或BFS这么复杂。首先建立一个空的哈希set，然后我们直接遍历排序后的字典，对于当前的单词，如果当前单词长度为1，或者该单词去掉最后一个字母后在集合中存在，这也不难理解，长度为1，说明是起始单词，不需要的多余的判断，否则的话就要判断其去掉最后一个字母后的单词是否在集合中存在，存在的话，才说明其中间单词都存在，因为此时是从短单词向长单词遍历，只要符合要求的才会加入集合，所以一旦其去掉尾字母的单词存在的话，那么其之前所有的中间情况都会在集合中存在。我们更新结果res时，要判断当前单词长度是否大于结果res的长度，因为排序过后，默认先更新的字母顺序小的单词，所有只有当当前单词长度大，才更新结果res，之后别忘了把当前单词加入集合中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> longestWord(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s;
+        sort(words.begin(), words.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">if</span> (word.size() == <span style="color: #800080;">1</span> || s.count(word.substr(<span style="color: #800080;">0</span>, word.size() - <span style="color: #800080;">1</span><span style="color: #000000;">))) {
+                res </span>= (word.size() &gt; res.size()) ?<span style="color: #000000;"> word : res;
+                s.insert(word);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6523344.html">Longest Word in Dictionary through Deleting</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7612918.html">Implement Magic Dictionary</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/109643/java-c-clean-code">https://discuss.leetcode.com/topic/109643/java-c-clean-code</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

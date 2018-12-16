@@ -1,0 +1,163 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9899034.html">[LeetCode] Design Circular Queue 设计环形队列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design your implementation of the circular queue. The circular queue is a linear data structure in which the operations are performed based on FIFO (First In First Out) principle and the last position is connected back to the first position to make a circle. It is also called "Ring Buffer".</p>
+<p>One of the benefits of the circular queue is that we can make use of the spaces in front of the queue. In a normal queue, once the queue becomes full, we cannot insert the next element even if there is a space in front of the queue. But using the circular queue, we can use the space to store new values.</p>
+<p>Your implementation should support following operations:</p>
+<ul>
+<li><code>MyCircularQueue(k)</code>: Constructor, set the size of the queue to be k.</li>
+<li><code>Front</code>: Get the front item from the queue. If the queue is empty, return -1.</li>
+<li><code>Rear</code>: Get the last item from the queue. If the queue is empty, return -1.</li>
+<li><code>enQueue(value)</code>: Insert an element into the circular queue. Return true if the operation is successful.</li>
+<li><code>deQueue()</code>: Delete an element from the circular queue. Return true if the operation is successful.</li>
+<li><code>isEmpty()</code>: Checks whether the circular queue is empty or not.</li>
+<li><code>isFull()</code>: Checks whether the circular queue is full or not.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Example:</p>
+<pre>MyCircularQueue circularQueue = new MyCircularQueue(3); // set the size to be 3
+circularQueue.enQueue(1); &nbsp;// return true
+circularQueue.enQueue(2); &nbsp;// return true
+circularQueue.enQueue(3); &nbsp;// return true
+circularQueue.enQueue(4); &nbsp;// return false, the queue is full
+circularQueue.Rear(); &nbsp;// return 3
+circularQueue.isFull(); &nbsp;// return true
+circularQueue.deQueue(); &nbsp;// return true
+circularQueue.enQueue(4); &nbsp;// return true
+circularQueue.Rear(); &nbsp;// return 4
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>All values will be in the range of [0, 1000].</li>
+<li>The number of operations will be in the range of&nbsp;[1, 1000].</li>
+<li>Please do not use the built-in Queue library.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题让我们设计一个环形的队列，说是不能使用内置的queue类，并且让我们实现一系列的成员函数，如进队，出队，取首尾元素，以及判空，判满等等。那么博主最先想到的就是用一个数组data来实现，并且用一个变量size来保存我们的环形队列的大小。先来实现最简单的判空和判满函数吧，判空就是判断data数组是否为空，判满就是看data数组的大小是否等于size。然后是取首尾元素，需要先对数组判空，然后取首尾元素即可。进队列函数先要判满，然后加入data数组，出队列函数，先要判空，然后去掉数组的首元素即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCircularQueue {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. Set the size of the queue to be k. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MyCircularQueue(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        size </span>=<span style="color: #000000;"> k;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Insert an element into the circular queue. Return true if the operation is successful. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> enQueue(<span style="color: #0000ff;">int</span><span style="color: #000000;"> value) {
+        </span><span style="color: #0000ff;">if</span> (isFull()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        data.push_back(value);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Delete an element from the circular queue. Return true if the operation is successful. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span><span style="color: #000000;"> deQueue() {
+        </span><span style="color: #0000ff;">if</span> (isEmpty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        data.erase(data.begin());
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get the front item from the queue. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> Front() {
+        </span><span style="color: #0000ff;">if</span> (isEmpty()) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> data.front();
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get the last item from the queue. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> Rear() {
+        </span><span style="color: #0000ff;">if</span> (isEmpty()) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> data.back();
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Checks whether the circular queue is empty or not. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span><span style="color: #000000;"> isEmpty() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> data.empty();
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Checks whether the circular queue is full or not. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span><span style="color: #000000;"> isFull() {
+        </span><span style="color: #0000ff;">return</span> data.size() &gt;=<span style="color: #000000;"> size;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> data;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>做完上面的方法有没有一种感觉，这跟环形Circular有毛线关系，还有题目要求中的第二段话里的&ldquo;我们可以使用队列前面的空间&rdquo;，完全没有用到啊。其实上面的解法并不是本题真正想要考察的内容，我们要用上环形Circular的性质，之前我们貌似应该做过环形数组的题目吧，提到环形数组，博主最先想到的就是坐标加1，再对数组长度取余。这是数组能够环形的关键，那么这里也一样，我们除了使用size来记录环形队列的最大长度之外，还要使用三个变量，head，tail，cnt，分别来记录队首位置，队尾位置，和当前队列中数字的个数，这里我们将head初始化为k-1，tail初始化为0。还是从简单的做起，判空就看当前个数cnt是否为0，判满就看当前个数cnt是否等于size。接下来取首尾元素，先进行判空，然后根据head和tail分别向后和向前移动一位取即可，记得使用上循环数组的性质，要对size取余。再来看进队列函数，先进行判满，然后将新的数字加到当前的tail位置，tail移动到下一位，为了避免越界，我们使用环形数组的经典操作，加1之后对长度取余，然后cnt自增1即可。同样，出队列函数先进行判空，队首位置head要向后移动一位，同样进行加1之后对长度取余的操作，到这里就可以了，不用真正的去删除数字，因为head和tail限定了我们的当前队列的范围，然后cnt自减1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCircularQueue {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. Set the size of the queue to be k. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MyCircularQueue(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        size </span>= k; head = k - <span style="color: #800080;">1</span>; tail = <span style="color: #800080;">0</span>; cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        data.resize(k);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Insert an element into the circular queue. Return true if the operation is successful. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> enQueue(<span style="color: #0000ff;">int</span><span style="color: #000000;"> value) {
+        </span><span style="color: #0000ff;">if</span> (isFull()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        data[tail] </span>=<span style="color: #000000;"> value;
+        tail </span>= (tail + <span style="color: #800080;">1</span>) %<span style="color: #000000;"> size;
+        </span>++<span style="color: #000000;">cnt;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Delete an element from the circular queue. Return true if the operation is successful. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span><span style="color: #000000;"> deQueue() {
+        </span><span style="color: #0000ff;">if</span> (isEmpty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        head </span>= (head + <span style="color: #800080;">1</span>) %<span style="color: #000000;"> size;
+        </span>--<span style="color: #000000;">cnt;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get the front item from the queue. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> Front() {
+        </span><span style="color: #0000ff;">return</span> isEmpty() ? -<span style="color: #800080;">1</span> : data[(head + <span style="color: #800080;">1</span>) %<span style="color: #000000;"> size];
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get the last item from the queue. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> Rear() {
+        </span><span style="color: #0000ff;">return</span> isEmpty() ? -<span style="color: #800080;">1</span> : data[(tail - <span style="color: #800080;">1</span> + size) %<span style="color: #000000;"> size];
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Checks whether the circular queue is empty or not. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span><span style="color: #000000;"> isEmpty() {
+        </span><span style="color: #0000ff;">return</span> cnt == <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Checks whether the circular queue is full or not. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span><span style="color: #000000;"> isFull() {
+        </span><span style="color: #0000ff;">return</span> cnt ==<span style="color: #000000;"> size;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> data;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> size, cnt, head, tail;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>论坛上还见到了使用链表来做的解法，由于博主比较抵触在解法中新建class，所以这里就不贴了，可以<a href="https://leetcode.com/problems/design-circular-queue/discuss/162759/JAVA-Pass-All-Test-Cases-100-O(1)" target="_blank">参见这个帖子</a>。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9899490.html">Design Circular Deque</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/design-circular-queue/" target="_blank">https://leetcode.com/problems/design-circular-queue/</a></p>
+<p><a href="https://leetcode.com/problems/design-circular-queue/discuss/149420/Concise-Java-using-array" target="_blank">https://leetcode.com/problems/design-circular-queue/discuss/149420/Concise-Java-using-array</a></p>
+<p><a href="https://leetcode.com/problems/design-circular-queue/discuss/162759/JAVA-Pass-All-Test-Cases-100-O(1)" target="_blank">https://leetcode.com/problems/design-circular-queue/discuss/162759/JAVA-Pass-All-Test-Cases-100-O(1)</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

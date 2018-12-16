@@ -1,0 +1,140 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4288151.html">[LeetCode] Populating Next Right Pointers in Each Node 每个节点的右向指针</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree</p>
+<pre>    struct TreeLinkNode {
+      TreeLinkNode *left;
+      TreeLinkNode *right;
+      TreeLinkNode *next;
+    }
+</pre>
+<p>&nbsp;</p>
+<p>Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to&nbsp;<code>NULL</code>.</p>
+<p>Initially, all next pointers are set to&nbsp;<code>NULL</code>.</p>
+<p>Note:</p>
+<ul>
+<li>You may only use constant extra space.</li>
+<li>You may assume that it is a perfect binary tree (ie, all leaves are at the same level, and every parent has two children).</li>
+</ul>
+<p>&nbsp;</p>
+<p>For example,<br />Given the following perfect binary tree,</p>
+<pre>         1
+       /  \
+      2    3
+     / \  / \
+    4  5  6  7
+</pre>
+<p>&nbsp;</p>
+<p>After calling your function, the tree should look like:</p>
+<pre>         1 -&gt; NULL
+       /  \
+      2 -&gt; 3 -&gt; NULL
+     / \  / \
+    4-&gt;5-&gt;6-&gt;7 -&gt; NULL</pre>
+<p>这道题实际上是树的层序遍历的应用，可以参考之前的博客<a id="link_post_title" class="link-post-title" href="http://www.cnblogs.com/grandyang/p/4051321.html">Binary Tree Level Order Traversal 二叉树层序遍历</a>，既然是遍历，就有递归和非递归两种方法，最好两种方法都要掌握，都要会写。下面先来看递归的解法，由于是完全二叉树，所以若节点的左子结点存在的话，其右子节点必定存在，所以左子结点的next指针可以直接指向其右子节点，对于其右子节点的处理方法是，判断其父节点的next是否为空，若不为空，则指向其next指针指向的节点的左子结点，若为空则指向NULL，代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursion, more than constant space</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> connect(TreeLinkNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left) root-&gt;left-&gt;next = root-&gt;<span style="color: #000000;">right;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;right) root-&gt;right-&gt;next = root-&gt;next? root-&gt;next-&gt;<span style="color: #000000;">left : NULL;
+        connect(root</span>-&gt;<span style="color: #000000;">left);
+        connect(root</span>-&gt;<span style="color: #000000;">right);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>对于非递归的解法要稍微复杂一点，但也不算特别复杂，需要用到queue来辅助，由于是层序遍历，每层的节点都按顺序加入queue中，而每当从queue中取出一个元素时，将其next指针指向queue中下一个节点即可。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Non-recursion, more than constant space</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> connect(TreeLinkNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        queue</span>&lt;TreeLinkNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        q.push(NULL);
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            TreeLinkNode </span>*cur =<span style="color: #000000;"> q.front();
+            q.pop();
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (cur) {
+                cur</span>-&gt;next =<span style="color: #000000;"> q.front();
+                </span><span style="color: #0000ff;">if</span> (cur-&gt;left) q.push(cur-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (cur-&gt;right) q.push(cur-&gt;<span style="color: #000000;">right);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (q.size() == <span style="color: #800080;">0</span> || q.front() == NULL) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                q.push(NULL);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的方法巧妙的通过给queue中添加空指针NULL来达到分层的目的，使每层的最后一个节点的next可以指向NULL，那么我们可以换一种方法来实现分层，我们对于每层的开头元素开始遍历之前，先统计一下该层的总个数，用个for循环，这样for循环结束的时候，我们就知道该层已经被遍历完了，这也是一种好办法：</p>
+<p>&nbsp;</p>
+<p>C++ 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> connect(TreeLinkNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        queue</span>&lt;TreeLinkNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; size; ++<span style="color: #000000;">i) {
+                TreeLinkNode </span>*t =<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">if</span> (i &lt; size - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    t</span>-&gt;next =<span style="color: #000000;"> q.front();
+                }
+                </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push(t-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push(t-&gt;<span style="color: #000000;">right);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面三种方法虽然叼，但是都不符合题意，题目中要求用O(1)的空间复杂度，所以我们来看下面这种碉堡了的方法。用两个指针start和cur，其中start标记每一层的起始节点，cur用来遍历该层的节点，设计思路之巧妙，不得不服啊：</p>
+<p>&nbsp;</p>
+<p>C++ 解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> connect(TreeLinkNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        TreeLinkNode </span>*start = root, *cur =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">while</span> (start-&gt;<span style="color: #000000;">left) {
+            cur </span>=<span style="color: #000000;"> start;
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+                cur</span>-&gt;left-&gt;next = cur-&gt;<span style="color: #000000;">right;
+                </span><span style="color: #0000ff;">if</span> (cur-&gt;next) cur-&gt;right-&gt;next = cur-&gt;next-&gt;<span style="color: #000000;">left;
+                cur </span>= cur-&gt;<span style="color: #000000;">next;
+            }
+            start </span>= start-&gt;<span style="color: #000000;">left;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4290148.html" target="_blank">Populating Next Right Pointers in Each Node II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/2202/a-simple-accepted-solution" target="_blank">https://discuss.leetcode.com/topic/2202/a-simple-accepted-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

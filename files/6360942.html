@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6360942.html">[LeetCode] Max Consecutive Ones 最大连续1的个数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary array, find the maximum number of consecutive 1s in this array.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> [1,1,0,1,1,1]
+<strong>Output:</strong> 3
+<strong>Explanation:</strong> The first two digits or the last three digits are consecutive 1s.
+    The maximum number of consecutive 1s is 3.
+</pre>
+<p><strong>Note:</strong></p>
+<ul>
+<li>The input array will only contain <code>0</code> and <code>1</code>.</li>
+<li>The length of input array is a positive integer and will not exceed 10,000</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题让我们求最大连续1的个数，不是一道难题。我们可以遍历一遍数组，用一个计数器cnt来统计1的个数，方法是如果当前数字为0，那么cnt重置为0，如果不是0，cnt自增1，然后每次更新结果res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findMaxConsecutiveOnes(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            cnt </span>= (num == <span style="color: #800080;">0</span>) ? <span style="color: #800080;">0</span> : cnt + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            res </span>=<span style="color: #000000;"> max(res, cnt);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于是个二进制数组，所以数组中的数字只能是0或1，那么连续1的和跟个数相等，所以我们可以计算和，通过加上num，再乘以num来计算，如果当前数字是0，那么sum就被重置为0，还是要更新结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findMaxConsecutiveOnes(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            sum </span>= (sum + num) *<span style="color: #000000;"> num;
+            res </span>=<span style="color: #000000;"> max(res, sum);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

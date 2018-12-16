@@ -1,0 +1,162 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4086297.html">[LeetCode] Merge Two Sorted Lists 混合插入有序链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.</p>
+<p>&nbsp;</p>
+<p>这道混合插入有序链表和我之前那篇混合插入有序数组非常的相似<a href="http://www.cnblogs.com/grandyang/p/4059650.html" target="_blank">Merge Sorted Array</a>，仅仅是数据结构由数组换成了链表而已，代码写起来反而更简洁。具体思想就是新建一个链表，然后比较两个链表中的元素值，把较小的那个链到新链表中，由于两个输入链表的长度可能不同，所以最终会有一个链表先完成插入所有元素，则直接另一个未完成的链表直接链入新链表的末尾。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* mergeTwoLists(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span>), *cur =<span style="color: #000000;"> dummy;
+        </span><span style="color: #0000ff;">while</span> (l1 &amp;&amp;<span style="color: #000000;"> l2) {
+            </span><span style="color: #0000ff;">if</span> (l1-&gt;val &lt; l2-&gt;<span style="color: #000000;">val) {
+                cur</span>-&gt;next =<span style="color: #000000;"> l1;
+                l1 </span>= l1-&gt;<span style="color: #000000;">next;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur</span>-&gt;next =<span style="color: #000000;"> l2;
+                l2 </span>= l2-&gt;<span style="color: #000000;">next;
+            }
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+        }
+        cur</span>-&gt;next = l1 ?<span style="color: #000000;"> l1 : l2;
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummy </span>= <span style="color: #0000ff;">new</span> ListNode(-1), cur =<span style="color: #000000;"> dummy;
+        </span><span style="color: #0000ff;">while</span> (l1 != <span style="color: #0000ff;">null</span> &amp;&amp; l2 != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (l1.val &lt;<span style="color: #000000;"> l2.val) {
+                cur.next </span>=<span style="color: #000000;"> l1;
+                l1 </span>=<span style="color: #000000;"> l1.next;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur.next </span>=<span style="color: #000000;"> l2;
+                l2 </span>=<span style="color: #000000;"> l2.next;
+            }
+            cur </span>=<span style="color: #000000;"> cur.next;
+        }
+        cur.next </span>= (l1 != <span style="color: #0000ff;">null</span>) ?<span style="color: #000000;"> l1 : l2;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dummy.next;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看递归的写法，当某个链表为空了，就返回另一个。然后核心还是比较当前两个节点值大小，如果l1的小，那么对于l1的下一个节点和l2调用递归函数，将返回值赋值给l1.next，然后返回l1；否则就对于l2的下一个节点和l1调用递归函数，将返回值赋值给l2.next，然后返回l2，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* mergeTwoLists(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        </span><span style="color: #0000ff;">if</span> (!l1) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">if</span> (!l2) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        </span><span style="color: #0000ff;">if</span> (l1-&gt;val &lt; l2-&gt;<span style="color: #000000;">val) {
+            l1</span>-&gt;next = mergeTwoLists(l1-&gt;<span style="color: #000000;">next, l2);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            l2</span>-&gt;next = mergeTwoLists(l1, l2-&gt;<span style="color: #000000;">next);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        </span><span style="color: #0000ff;">if</span> (l1 == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">if</span> (l2 == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        </span><span style="color: #0000ff;">if</span> (l1.val &lt;<span style="color: #000000;"> l2.val) {
+            l1.next </span>=<span style="color: #000000;"> mergeTwoLists(l1.next, l2);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            l2.next </span>=<span style="color: #000000;"> mergeTwoLists(l1, l2.next);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种递归的写法去掉了if从句，看起来更加简洁一些，但是思路并没有什么不同：</p>
+<p>&nbsp;</p>
+<p>C++ 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* mergeTwoLists(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        </span><span style="color: #0000ff;">if</span> (!l1) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">if</span> (!l2) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        ListNode </span>*head = l1-&gt;val &lt; l2-&gt;val ?<span style="color: #000000;"> l1 : l2;
+        ListNode </span>*nonhead = l1-&gt;val &lt; l2-&gt;val ?<span style="color: #000000;"> l2 : l1;
+        head</span>-&gt;next = mergeTwoLists(head-&gt;<span style="color: #000000;">next, nonhead);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        </span><span style="color: #0000ff;">if</span> (l1 == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">if</span> (l2 == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        ListNode head </span>= (l1.val &lt; l2.val) ?<span style="color: #000000;"> l1 : l2;
+        ListNode nonhead </span>= (l1.val &lt; l2.val) ?<span style="color: #000000;"> l2 : l1;
+        head.next </span>=<span style="color: #000000;"> mergeTwoLists(head.next, nonhead);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;我们还可以三行搞定，简直丧心病狂有木有！</p>
+<p>&nbsp;</p>
+<p>C++ 解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* mergeTwoLists(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        </span><span style="color: #0000ff;">if</span> (!l1 || (l2 &amp;&amp; l1-&gt;val &gt; l2-&gt;<span style="color: #000000;">val)) swap(l1, l2);
+        </span><span style="color: #0000ff;">if</span> (l1) l1-&gt;next = mergeTwoLists(l1-&gt;<span style="color: #000000;">next, l2);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        </span><span style="color: #0000ff;">if</span> (l1 == <span style="color: #0000ff;">null</span> || (l2 != <span style="color: #0000ff;">null</span> &amp;&amp; l1.val &gt;<span style="color: #000000;"> l2.val)) {
+            ListNode t </span>= l1; l1 = l2; l2 =<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">if</span> (l1 != <span style="color: #0000ff;">null</span>) l1.next =<span style="color: #000000;"> mergeTwoLists(l1.next, l2);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4059650.html" target="_blank">Merge Sorted Array</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/2513/a-recursive-solution" target="_blank">https://discuss.leetcode.com/topic/2513/a-recursive-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/18709/3-lines-c-12ms-and-c-4ms/2" target="_blank">https://discuss.leetcode.com/topic/18709/3-lines-c-12ms-and-c-4ms/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/32953/java-recursive-solution-in-6-lines" target="_blank">https://discuss.leetcode.com/topic/32953/java-recursive-solution-in-6-lines</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

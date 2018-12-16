@@ -1,0 +1,48 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4743837.html">[LeetCode] Ugly Number II 丑陋数之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a program to find the <code>n</code>-th ugly number.</p>
+<p>Ugly numbers are positive numbers whose prime factors only include <code>2, 3, 5</code>. For example, <code>1, 2, 3, 4, 5, 6, 8, 9, 10, 12</code> is the sequence of the first <code>10</code> ugly numbers.</p>
+<p>Note that <code>1</code> is typically treated as an ugly number.</p>
+<p><strong>Hint:</strong></p>
+<ol id="hints">
+<li class="hint animated fadeInLeft" style="display: list-item;">The naive approach is to call <code>isUgly</code> for every number until you reach the n<sup>th</sup> one. Most numbers are <em>not</em> ugly. Try to focus your effort on generating only the ugly ones.</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">An ugly number must be multiplied by either 2, 3, or 5 from a smaller ugly number.</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">The key is how to maintain the order of the ugly numbers. Try a similar approach of merging from three sorted lists: L<sub>1</sub>, L<sub>2</sub>, and L<sub>3</sub>.</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">Assume you have U<sub>k</sub>, the k<sup>th</sup> ugly number. Then U<sub>k+1</sub> must be Min(L<sub>1</sub> * 2, L<sub>2</sub> * 3, L<sub>3</sub> * 5).</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4741934.html">Ugly Number 丑陋数</a>的延伸，这里让我们找到第n个丑陋数，还好题目中给了很多提示，基本上相当于告诉我们解法了，根据提示中的信息，我们知道丑陋数序列可以拆分为下面3个子列表：</p>
+<div>(1) <span style="color: #ff0000;"><strong>1x2</strong></span>,&nbsp; 2x2, <span style="color: #ff0000;"><strong>2x2</strong></span>, 3x2, <span style="color: #ff0000;"><strong>3x2</strong></span>, <span style="color: #ff0000;"><strong>4x2</strong></span>, 5x2...</div>
+<div>(2)&nbsp;1x3, &nbsp;<span style="color: #ff0000;"><strong>1x3</strong></span>, 2x3, 2x3, <span style="color: #ff0000;"><strong>2x3</strong></span>, 3x3, <strong><span style="color: #ff0000;">3x3</span></strong>...</div>
+<div>(3)&nbsp;1x5, &nbsp;1x5, 1x5, <strong><span style="color: #ff0000;">1x5</span>,</strong> 2x5, 2x5, 2x5...</div>
+<p>仔细观察上述三个列表，我们可以发现每个子列表都是一个丑陋数分别乘以2,3,5，而要求的丑陋数就是从已经生成的序列中取出来的，我们每次都从三个列表中取出当前最小的那个加入序列，请参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> nthUglyNumber(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(<span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> i2 = <span style="color: #800080;">0</span>, i3 = <span style="color: #800080;">0</span>, i5 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (res.size() &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">int</span> m2 = res[i2] * <span style="color: #800080;">2</span>, m3 = res[i3] * <span style="color: #800080;">3</span>, m5 = res[i5] * <span style="color: #800080;">5</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> mn =<span style="color: #000000;"> min(m2, min(m3, m5));
+            </span><span style="color: #0000ff;">if</span> (mn == m2) ++<span style="color: #000000;">i2;
+            </span><span style="color: #0000ff;">if</span> (mn == m3) ++<span style="color: #000000;">i3;
+            </span><span style="color: #0000ff;">if</span> (mn == m5) ++<span style="color: #000000;">i5;
+            res.push_back(mn);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res.back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

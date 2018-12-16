@@ -1,0 +1,99 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5568818.html">[LeetCode] Russian Doll Envelopes 俄罗斯娃娃信封</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You have a number of envelopes with widths and heights given as a pair of integers <code>(w, h)</code>. One envelope can fit into another if and only if both the width and height of one envelope is greater than the width and height of the other envelope.</p>
+<p>What is the maximum number of envelopes can you Russian doll? (put one inside other)</p>
+<p><strong>Example:</strong><br />
+Given envelopes = <code>[[5,4],[6,4],[6,7],[2,3]]</code>, the maximum number of envelopes you can Russian doll is <code>3</code> ([2,3] =&gt; [5,4] =&gt; [6,7]).</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一堆大小不一的信封，让我们像套俄罗斯娃娃那样把这些信封都给套起来，这道题实际上是之前那道<a href="http://www.cnblogs.com/grandyang/p/4938187.html">Longest Increasing Subsequence</a>的具体应用，而且难度增加了，从一维变成了两维，但是万变不离其宗，解法还是一样的，首先来看DP的解法，这是一种brute force的解法，首先要给所有的信封按从小到大排序，首先根据宽度从小到大排，如果宽度相同，那么高度小的再前面，这是STL里面sort的默认排法，所以我们不用写其他的comparator，直接排就可以了，然后我们开始遍历，对于每一个信封，我们都遍历其前面所有的信封，如果当前信封的长和宽都比前面那个信封的大，那么我们更新dp数组，通过dp[i] = max(dp[i], dp[j] + 1)。然后我们每遍历完一个信封，都更新一下结果res，参见代码如下；</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxEnvelopes(vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> envelopes) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> envelopes.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n, <span style="color: #800080;">1</span><span style="color: #000000;">);
+        sort(envelopes.begin(), envelopes.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (envelopes[i].first &gt; envelopes[j].first &amp;&amp; envelopes[i].second &gt;<span style="color: #000000;"> envelopes[j].second) {
+                    dp[i] </span>= max(dp[i], dp[j] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+            res </span>=<span style="color: #000000;"> max(res, dp[i]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们还可以使用二分查找法来优化速度，我们首先要做的还是给信封排序，但是这次排序和上面有些不同，信封的宽度还是从小到大排，但是宽度相等时，我们让高度大的在前面。那么现在问题就简化了成了找高度数字中的LIS，完全就和之前那道<a href="http://www.cnblogs.com/grandyang/p/4938187.html">Longest Increasing Subsequence</a>一样了，所以我们还是使用之前那题解法来做，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxEnvelopes(vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> envelopes) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> dp;
+        sort(envelopes.begin(), envelopes.end(), [](</span><span style="color: #0000ff;">const</span> pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; &amp;a, <span style="color: #0000ff;">const</span> pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">b){
+            </span><span style="color: #0000ff;">if</span> (a.first == b.first) <span style="color: #0000ff;">return</span> a.second &gt;<span style="color: #000000;"> b.second;
+            </span><span style="color: #0000ff;">return</span> a.first &lt;<span style="color: #000000;"> b.first;
+        });
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; envelopes.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = dp.size(), t=<span style="color: #000000;"> envelopes[i].second;
+            </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (dp[mid] &lt; t) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+            }
+            </span><span style="color: #0000ff;">if</span> (right &gt;=<span style="color: #000000;"> dp.size()) dp.push_back(t);
+            </span><span style="color: #0000ff;">else</span> dp[right] =<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>既然可以用二分查找法，那么使用STL的自带函数lower_bound也没啥问题了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxEnvelopes(vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> envelopes) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> dp;
+        sort(envelopes.begin(), envelopes.end(), [](</span><span style="color: #0000ff;">const</span> pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; &amp;a, <span style="color: #0000ff;">const</span> pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">b){
+            </span><span style="color: #0000ff;">if</span> (a.first == b.first) <span style="color: #0000ff;">return</span> a.second &gt;<span style="color: #000000;"> b.second;
+            </span><span style="color: #0000ff;">return</span> a.first &lt;<span style="color: #000000;"> b.first;
+        });
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; envelopes.size(); ++<span style="color: #000000;">i) {
+            auto it </span>=<span style="color: #000000;"> lower_bound(dp.begin(), dp.end(), envelopes[i].second);
+            </span><span style="color: #0000ff;">if</span> (it ==<span style="color: #000000;"> dp.end()) dp.push_back(envelopes[i].second);
+            </span><span style="color: #0000ff;">else</span> *it =<span style="color: #000000;"> envelopes[i].second;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>讨论：这道题的一个follow up是信封可以旋转，怎么的最长序列？答案是&lt;3,4&gt;加入，然后&lt;4,3&gt;也加入，再找最长序列。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4938187.html">Longest Increasing Subsequence</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/106836/simple-dp-solution" target="_blank">https://leetcode.com/discuss/106836/simple-dp-solution</a></p>
+<p><a href="https://leetcode.com/discuss/106838/c-dp-version-time-o-n-2-space-o-n" target="_blank">https://leetcode.com/discuss/106838/c-dp-version-time-o-n-2-space-o-n</a></p>
+<p><a href="https://leetcode.com/discuss/106888/java-answer-n-lg-n-time-using-binary-search" target="_blank">https://leetcode.com/discuss/106888/java-answer-n-lg-n-time-using-binary-search</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

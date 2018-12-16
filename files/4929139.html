@@ -1,0 +1,95 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4929139.html">[LeetCode] Bulls and Cows 公母牛游戏</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are playing the following&nbsp;Bulls and Cows&nbsp;game with your friend: You write a 4-digit secret number and ask your friend to guess it, each time your friend guesses a number, you give a hint, the hint tells your friend how many digits are in the correct positions (called "bulls") and how many digits are in the wrong positions (called "cows"), your friend will use those hints to find out the secret number.</p>
+<p>For example:</p>
+<pre>Secret number:  1807
+Friend's guess: 7810
+</pre>
+<p>Hint:&nbsp;<code>1</code>&nbsp;bull and&nbsp;<code>3</code>&nbsp;cows. (The bull is&nbsp;<code>8</code>, the cows are&nbsp;<code>0</code>,&nbsp;<code>1</code>&nbsp;and&nbsp;<code>7</code>.)</p>
+<p>&nbsp;</p>
+<p>According to&nbsp;<a href="https://en.wikipedia.org/wiki/Bulls_and_Cows" target="_blank">Wikipedia</a>: "Bulls and Cows (also known as Cows and Bulls or Pigs and Bulls or Bulls and Cleots) is an old code-breaking mind or paper and pencil game for two or more players, predating the similar commercially marketed board game Mastermind. The numerical version of the game is usually played with 4 digits, but can also be played with 3 or any other number of digits."</p>
+<p>Write a function to return a hint according to the secret number and friend's guess, use&nbsp;<code>A</code>&nbsp;to indicate the bulls and&nbsp;<code>B</code>&nbsp;to indicate the cows, in the above example, your function should return&nbsp;<code>1A3B</code>.</p>
+<p>You may assume that the secret number and your friend's guess only contain digits, and their lengths are always equal.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/jeantimex">@jeantimex</a>&nbsp;for adding this problem and creating all test cases.</p>
+<div>
+<p><a href="https://leetcode.com/subscribe/">Subscribe</a>&nbsp;to see which companies asked this question</p>
+
+
+</div>
+<div>&nbsp;</div>
+<div>这道题提出了一个叫公牛母牛的游戏，其实就是之前文曲星上有的猜数字的游戏，有一个四位数字，你猜一个结果，然后根据你猜的结果和真实结果做对比，提示有多少个数字和位置都正确的叫做bulls，还提示有多少数字正确但位置不对的叫做cows，根据这些信息来引导我们继续猜测正确的数字。这道题并没有让我们实现整个游戏，而只用实现一次比较即可。给出两个字符串，让我们找出分别几个bulls和cows。这题需要用哈希表，来建立数字和其出现次数的映射。我最开始想的方法是用两次遍历，第一次遍历找出所有位置相同且值相同的数字，即bulls，并且记录secret中不是bulls的数字出现的次数。然后第二次遍历我们针对guess中不是bulls的位置，如果在哈希表中存在，cows自增1，然后映射值减1，参见如下代码：</div>
+<div>&nbsp;</div>
+<div>解法一：</div>
+<div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> getHint(<span style="color: #0000ff;">string</span> secret, <span style="color: #0000ff;">string</span><span style="color: #000000;"> guess) {
+        </span><span style="color: #0000ff;">int</span> m[<span style="color: #800080;">256</span>] = {<span style="color: #800080;">0</span>}, bulls = <span style="color: #800080;">0</span>, cows = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; secret.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (secret[i] == guess[i]) ++<span style="color: #000000;">bulls;
+            </span><span style="color: #0000ff;">else</span> ++<span style="color: #000000;">m[secret[i]];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; secret.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (secret[i] != guess[i] &amp;&amp;<span style="color: #000000;"> m[guess[i]]) {
+                </span>++<span style="color: #000000;">cows;
+                </span>--<span style="color: #000000;">m[guess[i]];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> to_string(bulls) + <span style="color: #800000;">"</span><span style="color: #800000;">A</span><span style="color: #800000;">"</span> + to_string(cows) + <span style="color: #800000;">"</span><span style="color: #800000;">B</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们其实可以用一次循环就搞定的，在处理不是bulls的位置时，我们看如果secret当前位置数字的映射值小于0，则表示其在guess中出现过，cows自增1，然后映射值加1，如果guess当前位置的数字的映射值大于0，则表示其在secret中出现过，cows自增1，然后映射值减1，参见代码如下：</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> getHint(<span style="color: #0000ff;">string</span> secret, <span style="color: #0000ff;">string</span><span style="color: #000000;"> guess) {
+        </span><span style="color: #0000ff;">int</span> m[<span style="color: #800080;">256</span>] = {<span style="color: #800080;">0</span>}, bulls = <span style="color: #800080;">0</span>, cows = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; secret.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (secret[i] == guess[i]) ++<span style="color: #000000;">bulls;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (m[secret[i]]++ &lt; <span style="color: #800080;">0</span>) ++<span style="color: #000000;">cows;
+                </span><span style="color: #0000ff;">if</span> (m[guess[i]]-- &gt; <span style="color: #800080;">0</span>) ++<span style="color: #000000;"> cows;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> to_string(bulls) + <span style="color: #800000;">"</span><span style="color: #800000;">A</span><span style="color: #800000;">"</span> + to_string(cows) + <span style="color: #800000;">"</span><span style="color: #800000;">B</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后我们还可以稍作修改写的更简洁一些，a是bulls的值，b是bulls和cows之和，参见代码如下：</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> getHint(<span style="color: #0000ff;">string</span> secret, <span style="color: #0000ff;">string</span><span style="color: #000000;"> guess) {
+        </span><span style="color: #0000ff;">int</span> m[<span style="color: #800080;">256</span>] = {<span style="color: #800080;">0</span>}, a = <span style="color: #800080;">0</span>, b = <span style="color: #800080;">0</span>, i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> s : secret) {
+            </span><span style="color: #0000ff;">char</span> g = guess[i++<span style="color: #000000;">];
+            a </span>+= s ==<span style="color: #000000;"> g;
+            b </span>+= (m[s]++ &lt; <span style="color: #800080;">0</span>) + (m[g]-- &gt; <span style="color: #800080;">0</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span> to_string(a) + <span style="color: #800000;">"</span><span style="color: #800000;">A</span><span style="color: #800000;">"</span> + to_string(b - a) + <span style="color: #800000;">"</span><span style="color: #800000;">B</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/67031/one-pass-java-solution" target="_blank">https://leetcode.com/discuss/67031/one-pass-java-solution</a></p>
+<p><a href="https://leetcode.com/discuss/67125/short-c-o-n" target="_blank">https://leetcode.com/discuss/67125/short-c-o-n</a></p>
+<p><a href="https://leetcode.com/discuss/67012/c-one-pass-o-n-time-o-1-space" target="_blank">https://leetcode.com/discuss/67012/c-one-pass-o-n-time-o-1-space</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,52 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8016251.html">[LeetCode] Sentence Similarity 句子相似度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two sentences&nbsp;<code>words1, words2</code>&nbsp;(each represented as an array of strings), and a list of similar word pairs&nbsp;<code>pairs</code>, determine if two sentences are similar.</p>
+<p>For example, "great acting skills" and "fine drama talent" are similar, if the similar word pairs are&nbsp;<code>pairs = [["great", "fine"], ["acting","drama"], ["skills","talent"]]</code>.</p>
+<p>Note that the similarity relation is not transitive. For example, if "great" and "fine" are similar, and "fine" and "good" are similar, "great" and "good" are&nbsp;not&nbsp;necessarily similar.</p>
+<p>However, similarity is symmetric. For example, "great" and "fine" being similar is the same as "fine" and "great" being similar.</p>
+<p>Also, a word is always similar with itself. For example, the sentences&nbsp;<code>words1 = ["great"], words2 = ["great"], pairs = []</code>&nbsp;are similar, even though there are no specified similar word pairs.</p>
+<p>Finally, sentences can only be similar if they have the same number of words. So a sentence like&nbsp;<code>words1 = ["great"]</code>&nbsp;can never be similar to&nbsp;<code>words2 = ["doubleplus","good"]</code>.</p>
+<p>Note:</p>
+<ul>
+<li>The length of&nbsp;<code>words1</code>&nbsp;and&nbsp;<code>words2</code>&nbsp;will not exceed&nbsp;<code>1000</code>.</li>
+<li>The length of&nbsp;<code>pairs</code>&nbsp;will not exceed&nbsp;<code>2000</code>.</li>
+<li>The length of each&nbsp;<code>pairs[i]</code>&nbsp;will be&nbsp;<code>2</code>.</li>
+<li>The length of each&nbsp;<code>words[i]</code>&nbsp;and&nbsp;<code>pairs[i][j]</code>&nbsp;will be in the range&nbsp;<code>[1, 20]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们两个句子，问这两个句子是否是相似的。判定的条件是两个句子的单词数要相同，而且每两个对应的单词要是相似度，这里会给一些相似的单词对，这里说明了单词对的相似具有互逆性但是没有传递性。看到这里博主似乎已经看到了Follow up了，加上传递性就是一个很好的拓展。那么这里没有传递性，就使得问题变得很容易了，我们只要建立一个单词和其所有相似单词的集合的映射就可以了，比如说如果great和fine类似，且great和good类似，那么就有下面这个映射：</p>
+<p>great -&gt; {fine, good}</p>
+<p>所以我们在逐个检验两个句子中对应的单词时就可以直接去映射中找，注意有可能遇到的单词对时反过来的，比如fine和great，所以我们两个单词都要带到映射中去查找，只要有一个能查找到，就说明是相似的，反之，如果两个都没查找到，说明不相似，直接返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> areSentencesSimilar(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words1, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words2, vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> pairs) {
+        </span><span style="color: #0000ff;">if</span> (words1.size() != words2.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto pair : pairs) {
+            m[pair.first].insert(pair.second);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words1.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (words1[i] == words2[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (!m[words1[i]].count(words2[i]) &amp;&amp; !m[words2[i]].count(words1[i])) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6686983.html">Friend Circles</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7829169.html">Accounts Merge</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

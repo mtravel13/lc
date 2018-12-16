@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6680548.html">[LeetCode] Longest Uncommon Subsequence II 最长非共同子序列之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of strings, you need to find the longest uncommon subsequence among them. The longest uncommon subsequence is defined as the longest subsequence of one of these strings and this subsequence should not be&nbsp;any&nbsp;subsequence of the other strings.</p>
+<p>A&nbsp;subsequence&nbsp;is a sequence that can be derived from one sequence by deleting some characters without changing the order of the remaining elements. Trivially, any string is a subsequence of itself and an empty string is a subsequence of any string.</p>
+<p>The input will be a list of strings, and the output needs to be the length of the longest uncommon subsequence. If the longest uncommon subsequence doesn't exist, return -1.</p>
+<p>Example 1:</p>
+<pre>Input: "aba", "cdc", "eae"
+Output: 3
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>All the given strings' lengths will not exceed 10.</li>
+<li>The length of the given list will be in the range of [2, 50].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/6666839.html">Longest Uncommon Subsequence I</a>的拓展，那道题因为只有两个字符串为大家所不屑。那么这道题有多个字符串，这次大家满足了吧。令我吃惊的是，这次的OJ异常的大度，连暴力搜索的解法也让过，那么还等什么，无脑暴力破解吧。遍历所有的字符串，对于每个遍历到的字符串，再和所有的其他的字符串比较，看是不是某一个字符串的子序列，如果都不是的话，那么当前字符串就是一个非共同子序列，用其长度来更新结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLUSlength(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> strs) {
+        </span><span style="color: #0000ff;">int</span> res = -<span style="color: #800080;">1</span>, j = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> strs.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (i == j) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (checkSubs(strs[i], strs[j])) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (j == n) res = max(res, (<span style="color: #0000ff;">int</span><span style="color: #000000;">)strs[i].size());
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> checkSubs(<span style="color: #0000ff;">string</span> subs, <span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : str) {
+            </span><span style="color: #0000ff;">if</span> (c == subs[i]) ++<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">if</span> (i == subs.size()) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        } 
+        </span><span style="color: #0000ff;">return</span> i ==<span style="color: #000000;"> subs.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法使用一些博主能想到的优化手段，首先我们给字符串按长度来排序，将长度大的放到前面，这样我们如果找到了非共同子序列，那么直接返回其长度即可，因为当前找到的肯定是最长的。然后我们用一个集合来记录已经遍历过的字符串，利用集合的去重复特性，这样在有大量的重复字符串的时候可以提高效率，然后我们开始遍历字符串，对于当前遍历到的字符串，我们和集合中的所有字符串相比，看其是否是某个的子序列，如果都不是，说明当前的就是最长的非共同子序列。注意如果当前的字符串是集合中某个字符串的子序列，那么直接break出来，不用再和其他的比较了，这样在集合中有大量的字符串时可以提高效率，最后别忘了将遍历过的字符串加入集合中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLUSlength(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> strs) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> strs.size();
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s;
+        sort(strs.begin(), strs.end(), [](</span><span style="color: #0000ff;">string</span> a, <span style="color: #0000ff;">string</span><span style="color: #000000;"> b){
+            </span><span style="color: #0000ff;">if</span> (a.size() == b.size()) <span style="color: #0000ff;">return</span> a &gt;<span style="color: #000000;"> b;
+            </span><span style="color: #0000ff;">return</span> a.size() &gt;<span style="color: #000000;"> b.size();
+        });
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i == n - <span style="color: #800080;">1</span> || strs[i] != strs[i + <span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                </span><span style="color: #0000ff;">bool</span> found = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : s) {
+                    </span><span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : a) {
+                        </span><span style="color: #0000ff;">if</span> (c == strs[i][j]) ++<span style="color: #000000;">j;
+                        </span><span style="color: #0000ff;">if</span> (j == strs[i].size()) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    }
+                    </span><span style="color: #0000ff;">if</span> (j ==<span style="color: #000000;"> strs[i].size()) {
+                        found </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    }
+                }
+                </span><span style="color: #0000ff;">if</span> (found) <span style="color: #0000ff;">return</span><span style="color: #000000;"> strs[i].size();
+            }
+            s.insert(strs[i]);
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/6666839.html">Longest Uncommon Subsequence I</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/85033/checking-subsequence-without-hashing" target="_blank">https://discuss.leetcode.com/topic/85033/checking-subsequence-without-hashing</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

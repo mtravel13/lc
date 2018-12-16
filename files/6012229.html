@@ -1,0 +1,111 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6012229.html">[LeetCode] All O`one Data Structure 全O(1)的数据结构</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement a data structure supporting the following operations:</p>
+<p>&nbsp;</p>
+<ol>
+<li>Inc(Key) - Inserts a new key&nbsp;with value 1. Or increments an existing key by 1. Key is guaranteed to be a&nbsp;non-empty&nbsp;string.</li>
+<li>Dec(Key) - If Key's value is 1, remove it from the data structure. Otherwise decrements an existing key by 1. If the key does not exist, this function does nothing. Key is guaranteed to be a&nbsp;non-empty&nbsp;string.</li>
+<li>GetMaxKey() - Returns one of the keys with maximal value. If no element exists, return an empty string&nbsp;<code>""</code>.</li>
+<li>GetMinKey() - Returns one of the keys with minimal value. If no element exists, return an empty string&nbsp;<code>""</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Challenge: Perform all these in O(1) time complexity.</p>
+<p>&nbsp;</p>
+<p>这道题让我们实现一个全是O(1)复杂度的数据结构，包括了增加key，减少key，获取最大key，获取最小key，这几个函数。由于需要常数级的时间复杂度，我们首先第一反应就是要用哈希表来做，不仅如此，我们肯定还需要用list来保存所有的key，那么哈希表就是建立key和list中位置迭代器之间的映射，这不由得令人想到了之前那道<a href="http://www.cnblogs.com/grandyang/p/4587511.html" target="_blank">LRU Cache</a>，也是用了类似的方法来解，但是感觉此题还要更加复杂一些。由于每个key还要对应一个次数，所以list中不能只放key，而且相同的次数可能会对应多个key值，所以我们用unordered_set来保存次数相同的所有key值，我们建立一个Bucket的结构体来保存次数val，和保存key值的集合keys。解题思路主要参考了<a href="https://discuss.leetcode.com/topic/63683/0ms-all-in-o-1-with-detailed-explantation" target="_blank">网友ivancjw的帖子</a>，数据结构参考了<a href="https://discuss.leetcode.com/topic/63827/c-solution-with-comments" target="_blank">史蒂芬大神的帖子</a>，思路是，我们建立一个次数分层的结构，次数多的在顶层，每一层放相同次数的key值，例如下面这个例子：</p>
+<p>"A": 4, "B": 4, "C": 2, "D": 1</p>
+<p>那么用我们设计的结构保存出来就是：</p>
+<p>row0: val = 4, keys = {"A", "B"}<br />row1: val = 2, keys&nbsp;= {"C"}<br />row2: val = 1, keys&nbsp;= {"D"}</p>
+<p>好，我们现在来分析如何实现inc函数，我们来想，如果我们插入一个新的key，跟我们插入一个已经存在的key，情况是完全不一样的，那么我们就需要分情况来讨论:</p>
+<p>- 如果我们插入一个新的key，那么由于该key没有出现过，所以加入后次数一定为1，那么就有两种情况了，如果list中没有val为1的这一行，那么我们需要插入该行，如果已经有了val为1的这行，我们直接将key加入集合keys中即可。</p>
+<p>- 如果我们插入了一个已存在的key，那么由于个数增加了1个，所以该key值肯定不能在当前行继续待下去了，要往上升职啊，那么这里就有两种情况了，如果该key要升职到的那行不存在，我们需要手动添加那一行；如果那一行存在，我们之间将key加入集合keys中，记得都要将原来行中的key值删掉。</p>
+<p>下面我们再来看dec函数如何实现，其实理解了上面的inc函数，那么dec函数也就没什么难度了：</p>
+<p>- 如果我们要删除的key不存在，那么直接返回即可。</p>
+<p>- 如果我们要删除的key存在，那么我们看其val值是否为1，如果为1的话，那么直接在keys中删除该key即可，然后还需要判断如果该key是集合中的唯一一个，那么该行也需要删除。如果key的次数val不为1的话，我们要考虑降级问题，跟之前的升职很类似，如果要降级的行不存在，我们手动添加上，如果存在，则直接将key值添加到keys集合中即可。</p>
+<p>当我们搞懂了inc和dec的实现方法，那么getMaxKey()和getMinKey()简直就是福利啊，不要太简单啊，直接返回首层和尾层的key值即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> AllOne {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    AllOne() {}
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Inserts a new key &lt;Key&gt; with value 1. Or increments an existing key by 1. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> inc(<span style="color: #0000ff;">string</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">m.count(key)) {
+            </span><span style="color: #0000ff;">if</span> (buckets.empty() || buckets.back().val != <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                auto newBucket </span>= buckets.insert(buckets.end(), {<span style="color: #800080;">1</span><span style="color: #000000;">, {key}});
+                m[key] </span>=<span style="color: #000000;"> newBucket;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                auto newBucket </span>= --<span style="color: #000000;">buckets.end();
+                newBucket</span>-&gt;<span style="color: #000000;">keys.insert(key);
+                m[key] </span>=<span style="color: #000000;"> newBucket;
+            }
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            auto curBucket </span>= m[key], lastBucket = (--<span style="color: #000000;">m[key]);
+            </span><span style="color: #0000ff;">if</span> (lastBucket == buckets.end() || lastBucket-&gt;val != curBucket-&gt;val + <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                auto newBucket </span>= buckets.insert(curBucket, {curBucket-&gt;val + <span style="color: #800080;">1</span><span style="color: #000000;">, {key}});
+                m[key] </span>=<span style="color: #000000;"> newBucket;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                lastBucket</span>-&gt;<span style="color: #000000;">keys.insert(key);
+                m[key] </span>=<span style="color: #000000;"> lastBucket;
+            }
+            curBucket</span>-&gt;<span style="color: #000000;">keys.erase(key);
+            </span><span style="color: #0000ff;">if</span> (curBucket-&gt;<span style="color: #000000;">keys.empty()) buckets.erase(curBucket);
+        }
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Decrements an existing key by 1. If Key's value is 1, remove it from the data structure. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> dec(<span style="color: #0000ff;">string</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">if</span> (!m.count(key)) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        auto curBucket </span>=<span style="color: #000000;"> m[key];
+        </span><span style="color: #0000ff;">if</span> (curBucket-&gt;val == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            curBucket</span>-&gt;<span style="color: #000000;">keys.erase(key);
+            </span><span style="color: #0000ff;">if</span> (curBucket-&gt;<span style="color: #000000;">keys.empty()) buckets.erase(curBucket);
+            m.erase(key);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        auto nextBucket </span>= ++<span style="color: #000000;">m[key];
+        </span><span style="color: #0000ff;">if</span> (nextBucket == buckets.end() || nextBucket-&gt;val != curBucket-&gt;val - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            auto newBucket </span>= buckets.insert(nextBucket, {curBucket-&gt;val - <span style="color: #800080;">1</span><span style="color: #000000;">, {key}});
+            m[key] </span>=<span style="color: #000000;"> newBucket;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            nextBucket</span>-&gt;<span style="color: #000000;">keys.insert(key);
+            m[key] </span>=<span style="color: #000000;"> nextBucket;
+        }
+        curBucket</span>-&gt;<span style="color: #000000;">keys.erase(key);
+        </span><span style="color: #0000ff;">if</span> (curBucket-&gt;<span style="color: #000000;">keys.empty()) buckets.erase(curBucket);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Returns one of the keys with maximal value. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> getMaxKey() {
+        </span><span style="color: #0000ff;">return</span> buckets.empty() ? <span style="color: #800000;">""</span> : *(buckets.begin()-&gt;<span style="color: #000000;">keys.begin());
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Returns one of the keys with Minimal value. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> getMinKey() {
+        </span><span style="color: #0000ff;">return</span> buckets.empty() ? <span style="color: #800000;">""</span> : *(buckets.rbegin()-&gt;<span style="color: #000000;">keys.begin());
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">struct</span> Bucket { <span style="color: #0000ff;">int</span> val; unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> keys; };
+    list</span>&lt;Bucket&gt;<span style="color: #000000;"> buckets;
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, list&lt;Bucket&gt;::iterator&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4587511.html" target="_blank">LRU Cache</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/63827/c-solution-with-comments" target="_blank">https://discuss.leetcode.com/topic/63827/c-solution-with-comments</a></p>
+<p><a href="https://discuss.leetcode.com/topic/63683/0ms-all-in-o-1-with-detailed-explantation" target="_blank">https://discuss.leetcode.com/topic/63683/0ms-all-in-o-1-with-detailed-explantation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

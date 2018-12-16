@@ -1,0 +1,63 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4741028.html">[LeetCode] Add Digits 加数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-negative integer <code>num</code>, repeatedly add all its digits until the result has only one digit.</p>
+<p>For example:</p>
+<p>Given <code>num = 38</code>, the process is like: <code>3 + 8 = 11</code>, <code>1 + 1 = 2</code>. Since <code>2</code> has only one digit, return it.</p>
+<p><strong>Follow up:</strong><br />
+Could you do it without any loop/recursion in O(1) runtime?
+</p>
+<p><strong>Hint:</strong></p>
+<ol>
+<li class="hint animated fadeInLeft" style="display: list-item;">A naive implementation of the above process is trivial. Could you come up with other methods? </li>
+<li class="hint animated fadeInLeft" style="display: list-item;">What are all the possible results?</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">How do they occur, periodically or randomly?</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">You may find this <a href="https://en.wikipedia.org/wiki/Digital_root" target="_blank">Wikipedia article</a> useful.</li>
+
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求<a href="https://zh.wikipedia.org/zh/%E6%95%B8%E6%A0%B9" target="_blank">数根</a>，所谓树根，就是将大于10的数的各个位上的数字相加，若结果还大于0的话，则继续相加，直到数字小于10为止。那么根据这个性质，我们可以写出一个解法如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> addDigits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">while</span> (num / <span style="color: #800080;">10</span> &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (num &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                sum </span>+= num % <span style="color: #800080;">10</span><span style="color: #000000;">;
+                num </span>/= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            }
+            num </span>=<span style="color: #000000;"> sum;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> num;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但是这个解法在出题人看来又trivial又naive，需要想点高逼格的解法，一行搞定碉堡了，那么我们先来观察1到20的所有的树根：</p>
+<p>1&nbsp;&nbsp; &nbsp;1<br />2&nbsp;&nbsp; &nbsp;2<br />3&nbsp;&nbsp; &nbsp;3<br />4&nbsp;&nbsp; &nbsp;4<br />5&nbsp;&nbsp; &nbsp;5<br />6&nbsp;&nbsp; &nbsp;6<br />7&nbsp;&nbsp; &nbsp;7<br />8&nbsp;&nbsp; &nbsp;8&nbsp;&nbsp; &nbsp;<br />9&nbsp;&nbsp; &nbsp;9&nbsp;&nbsp; &nbsp;<br />10&nbsp;&nbsp; &nbsp;1<br />11&nbsp;&nbsp; &nbsp;2<br />12&nbsp;&nbsp; &nbsp;3&nbsp;&nbsp; &nbsp;<br />13&nbsp;&nbsp; &nbsp;4<br />14&nbsp;&nbsp; &nbsp;5<br />15&nbsp;&nbsp; &nbsp;6<br />16&nbsp;&nbsp; &nbsp;7<br />17&nbsp;&nbsp; &nbsp;8<br />18&nbsp;&nbsp; &nbsp;9<br />19&nbsp;&nbsp; &nbsp;1<br />20&nbsp;&nbsp; &nbsp;2</p>
+<p>&nbsp;</p>
+<p>根据上面的列举，我们可以得出规律，每9个一循环，所有大于9的数的树根都是对9取余，那么对于等于9的数对9取余就是0了，为了得到其本身，而且同样也要对大于9的数适用，我们就用(n-1)%9+1这个表达式来包括所有的情况，所以解法如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> addDigits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">return</span> (num - <span style="color: #800080;">1</span>) % <span style="color: #800080;">9</span> + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

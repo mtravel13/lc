@@ -1,0 +1,46 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5944311.html">[LeetCode] Add Strings 字符串相加</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two non-negative numbers <code>num1</code> and <code>num2</code> represented as string, return the sum of <code>num1</code> and <code>num2</code>.</p>
+<p><strong>Note:</strong></p>
+<ol>
+<li>The length of both <code>num1</code> and <code>num2</code> is &lt; 5100.</li>
+<li>Both <code>num1</code> and <code>num2</code> contains only digits <code>0-9</code>.</li>
+<li>Both <code>num1</code> and <code>num2</code> does not contain any leading zero.</li>
+<li>You <strong>must not use any built-in BigInteger library</strong> or <strong>convert the inputs to integer</strong> directly.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求两个字符串的相加，之前LeetCode出过几道类似的题目，比如二进制数相加，还有链表相加，或是字符串加1，基本思路很类似，都是一位一位相加，然后算和算进位，最后根据进位情况看需不需要补一个高位，难度不大，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> addStrings(<span style="color: #0000ff;">string</span> num1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> num2) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = num1.size(), n = num2.size(), i = m - <span style="color: #800080;">1</span>, j = n - <span style="color: #800080;">1</span>, carry = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &gt;= <span style="color: #800080;">0</span> || j &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> a = i &gt;= <span style="color: #800080;">0</span> ? num1[i--] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> : <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> b = j &gt;= <span style="color: #800080;">0</span> ? num2[j--] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> : <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> sum = a + b +<span style="color: #000000;"> carry;
+            res.insert(res.begin(), sum </span>% <span style="color: #800080;">10</span> + <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            carry </span>= sum / <span style="color: #800080;">10</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> carry ? <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> res : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4741028.html" target="_blank">Add Digits</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4084971.html" target="_blank">Add Binary</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4129891.html" target="_blank">Add Two Numbers</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

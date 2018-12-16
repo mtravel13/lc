@@ -1,0 +1,124 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4444160.html">[LeetCode] Generate Parentheses 生成括号</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given&nbsp;<em>n</em>&nbsp;pairs of parentheses, write a function to generate all combinations of well-formed parentheses.</p>
+<p>For example, given&nbsp;<em>n</em>&nbsp;= 3, a solution set is:</p>
+<p><code>"((()))", "(()())", "(())()", "()(())", "()()()"</code></p>
+<p>&nbsp;</p>
+<p>在LeetCode中有关括号的题共有三道，除了这一道的另外两道是<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4424587.html">&nbsp;Valid Parentheses 验证括号</a>和<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4424731.html">&nbsp;Longest Valid Parentheses 最长有效括号</a>，这道题给定一个数字n，让生成共有n个括号的所有正确的形式，对于这种列出所有结果的题首先还是考虑用递归Recursion来解，由于字符串只有左括号和右括号两种字符，而且最终结果必定是左括号3个，右括号3个，所以我们定义两个变量left和right分别表示剩余左右括号的个数，如果在某次递归时，左括号的个数大于右括号的个数，说明此时生成的字符串中右括号的个数大于左括号的个数，即会出现')('这样的非法串，所以这种情况直接返回，不继续处理。如果left和right都为0，则说明此时生成的字符串已有3个左括号和3个右括号，且字符串合法，则存入结果中后返回。如果以上两种情况都不满足，若此时left大于0，则调用递归函数，注意参数的更新，若right大于0，则调用递归函数，同样要更新参数。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generateParenthesis(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        generateParenthesisDFS(n, n, </span><span style="color: #800000;">""</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> generateParenthesisDFS(<span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span> right, <span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span>, vector&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (left &gt; right) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (left == <span style="color: #800080;">0</span> &amp;&amp; right == <span style="color: #800080;">0</span>) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (left &gt; <span style="color: #800080;">0</span>) generateParenthesisDFS(left - <span style="color: #800080;">1</span>, right, <span style="color: #0000ff;">out</span> + <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">, res);
+            </span><span style="color: #0000ff;">if</span> (right &gt; <span style="color: #800080;">0</span>) generateParenthesisDFS(left, right - <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span> + <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">, res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> List&lt;String&gt; generateParenthesis(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        List</span>&lt;String&gt; res = <span style="color: #0000ff;">new</span> ArrayList&lt;String&gt;<span style="color: #000000;">();
+        helper(n, n, </span>""<span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span> right, String out, List&lt;String&gt;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (left &lt; 0 || right &lt; 0 || left &gt; right) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (left == 0 &amp;&amp; right == 0<span style="color: #000000;">) {
+            res.add(out);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        helper(left </span>- 1, right, out + "("<span style="color: #000000;">, res);
+        helper(left, right </span>- 1, out + ")"<span style="color: #000000;">, res);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看那一种方法，这种方法是CareerCup书上给的方法，感觉也是满巧妙的一种方法，这种方法的思想是找左括号，每找到一个左括号，就在其后面加一个完整的括号，最后再在开头加一个()，就形成了所有的情况，需要注意的是，有时候会出现重复的情况，所以我们用set数据结构，好处是如果遇到重复项，不会加入到结果中，最后我们再把set转为vector即可，参见代码如下：：</p>
+<p>n＝1:&nbsp;&nbsp;&nbsp; ()</p>
+<p>n=2:&nbsp;&nbsp;&nbsp; (())&nbsp;&nbsp;&nbsp; ()()</p>
+<p>n=3:&nbsp;&nbsp;&nbsp; (()())&nbsp;&nbsp;&nbsp; ((()))&nbsp;&nbsp;&nbsp; ()(())&nbsp;&nbsp;&nbsp; (())()&nbsp;&nbsp;&nbsp; ()()() &nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generateParenthesis(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> t;
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) t.insert(<span style="color: #800000;">""</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; pre = generateParenthesis(n - <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : pre) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; a.size(); ++<span style="color: #000000;">i) {
+                    </span><span style="color: #0000ff;">if</span> (a[i] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                        a.insert(a.begin() </span>+ i + <span style="color: #800080;">1</span>, <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+                        a.insert(a.begin() </span>+ i + <span style="color: #800080;">2</span>, <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+                        t.insert(a);
+                        a.erase(a.begin() </span>+ i + <span style="color: #800080;">1</span>, a.begin() + i + <span style="color: #800080;">3</span><span style="color: #000000;">);
+                    }
+                }
+                t.insert(</span><span style="color: #800000;">"</span><span style="color: #800000;">()</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> a);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> vector&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">(t.begin(), t.end());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;&nbsp;</p>
+<p>Java 解法二:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> List&lt;String&gt; generateParenthesis(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        Set</span>&lt;String&gt; res = <span style="color: #0000ff;">new</span> HashSet&lt;String&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">if</span> (n == 0<span style="color: #000000;">) {
+            res.add(</span>""<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            List</span>&lt;String&gt; pre = generateParenthesis(n - 1<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String str : pre) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; str.length(); ++<span style="color: #000000;">i) {
+                    </span><span style="color: #0000ff;">if</span> (str.charAt(i) == '('<span style="color: #000000;">) {
+                        str </span>= str.substring(0, i + 1) + "()" + str.substring(i + 1<span style="color: #000000;">, str.length());
+                        res.add(str);
+                        str </span>= str.substring(0, i + 1) +  str.substring(i + 3<span style="color: #000000;">, str.length());
+                    }
+                }
+                res.add(</span>"()" +<span style="color: #000000;"> str);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayList(res);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4944875.html">Remove Invalid Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4682458.html">Different Ways to Add Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424731.html" target="_blank">Longest Valid Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424587.html" target="_blank">Valid Parentheses</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/4485/concise-recursive-c-solution" target="_blank">https://discuss.leetcode.com/topic/4485/concise-recursive-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/30026/2ms-ac-java-solution-using-recursive-call/2" target="_blank">https://discuss.leetcode.com/topic/30026/2ms-ac-java-solution-using-recursive-call/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,124 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5138186.html">[LeetCode] Coin Change 硬币找零</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given coins of different denominations and a total amount of money&nbsp;<em>amount</em>. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return&nbsp;<code>-1</code>.</p>
+<p>Example 1:<br />coins =&nbsp;<code>[1, 2, 5]</code>, amount =&nbsp;<code>11</code><br />return&nbsp;<code>3</code>&nbsp;(11 = 5 + 5 + 1)</p>
+<p>Example 2:<br />coins =&nbsp;<code>[2]</code>, amount =&nbsp;<code>3</code><br />return&nbsp;<code>-1</code>.</p>
+<p>Note:<br />You may assume that you have an infinite number of each kind of coin.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/jianchao.li.fighter">@jianchao.li.fighter</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给我们了一些可用的硬币值，又给了一个钱数，问我们最小能用几个硬币来找零。根据题目中的例子可知，不是每次都会给全1,2,5的硬币，有时候没有1分硬币，那么有的钱数就没法找零，需要返回-1。这道题跟CareerCup上的那道<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_39" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4840713.html">9.8 Represent N Cents 美分的组成</a>有些类似，那道题给全了所有的美分，25,10,5,1，然后给我们一个钱数，问我们所有能够找零的方法，而这道题只让我们求出最小的那种。没啥特别好的思路就首先来考虑brute force吧，暴力搜索如果也没思路肿么办-.-|||。那我们怎么办，还是来看例子1，如果不考虑代码实现，你怎么手动找出答案。博主会先取出一个最大的数字5，比目标值11要小，由于这里的硬币是可以重复使用的，所以博主会再取个5出来，现在是10，还是比11要小，这是再取5会超，那就往前取，取2，也会超出，于是就取1，刚好是11。那么我们的暴力搜索法也是这种思路，首先要给数组排个序，因为我们想要从最大的开始取，我们的递归函数需要一个变量start，初识化为数组的最后一个位置，当前目标值target，还有当前使用的硬币个数cur，以及最终结果res。在递归函数，我们首先判断如果target小于0了，直接返回。若target为0了，说明我们当前使用的硬币已经组成了目标值，用cur来更新结果res。否则就从start开始往前遍历硬币，对每个硬币都调用递归函数，此时target应该减去当前的硬币值，cur应该自增1，代码参见评论区七楼。但是暴力搜索Brute Force的方法会超时TLE，所以我们考虑一下其他的方法吧。</p>
+<p>如果大家刷题有一阵子了的，那么应该会知道，对于求极值问题，我们还是主要考虑动态规划Dynamic Programming来做，好处是保留了一些中间状态的计算值，这样可以避免大量的重复计算。我们维护一个一维动态数组dp，其中dp[i]表示钱数为i时的最小硬币数的找零，注意由于数组是从0开始的，所以我们要多申请一位，数组大小为amount+1，这样最终结果就可以保存在dp[amount]中了。初始化dp[0] = 0，因为目标值若为0时，就不需要硬币了。其他值可以初始化为整型最大值，或者是amount+1，为啥呢，因为最小的硬币是1，所以amount最多需要amount个硬币，amount+1也就相当于整型最大值的作用了。好，接下来就是要找状态转移方程了，没思路？不要紧！回归例子1，假设我取了一个值为5的硬币，那么由于目标值是11，所以是不是假如我们知道dp[6]，那么就知道了组成11的dp值了？所以我们更新dp[i]的方法就是遍历每个硬币，如果遍历到的硬币值小于i值（比如我们不能用值为5的硬币去更新dp[3]）时，我们用 dp[i - coins[j]] + 1 来更新dp[i]，所以状态转移方程为：</p>
+<pre><span>dp[i] = min(dp[i], dp[i - coins[j]] + 1<span>);</span></span></pre>
+<p>其中coins[j]为第j个硬币，而i - coins[j]为钱数i减去其中一个硬币的值，剩余的钱数在dp数组中找到值，然后加1和当前dp数组中的值做比较，取较小的那个更新dp数组。先来看迭代的写法如下所示：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> coinChange(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span><span style="color: #000000;"> amount) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(amount + <span style="color: #800080;">1</span>, amount + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        dp[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= amount; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; coins.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (coins[j] &lt;=<span style="color: #000000;"> i) {
+                    dp[i] </span>= min(dp[i], dp[i - coins[j]] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> (dp[amount] &gt; amount) ? -<span style="color: #800080;">1</span><span style="color: #000000;"> : dp[amount];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>迭代的DP解法有一个好基友，就是递归+memo数组的解法，说其是递归形式的DP解法也没错，但博主比较喜欢说成是递归加记忆数组。其目的都是为了保存中间计算结果，避免大量的重复计算，宠从而提高运算效率，思路都一样，仅仅是写法有些区别：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> coinChange(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span><span style="color: #000000;"> amount) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; memo(amount + <span style="color: #800080;">1</span><span style="color: #000000;">, INT_MAX);
+        memo[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> coinChangeDFS(coins, amount, memo);
+    }
+    </span><span style="color: #0000ff;">int</span> coinChangeDFS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span> target, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">if</span> (target &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (memo[target] != INT_MAX) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[target];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; coins.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> tmp = coinChangeDFS(coins, target -<span style="color: #000000;"> coins[i], memo);
+            </span><span style="color: #0000ff;">if</span> (tmp &gt;= <span style="color: #800080;">0</span>) memo[target] = min(memo[target], tmp + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span> memo[target] = (memo[target] == INT_MAX) ? -<span style="color: #800080;">1</span><span style="color: #000000;"> : memo[target];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种使用HashMap来当记忆数组的递归解法：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> coinChange(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span><span style="color: #000000;"> amount) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> memo;
+        memo[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> coinChangeDFS(coins, amount, memo);
+    }
+    </span><span style="color: #0000ff;">int</span> coinChangeDFS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span> target, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">if</span> (target &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (memo.count(target)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[target];
+        </span><span style="color: #0000ff;">int</span> cur =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; coins.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> tmp = coinChangeDFS(coins, target -<span style="color: #000000;"> coins[i], memo);
+            </span><span style="color: #0000ff;">if</span> (tmp &gt;= <span style="color: #800080;">0</span>) cur = min(cur, tmp + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span> memo[target] = (cur == INT_MAX) ? -<span style="color: #800080;">1</span><span style="color: #000000;"> : cur;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>难道这题一定要DP来做吗，我们来看网友hello_world00提供的一种解法，这其实是对暴力搜索的解法做了很好的优化，不仅不会TLE，而且击败率相当的高！对比Brute Force的方法，这里在递归函数中做了很好的优化。首先是判断start是否小于0，因为我们需要从coin中取硬币，不能越界。下面就是优化的核心了，看target是否能整除coins[start]，这是相当叼的一步，比如假如我们的目标值是15，如果我们当前取出了大小为5的硬币，我们做除法，可以立马知道只用大小为5的硬币就可以组成目标值target，那么我们用cur + target/coins[start] 来更新结果res。之后的for循环也相当叼，不像暴力搜索中的那样从start位置开始往前遍历coins中的硬币，而是遍历 target/coins[start] 的次数，由于不能整除，我们只需要对余数调用递归函数，而且我们要把次数每次减1，并且再次求余数。举个例子，比如coins=[1,2,3]，amount=11，那么 11除以3，得3余2，那么我们的i从3开始遍历，这里有一步非常有用的剪枝操作，没有这一步，还是会TLE，而加上了这一步，直接击败百分之九十九以上，可以说是天壤之别。那就是判断若 cur + i &gt;= res - 1 成立，直接break，不调用递归。这里解释一下，cur + i 自不必说，是当前硬币个数cur 加上新加的i个硬币，我们都是知道cur+i如果大于等于res的话，那么res是不会被更新的，那么为啥这里是大于等于res-1呢？因为能运行到这一步，说明之前是无法整除的，那么余数一定存在，所以再次调用递归函数的target不为0，那么如果整除的话，cur至少会加上1，所以又跟res相等了，还是不会使得res变得更小。解释到这里应该比较明白了吧，有疑问的请在下方留言哈，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> coinChange(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span><span style="color: #000000;"> amount) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, n =<span style="color: #000000;"> coins.size();
+        sort(coins.begin(), coins.end());
+        helper(coins, n </span>- <span style="color: #800080;">1</span>, amount, <span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span> (res == INT_MAX) ? -<span style="color: #800080;">1</span><span style="color: #000000;"> : res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span> target, <span style="color: #0000ff;">int</span> cur, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (start &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (target % coins[start] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            res </span>= min(res, cur + target /<span style="color: #000000;"> coins[start]);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = target / coins[start]; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (cur + i &gt;= res - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            helper(coins, start </span>- <span style="color: #800080;">1</span>, target - i * coins[start], cur +<span style="color: #000000;"> i, res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7669088.html">Coin Change 2</a></p>
+<p><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_39" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4840713.html">9.8 Represent N Cents 美分的组成</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/coin-change/" target="_blank">https://leetcode.com/problems/coin-change/</a></p>
+<p><a href="https://leetcode.com/problems/coin-change/discuss/77360/C%2B%2B-O(n*amount)-time-O(amount)-space-DP-solution" target="_blank">https://leetcode.com/problems/coin-change/discuss/77360/C%2B%2B-O(n*amount)-time-O(amount)-space-DP-solution</a></p>
+<p><a href="https://leetcode.com/problems/coin-change/discuss/77368/*Java*-Both-iterative-and-recursive-solutions-with-explanations" target="_blank">https://leetcode.com/problems/coin-change/discuss/77368/*Java*-Both-iterative-and-recursive-solutions-with-explanations</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

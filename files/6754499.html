@@ -1,0 +1,61 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6754499.html">[LeetCode] Lonely Pixel I 孤独的像素之一</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a picture consisting of black and white pixels, find the number of&nbsp;black&nbsp;lonely pixels.</p>
+<p>The picture is represented by a 2D char array consisting of 'B' and 'W', which means black and white pixels respectively.</p>
+<p>A black lonely pixel is character 'B' that located at a specific position where the same row and same column don't have any other black pixels.</p>
+<p>Example:</p>
+<pre>Input: 
+[['W', 'W', 'B'],
+ ['W', 'B', 'W'],
+ ['B', 'W', 'W']]
+
+Output: 3
+Explanation: All the three 'B's are black lonely pixels.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The range of width and height of the input 2D array is [1,500].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题定义了一种孤独的黑像素，就是该黑像素所在的行和列中没有其他的黑像素，让我们找出所有的这样的像素。那么既然对于每个黑像素都需要查找其所在的行和列，为了避免重复查找，我们可以统一的扫描一次，将各行各列的黑像素的个数都统计出来，然后再扫描所有的黑像素一次，看其是否是该行该列唯一的存在，是的话就累加计数器即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLonelyPixel(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> picture) {
+        </span><span style="color: #0000ff;">if</span> (picture.empty() || picture[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = picture.size(), n = picture[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; rowCnt(m, <span style="color: #800080;">0</span>), colCnt(n, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (picture[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span>++<span style="color: #000000;">rowCnt[i];
+                    </span>++<span style="color: #000000;">colCnt[j];
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (picture[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (rowCnt[i] == <span style="color: #800080;">1</span> &amp;&amp; colCnt[j] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                        </span>++<span style="color: #000000;">res;
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

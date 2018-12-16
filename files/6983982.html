@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6983982.html">[LeetCode] Can Place Flowers 可以放置花</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Suppose you have a long flowerbed in which some of the plots are planted and some are not. However, flowers cannot be planted in adjacent plots - they would compete for water and both would die.</p>
+<p>Given a flowerbed (represented as an array containing 0 and 1, where 0 means empty and 1 means not empty), and a number&nbsp;n, return if&nbsp;n&nbsp;new flowers can be planted in it without violating the no-adjacent-flowers rule.</p>
+<p>Example 1:</p>
+<pre>Input: flowerbed = [1,0,0,0,1], n = 1
+Output: True
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: flowerbed = [1,0,0,0,1], n = 2
+Output: False
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The input array won't violate no-adjacent-flowers rule.</li>
+<li>The input array size is in the range of [1, 20000].</li>
+<li>n&nbsp;is a non-negative integer which won't exceed the input array size.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个01数组，其中1表示已经放了花，0表示可以放花的位置，但是有个限制条件是不能有相邻的花。那么我们来看如果是一些简单的例子，如果有3个连续的零，000，能放几盆花呢，其实是要取决约左右的位置的，如果是10001，那么只能放1盆，如果左右是边界的花，那么就能放两盆，101，所以如果我们想通过计算连续0的个数，然后直接算出能放花的个数，就必须要对边界进行处理，处理方法是如果首位置是0，那么前面再加上个0，如果末位置是0，就在最后面再加上个0。这样处理之后我们就默认连续0的左右两边都是1了，这样如果有k个连续0，那么就可以通过(k-1)/2来快速计算出能放的花的数量，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canPlaceFlowers(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; flowerbed, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (flowerbed.empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (flowerbed[<span style="color: #800080;">0</span>] == <span style="color: #800080;">0</span>) flowerbed.insert(flowerbed.begin(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (flowerbed.back() == <span style="color: #800080;">0</span>) flowerbed.push_back(<span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> len = flowerbed.size(), cnt = <span style="color: #800080;">0</span>, sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= len; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i &lt; len &amp;&amp; flowerbed[i] == <span style="color: #800080;">0</span>) ++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                sum </span>+= (cnt - <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> sum &gt;=<span style="color: #000000;"> n;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以直接通过修改flowerbed的值来做，我们遍历花床，如果某个位置为0，我们就看其前面一个和后面一个位置的值，注意处理首位置和末位置的情况，如果pre和next均为0，那么说明当前位置可以放花，我们修改flowerbed的值，并且n自减1，最后看n是否小于等于0，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canPlaceFlowers(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; flowerbed, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; flowerbed.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (flowerbed[i] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">int</span> next = (i == flowerbed.size() - <span style="color: #800080;">1</span> ? <span style="color: #800080;">0</span> : flowerbed[i + <span style="color: #800080;">1</span><span style="color: #000000;">]);
+                </span><span style="color: #0000ff;">int</span> pre = (i == <span style="color: #800080;">0</span> ? <span style="color: #800080;">0</span> : flowerbed[i - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+                </span><span style="color: #0000ff;">if</span> (next + pre == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    flowerbed[i] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                    </span>--<span style="color: #000000;">n;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> n &lt;= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法跟上面的方法类似，为了不特殊处理首末位置，直接先在首尾各加了一个0，然后就三个三个的来遍历，如果找到了三个连续的0，那么n自减1，i自增1，这样相当于i一下向后跨了两步，可以自行带例子检验，最后还是看n是否小于等于0，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canPlaceFlowers(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; flowerbed, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        flowerbed.insert(flowerbed.begin(), </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+        flowerbed.push_back(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; flowerbed.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (flowerbed[i - <span style="color: #800080;">1</span>] + flowerbed[i] + flowerbed[i + <span style="color: #800080;">1</span>] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span>--<span style="color: #000000;">n;
+                </span>++<span style="color: #000000;">i;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> n &lt;= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6399408.html">Teemo Attacking</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/91376/simplest-c-code" target="_blank">https://discuss.leetcode.com/topic/91376/simplest-c-code</a></p>
+<p><a href="https://discuss.leetcode.com/topic/91303/java-greedy-solution-o-flowerbed-beats-100" target="_blank">https://discuss.leetcode.com/topic/91303/java-greedy-solution-o-flowerbed-beats-100</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

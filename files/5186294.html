@@ -1,0 +1,43 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5186294.html">[LeetCode] Reverse Words in a String II 翻转字符串中的单词之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p><br />Given an input string, reverse the string word by word. A word is defined as a sequence of non-space characters.<br />The input string does not contain leading or trailing spaces and the words are always separated by a single space.<br />For example,<br />Given s = "the sky is blue",<br />return "blue is sky the".<br />Could you do it in-place without allocating extra space? </p>
+<p>&nbsp;</p>
+<p>这道题让我们翻转一个字符串中的单词，跟之前那题<a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a>没有区别，由于之前那道题我们就是用in-place的方法做的，而这道题反而更简化了题目，因为不考虑首尾空格了和单词之间的多空格了，方法还是很简单，先把每个单词翻转一遍，再把整个字符串翻转一遍，或者也可以调换个顺序，先翻转整个字符串，再翻转每个单词，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> reverseWords(<span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i == s.size() || s[i] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">) {
+                reverse(s, left, i </span>- <span style="color: #800080;">1</span><span style="color: #000000;">);
+                left </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        }
+        reverse(s, </span><span style="color: #800080;">0</span>, s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">void</span> reverse(<span style="color: #0000ff;">string</span> &amp;s, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span><span style="color: #000000;"> right) {
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">char</span> t =<span style="color: #000000;"> s[left];
+            s[left] </span>=<span style="color: #000000;"> s[right];
+            s[right] </span>=<span style="color: #000000;"> t;
+            </span>++left; --<span style="color: #000000;">right;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

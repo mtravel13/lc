@@ -1,0 +1,94 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7722949.html">[LeetCode] Degree of an Array 数组的度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-empty array of non-negative integers&nbsp;<code>nums</code>, the&nbsp;degree&nbsp;of this array is defined as the maximum frequency of any one of its elements.</p>
+<p>Your task is to find the smallest possible length of a (contiguous) subarray of&nbsp;<code>nums</code>, that has the same degree as&nbsp;<code>nums</code>.</p>
+<p>Example 1:</p>
+<pre>Input: [1, 2, 2, 3, 1]
+Output: 2
+Explanation: 
+The input array has a degree of 2 because both elements 1 and 2 appear twice.
+Of the subarrays that have the same degree:
+[1, 2, 2, 3, 1], [1, 2, 2, 3], [2, 2, 3, 1], [1, 2, 2], [2, 2, 3], [2, 2]
+The shortest length is 2. So return 2.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [1,2,2,3,1,4,2]
+Output: 6
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li><code>nums.length</code>&nbsp;will be between 1 and 50,000.</li>
+<li><code>nums[i]</code>&nbsp;will be an integer between 0 and 49,999.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，定义数组的度为某个或某些数字出现最多的次数，要我们找最短的子数组使其和原数组拥有相同的度。那么我们肯定需要统计每个数字出现的次数，就要用哈希表来建立每个数字和其出现次数之间的映射。由于我们要求包含原度的最小长度的子数组，那么最好的情况就是子数组的首位数字都是统计度的数字，即出现最多的数字。那么我们肯定要知道该数字的第一次出现的位置和最后一次出现的位置，由于我们开始不知道哪些数字会出现最多次，所以我们统计所有数字的首尾出现位置，那么我们再用一个哈希表，建立每个数字和其首尾出现的位置。我们用变量degree来表示数组的度。好，现在我们遍历原数组，累加当前数字出现的次数，当某个数字是第一次出现，那么我们用当前位置的来更新该数字出现的首尾位置，否则只更新尾位置。每遍历一个数，我们都更新一下degree。当遍历完成后，我们已经有了数组的度，还有每个数字首尾出现的位置，下面就来找出现次数为degree的数组，然后计算其首尾位置差加1就是candidate数组的长度，由于出现次数为degree的数字不一定只有一个，我们遍历所有的，找出其中最小的即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findShortestSubArray(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), res = INT_MAX, degree = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> pos;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (++m[nums[i]] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                pos[nums[i]] </span>=<span style="color: #000000;"> {i, i};
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                pos[nums[i]].second </span>=<span style="color: #000000;"> i;
+            }
+            degree </span>=<span style="color: #000000;"> max(degree, m[nums[i]]);
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            </span><span style="color: #0000ff;">if</span> (degree ==<span style="color: #000000;"> a.second) {
+                res </span>= min(res, pos[a.first].second - pos[a.first].first + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法只用了一次遍历，思路跟上面的解法很相似，还是要建立数字出现次数的哈希表，还有就是建立每个数字和其第一次出现位置之间的映射，那么我们当前遍历的位置其实可以看作是尾位置，还是可以计算子数组的长度的。我们遍历数组，累加当前数字出现的次数，如果某个数字是第一次出现，建立该数字和当前位置的映射，如果当前数字的出现次数等于degree时，当前位置为尾位置，首位置在startIdx中取的，二者做差加1来更新结果res；如果当前数字的出现次数大于degree，说明之前的结果代表的数字不是出现最多的，直接将结果res更新为当前数字的首尾差加1的长度，然后degree也更新为当前数字出现的次数。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findShortestSubArray(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), res = INT_MAX, degree = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m, startIdx;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span>++<span style="color: #000000;">m[nums[i]];
+            </span><span style="color: #0000ff;">if</span> (!startIdx.count(nums[i])) startIdx[nums[i]] =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">if</span> (m[nums[i]] ==<span style="color: #000000;"> degree) {
+                res </span>= min(res, i - startIdx[nums[i]] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (m[nums[i]] &gt;<span style="color: #000000;"> degree) {
+                res </span>= i - startIdx[nums[i]] + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                degree </span>=<span style="color: #000000;"> m[nums[i]];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4377150.html" target="_blank">Maximum Subarray</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/107097/java-o-n-time-o-n-space">https://discuss.leetcode.com/topic/107097/java-o-n-time-o-n-space</a></p>
+<p><a href="https://discuss.leetcode.com/topic/107216/concise-c-solution-using-hash-map-o-n-time">https://discuss.leetcode.com/topic/107216/concise-c-solution-using-hash-map-o-n-time</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5265628.html">http://www.cnblogs.com/grandyang/p/5265628.html</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

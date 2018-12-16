@@ -1,0 +1,944 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="origin" />
+<title>LintCode - 随笔分类 - Grandyang - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=-duj5vpGTntb85GJoM3iRI972XwWcI-j8zmqDzyfu2w1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/UnlimitedSunlight/bundle-UnlimitedSunlight.css?v=U277U0wIYS14CMa8eCm6JCKf6HhAx4Z-aYITTLKh93g1"/>
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/UnlimitedSunlight/bundle-UnlimitedSunlight-mobile.css?v=VxC7ucUyn1xY9IlWteuEc3CgiJJILG_BSweawTmecb01"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/grandyang/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/grandyang/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/grandyang/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">var currentBlogApp = 'grandyang', cb_enable_mathjax=true;var isLogined=false;</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: { 
+            equationNumbers: { autoNumber: ['AMS'], useLabelIds: true }, extensions: ['extpfeil.js'] 
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script><script src="//mathjax.cnblogs.com/2_7_2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="/bundles/blog-common.js?v=_U8OpbfIPk4K3Mxrx3oPrbJt2JRnf47OVRruaRlQuEc1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+<!--PageBeginHtml Block Begin-->
+<script src="https://files.cnblogs.com/files/grandyang/tctip-1.0.4.js"></script>
+<script>
+new tctip({
+top: '20%',
+button: {
+  id:7,
+  type: 'zanzhu',
+},
+list: [
+  {
+        type: 'wechat',
+	qrImg: 'https://files.cnblogs.com/files/grandyang/wepay.gif'
+  }, {
+	type: 'announcement',
+        qrText: '2018，梦想，起航～'
+  }
+]
+}).init()
+</script>
+<!--PageBeginHtml Block End-->
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="https://www.cnblogs.com/grandyang/"><img id="blogLogo" src="/Skins/custom/images/logo.gif" alt="返回主页" /></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="https://www.cnblogs.com/grandyang/">Grandyang</a></h1>
+<h2>仰天长啸仗剑红尘，冬去春来寒暑几更...</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">博客园</a></li>
+<li><a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/grandyang/">首页</a></li>
+<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/Grandyang">联系</a></li>
+<li><a id="blog_nav_rss" class="menu" href="https://www.cnblogs.com/grandyang/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="https://www.cnblogs.com/grandyang/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<span id="stats_post_count">随笔 - 1306&nbsp; </span>
+<span id="stats_article_count">文章 - 1&nbsp; </span>
+<span id="stats-comment_count">评论 - 2263</span>
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+
+<!--done-->
+
+
+<div class="entrylist">
+	<h1 class="entrylistTitle">随笔分类 - LintCode</h1>
+	<div class="entrylistDescription"></div>
+	
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_0" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6269254.html">[LintCode] Max Points on a Line 共线点个数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given n points on a 2D plane, find the maximum number of points that lie on the same straight line. Given n points on a 2D plane, find the maximum num<a href="https://www.cnblogs.com/grandyang/p/6269254.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6269254.html" Title = "permalink">2017-01-10 14:29</a> Grandyang 阅读(366) | <a href="https://www.cnblogs.com/grandyang/p/6269254.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6269254" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_1" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6248101.html">[LintCode] Intersection of Two Linked Lists  求两个链表的交点</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Write a program to find the node at which the intersection of two singly linked lists begins. Notice If the two linked lists have no intersection at a<a href="https://www.cnblogs.com/grandyang/p/6248101.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6248101.html" Title = "permalink">2017-01-04 11:56</a> Grandyang 阅读(232) | <a href="https://www.cnblogs.com/grandyang/p/6248101.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6248101" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_2" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6243668.html">[LintCode] Merge Two Sorted Lists 混合插入有序链表</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Merge two sorted (ascending) linked lists and return it as a new sorted list. The new sorted list should be made by splicing together the nodes of the<a href="https://www.cnblogs.com/grandyang/p/6243668.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6243668.html" Title = "permalink">2017-01-03 06:09</a> Grandyang 阅读(187) | <a href="https://www.cnblogs.com/grandyang/p/6243668.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6243668" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_3" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6240665.html">[LintCode] Best Time to Buy and Sell Stock II 买股票的最佳时间之二</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Say you have an array for which the&#160;ith&#160;element is the price of a given stock on day&#160;i. Design an algorithm to find the maximum profit. You may comple<a href="https://www.cnblogs.com/grandyang/p/6240665.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6240665.html" Title = "permalink">2017-01-01 03:09</a> Grandyang 阅读(209) | <a href="https://www.cnblogs.com/grandyang/p/6240665.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6240665" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_4" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6238721.html">[LintCode] Maximum Subarray 最大子数组</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array of integers, find a contiguous subarray which has the largest sum. Notice The subarray should contain at least one number. Have you met<a href="https://www.cnblogs.com/grandyang/p/6238721.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6238721.html" Title = "permalink">2016-12-31 08:09</a> Grandyang 阅读(792) | <a href="https://www.cnblogs.com/grandyang/p/6238721.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6238721" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_5" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6201067.html">[LintCode] Trailing Zeroes 末尾零的个数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Write an algorithm which computes the number of trailing zeros in n factorial. Have you met this question in a real interview? Yes Write an algorithm <a href="https://www.cnblogs.com/grandyang/p/6201067.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6201067.html" Title = "permalink">2016-12-19 23:30</a> Grandyang 阅读(317) | <a href="https://www.cnblogs.com/grandyang/p/6201067.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6201067" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_6" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6166347.html">[LintCode] Trapping Rain Water 收集雨水</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given&#160;n&#160;non-negative integers representing an elevation map where the width of each bar is&#160;1, compute how much water it is able to trap after raining.<a href="https://www.cnblogs.com/grandyang/p/6166347.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6166347.html" Title = "permalink">2016-12-12 23:03</a> Grandyang 阅读(347) | <a href="https://www.cnblogs.com/grandyang/p/6166347.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6166347" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_7" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6132943.html">[LintCode] Longest Common Prefix 最长共同前缀</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given k strings, find the longest common prefix (LCP). Given k strings, find the longest common prefix (LCP). Have you met this question in a real int<a href="https://www.cnblogs.com/grandyang/p/6132943.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6132943.html" Title = "permalink">2016-12-05 10:30</a> Grandyang 阅读(282) | <a href="https://www.cnblogs.com/grandyang/p/6132943.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6132943" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_8" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6132378.html">[LintCode] Product of Array Except Self 除本身之外的数组之积</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an integers array A. Define B[i] = A[0] * ... * A[i-1] * A[i+1] * ... * A[n-1], calculate B&#160;WITHOUT&#160;divide operation. Have you met this question<a href="https://www.cnblogs.com/grandyang/p/6132378.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6132378.html" Title = "permalink">2016-12-04 23:28</a> Grandyang 阅读(146) | <a href="https://www.cnblogs.com/grandyang/p/6132378.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6132378" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_9" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6130003.html">[LintCode] Best Time to Buy and Sell Stock 买卖股票的最佳时间</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Say you have an array for which the&#160;ith&#160;element is the price of a given stock on day&#160;i. If you were only permitted to complete at most one transaction<a href="https://www.cnblogs.com/grandyang/p/6130003.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6130003.html" Title = "permalink">2016-12-03 23:37</a> Grandyang 阅读(206) | <a href="https://www.cnblogs.com/grandyang/p/6130003.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6130003" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_10" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6127747.html">[LintCode] Sort List 链表排序</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Sort a linked list in O(n&#160;log&#160;n) time using constant space complexity. Have you met this question in a real interview? Yes Sort a linked list in O(n&#160;l<a href="https://www.cnblogs.com/grandyang/p/6127747.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6127747.html" Title = "permalink">2016-12-02 23:40</a> Grandyang 阅读(1484) | <a href="https://www.cnblogs.com/grandyang/p/6127747.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6127747" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_11" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6121604.html">[LintCode] Climbing Stairs 爬梯子问题</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: You are climbing a stair case. It takes&#160;n&#160;steps to reach to the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you cl<a href="https://www.cnblogs.com/grandyang/p/6121604.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6121604.html" Title = "permalink">2016-12-01 13:52</a> Grandyang 阅读(185) | <a href="https://www.cnblogs.com/grandyang/p/6121604.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6121604" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_12" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6117182.html">[LintCode] Find Peak Element 求数组的峰值</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There is an integer array which has the following features: The numbers in adjacent positions are different. A[0] &lt; A[1] &amp;&amp; A[A.length - 2] &gt; A[A.leng<a href="https://www.cnblogs.com/grandyang/p/6117182.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6117182.html" Title = "permalink">2016-11-30 12:00</a> Grandyang 阅读(509) | <a href="https://www.cnblogs.com/grandyang/p/6117182.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6117182" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_13" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6115984.html">[LintCode] Container With Most Water 装最多水的容器</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given n non-negative integers a1, a2, ..., an, where each represents a point at coordinate&#160;(i, ai).&#160;n&#160;vertical lines are drawn such that the two endpo<a href="https://www.cnblogs.com/grandyang/p/6115984.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6115984.html" Title = "permalink">2016-11-29 23:57</a> Grandyang 阅读(580) | <a href="https://www.cnblogs.com/grandyang/p/6115984.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6115984" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_14" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6115972.html">[LintCode] Linked List Cycle 单链表中的环</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a linked list, determine if it has a cycle in it. ExampleGiven -21-&gt;10-&gt;4-&gt;5, tail connects to node index 1, return true Challenge Follow up:Can<a href="https://www.cnblogs.com/grandyang/p/6115972.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6115972.html" Title = "permalink">2016-11-29 23:50</a> Grandyang 阅读(179) | <a href="https://www.cnblogs.com/grandyang/p/6115972.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6115972" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_15" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6068963.html">[LintCode] Majority Number 求众数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array of integers, the majority number is the number that occurs more than half of the size of the array. Find it. Notice You may assume that<a href="https://www.cnblogs.com/grandyang/p/6068963.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6068963.html" Title = "permalink">2016-11-16 11:58</a> Grandyang 阅读(282) | <a href="https://www.cnblogs.com/grandyang/p/6068963.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6068963" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_16" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6065544.html">[LintCode] Reverse Words in a String 翻转字符串中的单词</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an input string, reverse the string word by word. For example,Given s = &quot;the sky is blue&quot;,return &quot;blue is sky the&quot;. Have you met this question i<a href="https://www.cnblogs.com/grandyang/p/6065544.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6065544.html" Title = "permalink">2016-11-15 14:20</a> Grandyang 阅读(964) | <a href="https://www.cnblogs.com/grandyang/p/6065544.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6065544" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_17" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6060577.html">[LintCode] Min Stack 最小栈</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Implement a stack with min() function, which will return the smallest number in the stack. It should support push, pop and min operation all in O(1) c<a href="https://www.cnblogs.com/grandyang/p/6060577.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6060577.html" Title = "permalink">2016-11-14 06:28</a> Grandyang 阅读(365) | <a href="https://www.cnblogs.com/grandyang/p/6060577.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6060577" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_18" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6042120.html">[LintCode] Delete Node in the Middle of Singly Linked List 在单链表的中间删除节点</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Implement an algorithm to delete a node in the middle of a singly linked list, given only access to that node. Implement an algorithm to delete a node<a href="https://www.cnblogs.com/grandyang/p/6042120.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6042120.html" Title = "permalink">2016-11-08 10:54</a> Grandyang 阅读(220) | <a href="https://www.cnblogs.com/grandyang/p/6042120.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6042120" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_19" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6037391.html">[LintCode] Add Two Numbers 两个数字相加</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: You have two numbers represented by a linked list, where each node contains a single digit. The digits are stored in&#160;reverse&#160;order, such that the 1&#39;s <a href="https://www.cnblogs.com/grandyang/p/6037391.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6037391.html" Title = "permalink">2016-11-07 08:02</a> Grandyang 阅读(374) | <a href="https://www.cnblogs.com/grandyang/p/6037391.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6037391" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_20" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/6035198.html">[LintCode] Single Number  单独的数字</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given&#160;2*n + 1&#160;numbers, every numbers occurs twice except one, find it. Have you met this question in a real interview? Yes Given&#160;2*n + 1&#160;numbers, ever<a href="https://www.cnblogs.com/grandyang/p/6035198.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/6035198.html" Title = "permalink">2016-11-06 13:55</a> Grandyang 阅读(209) | <a href="https://www.cnblogs.com/grandyang/p/6035198.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6035198" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_21" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5958762.html">[LintCode] Longest Substring Without Repeating Characters</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a string, find the length of the longest substring without repeating characters. Have you met this question in a real interview? Yes Given a str<a href="https://www.cnblogs.com/grandyang/p/5958762.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5958762.html" Title = "permalink">2016-10-13 23:58</a> Grandyang 阅读(394) | <a href="https://www.cnblogs.com/grandyang/p/5958762.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5958762" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_22" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5951061.html">[LintCode] Reverse Linked List 倒置链表</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Reverse a linked list. Have you met this question in a real interview? Yes Reverse a linked list. Reverse a linked list. Have you met this question in<a href="https://www.cnblogs.com/grandyang/p/5951061.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5951061.html" Title = "permalink">2016-10-11 22:32</a> Grandyang 阅读(293) | <a href="https://www.cnblogs.com/grandyang/p/5951061.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5951061" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_23" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5944447.html">[LintCode] Median of Two Sorted Arrays 两个有序数组的中位数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There are two sorted arrays A and B of size m and n respectively. Find the median of the two sorted arrays. There are two sorted arrays A and B of siz<a href="https://www.cnblogs.com/grandyang/p/5944447.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5944447.html" Title = "permalink">2016-10-10 04:33</a> Grandyang 阅读(793) | <a href="https://www.cnblogs.com/grandyang/p/5944447.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5944447" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_24" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5940677.html">[LintCode] Longest Consecutive Sequence 求最长连续序列</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an unsorted array of integers, find the length of the longest consecutive elements sequence. Have you met this question in a real interview? Yes<a href="https://www.cnblogs.com/grandyang/p/5940677.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5940677.html" Title = "permalink">2016-10-08 23:58</a> Grandyang 阅读(496) | <a href="https://www.cnblogs.com/grandyang/p/5940677.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5940677" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_25" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5902540.html">[LintCode] LRU Cache 缓存器</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations:&#160;get&#160;and&#160;set. get(key)&#160;- Get the<a href="https://www.cnblogs.com/grandyang/p/5902540.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5902540.html" Title = "permalink">2016-09-24 09:55</a> Grandyang 阅读(1143) | <a href="https://www.cnblogs.com/grandyang/p/5902540.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5902540" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_26" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5880287.html">[LintCode] Two Sum 两数之和</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array of integers, find two numbers such that they add up to a specific target number. The function&#160;twoSum&#160;should return&#160;indices&#160;of the two n<a href="https://www.cnblogs.com/grandyang/p/5880287.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5880287.html" Title = "permalink">2016-09-18 06:33</a> Grandyang 阅读(918) | <a href="https://www.cnblogs.com/grandyang/p/5880287.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5880287" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_27" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5880276.html">[LintCode] 3Sum 三数之和</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array&#160;S&#160;of n integers, are there elements&#160;a,&#160;b,&#160;c&#160;in&#160;S&#160;such that&#160;a + b + c = 0? Find all unique triplets in the array which gives the sum of <a href="https://www.cnblogs.com/grandyang/p/5880276.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5880276.html" Title = "permalink">2016-09-18 05:33</a> Grandyang 阅读(695) | <a href="https://www.cnblogs.com/grandyang/p/5880276.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5880276" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_28" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5864323.html">[LintCode] Coins in a Line II 一条线上的硬币之二</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There are n coins with different value in a line. Two players take turns to take one or two coins from left side until there are no more coins left. T<a href="https://www.cnblogs.com/grandyang/p/5864323.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5864323.html" Title = "permalink">2016-09-12 12:15</a> Grandyang 阅读(1579) | <a href="https://www.cnblogs.com/grandyang/p/5864323.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (2)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5864323" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_29" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5861500.html">[LintCode] Coins in a Line 一条线上的硬币</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There are n coins in a line. Two players take turns to take one or two coins from right side until there are no more coins left. The player who take t<a href="https://www.cnblogs.com/grandyang/p/5861500.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5861500.html" Title = "permalink">2016-09-11 12:42</a> Grandyang 阅读(1022) | <a href="https://www.cnblogs.com/grandyang/p/5861500.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5861500" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_30" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5858125.html">[LintCode] Longest Increasing Continuous Subsequence 最长连续递增子序列</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Give an integer array，find the longest increasing continuous subsequence in this array. An increasing continuous subsequence: Can be from right to lef<a href="https://www.cnblogs.com/grandyang/p/5858125.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5858125.html" Title = "permalink">2016-09-09 21:37</a> Grandyang 阅读(1104) | <a href="https://www.cnblogs.com/grandyang/p/5858125.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5858125" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_31" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5838403.html">[LintCode] Maximum Gap 求最大间距</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an unsorted array, find the maximum difference between the successive elements in its sorted form. Return 0 if the array contains less than 2 el<a href="https://www.cnblogs.com/grandyang/p/5838403.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5838403.html" Title = "permalink">2016-09-03 23:58</a> Grandyang 阅读(557) | <a href="https://www.cnblogs.com/grandyang/p/5838403.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5838403" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_32" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5833107.html">[LintCode] Nuts &amp; Bolts Problem 螺栓螺母问题</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a set of n nuts of different sizes and n bolts of different sizes. There is a one-one mapping between nuts and bolts. Comparison of a nut to ano<a href="https://www.cnblogs.com/grandyang/p/5833107.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5833107.html" Title = "permalink">2016-09-02 12:58</a> Grandyang 阅读(614) | <a href="https://www.cnblogs.com/grandyang/p/5833107.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5833107" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_33" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5829343.html">[LintCode] Kth Smallest Number in Sorted Matrix 有序矩阵中第K小的数字</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Find the&#160;kth smallest number in at row and column sorted matrix. Have you met this question in a real interview? Yes Find the&#160;kth smallest number in a<a href="https://www.cnblogs.com/grandyang/p/5829343.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5829343.html" Title = "permalink">2016-09-01 12:24</a> Grandyang 阅读(412) | <a href="https://www.cnblogs.com/grandyang/p/5829343.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5829343" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_34" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5824192.html">[LintCode] Continuous Subarray Sum 连续子数组之和</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an integer array, find a continuous subarray where the sum of numbers is the biggest. Your code should return the index of the first number and <a href="https://www.cnblogs.com/grandyang/p/5824192.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5824192.html" Title = "permalink">2016-08-30 23:52</a> Grandyang 阅读(882) | <a href="https://www.cnblogs.com/grandyang/p/5824192.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5824192" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_35" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5814131.html">[LintCode] Submatrix Sum 子矩阵之和</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an integer matrix, find a submatrix where the sum of numbers is zero. Your code should return the coordinate of the left-up and right-down numbe<a href="https://www.cnblogs.com/grandyang/p/5814131.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5814131.html" Title = "permalink">2016-08-27 23:58</a> Grandyang 阅读(910) | <a href="https://www.cnblogs.com/grandyang/p/5814131.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5814131" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_36" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5810138.html">[LintCode] Minimum Size Subarray Sum 最小子数组和的大小</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array of n positive integers and a positive integer s, find the minimal length of a subarray of which the sum ≥ s. If there isn&#39;t one, return<a href="https://www.cnblogs.com/grandyang/p/5810138.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5810138.html" Title = "permalink">2016-08-26 14:07</a> Grandyang 阅读(403) | <a href="https://www.cnblogs.com/grandyang/p/5810138.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5810138" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_37" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5794220.html">[LintCode] Plus One 加一运算</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a non-negative number represented as an array of digits, plus one to the number. The digits are stored such that the most significant digit is a<a href="https://www.cnblogs.com/grandyang/p/5794220.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5794220.html" Title = "permalink">2016-08-22 06:43</a> Grandyang 阅读(375) | <a href="https://www.cnblogs.com/grandyang/p/5794220.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5794220" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_38" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5787682.html">[LintCode] Gray Code 格雷码</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: The gray code is a binary numeral system where two successive values differ in only one bit. Given a non-negative integer&#160;n&#160;representing the total num<a href="https://www.cnblogs.com/grandyang/p/5787682.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5787682.html" Title = "permalink">2016-08-19 15:08</a> Grandyang 阅读(239) | <a href="https://www.cnblogs.com/grandyang/p/5787682.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5787682" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_39" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5779080.html">[LintCode] Candy 分糖果问题</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There are&#160;N&#160;children standing in a line. Each child is assigned a rating value. You are giving candies to these children subjected to the following re<a href="https://www.cnblogs.com/grandyang/p/5779080.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5779080.html" Title = "permalink">2016-08-17 10:57</a> Grandyang 阅读(456) | <a href="https://www.cnblogs.com/grandyang/p/5779080.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5779080" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_40" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5778281.html">[LintCode] Reverse Integer 翻转整数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Reverse digits of an integer. Returns 0 when the reversed integer overflows (signed 32-bit integer). Reverse digits of an integer. Returns 0 when the <a href="https://www.cnblogs.com/grandyang/p/5778281.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5778281.html" Title = "permalink">2016-08-16 23:28</a> Grandyang 阅读(2115) | <a href="https://www.cnblogs.com/grandyang/p/5778281.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5778281" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_41" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5751454.html">[LintCode] Divide Two Integers 两数相除</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Divide two integers without using multiplication, division and mod operator. If it is overflow, return 2147483647 Divide two integers without using mu<a href="https://www.cnblogs.com/grandyang/p/5751454.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5751454.html" Title = "permalink">2016-08-08 23:52</a> Grandyang 阅读(606) | <a href="https://www.cnblogs.com/grandyang/p/5751454.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5751454" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_42" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5747730.html">[LintCode] Valid Number 验证数字</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Validate if a given string is numeric. Have you met this question in a real interview? Yes Validate if a given string is numeric. Validate if a given <a href="https://www.cnblogs.com/grandyang/p/5747730.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5747730.html" Title = "permalink">2016-08-07 23:44</a> Grandyang 阅读(200) | <a href="https://www.cnblogs.com/grandyang/p/5747730.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5747730" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_43" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5743719.html">[LintCode] Backpack VI 背包之六</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an integer array&#160;nums&#160;with all positive numbers and no duplicates, find the number of possible combinations that add up to a positive integer&#160;ta<a href="https://www.cnblogs.com/grandyang/p/5743719.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5743719.html" Title = "permalink">2016-08-06 12:00</a> Grandyang 阅读(1816) | <a href="https://www.cnblogs.com/grandyang/p/5743719.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (4)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5743719" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_44" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5731347.html">[LintCode] Valid Palindrome 验证回文字符串</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases. Notice Have you consider that the string<a href="https://www.cnblogs.com/grandyang/p/5731347.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5731347.html" Title = "permalink">2016-08-03 02:51</a> Grandyang 阅读(218) | <a href="https://www.cnblogs.com/grandyang/p/5731347.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5731347" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_45" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5724629.html">[LintCode] Integer to Roman 整数转化成罗马数字</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an integer, convert it to a roman numeral. The number is guaranteed to be within the range from 1 to 3999. Given an integer, convert it to a rom<a href="https://www.cnblogs.com/grandyang/p/5724629.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5724629.html" Title = "permalink">2016-08-01 09:24</a> Grandyang 阅读(244) | <a href="https://www.cnblogs.com/grandyang/p/5724629.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5724629" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_46" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5724219.html">[LintCode] Roman to Integer 罗马数字转化成整数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a roman numeral, convert it to an integer. The answer is guaranteed to be within the range from 1 to 3999. Have you met this question in a real <a href="https://www.cnblogs.com/grandyang/p/5724219.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5724219.html" Title = "permalink">2016-07-31 23:03</a> Grandyang 阅读(239) | <a href="https://www.cnblogs.com/grandyang/p/5724219.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5724219" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_47" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5722116.html">[LintCode] Scramble String 爬行字符串</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a string&#160;s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively. Below is one possible representati<a href="https://www.cnblogs.com/grandyang/p/5722116.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5722116.html" Title = "permalink">2016-07-30 23:46</a> Grandyang 阅读(415) | <a href="https://www.cnblogs.com/grandyang/p/5722116.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5722116" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_48" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5716948.html">[LintCode] Count and Say 计数和读法</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: The count-and-say sequence is the sequence of integers beginning as follows: 1, 11, 21, 1211, 111221, ... 1 is read off as &quot;one 1&quot; or 11. 11 is read o<a href="https://www.cnblogs.com/grandyang/p/5716948.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5716948.html" Title = "permalink">2016-07-29 06:52</a> Grandyang 阅读(363) | <a href="https://www.cnblogs.com/grandyang/p/5716948.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5716948" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_49" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5716789.html">[LintCode] Simplify Path 简化路径</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an absolute path for a file (Unix-style), simplify it. Given an absolute path for a file (Unix-style), simplify it. Have you met this question i<a href="https://www.cnblogs.com/grandyang/p/5716789.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5716789.html" Title = "permalink">2016-07-28 23:54</a> Grandyang 阅读(297) | <a href="https://www.cnblogs.com/grandyang/p/5716789.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5716789" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_50" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5713118.html">[LintCode] Length of Last Word 求末尾单词的长度</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a string s consists of upper/lower-case alphabets and empty space characters &#39; &#39;, return the length of last word in the string. If the last word<a href="https://www.cnblogs.com/grandyang/p/5713118.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5713118.html" Title = "permalink">2016-07-27 23:35</a> Grandyang 阅读(145) | <a href="https://www.cnblogs.com/grandyang/p/5713118.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5713118" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_51" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5709256.html">[LintCode] Valid Parentheses 验证括号</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a string containing just the characters &#39;(&#39;, &#39;)&#39;, &#39;{&#39;, &#39;}&#39;, &#39;[&#39; and &#39;]&#39;, determine if the input string is valid. Given a string containing just <a href="https://www.cnblogs.com/grandyang/p/5709256.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5709256.html" Title = "permalink">2016-07-26 22:45</a> Grandyang 阅读(157) | <a href="https://www.cnblogs.com/grandyang/p/5709256.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5709256" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_52" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5702054.html">[LintCode] Evaluate Reverse Polish Notation 计算逆波兰表达式</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Evaluate the value of an arithmetic expression in&#160;Reverse Polish Notation. Valid operators are&#160;+,&#160;-,&#160;*,&#160;/. Each operand may be an integer or another e<a href="https://www.cnblogs.com/grandyang/p/5702054.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5702054.html" Title = "permalink">2016-07-24 23:59</a> Grandyang 阅读(804) | <a href="https://www.cnblogs.com/grandyang/p/5702054.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5702054" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_53" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5699874.html">[LintCode] Copy Books 复印书籍</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array A of integer with size of n( means n books and number of pages of each book) and k people to copy the book. You must distribute the con<a href="https://www.cnblogs.com/grandyang/p/5699874.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5699874.html" Title = "permalink">2016-07-23 23:49</a> Grandyang 阅读(852) | <a href="https://www.cnblogs.com/grandyang/p/5699874.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5699874" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_54" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5690104.html">[LintCode] Letter Combinations of a Phone Number 电话号码的字母组合</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a digit string, return all possible letter combinations that the number could represent. A mapping of digit to letters (just like on the telepho<a href="https://www.cnblogs.com/grandyang/p/5690104.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5690104.html" Title = "permalink">2016-07-20 23:31</a> Grandyang 阅读(640) | <a href="https://www.cnblogs.com/grandyang/p/5690104.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5690104" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_55" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5686738.html">[LintCode] Restore IP Address 复原IP地址</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a string containing only digits, restore it by returning all possible valid IP address combinations. Have you met this question in a real interv<a href="https://www.cnblogs.com/grandyang/p/5686738.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5686738.html" Title = "permalink">2016-07-19 23:48</a> Grandyang 阅读(282) | <a href="https://www.cnblogs.com/grandyang/p/5686738.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5686738" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_56" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5683142.html">[LintCode] Generate Parentheses 生成括号</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses. Given n pairs of parentheses, write a function<a href="https://www.cnblogs.com/grandyang/p/5683142.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5683142.html" Title = "permalink">2016-07-18 23:39</a> Grandyang 阅读(247) | <a href="https://www.cnblogs.com/grandyang/p/5683142.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5683142" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_57" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5679800.html">[LintCode] Pow(x, n) 求x的n次方</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Implement pow(x, n). Notice You don&#39;t need to care about the precision of your answer, it&#39;s acceptable if the expected answer and your answer &#39;s diffe<a href="https://www.cnblogs.com/grandyang/p/5679800.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5679800.html" Title = "permalink">2016-07-17 23:54</a> Grandyang 阅读(697) | <a href="https://www.cnblogs.com/grandyang/p/5679800.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5679800" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_58" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5672890.html">[LintCode] Number of Islands 岛屿的数量</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a boolean 2D matrix, find the number of islands. Notice 0 is represented as the sea, 1 is represented as the island. If two 1 is adjacent, we co<a href="https://www.cnblogs.com/grandyang/p/5672890.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5672890.html" Title = "permalink">2016-07-15 11:09</a> Grandyang 阅读(414) | <a href="https://www.cnblogs.com/grandyang/p/5672890.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5672890" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_59" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5672120.html">[LintCode] Maximal Square 最大正方形</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a 2D binary matrix filled with 0&#39;s and 1&#39;s, find the largest square containing all 1&#39;s and return its area. Given a 2D binary matrix filled with<a href="https://www.cnblogs.com/grandyang/p/5672120.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5672120.html" Title = "permalink">2016-07-14 23:41</a> Grandyang 阅读(376) | <a href="https://www.cnblogs.com/grandyang/p/5672120.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5672120" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_60" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5657151.html">[LintCode] Reverse Nodes in k-Group 每k个一组翻转链表</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a linked list, reverse the nodes of a linked list k at a time and return its modified list. If the number of nodes is not a multiple of k then l<a href="https://www.cnblogs.com/grandyang/p/5657151.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5657151.html" Title = "permalink">2016-07-10 09:59</a> Grandyang 阅读(933) | <a href="https://www.cnblogs.com/grandyang/p/5657151.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5657151" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_61" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5656870.html">[LintCode] Parking Lot 停车场问题</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Design a parking lot. see CC150 OO Design for details.1)&#160;n&#160;levels, each level has&#160;m&#160;rows of spots and each row has&#160;k&#160;spots.So each level has&#160;m&#160;x&#160;k&#160;spo<a href="https://www.cnblogs.com/grandyang/p/5656870.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5656870.html" Title = "permalink">2016-07-09 23:37</a> Grandyang 阅读(1315) | <a href="https://www.cnblogs.com/grandyang/p/5656870.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (1)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5656870" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_62" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5648424.html">[LintCode] Swap Nodes in Pairs 成对交换节点</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a linked list, swap every two adjacent nodes and return its head. Given a linked list, swap every two adjacent nodes and return its head. Exampl<a href="https://www.cnblogs.com/grandyang/p/5648424.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5648424.html" Title = "permalink">2016-07-06 23:12</a> Grandyang 阅读(209) | <a href="https://www.cnblogs.com/grandyang/p/5648424.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5648424" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_63" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5645327.html">[LintCode] Remove Linked List Elements 移除链表元素</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Remove all elements from a linked list of integers that have value val. Remove all elements from a linked list of integers that have value val. Have y<a href="https://www.cnblogs.com/grandyang/p/5645327.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5645327.html" Title = "permalink">2016-07-05 22:53</a> Grandyang 阅读(171) | <a href="https://www.cnblogs.com/grandyang/p/5645327.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5645327" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_64" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5642095.html">[LintCode] Flatten Binary Tree to Linked List 将二叉树展开成链表</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Flatten a binary tree to a fake &quot;linked list&quot; in pre-order traversal. Here we use the right pointer in TreeNode as the next pointer in ListNode. Notic<a href="https://www.cnblogs.com/grandyang/p/5642095.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5642095.html" Title = "permalink">2016-07-04 23:44</a> Grandyang 阅读(545) | <a href="https://www.cnblogs.com/grandyang/p/5642095.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5642095" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_65" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5637862.html">[LintCode] Sort Integers II 整数排序之二</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an integer array, sort it in ascending order. Use quick sort, merge sort, heap sort or any O(nlogn) algorithm. Given an integer array, sort it i<a href="https://www.cnblogs.com/grandyang/p/5637862.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5637862.html" Title = "permalink">2016-07-03 12:46</a> Grandyang 阅读(1280) | <a href="https://www.cnblogs.com/grandyang/p/5637862.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5637862" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_66" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5635148.html">[LintCode] Sort Integers 整数排序</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an integer array, sort it in ascending order. Use selection sort, bubble sort, insertion sort or any O(n2) algorithm. Given an integer array, so<a href="https://www.cnblogs.com/grandyang/p/5635148.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5635148.html" Title = "permalink">2016-07-02 12:32</a> Grandyang 阅读(1313) | <a href="https://www.cnblogs.com/grandyang/p/5635148.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5635148" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_67" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5600265.html">[LintCode] Identical Binary Tree 相同二叉树</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Check if two binary trees are identical. Identical means the two binary trees have the same structure and every identical position has the same value.<a href="https://www.cnblogs.com/grandyang/p/5600265.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5600265.html" Title = "permalink">2016-06-20 13:24</a> Grandyang 阅读(405) | <a href="https://www.cnblogs.com/grandyang/p/5600265.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5600265" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_68" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5592512.html">[LintCode] Create Maximum Number 创建最大数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given two arrays of length m and n with digits 0-9 representing two numbers. Create the maximum number of length k &lt;= m + n from digits of the two. Th<a href="https://www.cnblogs.com/grandyang/p/5592512.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5592512.html" Title = "permalink">2016-06-16 23:31</a> Grandyang 阅读(963) | <a href="https://www.cnblogs.com/grandyang/p/5592512.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5592512" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_69" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5574600.html">[LintCode] Add and Search Word 添加和查找单词</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Design a data structure that supports the following two operations: addWord(word) and search(word)search(word) can search a literal word or a regular <a href="https://www.cnblogs.com/grandyang/p/5574600.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5574600.html" Title = "permalink">2016-06-11 01:19</a> Grandyang 阅读(643) | <a href="https://www.cnblogs.com/grandyang/p/5574600.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5574600" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_70" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5572999.html">[LintCode] Surrounded Regions 包围区域</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a 2D board containing &#39;X&#39; and &#39;O&#39;, capture all regions surrounded by &#39;X&#39;.A region is captured by flipping all &#39;O&#39;&#39;s into &#39;X&#39;&#39;s in that surrounde<a href="https://www.cnblogs.com/grandyang/p/5572999.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5572999.html" Title = "permalink">2016-06-10 00:07</a> Grandyang 阅读(362) | <a href="https://www.cnblogs.com/grandyang/p/5572999.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5572999" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_71" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5571674.html">[LintCode] Intersection of Two Arrays II 两个数组相交之二</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given two arrays, write a function to compute their intersection.Notice Each element in the result should appear as many times as it shows in both arr<a href="https://www.cnblogs.com/grandyang/p/5571674.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5571674.html" Title = "permalink">2016-06-09 00:08</a> Grandyang 阅读(516) | <a href="https://www.cnblogs.com/grandyang/p/5571674.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5571674" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_72" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5565633.html">[LintCode] Intersection of Two Arrays 两个数组相交</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given two arrays, write a function to compute their intersection.Notice Each element in the result must be unique. The result can be in any order.Have<a href="https://www.cnblogs.com/grandyang/p/5565633.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5565633.html" Title = "permalink">2016-06-07 00:18</a> Grandyang 阅读(609) | <a href="https://www.cnblogs.com/grandyang/p/5565633.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5565633" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_73" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5562581.html">[LintCode] Binary Tree Paths 二叉树路径</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a binary tree, return all root-to-leaf paths.ExampleGiven the following binary tree: 1&#160;/ \2 3&#160;\ 5All root-to-leaf paths are:[ &quot;1-&gt;2-&gt;5&quot;, &quot;1-&gt;3&quot;]<a href="https://www.cnblogs.com/grandyang/p/5562581.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5562581.html" Title = "permalink">2016-06-06 01:26</a> Grandyang 阅读(443) | <a href="https://www.cnblogs.com/grandyang/p/5562581.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5562581" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_74" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5560036.html">[LintCode] Happy Number 快乐数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Write an algorithm to determine if a number is happy. A happy number is a number defined by the following process: Starting with any positive integer,<a href="https://www.cnblogs.com/grandyang/p/5560036.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5560036.html" Title = "permalink">2016-06-05 07:21</a> Grandyang 阅读(1289) | <a href="https://www.cnblogs.com/grandyang/p/5560036.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5560036" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_75" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5551613.html">[LintCode] Toy Factory 玩具工厂</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Factory is a design pattern in common usage. Please implement a ToyFactory which can generate proper toy based on the given type.ExampleToyFactory tf <a href="https://www.cnblogs.com/grandyang/p/5551613.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5551613.html" Title = "permalink">2016-06-02 00:32</a> Grandyang 阅读(917) | <a href="https://www.cnblogs.com/grandyang/p/5551613.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5551613" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_76" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5544462.html">[LintCode] Move Zeroes 移动零</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array nums, write a function to move all 0&#39;s to the end of it while maintaining the relative order of the non-zero elements. Notice You must <a href="https://www.cnblogs.com/grandyang/p/5544462.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5544462.html" Title = "permalink">2016-05-31 00:07</a> Grandyang 阅读(379) | <a href="https://www.cnblogs.com/grandyang/p/5544462.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5544462" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_77" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5512133.html">[LintCode] Shape Factory 形状工厂</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Factory is a design pattern in common usage. Implement a ShapeFactory that can generate correct shape. You can assume that we have only tree different<a href="https://www.cnblogs.com/grandyang/p/5512133.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5512133.html" Title = "permalink">2016-05-20 15:03</a> Grandyang 阅读(1723) | <a href="https://www.cnblogs.com/grandyang/p/5512133.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5512133" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_78" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5507316.html">[LintCode] Mini Twitter 迷你推特</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Implement a simple twitter. Support the following method: postTweet(user_id, tweet_text). Post a tweet.getTimeline(user_id). Get the given user&#39;s most<a href="https://www.cnblogs.com/grandyang/p/5507316.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5507316.html" Title = "permalink">2016-05-19 07:41</a> Grandyang 阅读(1117) | <a href="https://www.cnblogs.com/grandyang/p/5507316.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5507316" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_79" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5501181.html">[LintCode] Wiggle Sort II 扭动排序之二</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an unsorted array nums, reorder it such that nums[0] &lt; nums[1] &gt; nums[2] &lt; nums[3].... Notice You may assume all input has valid answer. Example<a href="https://www.cnblogs.com/grandyang/p/5501181.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5501181.html" Title = "permalink">2016-05-17 13:04</a> Grandyang 阅读(350) | <a href="https://www.cnblogs.com/grandyang/p/5501181.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5501181" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_80" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5500067.html">[LintCode] Wiggle Sort 扭动排序</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an unsorted array nums, reorder it in-place such that nums[0] &lt;= nums[1] &gt;= nums[2] &lt;= nums[3].... Notice Please complete the problem in-place. <a href="https://www.cnblogs.com/grandyang/p/5500067.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5500067.html" Title = "permalink">2016-05-16 23:57</a> Grandyang 阅读(188) | <a href="https://www.cnblogs.com/grandyang/p/5500067.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5500067" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_81" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5496687.html">[LintCode] Maximal Rectangle 最大矩形</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a 2D boolean matrix filled with False and True, find the largest rectangle containing all True and return its area. ExampleGiven a matrix: [ [1,<a href="https://www.cnblogs.com/grandyang/p/5496687.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5496687.html" Title = "permalink">2016-05-15 23:58</a> Grandyang 阅读(751) | <a href="https://www.cnblogs.com/grandyang/p/5496687.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5496687" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_82" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5493999.html">[LintCode] Swap Two Nodes in Linked List 交换链表中的两个结点</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a linked list and two values v1 and v2. Swap the two nodes in the linked list with values v1 and v2. It&#39;s guaranteed there is no duplicate value<a href="https://www.cnblogs.com/grandyang/p/5493999.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5493999.html" Title = "permalink">2016-05-14 23:34</a> Grandyang 阅读(1836) | <a href="https://www.cnblogs.com/grandyang/p/5493999.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5493999" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_83" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5448531.html">[LintCode] Decode Ways 解码方法</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: A message containing letters from A-Z is being encoded to numbers using the following mapping: &#39;A&#39; -&gt; 1&#39;B&#39; -&gt; 2...&#39;Z&#39; -&gt; 26Given an encoded message co<a href="https://www.cnblogs.com/grandyang/p/5448531.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5448531.html" Title = "permalink">2016-04-30 12:18</a> Grandyang 阅读(659) | <a href="https://www.cnblogs.com/grandyang/p/5448531.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5448531" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_84" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5448521.html">[LintCode] Perfect Squares 完全平方数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n. ExampleGiven n = 12, retur<a href="https://www.cnblogs.com/grandyang/p/5448521.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5448521.html" Title = "permalink">2016-04-30 12:16</a> Grandyang 阅读(835) | <a href="https://www.cnblogs.com/grandyang/p/5448521.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5448521" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_85" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5448516.html">[LintCode] Paint Fence 粉刷篱笆</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There is a fence with n posts, each post can be painted with one of the k colors.You have to paint all the posts such that no more than two adjacent f<a href="https://www.cnblogs.com/grandyang/p/5448516.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5448516.html" Title = "permalink">2016-04-30 12:14</a> Grandyang 阅读(347) | <a href="https://www.cnblogs.com/grandyang/p/5448516.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5448516" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_86" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5448512.html">[LintCode] Paint House 粉刷房子</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There are a row of n houses, each house can be painted with one of the three colors: red, blue or green. The cost of painting each house with a certai<a href="https://www.cnblogs.com/grandyang/p/5448512.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5448512.html" Title = "permalink">2016-04-30 12:13</a> Grandyang 阅读(466) | <a href="https://www.cnblogs.com/grandyang/p/5448512.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5448512" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_87" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5448505.html">[LintCode] Paint House II 粉刷房子之二</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: There are a row of n houses, each house can be painted with one of the k colors. The cost of painting each house with a certain color is different. Yo<a href="https://www.cnblogs.com/grandyang/p/5448505.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5448505.html" Title = "permalink">2016-04-30 12:10</a> Grandyang 阅读(405) | <a href="https://www.cnblogs.com/grandyang/p/5448505.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5448505" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_88" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5448498.html">[LintCode] Ugly Number 丑陋数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Write a program to check whether a given number is an ugly number`. Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For ex<a href="https://www.cnblogs.com/grandyang/p/5448498.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5448498.html" Title = "permalink">2016-04-30 12:07</a> Grandyang 阅读(150) | <a href="https://www.cnblogs.com/grandyang/p/5448498.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5448498" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_89" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5445914.html">[LintCode] House Robber II 打家劫舍之二</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This t<a href="https://www.cnblogs.com/grandyang/p/5445914.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5445914.html" Title = "permalink">2016-04-29 12:38</a> Grandyang 阅读(424) | <a href="https://www.cnblogs.com/grandyang/p/5445914.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5445914" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_90" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5445889.html">[LintCode] House Robber 打家劫舍</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping yo<a href="https://www.cnblogs.com/grandyang/p/5445889.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5445889.html" Title = "permalink">2016-04-29 12:24</a> Grandyang 阅读(387) | <a href="https://www.cnblogs.com/grandyang/p/5445889.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5445889" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_91" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5445661.html">[LintCode] House Robber III 打家劫舍之三</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: The thief has found himself a new place for his thievery again. There is only one entrance to this area, called the &quot;root.&quot; Besides the root, each hou<a href="https://www.cnblogs.com/grandyang/p/5445661.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5445661.html" Title = "permalink">2016-04-29 11:22</a> Grandyang 阅读(425) | <a href="https://www.cnblogs.com/grandyang/p/5445661.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5445661" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_92" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5438631.html">[LintCode] Super Ugly Number 超级丑陋数</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Write a program to find the nth super ugly number. Super ugly numbers are positive numbers whose all prime factors are in the given prime list primes <a href="https://www.cnblogs.com/grandyang/p/5438631.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5438631.html" Title = "permalink">2016-04-27 13:54</a> Grandyang 阅读(256) | <a href="https://www.cnblogs.com/grandyang/p/5438631.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (2)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5438631" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_93" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5434692.html">[LintCode] Left Pad 左填充</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: You know what, left pad is javascript package and referenced by React: Github link One day his author unpublished it, then a lot of javascript project<a href="https://www.cnblogs.com/grandyang/p/5434692.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5434692.html" Title = "permalink">2016-04-26 13:05</a> Grandyang 阅读(803) | <a href="https://www.cnblogs.com/grandyang/p/5434692.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5434692" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_94" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5434649.html">[LintCode] Flatten Nested List Iterator 压平嵌套链表迭代器</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a nested list of integers, implement an iterator to flatten it. Each element is either an integer, or a list -- whose elements may also be integ<a href="https://www.cnblogs.com/grandyang/p/5434649.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5434649.html" Title = "permalink">2016-04-26 12:47</a> Grandyang 阅读(460) | <a href="https://www.cnblogs.com/grandyang/p/5434649.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5434649" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_95" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/5434414.html">[LintCode] Reverse Pairs 翻转对</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: For an array A, if i &lt; j, and A [i] &gt; A [j], called (A [i], A [j]) is a reverse pair.return total of reverse pairs in A. ExampleGiven A = [2, 4, 1, 3,<a href="https://www.cnblogs.com/grandyang/p/5434414.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/5434414.html" Title = "permalink">2016-04-26 11:32</a> Grandyang 阅读(2880) | <a href="https://www.cnblogs.com/grandyang/p/5434414.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5434414" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_96" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4891500.html">[LintCode] Longest Increasing Subsequence 最长递增子序列</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given a sequence of integers, find the longest increasing subsequence (LIS).You code should return the length of the LIS.Have you met this question in...<a href="https://www.cnblogs.com/grandyang/p/4891500.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4891500.html" Title = "permalink">2015-10-19 12:04</a> Grandyang 阅读(2388) | <a href="https://www.cnblogs.com/grandyang/p/4891500.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4891500" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_97" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4868908.html">[LintCode]  Implement Trie 实现字典树</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Implement a trie with insert, search, and startsWith methods.Have you met this question in a real interview?ExampleNoteYou may assume that all inputs ...<a href="https://www.cnblogs.com/grandyang/p/4868908.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4868908.html" Title = "permalink">2015-10-11 10:45</a> Grandyang 阅读(807) | <a href="https://www.cnblogs.com/grandyang/p/4868908.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4868908" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_98" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4837874.html">[LintCode] Cosine Similarity 余弦公式</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Cosine similarity is a measure of similarity between two vectors of an inner product space that measures the cosine of the angle between them. The cos...<a href="https://www.cnblogs.com/grandyang/p/4837874.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4837874.html" Title = "permalink">2015-09-25 12:47</a> Grandyang 阅读(1354) | <a href="https://www.cnblogs.com/grandyang/p/4837874.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4837874" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_99" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4790476.html">[LintCode] Invert Binary Tree 翻转二叉树</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Givennpoints on a 2D plane, find the maximum number of points that lie on the same straight line.ExampleGiven 4 points:(1,2),(3,6),(0,0),(1,3).The max...<a href="https://www.cnblogs.com/grandyang/p/4790476.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4790476.html" Title = "permalink">2015-09-08 02:39</a> Grandyang 阅读(332) | <a href="https://www.cnblogs.com/grandyang/p/4790476.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4790476" rel="nofollow">编辑</a></div>
+			</div>
+		
+			<div class="postSeparator"></div>
+		
+			<div class="entrylistItem">
+				<div class="entrylistPosttitle"><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_100" class="entrylistItemTitle" href="https://www.cnblogs.com/grandyang/p/4781519.html">[LintCode] Find the Missing Number 寻找丢失的数字</a></div>
+				<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: Given an array containsNnumbers of 0 ..N, find which number doesn&#39;t exist in the array.ExampleGivenN=3and the array[0, 1, 3], return2.ChallengeDo it i...<a href="https://www.cnblogs.com/grandyang/p/4781519.html" class="c_b_p_desc_readmore">阅读全文</a></div></div>				
+				<div class="entrylistItemPostDesc">posted @ <a href="https://www.cnblogs.com/grandyang/p/4781519.html" Title = "permalink">2015-09-04 12:01</a> Grandyang 阅读(633) | <a href="https://www.cnblogs.com/grandyang/p/4781519.html#FeedBack" Title = "comments, pingbacks, trackbacks">评论 (0)</a>  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4781519" rel="nofollow">编辑</a></div>
+			</div>
+		
+	<p>
+	
+	</p>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright &copy;2018 Grandyang
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+</html>

@@ -1,0 +1,94 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4401196.html">[LeetCode] Wildcard Matching 外卡匹配</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement wildcard pattern matching with support for <code>'?'</code> and <code>'*'</code>.</p>
+<pre>'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the <strong>entire</strong> input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") &rarr; false
+isMatch("aa","aa") &rarr; true
+isMatch("aaa","aa") &rarr; false
+isMatch("aa", "*") &rarr; true
+isMatch("aa", "a*") &rarr; true
+isMatch("ab", "?*") &rarr; true
+isMatch("aab", "c*a*b") &rarr; false
+</pre>
+<p>这道题通配符匹配问题还是小有难度的，这道里用了贪婪算法Greedy Alogrithm来解，由于有特殊字符*和？，其中？能代替任何字符，*能代替任何字符串，那么我们需要定义几个额外的指针，其中scur和pcur分别指向当前遍历到的字符，再定义pstar指向p中最后一个*的位置，sstar指向此时对应的s的位置，具体算法如下：</p>
+<p>- 定义scur, pcur, sstar, pstar</p>
+<p>- 如果*scur存在</p>
+<p>&nbsp; - 如果*scur等于*pcur或者*pcur为 '?'，则scur和pcur都自增1</p>
+<p>&nbsp; - 如果*pcur为'*'，则pstar指向pcur位置，pcur自增1，且sstar指向scur</p>
+<p>&nbsp; - 如果pstar存在，则pcur指向pstar的下一个位置，scur指向sstar自增1后的位置</p>
+<p>- 如果pcur为'*'，则pcur自增1</p>
+<p>- 若*pcur存在，返回False，若不存在，返回True</p>
+<p>&nbsp;</p>
+<p>C 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">bool</span> isMatch(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">p) {
+    </span><span style="color: #0000ff;">char</span> *scur = s, *pcur = p, *sstar = NULL, *pstar =<span style="color: #000000;"> NULL;
+    </span><span style="color: #0000ff;">while</span> (*<span style="color: #000000;">scur) {
+        </span><span style="color: #0000ff;">if</span> (*scur == *pcur || *pcur == <span style="color: #800000;">'</span><span style="color: #800000;">?</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            </span>++<span style="color: #000000;">scur;
+            </span>++<span style="color: #000000;">pcur;
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (*pcur == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            pstar </span>= pcur++<span style="color: #000000;">;
+            sstar </span>=<span style="color: #000000;"> scur;
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (pstar) {
+            pcur </span>= pstar + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            scur </span>= ++<span style="color: #000000;">sstar;
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    } 
+    </span><span style="color: #0000ff;">while</span> (*pcur == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">pcur;
+    </span><span style="color: #0000ff;">return</span> !*<span style="color: #000000;">pcur;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题也能用动态规划Dynamic Programming来解，写法跟之前那道题<a href="http://www.cnblogs.com/grandyang/p/4461713.html" target="_blank">Regular Expression Matching</a>很像，但是还是不一样。外卡匹配和正则匹配最大的区别就是在星号的使用规则上，对于正则匹配来说，星号不能单独存在，前面必须要有一个字符，而星号存在的意义就是表明前面这个字符的个数可以是任意个，包括0个，那么就是说即使前面这个字符并没有在s中出现过也无所谓，只要后面的能匹配上就可以了。而外卡匹配就不是这样的，外卡匹配中的星号跟前面的字符没有半毛钱关系，如果前面的字符没有匹配上，那么直接返回false了，根本不用管星号。而星号存在的作用是可以表示任意的字符串，当然只是当匹配字符串缺少一些字符的时候起作用，当匹配字符串包含目标字符串没有的字符时，将无法成功匹配。</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isMatch(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">string</span><span style="color: #000000;"> p) {
+        </span><span style="color: #0000ff;">int</span> m = s.size(), n =<span style="color: #000000;"> p.size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; dp(m + <span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        dp[</span><span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (p[i - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span>) dp[<span style="color: #800080;">0</span>][i] = dp[<span style="color: #800080;">0</span>][i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt;= n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (p[j - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    dp[i][j] </span>= dp[i - <span style="color: #800080;">1</span>][j] || dp[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    dp[i][j] </span>= (s[i - <span style="color: #800080;">1</span>] == p[j - <span style="color: #800080;">1</span>] || p[j - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">?</span><span style="color: #800000;">'</span>) &amp;&amp; dp[i - <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[m][n];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4461713.html" target="_blank">Regular Expression Matching</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/3040/linear-runtime-and-constant-space-solution" target="_blank">https://discuss.leetcode.com/topic/3040/linear-runtime-and-constant-space-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/40118/clear-c-dp-solution-similar-to-the-last-matching-problem" target="_blank">https://discuss.leetcode.com/topic/40118/clear-c-dp-solution-similar-to-the-last-matching-problem</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

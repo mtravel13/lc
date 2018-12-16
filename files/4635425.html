@@ -1,0 +1,70 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4635425.html">[LeetCode] Palindrome Linked List 回文链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a singly linked list, determine if it is a palindrome. Follow up: Could you do it in O(n) time and O(1) space?</p>
+<p>这道题让我们判断一个链表是否为回文链表，LeetCode中关于回文串的题共有六道，除了这道，其他的五道为<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4125510.html"> Palindrome Number 验证回文数字</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4030114.html"> Validate Palindrome 验证回文字符串</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4270008.html"> Palindrome Partitioning 拆分回文串</a>，<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4271456.html">Palindrome Partitioning II 拆分回文串之二</a> 和 <a href="http://www.cnblogs.com/grandyang/p/4464476.html" target="_blank">Longest Palindromic Substring 最长回文串</a>.链表比字符串难的地方就在于不能通过坐标来直接访问，而只能从头开始遍历到某个位置。那么根据回文串的特点，我们需要比较对应位置的值是否相等，那么我们首先需要找到链表的中点，这个可以用快慢指针来实现，使用方法可以参见之前的两篇<a href="http://www.cnblogs.com/grandyang/p/4295618.html" target="_blank">Convert Sorted List to Binary Search Tree 将有序链表转为二叉搜索树</a> 和 <a href="http://www.cnblogs.com/grandyang/p/4254860.html" target="_blank">Reorder List 链表重排序</a>，我们使用快慢指针找中点的原理是fast和slow两个指针，每次快指针走两步，慢指针走一步，等快指针走完时，慢指针的位置就是中点。我们还需要用栈，每次慢指针走一步，都把值存入栈中，等到达中点时，链表的前半段都存入栈中了，由于栈的后进先出的性质，就可以和后半段链表按照回文对应的顺序比较了。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPalindrome(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        ListNode </span>*slow = head, *fast =<span style="color: #000000;"> head;
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        s.push(head</span>-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">while</span> (fast-&gt;next &amp;&amp; fast-&gt;next-&gt;<span style="color: #000000;">next) {
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;next-&gt;<span style="color: #000000;">next;
+            s.push(slow</span>-&gt;<span style="color: #000000;">val);
+        }
+        </span><span style="color: #0000ff;">if</span> (!fast-&gt;<span style="color: #000000;">next) s.pop();
+        </span><span style="color: #0000ff;">while</span> (slow-&gt;<span style="color: #000000;">next) {
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            </span><span style="color: #0000ff;">int</span> tmp =<span style="color: #000000;"> s.top(); s.pop();
+            </span><span style="color: #0000ff;">if</span> (tmp != slow-&gt;val) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题的Follow Up让我们用O(1)的空间，那就是说我们不能使用stack了，那么如果代替stack的作用呢，用stack的目的是为了利用其后进先出的特点，好倒着取出前半段的元素。那么现在我们不用stack了，如何倒着取元素呢。我们可以在找到中点后，将后半段的链表翻转一下，这样我们就可以按照回文的顺序比较了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPalindrome(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        ListNode </span>*slow = head, *fast =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (fast-&gt;next &amp;&amp; fast-&gt;next-&gt;<span style="color: #000000;">next) {
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;next-&gt;<span style="color: #000000;">next;
+        }
+        ListNode </span>*last = slow-&gt;next, *pre =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (last-&gt;<span style="color: #000000;">next) {
+            ListNode </span>*tmp = last-&gt;<span style="color: #000000;">next;
+            last</span>-&gt;next = tmp-&gt;<span style="color: #000000;">next;
+            tmp</span>-&gt;next = slow-&gt;<span style="color: #000000;">next;
+            slow</span>-&gt;next =<span style="color: #000000;"> tmp;
+        }
+        </span><span style="color: #0000ff;">while</span> (slow-&gt;<span style="color: #000000;">next) {
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            </span><span style="color: #0000ff;">if</span> (pre-&gt;val != slow-&gt;val) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            pre </span>= pre-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

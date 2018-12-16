@@ -1,0 +1,91 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9741220.html">[LeetCode] Generate Random Point in a Circle 生成圆中的随机点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given the radius and x-y positions of the center of a circle, write a function&nbsp;<code>randPoint</code>&nbsp;which&nbsp;generates a uniform random&nbsp;point in the circle.</p>
+<p>Note:</p>
+<ol>
+<li>input and output values are&nbsp;in&nbsp;<a href="https://www.webopedia.com/TERM/F/floating_point_number.html" target="_blank">floating-point</a>.</li>
+<li>radius and x-y position of the center of the circle is passed into the class constructor.</li>
+<li>a point on the circumference of the circle is considered to be&nbsp;in the circle.</li>
+<li><code>randPoint</code>&nbsp;returns&nbsp;a size 2 array containing x-position and y-position of the random point, in that order.</li>
+</ol>
+<div>
+<p>Example 1:</p>
+<pre>Input: 
+<span id="example-input-1-1">["Solution","randPoint","randPoint","randPoint"]
+<span id="example-input-1-2">[[1,0,0],[],[],[]]
+Output: <span id="example-output-1">[null,[-0.72939,-0.65505],[-0.78502,-0.28626],[-0.83119,-0.19803]]
+</span></span></span></pre>
+<div>
+<p>Example 2:</p>
+<pre>Input: 
+<span id="example-input-2-1">["Solution","randPoint","randPoint","randPoint"]
+<span id="example-input-2-2">[[10,5,-7.5],[],[],[]]
+Output: <span id="example-output-2">[null,[11.52438,-8.33273],[2.46992,-16.21705],[11.13430,-12.42337]]</span></span></span></pre>
+</div>
+<p>Explanation of Input Syntax:</p>
+<p>The input is two lists:&nbsp;the subroutines called&nbsp;and their&nbsp;arguments.&nbsp;<code>Solution</code>'s&nbsp;constructor has three arguments, the radius, x-position of the center, and y-position of the center of the circle.&nbsp;<code>randPoint</code>&nbsp;has no arguments.&nbsp;Arguments&nbsp;are&nbsp;always wrapped with a list, even if there aren't any.</p>
+</div>
+<p>&nbsp;</p>
+<p>这道题给了我们一个圆，包括中点位置和半径，让我们随机生成圆中的任意一个点。这里说明了圆上也当作是圆中，而且这里的随机意味着要等概率。思绪飘回了高中时代，努力搜索着那一丝丝残留的记忆，终于，我把还给老师的知识又要了回来，圆的方程表示为 (x - a) ^ 2 + (y - b) ^ 2 = r ^ 2，这里的 (a, b) 是圆心位置，r为半径。那么我们想如何生成圆中的任意位置呢，如果用这种方式来生成，那么我们先随机出一个x，那么随机出y的时候还要考虑其是否在圆中间，比较麻烦。继续回到高中时代，模糊的记忆中飘来了三个字，极坐标。是的，圆还可以用极坐标的形式来表示，我们只需随机出一个角度theta，再随机出一个小于半径的长度，这样我们就可以得到圆中的坐标位置了，哦耶～ 那么先来生成theta吧，我们知道一圈是360度，即2pi，所以我们随机出一个 [0, 1] 中的小数，再乘以2pi，就可以了。然后就是随机小于半径的长度，这里有个问题需要注意一下，我们并不是直接随机出一个&nbsp;[0, 1] 中的小数再乘以半径r，而是要对随机出的[0, 1] 中的小数取个平方根再乘以半径r。这是为啥呢，简单来说，是为了保证等概率。如果不用平方根的话，那么表示圆的时候 (len * cos(theta)) ^ 2 + (len * sin(theta) ^ 2，这里就相当于对随机出的[0, 1] 中的小数平方了，那么其就不是等概率的了，因为两个小于1的小数相乘了，其会更加靠近0，这就是为啥我们要平方一下的原因。最后在求点位置的时候要加上圆心的偏移即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Solution(</span><span style="color: #0000ff;">double</span> radius, <span style="color: #0000ff;">double</span> x_center, <span style="color: #0000ff;">double</span><span style="color: #000000;"> y_center) {
+        r </span>= radius; centerX = x_center; centerY =<span style="color: #000000;"> y_center;
+    }
+    
+    vector</span>&lt;<span style="color: #0000ff;">double</span>&gt;<span style="color: #000000;"> randPoint() {
+        </span><span style="color: #0000ff;">double</span> theta = <span style="color: #800080;">2</span> * M_PI * ((<span style="color: #0000ff;">double</span>)rand() /<span style="color: #000000;"> RAND_MAX);
+        </span><span style="color: #0000ff;">double</span> len = sqrt((<span style="color: #0000ff;">double</span>)rand() / RAND_MAX) *<span style="color: #000000;"> r;
+        </span><span style="color: #0000ff;">return</span> {centerX + len * cos(theta), centerY + len *<span style="color: #000000;"> sin(theta)};
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> r, centerX, centerY;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以不用极坐标来做，由于之前刚做过<a id="link_post_title" class="link-post-title" href="https://www.cnblogs.com/grandyang/p/9727206.html">Implement Rand10() Using Rand7()</a>，对其中的拒绝采样Rejection Sampling还有印象，所以我们也可以用其来做。这其实就是拒绝采样的经典应用，在一个正方形中有均匀分布的点，让我们随机出其内切圆中的一个点，那么就是我们随机出x和y之后，然后算其平方和，如果小于等于r平方，说明其在圆内，我们可以返回其坐标，记得加上圆心偏移，否则我们重新进行采样。关于拒绝采样的方法可以参见我之前那篇博客<a id="link_post_title" class="link-post-title" href="https://www.cnblogs.com/grandyang/p/9727206.html">Implement Rand10() Using Rand7()</a>，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Solution(</span><span style="color: #0000ff;">double</span> radius, <span style="color: #0000ff;">double</span> x_center, <span style="color: #0000ff;">double</span><span style="color: #000000;"> y_center) {
+        r </span>= radius; centerX = x_center; centerY =<span style="color: #000000;"> y_center;
+    }
+    
+    vector</span>&lt;<span style="color: #0000ff;">double</span>&gt;<span style="color: #000000;"> randPoint() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">double</span> x = (<span style="color: #800080;">2</span> * (<span style="color: #0000ff;">double</span>)rand() / RAND_MAX - <span style="color: #800080;">1.0</span>) *<span style="color: #000000;"> r;
+            </span><span style="color: #0000ff;">double</span> y = (<span style="color: #800080;">2</span> * (<span style="color: #0000ff;">double</span>)rand() / RAND_MAX - <span style="color: #800080;">1.0</span>) *<span style="color: #000000;"> r;
+            </span><span style="color: #0000ff;">if</span> (x * x + y * y &lt;= r * r) <span style="color: #0000ff;">return</span> {centerX + x, centerY +<span style="color: #000000;"> y};
+        }
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> r, centerX, centerY;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="link_post_title" class="link-post-title" href="https://www.cnblogs.com/grandyang/p/9727206.html">Implement Rand10() Using Rand7()</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/generate-random-point-in-a-circle/" target="_blank">https://leetcode.com/problems/generate-random-point-in-a-circle/</a></p>
+<p><a href="https://leetcode.com/problems/generate-random-point-in-a-circle/discuss/154405/C%2B%2B-solution-polar-coordinates" target="_blank">https://leetcode.com/problems/generate-random-point-in-a-circle/discuss/154405/C%2B%2B-solution-polar-coordinates</a></p>
+<p><a href="https://leetcode.com/problems/generate-random-point-in-a-circle/discuss/169518/C%2B%2B-AC-solution-using-rejection-sampling" target="_blank">https://leetcode.com/problems/generate-random-point-in-a-circle/discuss/169518/C%2B%2B-AC-solution-using-rejection-sampling</a></p>
+<p><a href="https://leetcode.com/problems/generate-random-point-in-a-circle/discuss/155650/Explanation-with-Graphs-why-using-Math.sqrt()" target="_blank">https://leetcode.com/problems/generate-random-point-in-a-circle/discuss/155650/Explanation-with-Graphs-why-using-Math.sqrt()</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

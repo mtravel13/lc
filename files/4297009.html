@@ -1,0 +1,93 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4297009.html">[LeetCode] Binary Tree Zigzag Level Order Traversal  二叉树的之字形层序遍历</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, return the&nbsp;<em>zigzag level order</em>&nbsp;traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).</p>
+<p>For example:<br />Given binary tree&nbsp;<code>{3,9,20,#,#,15,7}</code>,</p>
+<pre>    3
+   / \
+  9  20
+    /  \
+   15   7
+</pre>
+<p>&nbsp;</p>
+<p>return its zigzag level order traversal as:</p>
+<pre>[
+  [3],
+  [20,9],
+  [15,7]
+]
+</pre>
+<p>&nbsp;</p>
+<p class="showspoilers">confused what&nbsp;<code>"{1,#,2,3}"</code>&nbsp;means?&nbsp;<a href="https://oj.leetcode.com/problems/binary-tree-zigzag-level-order-traversal/">&gt; read more on how binary tree is serialized on OJ.</a></p>
+<p class="showspoilers">&nbsp;</p>
+<p class="showspoilers">这道二叉树的之字形层序遍历是之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4051321.html">[LeetCode] Binary Tree Level Order Traversal 二叉树层序遍历</a>的变形，不同之处在于一行是从左到右遍历，下一行是从右往左遍历，交叉往返的之字形的层序遍历。根据其特点我们用到栈的后进先出的特点，这道题我们维护两个栈，相邻两行分别存到两个栈中，进栈的顺序也不相同，一个栈是先进左子结点然后右子节点，另一个栈是先进右子节点然后左子结点，这样出栈的顺序就是我们想要的之字形了，代码如下：</p>
+<p class="showspoilers">&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; zigzagLevelOrder(TreeNode *<span style="color: #000000;">root) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;">res;
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s1;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s2;
+        s1.push(root);
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (!s1.empty() || !<span style="color: #000000;">s2.empty()) {
+            </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s1.empty()) {
+                TreeNode </span>*cur =<span style="color: #000000;"> s1.top();
+                s1.pop();
+                </span><span style="color: #0000ff;">out</span>.push_back(cur-&gt;<span style="color: #000000;">val);
+                </span><span style="color: #0000ff;">if</span> (cur-&gt;left) s2.push(cur-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (cur-&gt;right) s2.push(cur-&gt;<span style="color: #000000;">right);
+            } 
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">out</span>.empty()) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.clear();
+            </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s2.empty()) {
+                TreeNode </span>*cur =<span style="color: #000000;"> s2.top();
+                s2.pop();
+                </span><span style="color: #0000ff;">out</span>.push_back(cur-&gt;<span style="color: #000000;">val);
+                </span><span style="color: #0000ff;">if</span> (cur-&gt;right) s1.push(cur-&gt;<span style="color: #000000;">right);
+                </span><span style="color: #0000ff;">if</span> (cur-&gt;left) s1.push(cur-&gt;<span style="color: #000000;">left);
+            }
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">out</span>.empty()) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.clear();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p class="showspoilers">比如对于题干中的那个例子：</p>
+<pre>    3
+   / \
+  9  20
+    /  \
+   15   7</pre>
+<p class="showspoilers">我们来看每一层两个栈s1, s2的情况：</p>
+<p class="showspoilers">s1:　　3</p>
+<p class="showspoilers">s2:</p>
+<p class="showspoilers">&nbsp;</p>
+<p class="showspoilers">s1:　　</p>
+<p class="showspoilers">s2:　　9　　20</p>
+<p class="showspoilers">&nbsp;</p>
+<p class="showspoilers">s1:　　7　　15</p>
+<p class="showspoilers">s2:&nbsp;</p>
+<p class="showspoilers">&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

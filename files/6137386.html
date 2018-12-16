@@ -1,0 +1,84 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6137386.html">[LeetCode] Number of Segments in a String 字符串中的分段数量</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Count the number of segments in a string, where a segment is defined to be a contiguous sequence of non-space characters.</p>
+<p>Please note that the string does not contain any <strong>non-printable</strong> characters.</p>
+<p><strong>Example:</strong></p>
+<pre><strong>Input:</strong> "Hello, my name is John"
+<strong>Output:</strong> 5
+</pre>
+<div>&nbsp;</div>
+<div>这道题跟之前那道<a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a>有些类似，不过比那题要简单一些，因为不用翻转单词，只要统计出单词的数量即可。那么我们的做法是遍历字符串，遇到空格直接跳过，如果不是空格，则计数器加1，然后用个while循环找到下一个空格的位置，这样就遍历完了一个单词，再重复上面的操作直至结束，就能得到正确结果：</div>
+<div>&nbsp;</div>
+<div> 解法一：</div>
+<div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countSegments(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span>++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; s[i] != <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) ++<span style="color: #000000;">i;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是统计单词开头的第一个字符，因为每个单词的第一个字符前面一个字符一定是空格，利用这个特性也可以统计单词的个数：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countSegments(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] != <span style="color: #800000;">'</span> <span style="color: #800000;">'</span> &amp;&amp; (i == <span style="color: #800080;">0</span> || s[i - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">)) {
+                </span>++<span style="color: #000000;">res;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法用到了C++的字符串流操作，利用getline函数取出每两个空格符之间的字符串，由于多个空格符可能连在一起，所以有可能取出空字符串，我们要判断一下，如果取出的是非空字符串我们才累加计数器，参见代码如下：</p>
+<p>&nbsp;</p>
+</div>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countSegments(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        istringstream </span><span style="color: #0000ff;">is</span><span style="color: #000000;">(s);
+        </span><span style="color: #0000ff;">string</span> t = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (getline(<span style="color: #0000ff;">is</span>, t, <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">)) {
+            </span><span style="color: #0000ff;">if</span> (t.empty()) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span>++<span style="color: #000000;">res;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/70775/c-istringstream-try" target="_blank">https://discuss.leetcode.com/topic/70775/c-istringstream-try</a></p>
+<p><a href="https://discuss.leetcode.com/topic/70642/clean-java-solution-o-n" target="_blank">https://discuss.leetcode.com/topic/70642/clean-java-solution-o-n</a></p>
+<p><a href="https://discuss.leetcode.com/topic/70656/ac-solution-java-with-trim-and-split" target="_blank">https://discuss.leetcode.com/topic/70656/ac-solution-java-with-trim-and-split</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

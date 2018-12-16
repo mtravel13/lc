@@ -1,0 +1,77 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9563418.html">[LeetCode] Ambiguous Coordinates 模糊的坐标</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>We had some 2-dimensional coordinates, like&nbsp;<code>"(1, 3)"</code>&nbsp;or&nbsp;<code>"(2, 0.5)"</code>.&nbsp; Then, we removed&nbsp;all commas, decimal points, and spaces, and ended up with the string&nbsp;<code>S</code>.&nbsp; Return a list of strings representing&nbsp;all possibilities for what our original coordinates could have been.</p>
+<p>Our original representation never had extraneous zeroes, so we never started with numbers like "00", "0.0", "0.00", "1.0", "001", "00.01", or any other number that can be represented with&nbsp;less digits.&nbsp; Also, a decimal point within a number never occurs without at least one digit occuring before it, so we never started with numbers like ".1".</p>
+<p>The final answer list can be returned in any order.&nbsp; Also note that all coordinates in the final answer&nbsp;have exactly one space between them (occurring after the comma.)</p>
+<pre>Example 1:
+Input: "(123)"
+Output: ["(1, 23)", "(12, 3)", "(1.2, 3)", "(1, 2.3)"]
+</pre>
+<pre>Example 2:
+Input: "(00011)"
+Output: &nbsp;["(0.001, 1)", "(0, 0.011)"]
+Explanation: 
+0.0, 00, 0001 or 00.01 are not allowed.
+</pre>
+<pre>Example 3:
+Input: "(0123)"
+Output: ["(0, 123)", "(0, 12.3)", "(0, 1.23)", "(0.1, 23)", "(0.1, 2.3)", "(0.12, 3)"]
+</pre>
+<pre>Example 4:
+Input: "(100)"
+Output: [(10, 0)]
+Explanation: 
+1.0 is not allowed.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li><code>4 &lt;= S.length &lt;= 12</code>.</li>
+<li><code>S[0]</code>&nbsp;= "(",&nbsp;<code>S[S.length - 1]</code>&nbsp;= ")", and the other elements in&nbsp;<code>S</code>&nbsp;are digits.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们一个模糊坐标，括号里面很只有一个数字字符串，没有逗号也没有小数点，让我们自己添加逗号和小数点，让把所有可能的组合都返回。题目中给了很多例子，理解起题意来很容易。这道题的难点是如何合理的拆分，很多拆分是不合法的，题目举了很多不合法的例子，比如&nbsp;"00", "0.0", "0.00", "1.0", "001", "00.01"。那么我们需要归纳出所有不合法的corner case，然后剩下一般情况比如123，我们就按位加小数点即可。那么我们再来看一下那些非法的例子，我们发现一眼望去好多0，不错，0就是trouble maker，首先不能有0开头的长度大于1的整数，比如00， 001。其次，不能有0结尾的小数，比如0.0，0.00，1.0等。还有，小数的整数位上也不能有0开头的长度大于1的整数。那么我们来归纳一下吧，首先如果字符串为空，那么直接返回空集合。然后如果字符串长度大于1，且首尾字符都是0的话，那么不可分，比如 0xxx0，因为整数长度大于1的话不能以0开头，中间也没法加小数点，因为小数最后一位不能是0。如果长度大于1，第一位是0，但最后一位不是0，那我们可以在第一个0后面加个小数点返回，这时就必须要加小数点了，因为长度大于1的整数不能以0开头。再之后，如果最后一位是0，说明不能加小数点，直接把当前值返回即可。最后就是一般情况了，我们先把原数加入结果res，然后遍历中间的每个位置，都加个小数点，所有情况归纳如下：</p>
+<p>if S == "": return []<br />if S == "0": return [S]<br />if S == "0XXX0": return []<br />if S == "0XXX": return ["0.XXX"]<br />if S == "XXX0": return [S]<br />return [S, "X.XXX", "XX.XX", "XXX.X"...]</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; ambiguousCoordinates(<span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> S.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n - <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+            vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; A = findAll(S.substr(<span style="color: #800080;">1</span>, i)), B = findAll(S.substr(i + <span style="color: #800080;">1</span>, n - <span style="color: #800080;">2</span> -<span style="color: #000000;"> i));
+            </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : A) {
+                </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">b : B) {
+                    res.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">, </span><span style="color: #800000;">"</span> + b + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findAll(<span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> S.size();
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span> || (n &gt; <span style="color: #800080;">1</span> &amp;&amp; S[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; S[n - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">if</span> (n &gt; <span style="color: #800080;">1</span> &amp;&amp; S[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span> {<span style="color: #800000;">"</span><span style="color: #800000;">0.</span><span style="color: #800000;">"</span> + S.substr(<span style="color: #800080;">1</span><span style="color: #000000;">)};
+        </span><span style="color: #0000ff;">if</span> (S[n - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {S};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res{S};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++i) res.push_back(S.substr(<span style="color: #800080;">0</span>, i) + <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> S.substr(i));
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/ambiguous-coordinates/" target="_blank">https://leetcode.com/problems/ambiguous-coordinates/</a></p>
+<p><a href="https://leetcode.com/problems/ambiguous-coordinates/discuss/123851/C%2B%2BJavaPython-Solution-with-Explanation" target="_blank">https://leetcode.com/problems/ambiguous-coordinates/discuss/123851/C%2B%2BJavaPython-Solution-with-Explanation</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

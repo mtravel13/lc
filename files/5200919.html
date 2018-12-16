@@ -1,0 +1,86 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5200919.html">[LeetCode] Strobogrammatic Number II 对称数之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).</p>
+<p>Find all strobogrammatic numbers that are of length = n.</p>
+<p>For example,<br />Given n = 2, return&nbsp;<code>["11","69","88","96"]</code>.</p>
+<p>Hint:</p>
+<ol>
+<li class="hint animated fadeInLeft">Try to use recursion and notice that it should recurse with&nbsp;<em>n</em>&nbsp;- 2 instead of&nbsp;<em>n</em>&nbsp;- 1.</li>
+
+
+</ol>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5196960.html">Strobogrammatic Number</a>的拓展，那道题让我们判断一个数是否是对称数，而这道题让我们找出长度为n的所有的对称数，我们肯定不能一个数一个数的来判断，那样太不高效了，而且OJ肯定也不会答应。题目中给了提示说可以用递归来做，而且提示了递归调用n-2，而不是n-1。我们先来列举一下n为0,1,2,3,4的情况：</p>
+<p>n = 0: &nbsp; none</p>
+<p>n = 1: &nbsp; 0, 1, 8</p>
+<p>n = 2: &nbsp; 11, 69, 88, 96</p>
+<p>n = 3: &nbsp; 101, 609, 808, 906, 111, 619, 818, 916, 181, 689, 888, 986</p>
+<p>n = 4: &nbsp; 1001, 6009, 8008, 9006, 1111, 6119, 8118, 9116, 1691, 6699, 8698, 9696, 1881, 6889, 8888, 9886, 1961, 6969, 8968, 9966</p>
+<p>我们注意观察n=0和n=2，可以发现后者是在前者的基础上，每个数字的左右增加了[1 1], [6 9], [8 8], [9 6]，看n=1和n=3更加明显，在0的左右增加[1 1]，变成了101,&nbsp;在0的左右增加[6 9]，变成了609, 在0的左右增加[8 8]，变成了808,&nbsp;在0的左右增加[9 6]，变成了906, 然后在分别在1和8的左右两边加那四组数，我们实际上是从m=0层开始，一层一层往上加的，需要注意的是当加到了n层的时候，左右两边不能加[0 0]，因为0不能出现在两位数及多位数的开头，在中间递归的过程中，需要有在数字左右两边各加上0的那种情况，参见代码如下：&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findStrobogrammatic(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> find(n, n);
+    }
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; find(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (m == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> {<span style="color: #800000;">""</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">if</span> (m == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> {<span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; t = find(m - <span style="color: #800080;">2</span><span style="color: #000000;">, n), res;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : t) {
+            </span><span style="color: #0000ff;">if</span> (m != n) res.push_back(<span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            res.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            res.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            res.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            res.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有迭代的解法，感觉也相当的巧妙，需要从奇偶来考虑，奇数赋为0,1,8，偶数赋为空，如果是奇数，就从i=3开始搭建，因为计算i=3需要i=1，而我们已经初始化了i=1的情况，如果是偶数，我们从i=2开始搭建，我们也已经初始化了i=0的情况，所以我们可以用for循环来搭建到i=n的情况，思路和递归一样，写法不同而已，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findStrobogrammatic(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; one{<span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span>}, two{<span style="color: #800000;">""</span>}, res =<span style="color: #000000;"> two;
+        </span><span style="color: #0000ff;">if</span> (n % <span style="color: #800080;">2</span> == <span style="color: #800080;">1</span>) res =<span style="color: #000000;"> one;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = (n % <span style="color: #800080;">2</span>) + <span style="color: #800080;">2</span>; i &lt;= n; i += <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> t;
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : res) {
+                </span><span style="color: #0000ff;">if</span> (i != n) t.push_back(<span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+                t.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+                t.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+                t.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+                t.push_back(</span><span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span> + a + <span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            }
+            res </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5196960.html">Strobogrammatic Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5203228.html" target="_blank">Strobogrammatic Number III</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/68215/simple-java-solution-without-recursion" target="_blank">https://leetcode.com/discuss/68215/simple-java-solution-without-recursion</a></p>
+<p><a href="https://leetcode.com/discuss/85991/14-lines-concise-and-easy-understand-c-solution" target="_blank">https://leetcode.com/discuss/85991/14-lines-concise-and-easy-understand-c-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

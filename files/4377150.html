@@ -1,0 +1,111 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4377150.html">[LeetCode] Maximum Subarray 最大子数组</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Find the contiguous subarray within an array (containing at least one number) which has the largest sum.</p>
+<p>For example, given the array&nbsp;<code>[&minus;2,1,&minus;3,4,&minus;1,2,1,&minus;5,4]</code>,<br />the contiguous subarray&nbsp;<code>[4,&minus;1,2,1]</code>&nbsp;has the largest sum =&nbsp;<code>6</code>.</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/maximum-subarray/">click to show more practice.</a></p>
+<div class="spoilers">More practice:
+<p>If you have figured out the O(<em>n</em>) solution, try coding another solution using the divide and conquer approach, which is more subtle.</p>
+
+
+
+
+</div>
+<p>&nbsp;</p>
+<p>这道题让我们求最大子数组之和，并且要我们用两种方法来解，分别是O(n)的解法，还有用分治法Divide and Conquer Approach，这个解法的时间复杂度是O(nlgn)，那我们就先来看O(n)的解法，定义两个变量res和curSum，其中res保存最终要返回的结果，即最大的子数组之和，curSum初始值为0，每遍历一个数字num，比较curSum + num和num中的较大值存入curSum，然后再把res和curSum中的较大值存入res，以此类推直到遍历完整个数组，可得到最大子数组的值存在res中，代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxSubArray(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MIN, curSum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            curSum </span>= max(curSum +<span style="color: #000000;"> num, num);
+            res </span>=<span style="color: #000000;"> max(res, curSum);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> maxSubArray(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] nums) {
+        </span><span style="color: #0000ff;">int</span> res = Integer.MIN_VALUE, curSum = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            curSum </span>= Math.max(curSum +<span style="color: #000000;"> num, num);
+            res </span>=<span style="color: #000000;"> Math.max(res, curSum);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>题目还要求我们用分治法Divide and Conquer Approach来解，这个分治法的思想就类似于二分搜索法，我们需要把数组一分为二，分别找出左边和右边的最大子数组之和，然后还要从中间开始向左右分别扫描，求出的最大值分别和左右两边得出的最大值相比较取最大的那一个，代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxSubArray(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> helper(nums, <span style="color: #800080;">0</span>, (<span style="color: #0000ff;">int</span>)nums.size() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span><span style="color: #000000;"> right) {
+        </span><span style="color: #0000ff;">if</span> (left &gt;= right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> nums[left];
+        </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> lmax = helper(nums, left, mid - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> rmax = helper(nums, mid + <span style="color: #800080;">1</span><span style="color: #000000;">, right);
+        </span><span style="color: #0000ff;">int</span> mmax = nums[mid], t =<span style="color: #000000;"> mmax;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = mid - <span style="color: #800080;">1</span>; i &gt;= left; --<span style="color: #000000;">i) {
+            t </span>+=<span style="color: #000000;"> nums[i];
+            mmax </span>=<span style="color: #000000;"> max(mmax, t);
+        }
+        t </span>=<span style="color: #000000;"> mmax;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = mid + <span style="color: #800080;">1</span>; i &lt;= right; ++<span style="color: #000000;">i) {
+            t </span>+=<span style="color: #000000;"> nums[i];
+            mmax </span>=<span style="color: #000000;"> max(mmax, t);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> max(mmax, max(lmax, rmax));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> maxSubArray(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.length == 0) <span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> helper(nums, 0, nums.length - 1<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">int</span>[] nums, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span><span style="color: #000000;"> right) {
+        </span><span style="color: #0000ff;">if</span> (left &gt;= right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> nums[left];
+        </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / 2<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> lmax = helper(nums, left, mid - 1<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> rmax = helper(nums, mid + 1<span style="color: #000000;">, right);
+        </span><span style="color: #0000ff;">int</span> mmax = nums[mid], t =<span style="color: #000000;"> mmax;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = mid - 1; i &gt;= left; --<span style="color: #000000;">i) {
+            t </span>+=<span style="color: #000000;"> nums[i];
+            mmax </span>=<span style="color: #000000;"> Math.max(mmax, t);
+        }
+        t </span>=<span style="color: #000000;"> mmax;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = mid + 1; i &lt;= right; ++<span style="color: #000000;">i) {
+            t </span>+=<span style="color: #000000;"> nums[i];
+            mmax </span>=<span style="color: #000000;"> Math.max(mmax, t);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> Math.max(mmax, Math.max(lmax, rmax));
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

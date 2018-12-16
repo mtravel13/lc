@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6675879.html">[LeetCode] Freedom Trail 自由之路</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>In the video game Fallout 4, the quest "Road to Freedom" requires players to reach a metal dial called the "Freedom Trail Ring", and use the dial to spell a specific keyword in order to open the door.</p>
+<p>Given a string&nbsp;ring, which represents the code engraved on the outer ring and another string&nbsp;key, which represents the keyword needs to be spelled. You need to find the&nbsp;minimum&nbsp;number of steps in order to spell all the characters in the keyword.</p>
+<p>Initially, the first character of the&nbsp;ring&nbsp;is aligned at 12:00 direction. You need to spell all the characters in the string&nbsp;key&nbsp;one by one by rotating the ring clockwise or anticlockwise to make each character of the string&nbsp;key&nbsp;aligned at 12:00 direction and then by pressing the center button.&nbsp;<br />At the stage of rotating the ring to spell the key character&nbsp;key[i]:</p>
+<ol>
+<li>You can rotate the&nbsp;ring&nbsp;clockwise or anticlockwise&nbsp;one place, which counts as 1 step. The final purpose of the rotation is to align one of the string&nbsp;ring's&nbsp;characters at the 12:00 direction, where this character must equal to the character&nbsp;key[i].</li>
+<li>If the character&nbsp;key[i]&nbsp;has been aligned at the 12:00 direction, you need to press the center button to spell, which also counts as 1 step. After the pressing, you could begin to spell the next character in the key (next stage), otherwise, you've finished all the spelling.</li>
+
+
+
+
+</ol>
+<p>&nbsp;</p>
+<p>Example:</p>
+<center><img src="https://leetcode.com/static/images/problemset/ring.jpg" alt="" width="26%" /></center>
+<p>&nbsp;</p>
+<pre>Input: ring = "godding", key = "gd"
+Output: 4
+Explanation:<br /> For the first key character 'g', since it is already in place, we just need 1 step to spell this character. <br /> For the second key character 'd', we need to rotate the ring "godding" anticlockwise by two steps to make it become "ddinggo".<br /> Also, we need 1 more step for spelling.<br /> So the final output is 4.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>Length of both ring and&nbsp;key&nbsp;will be in range 1 to 100.</li>
+<li>There are only lowercase letters in both strings and might be some duplcate characters in both strings.</li>
+<li>It's guaranteed that string&nbsp;key&nbsp;could always be spelled by rotating the string&nbsp;ring.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题是关于辐射4这款游戏出的，博主虽然没有玩过这款游戏，但是知道确实有些游戏中需要破解一些谜题才能继续通关，像博主很早以前玩过的恐龙危机啊，生化危机啊啥的，都有一些机关需要破解，博主大部分都要靠看攻略来通关哈哈。这道题讲的是一种叫做自由之路的机关，我们需要将密码字符串都转出来，让我们求最短的转动步数。博主最先尝试的用贪婪算法来做，就是每一步都选最短的转法，但是OJ中总有些test case会引诱贪婪算法得出错误的结果，因为全局最优解不一定都是局部最优解，而贪婪算法一直都是在累加局部最优解，这也是为啥DP解法这么叼的原因。贪婪算法好想好实现，但是不一定能得到正确的结果。DP解法难想不好写，但往往才是正确的解法，这也算一个trade off吧。这道题可以用DP来解，难点还是写递推公式，博主在充分研究网上大神们的帖子后尝试着自己理理思路，如果有不正确或者不足的地方，也请各位不吝赐教。此题需要使用一个二维数组dp，其中dp[i][j]表示转动从i位置开始的key串所需要的最少步数(这里不包括spell的步数，因为spell可以在最后统一加上)，此时表盘的12点位置是ring中的第j个字符。不得不佩服这样的设计的确很巧妙，我们可以从key的末尾往前推，这样dp[0][0]就是我们所需要的结果，因为此时是从key的开头开始转动，而且表盘此时的12点位置也是ring的第一个字符。现在我们来看如何找出递推公式，对于dp[i][j]，我们知道此时要将key[i]转动到12点的位置，而此时表盘的12点位置是ring[j]，我们有两种旋转的方式，顺时针和逆时针，我们的目标肯定是要求最小的转动步数，而顺时针和逆时针的转动次数之和刚好为ring的长度n，这样我们求出来一个方向的次数，就可以迅速得到反方向的转动次数。为了将此时表盘上12点位置上的ring[j]转动到key[i]，我们要将表盘转动一整圈，当转到key[i]的位置时，我们计算出转动步数diff，然后计算出反向转动步数，并取二者较小值为整个转动步数step，此时我们更新dp[i][j]，更新对比值为step + dp[i+1][k]，这个也不难理解，因为key的前一个字符key[i+1]的转动情况suppose已经计算好了，那么dp[i+1][k]就是当时表盘12点位置上ring[k]的情况的最短步数，step就是从ring[k]转到ring[j]的步数，也就是key[i]转到ring[j]的步数，用语言来描述就是，从key的i位置开始转动并且此时表盘12点位置为ring[j]的最小步数(dp[i][j])就等价于将ring[k]转动到12点位置的步数(step)加上从key的i+1位置开始转动并且ring[k]已经在表盘12点位置上的最小步数(dp[i+1][k])之和。突然发现这不就是之前那道<a id="homepage1_HomePageDays_DaysList_ctl08_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/6657956.html">Reverse Pairs</a>中解法一中归纳的顺序重现关系的思路吗，都做了总结，可换个马甲就又不认识了，泪目中。。。</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findRotateSteps(<span style="color: #0000ff;">string</span> ring, <span style="color: #0000ff;">string</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">int</span> n = ring.size(), m =<span style="color: #000000;"> key.size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(m + <span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">(n));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = m - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                dp[i][j] </span>=<span style="color: #000000;"> INT_MAX;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; n; ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">if</span> (ring[k] ==<span style="color: #000000;"> key[i]) {
+                        </span><span style="color: #0000ff;">int</span> diff = abs(j -<span style="color: #000000;"> k);
+                        </span><span style="color: #0000ff;">int</span> step = min(diff, n -<span style="color: #000000;"> diff);
+                        dp[i][j] </span>= min(dp[i][j], step + dp[i + <span style="color: #800080;">1</span><span style="color: #000000;">][k]);
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[<span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] +<span style="color: #000000;"> m;      
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是用DFS来解的，我们需要做优化，也就是用memo数组来保存已经计算过的结果，否则大量的重复运算是无法通过OJ的。其实这里的memo数组也起到了跟上面解法中的dp数组相类似的作用，还有就是要注意数组v的作用，记录了每个字母在ring中的出现位置，由于ring中可能有重复字符，而且麻烦的情况是当前位置向两个方向分别转动相同的步数会分别到达两个相同的字符，这也是贪婪算法会失效的一个重要原因，而且也是上面的解法在找到ring[k] ==<span style="color: #000000;"> key[i]</span>并处理完之后不break的原因，因为后面还有可能找到。上面的迭代解法中使用到的变量i和j可以直接访问到，而在递归的写法中必须要把位置变量x和y当作参数导入进去，这样才能更新正确的地方，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findRotateSteps(<span style="color: #0000ff;">string</span> ring, <span style="color: #0000ff;">string</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">int</span> n = ring.size(), m =<span style="color: #000000;"> key.size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; v(<span style="color: #800080;">26</span><span style="color: #000000;">);
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; memo(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">(m));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++i) v[ring[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">].push_back(i);
+        </span><span style="color: #0000ff;">return</span> helper(ring, key, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, v, memo);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">string</span> ring, <span style="color: #0000ff;">string</span> key, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> y, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;v, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">if</span> (y == key.size()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (memo[x][y]) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[x][y];
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, n =<span style="color: #000000;"> ring.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k : v[key[y] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">]) {
+            </span><span style="color: #0000ff;">int</span> diff = abs(x -<span style="color: #000000;"> k);
+            </span><span style="color: #0000ff;">int</span> step = min(diff, n -<span style="color: #000000;"> diff);
+            res </span>= min(res, step + helper(ring, key, k, y + <span style="color: #800080;">1</span><span style="color: #000000;">, v, memo));
+        }
+        </span><span style="color: #0000ff;">return</span> memo[x][y] = res + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/81684/concise-java-dp-solution" target="_blank">https://discuss.leetcode.com/topic/81684/concise-java-dp-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/82720/evolve-from-brute-force-to-dp" target="_blank">https://discuss.leetcode.com/topic/82720/evolve-from-brute-force-to-dp</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

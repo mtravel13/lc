@@ -1,0 +1,126 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5188938.html">[LeetCode] Largest BST Subtree 最大的二分搜索子树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, find the largest subtree which is a Binary Search Tree (BST), where largest means subtree with largest number of nodes in it.</p>
+<p>Note:<br />A subtree must include all of its descendants.<br />Here's an example:</p>
+<pre>    10
+    / \
+   <span style="color: red;">5</span>  15
+  <span style="color: red;">/ \</span>   \ 
+ <span style="color: red;">1   8</span>   7
+</pre>
+<p>The Largest BST Subtree in this case is the highlighted one.&nbsp;<br />The return value is the subtree's size, which is 3.</p>
+<p>&nbsp;</p>
+<p>Hint:</p>
+<ol id="hints">
+<li class="hint animated fadeInLeft">You can recursively use algorithm similar to&nbsp;<a href="https://leetcode.com/problems/validate-binary-search-tree/">98. Validate Binary Search Tree</a>&nbsp;at each node of the tree, which will result in O(nlogn) time complexity.</li>
+
+
+
+</ol>
+<p>Follow up:<br />Can you figure out ways to solve it with O(n) time complexity?</p>
+<p>&nbsp;</p>
+<p>这道题让我们求一棵二分树的最大二分搜索子树，所谓二分搜索树就是满足左&lt;根&lt;右的二分树，我们需要返回这个二分搜索子树的节点个数。题目中给的提示说我们可以用之前那道<a href="http://www.cnblogs.com/grandyang/p/4298435.html" target="_blank">Validate Binary Search Tree</a>的方法来做，时间复杂度为O(n<sup>2</sup>)，这种方法是把每个节点都当做根节点，来验证其是否是二叉搜索数，并记录节点的个数，若是二叉搜索树，就更新最终结果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> largestBSTSubtree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        dfs(root, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> dfs(TreeNode *root, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> d =<span style="color: #000000;"> countBFS(root, INT_MIN, INT_MAX);
+        </span><span style="color: #0000ff;">if</span> (d != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+            res </span>=<span style="color: #000000;"> max(res, d);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        dfs(root</span>-&gt;<span style="color: #000000;">left, res);
+        dfs(root</span>-&gt;<span style="color: #000000;">right, res);
+    }
+    </span><span style="color: #0000ff;">int</span> countBFS(TreeNode *root, <span style="color: #0000ff;">int</span> mn, <span style="color: #0000ff;">int</span><span style="color: #000000;"> mx) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;val &lt;= mn || root-&gt;val &gt;= mx) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = countBFS(root-&gt;left, mn, root-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">if</span> (left == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> right = countBFS(root-&gt;right, root-&gt;<span style="color: #000000;">val, mx);
+        </span><span style="color: #0000ff;">if</span> (right == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> left + right + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看一种更简洁的写法，对于每一个节点，都来验证其是否是BST，如果是的话，我们就统计节点的个数即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> largestBSTSubtree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (isValid(root, INT_MIN, INT_MAX)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> count(root);
+        </span><span style="color: #0000ff;">return</span> max(largestBSTSubtree(root-&gt;left), largestBSTSubtree(root-&gt;<span style="color: #000000;">right));
+    }
+    </span><span style="color: #0000ff;">bool</span> isValid(TreeNode* root, <span style="color: #0000ff;">int</span> mn, <span style="color: #0000ff;">int</span><span style="color: #000000;"> mx) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;val &lt;= mn || root-&gt;val &gt;= mx) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> isValid(root-&gt;left, mn, root-&gt;val) &amp;&amp; isValid(root-&gt;right, root-&gt;<span style="color: #000000;">val, mx);
+    }
+    </span><span style="color: #0000ff;">int</span> count(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> count(root-&gt;left) + count(root-&gt;right) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>题目中的Follow up让我们用O(n)的时间复杂度来解决问题，我们还是采用DFS的思想来解题，由于时间复杂度的限制，只允许我们遍历一次整个二叉树，由于满足题目要求的 二叉搜索子树必定是有叶节点的，所以我们的思路就是先递归到最左子节点，然后逐层往上递归，对于每一个节点，我们都记录当前最大的BST的节点数，当做为左子树的最大值，和做为右子树的最小值，当每次遇到左子节点不存在或者当前节点值大于左子树的最大值，且右子树不存在或者当前节点值小于右子树的最小数时，说明BST的节点数又增加了一个，我们更新结果及其参数，如果当前节点不是BST的节点，那么我们更新BST的节点数res为左右子节点的各自的BST的节点数的较大值，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> largestBSTSubtree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, mn = INT_MIN, mx =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">bool</span> d =<span style="color: #000000;"> isValidBST(root, mn, mx, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">bool</span> isValidBST(TreeNode *root, <span style="color: #0000ff;">int</span> &amp;mn, <span style="color: #0000ff;">int</span> &amp;mx, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left_n = <span style="color: #800080;">0</span>, right_n = <span style="color: #800080;">0</span>, left_mn =<span style="color: #000000;"> INT_MIN;
+        </span><span style="color: #0000ff;">int</span> right_mn = INT_MIN, left_mx = INT_MAX, right_mx =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">bool</span> left = isValidBST(root-&gt;<span style="color: #000000;">left, left_mn, left_mx, left_n);
+        </span><span style="color: #0000ff;">bool</span> right = isValidBST(root-&gt;<span style="color: #000000;">right, right_mn, right_mx, right_n);
+        </span><span style="color: #0000ff;">if</span> (left &amp;&amp;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> ((!root-&gt;left || root-&gt;val &gt; left_mx) &amp;&amp; (!root-&gt;right || root-&gt;val &lt;<span style="color: #000000;"> right_mn)) {
+                res </span>= left_n + right_n + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                mn </span>= root-&gt;left ? left_mn : root-&gt;<span style="color: #000000;">val;
+                mx </span>= root-&gt;right ? right_mx : root-&gt;<span style="color: #000000;">val;
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        res </span>=<span style="color: #000000;"> max(left_n, right_n);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4298435.html" target="_blank">Validate Binary Search Tree</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/85959/12ms-c-solution" target="_blank">https://leetcode.com/discuss/85959/12ms-c-solution</a></p>
+<p><a href="https://leetcode.com/discuss/86015/two-dfs-solution" target="_blank">https://leetcode.com/discuss/86015/two-dfs-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/36935/o-nlogn-java-solution" target="_blank">https://discuss.leetcode.com/topic/36935/o-nlogn-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

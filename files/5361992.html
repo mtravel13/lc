@@ -1,0 +1,69 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5361992.html">[LeetCode] Customers Who Never Order 从未下单订购的顾客</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Suppose that a website contains two tables, the <code>Customers</code> table and the <code>Orders</code> table. Write a SQL query to find all customers who never order anything.</p>
+<p>Table: <code>Customers</code>.</p>
+<pre>+----+-------+
+| Id | Name  |
++----+-------+
+| 1  | Joe   |
+| 2  | Henry |
+| 3  | Sam   |
+| 4  | Max   |
++----+-------+
+</pre>
+<p>Table: <code>Orders</code>.</p>
+<pre>+----+------------+
+| Id | CustomerId |
++----+------------+
+| 1  | 3          |
+| 2  | 1          |
++----+------------+
+</pre>
+<p>Using the above tables as example, return the following:</p>
+<pre>+-----------+
+| Customers |
++-----------+
+| Henry     |
+| Max       |
++-----------+
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们给了我们一个Customers表和一个Orders表，让我们找到从来没有下单的顾客，那么我们最直接的方法就是找没有在Orders表中出现的顾客Id就行了，用Not in关键字，如下所示：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Name <span style="color: #0000ff;">AS</span> Customers <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Customers 
+</span><span style="color: #0000ff;">WHERE</span> Id <span style="color: #808080;">NOT</span> <span style="color: #808080;">IN</span> (<span style="color: #0000ff;">SELECT</span> CustomerId <span style="color: #0000ff;">FROM</span> Orders);</pre>
+</div>
+<p>&nbsp;</p>
+<p>或者我们也可以用左交来联合两个表，只要找出右边的CustomerId为Null的顾客就是木有下单的：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Name <span style="color: #0000ff;">AS</span> Customers <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Customers
+</span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> Orders <span style="color: #0000ff;">ON</span> Customers.Id <span style="color: #808080;">=</span><span style="color: #000000;"> Orders.CustomerId
+</span><span style="color: #0000ff;">WHERE</span> Orders.CustomerId <span style="color: #0000ff;">IS</span> <span style="color: #0000ff;">NULL</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们还可以用Not exists关键字来做，原理和Not in很像，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Name <span style="color: #0000ff;">AS</span> Customers <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Customers c
+</span><span style="color: #0000ff;">WHERE</span> <span style="color: #808080;">NOT</span> <span style="color: #808080;">EXISTS</span> (<span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span> Orders o <span style="color: #0000ff;">WHERE</span> o.CustomerId <span style="color: #808080;">=</span> c.Id);</pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/22624/three-accepted-solutions" target="_blank">https://leetcode.com/discuss/22624/three-accepted-solutions</a></p>
+<p><a href="https://leetcode.com/discuss/53213/a-solution-using-not-in-and-another-one-using-left-join" target="_blank">https://leetcode.com/discuss/53213/a-solution-using-not-in-and-another-one-using-left-join</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

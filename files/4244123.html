@@ -1,0 +1,135 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4244123.html">[LeetCode] Compare Version Numbers 版本比较</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Compare two version numbers&nbsp;<em>version1</em>&nbsp;and&nbsp;<em>version2</em>.<br />If&nbsp;<code><em>version1</em>&nbsp;&gt;&nbsp;<em>version2</em></code>&nbsp;return&nbsp;<code>1;</code>&nbsp;if&nbsp;<code><em>version1</em>&nbsp;&lt;<em>version2</em></code>&nbsp;return&nbsp;<code>-1;</code>otherwise return&nbsp;<code>0</code>.</p>
+<p>You may assume that the version strings are non-empty and contain only digits and the&nbsp;<code>.</code>&nbsp;character.<br />The&nbsp;<code>.</code>&nbsp;character does not represent a decimal point and is used to separate number sequences.<br />For instance,&nbsp;<code>2.5</code>&nbsp;is not "two and a half" or "half way to version three", it is the fifth second-level revision of the second first-level revision.</p>
+<p>Example 1:</p>
+<pre>Input: <code><em>version1</em></code> = "0.1", <code><em>version2</em></code> = "1.1"
+Output: -1</pre>
+<p>Example 2:</p>
+<pre>Input: <code><em>version1</em></code> = "1.0.1", <code><em>version2</em></code> = "1"
+Output: 1</pre>
+<p>Example 3:</p>
+<pre>Input: <code><em>version1</em></code> = "7.5.2.4", <code><em>version2</em></code> = "7.5.3"
+Output: -1</pre>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://oj.leetcode.com/discuss/user/ts">@ts</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题调试了好久，一直不想上网搜别人的解法，因为感觉自己可以做出来，改来改去最后终于通过了，再上网一搜，发现果然和别人的方法不同，小有成就感。我的思路是：由于两个版本号所含的小数点个数不同，有可能是1和1.1.1比较，还有可能开头有无效0，比如01和1就是相同版本，还有可能末尾无效0，比如1.0和1也是同一版本。对于没有小数点的数字，可以默认为最后一位是小数点，而版本号比较的核心思想是相同位置的数字比较，比如题目给的例子，1.2和13.37比较，我们都知道应该显示1和13比较，13比1大，所以后面的不用再比了，再比如1.1和1.2比较，前面都是1，则比较小数点后面的数字。那么算法就是每次对应取出相同位置的小数点之前所有的字符，把他们转为数字比较，若不同则可直接得到答案，若相同，再对应往下取。如果一个数字已经没有小数点了，则默认取出为0，和另一个比较，这样也解决了末尾无效0的情况。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> compareVersion(<span style="color: #0000ff;">string</span> version1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> version2) {
+        </span><span style="color: #0000ff;">int</span> n1 = version1.size(), n2 =<span style="color: #000000;"> version2.size();
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = <span style="color: #800080;">0</span>, d1 = <span style="color: #800080;">0</span>, d2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> v1, v2;
+        </span><span style="color: #0000ff;">while</span> (i &lt; n1 || j &lt;<span style="color: #000000;"> n2) {
+            </span><span style="color: #0000ff;">while</span> (i &lt; n1 &amp;&amp; version1[i] != <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                v1.push_back(version1[i</span>++<span style="color: #000000;">]);
+            }
+            d1 </span>=<span style="color: #000000;"> atoi(v1.c_str());
+            </span><span style="color: #0000ff;">while</span> (j &lt; n2 &amp;&amp; version2[j] != <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                v2.push_back(version2[j</span>++<span style="color: #000000;">]);
+            }
+            d2 </span>=<span style="color: #000000;"> atoi(v2.c_str());
+            </span><span style="color: #0000ff;">if</span> (d1 &gt; d2) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (d1 &lt; d2) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            v1.clear(); v2.clear();
+            </span>++i; ++<span style="color: #000000;">j;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p><br />当然我们也可以不使用将字符串转为整型的atoi函数，我们可以一位一位的累加，参加如下代码：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> compareVersion(<span style="color: #0000ff;">string</span> version1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> version2) {
+        </span><span style="color: #0000ff;">int</span> n1 = version1.size(), n2 =<span style="color: #000000;"> version2.size();
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = <span style="color: #800080;">0</span>, d1 = <span style="color: #800080;">0</span>, d2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt; n1 || j &lt;<span style="color: #000000;"> n2) {
+            </span><span style="color: #0000ff;">while</span> (i &lt; n1 &amp;&amp; version1[i] != <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                d1 </span>= d1 * <span style="color: #800080;">10</span> + version1[i++] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">while</span> (j &lt; n2 &amp;&amp; version2[j] != <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                d2 </span>= d2 * <span style="color: #800080;">10</span> + version2[j++] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (d1 &gt; d2) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (d1 &lt; d2) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            d1 </span>= d2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span>++i; ++<span style="color: #000000;">j;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于这道题我们需要将版本号以&rsquo;.'分开，那么我们可以借用强大的字符串流stringstream的功能来实现分段和转为整数，使用这种方法写的代码很简洁，如下所示：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> compareVersion(<span style="color: #0000ff;">string</span> version1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> version2) {
+        istringstream v1(version1 </span>+ <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span>), v2(version2 + <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> d1 = <span style="color: #800080;">0</span>, d2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">char</span> dot = <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (v1.good() ||<span style="color: #000000;"> v2.good()) {
+            </span><span style="color: #0000ff;">if</span> (v1.good()) v1 &gt;&gt; d1 &gt;&gt;<span style="color: #000000;"> dot;
+            </span><span style="color: #0000ff;">if</span> (v2.good()) v2 &gt;&gt; d2 &gt;&gt;<span style="color: #000000;"> dot;
+            </span><span style="color: #0000ff;">if</span> (d1 &gt; d2) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (d1 &lt; d2) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            d1 </span>= d2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后我们来看一种用C语言的字符串指针来实现的方法，这个方法的关键是用到将字符串转为长整型的strtol函数，关于此函数的用法可以参见我的另一篇博客<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4966132.html">strtol 函数用法</a>。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> compareVersion(<span style="color: #0000ff;">string</span> version1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> version2) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">char</span> *v1 = (<span style="color: #0000ff;">char</span>*)version1.c_str(), *v2 = (<span style="color: #0000ff;">char</span>*<span style="color: #000000;">)version2.c_str();
+        </span><span style="color: #0000ff;">while</span> (res == <span style="color: #800080;">0</span> &amp;&amp; (*v1 != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span> || *v2 != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)) {
+            </span><span style="color: #0000ff;">long</span> d1 = *v1 == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span> ? <span style="color: #800080;">0</span> : strtol(v1, &amp;v1, <span style="color: #800080;">10</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">long</span> d2 = *v2 == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span> ? <span style="color: #800080;">0</span> : strtol(v2, &amp;v2, <span style="color: #800080;">10</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (d1 &gt; d2) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (d1 &lt; d2) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (*v1 != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">v1;
+                </span><span style="color: #0000ff;">if</span> (*v2 != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">v2;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4790469.html" target="_blank">First Bad Version</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/compare-version-numbers/discuss/?orderBy=most_votes" target="_blank">https://leetcode.com/problems/compare-version-numbers/discuss/?orderBy=most_votes</a></p>
+<p><a href="https://leetcode.com/problems/compare-version-numbers/discuss/50774/Accepted-small-Java-solution." target="_blank">https://leetcode.com/problems/compare-version-numbers/discuss/50774/Accepted-small-Java-solution.</a></p>
+<p><a href="https://leetcode.com/problems/compare-version-numbers/discuss/50788/My-JAVA-solution-without-split" target="_blank">https://leetcode.com/problems/compare-version-numbers/discuss/50788/My-JAVA-solution-without-split</a></p>
+<p><a href="https://leetcode.com/problems/compare-version-numbers/discuss/50804/10-line-concise-solution.-(C%2B%2B)" target="_blank">https://leetcode.com/problems/compare-version-numbers/discuss/50804/10-line-concise-solution.-(C%2B%2B)</a></p>
+<p><a href="https://leetcode.com/problems/compare-version-numbers/discuss/50767/My-2ms-easy-solution-with-CC%2B%2B" target="_blank">https://leetcode.com/problems/compare-version-numbers/discuss/50767/My-2ms-easy-solution-with-CC%2B%2B</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

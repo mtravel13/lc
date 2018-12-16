@@ -1,0 +1,87 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4045660.html">[LeetCode] Balanced Binary Tree 平衡二叉树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="content__1c40">
+<p>Given a binary tree, determine if it is height-balanced.</p>
+<p>For this problem, a height-balanced binary tree is defined as:</p>
+<blockquote>
+<p>a binary tree in which the depth of the two subtrees of&nbsp;<em>every</em>node never differ by more than 1.</p>
+</blockquote>
+<p>Example 1:</p>
+<p>Given the following tree&nbsp;<code>[3,9,20,null,null,15,7]</code>:</p>
+<pre>    3
+   / \
+  9  20
+    /  \
+   15   7</pre>
+<p>Return true.<br /><br />Example 2:</p>
+<p>Given the following tree&nbsp;<code>[1,2,2,3,3,null,null,4,4]</code>:</p>
+<pre>       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+</pre>
+<p>Return false.</p>
+</div>
+<div class="header__2cgQ">&nbsp;</div>
+<p>求二叉树是否平衡，根据题目中的定义，高度平衡二叉树是每一个结点的两个子树的深度差不能超过1，那么我们肯定需要一个求各个点深度的函数，然后对每个节点的两个子树来比较深度差，时间复杂度为O(NlgN)，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isBalanced(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (abs(getDepth(root-&gt;left) - getDepth(root-&gt;right)) &gt; <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> isBalanced(root-&gt;left) &amp;&amp; isBalanced(root-&gt;<span style="color: #000000;">right);    
+    }
+    </span><span style="color: #0000ff;">int</span> getDepth(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> + max(getDepth(root-&gt;left), getDepth(root-&gt;<span style="color: #000000;">right));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面那个方法正确但不是很高效，因为每一个点都会被上面的点计算深度时访问一次，我们可以进行优化。方法是如果我们发现子树不平衡，则不计算具体的深度，而是直接返回-1。那么优化后的方法为：对于每一个节点，我们通过checkDepth方法递归获得左右子树的深度，如果子树是平衡的，则返回真实的深度，若不平衡，直接返回-1，此方法时间复杂度O(N)，空间复杂度O(H)，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:    
+    </span><span style="color: #0000ff;">bool</span> isBalanced(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (checkDepth(root) == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">int</span> checkDepth(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = checkDepth(root-&gt;<span style="color: #000000;">left);
+        </span><span style="color: #0000ff;">if</span> (left == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> right = checkDepth(root-&gt;<span style="color: #000000;">right);
+        </span><span style="color: #0000ff;">if</span> (right == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> diff = abs(left -<span style="color: #000000;"> right);
+        </span><span style="color: #0000ff;">if</span> (diff &gt; <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> +<span style="color: #000000;"> max(left, right);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4051348.html" target="_blank">Maximum Depth of Binary Tree</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/balanced-binary-tree/" target="_blank">https://leetcode.com/problems/balanced-binary-tree/</a></p>
+<p><a href="https://leetcode.com/problems/balanced-binary-tree/discuss/35691/The-bottom-up-O(N)-solution-would-be-better" target="_blank">https://leetcode.com/problems/balanced-binary-tree/discuss/35691/The-bottom-up-O(N)-solution-would-be-better</a></p>
+<p><a href="https://leetcode.com/problems/balanced-binary-tree/discuss/35686/Java-solution-based-on-height-check-left-and-right-node-in-every-recursion-to-avoid-further-useless-search" target="_blank">https://leetcode.com/problems/balanced-binary-tree/discuss/35686/Java-solution-based-on-height-check-left-and-right-node-in-every-recursion-to-avoid-further-useless-search</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

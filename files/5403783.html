@@ -1,0 +1,79 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5403783.html">[LeetCode] Power of Four 判断4的次方数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer (signed 32 bits), write a function to check whether it is a power of 4.</p>
+<p><strong>Example:</strong><br />
+Given num = 16, return true.
+Given num = 5, return false.
+</p>
+<p>
+<strong>Follow up</strong>: Could you solve it without loops/recursion?
+</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/yukuairoy">@yukuairoy </a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题让我们判断一个数是否为4的次方数，那么最直接的方法就是不停的除以4，看最终结果是否为1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfFour(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">while</span> (num &amp;&amp; (num % <span style="color: #800080;">4</span> == <span style="color: #800080;">0</span><span style="color: #000000;">)) {
+            num </span>/= <span style="color: #800080;">4</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> num == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种方法是跟<a href="http://www.cnblogs.com/grandyang/p/5138212.html">Power of Three</a>中的解法三一样，使用换底公式来做，讲解请参见之前那篇博客：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfFour(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">return</span> num &gt; <span style="color: #800080;">0</span> &amp;&amp; <span style="color: #0000ff;">int</span>(log10(num) / log10(<span style="color: #800080;">4</span>)) - log10(num) / log10(<span style="color: #800080;">4</span>) == <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是网上比较流行的一种解法，思路很巧妙，首先根据<a href="http://www.cnblogs.com/grandyang/p/4623394.html" target="_blank">Power of Two</a>中的解法二，我们知道num &amp; (num - 1)可以用来判断一个数是否为2的次方数，更进一步说，就是二进制表示下，只有最高位是1，那么由于是2的次方数，不一定是4的次方数，比如8，所以我们还要其他的限定条件，我们仔细观察可以发现，4的次方数的最高位的1都是计数位，那么我们只需与上一个数(0x55555555) &lt;==&gt; 1010101010101010101010101010101，如果得到的数还是其本身，则可以肯定其为4的次方数：<code class="python"></code></p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfFour(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">return</span> num &gt; <span style="color: #800080;">0</span> &amp;&amp; !(num &amp; (num - <span style="color: #800080;">1</span>)) &amp;&amp; (num &amp; <span style="color: #800080;">0x55555555</span>) ==<span style="color: #000000;"> num;
+    }
+};</span></pre>
+</div>
+<p><br />或者我们在确定其是2的次方数了之后，发现只要是4的次方数，减1之后可以被3整除，所以可以写出代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPowerOfFour(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">return</span> num &gt; <span style="color: #800080;">0</span> &amp;&amp; !(num &amp; (num - <span style="color: #800080;">1</span>)) &amp;&amp; (num - <span style="color: #800080;">1</span>) % <span style="color: #800080;">3</span> == <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5138212.html">Power of Three</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4623394.html" target="_blank">Power of Two</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/97944/c-solution-using-bit-manipulation-with-one-line-code" target="_blank">https://leetcode.com/discuss/97944/c-solution-using-bit-manipulation-with-one-line-code</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

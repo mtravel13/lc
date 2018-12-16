@@ -1,0 +1,114 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7841824.html">[LeetCode] Remove Comments 移除注释</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a C++ program, remove comments from it. The program <code>source</code> is an array where <code>source[i]</code> is the <code>i</code>-th line of the source code. This represents the result of splitting the original source code string by the newline character <code>\n</code>.</p>
+<p>In C++, there are two types of comments, line comments, and block comments.</p>
+<p>The string <code>//</code> denotes a line comment, which represents that it and rest of the characters to the right of it in the same line should be ignored.</p>
+<p>The string <code>/*</code> denotes a block comment, which represents that all characters until the next (non-overlapping) occurrence of <code>*/</code> should be ignored. (Here, occurrences happen in reading order: line by line from left to right.) To be clear, the string <code>/*/</code> does not yet end the block comment, as the ending would be overlapping the beginning.</p>
+<p>The first effective comment takes precedence over others: if the string <code>//</code> occurs in a block comment, it is ignored. Similarly, if the string <code>/*</code> occurs in a line or block comment, it is also ignored.</p>
+<p>If a certain line of code is empty after removing comments, you must not output that line: each string in the answer list will be non-empty.</p>
+<p>There will be no control characters, single quote, or double quote characters. For example, <code>source = "string s = "/* Not a comment. */";"</code> will not be a test case. (Also, nothing else such as defines or macros will interfere with the comments.)</p>
+<p>It is guaranteed that every open block comment will eventually be closed, so <code>/*</code> outside of a line or block comment always starts a new comment.</p>
+<p>Finally, implicit newline characters can be deleted by block comments. Please see the examples below for details.</p>
+<p>After removing the comments from the source code, return the source code in the same format.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> 
+source = ["/*Test program */", "int main()", "{ ", "  // variable declaration ", "int a, b, c;", "/* This is a test", "   multiline  ", "   comment for ", "   testing */", "a = b + c;", "}"]
+
+The line by line code is visualized as below:
+/*Test program */
+int main()
+{ 
+  // variable declaration 
+int a, b, c;
+/* This is a test
+   multiline  
+   comment for 
+   testing */
+a = b + c;
+}
+
+<strong>Output:</strong> ["int main()","{ ","  ","int a, b, c;","a = b + c;","}"]
+
+The line by line code is visualized as below:
+int main()
+{ 
+  
+int a, b, c;
+a = b + c;
+}
+
+<strong>Explanation:</strong> 
+The string <code class="hljs">/*</code> denotes a block comment, including line 1 and lines 6-9. The string <code class="hljs 1c"><span class="hljs-comment">//</span></code> denotes line 4 as comments.
+</pre>
+<p><strong>Example 2:</strong><br />
+</p>
+<pre><strong>Input:</strong> 
+source = ["a/*comment", "line", "more_comment*/b"]
+<strong>Output:</strong> ["ab"]
+<strong>Explanation:</strong> The original source string is "a/*comment<strong>\n</strong>line<strong>\n</strong>more_comment*/b", where we have bolded the newline characters.  After deletion, the <em>implicit</em> newline characters are deleted, leaving the string "ab", which when delimited by newline characters becomes ["ab"].
+</pre>
+<p><strong>Note:</strong></p>
+<div class="question-description">
+<ul>
+<li>The length of <code>source</code> is in the range <code>[1, 100]</code>.</li>
+<li>The length of <code>source[i]</code> is in the range <code>[0, 80]</code>.</li>
+<li>Every open block comment is eventually closed.</li>
+<li>There are no single-quote, double-quote, or control characters in the source code.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p>这道题让我们移除代码中的注释部分，就是写代码中经常遇到的两种注释，单行注释和多行注释，也可以叫块注释，当然最最重要的就是要找到这两种注释的起始标识符"//"和"/*"，注意它们两者之间存在覆盖的关系，谁在前面谁work，比如"//abc/*"，那么此时后面的块注释起始符被忽略掉，同样"/*abc//"，后面的单行注释起始符也不起作用，所以两者之间的前后顺序很重要。博主刚开始想的方法是用string的find函数来分别找"//"和"/*"的起始位置，如果不存在就返回-1，但是需要分多种情况来处理，其是否存在，还有二者的前后顺序，处理起来比较麻烦。起始我们可以直接按字符来一个一个处理，由于块注释是多行注释，所以一旦之前有了块注释的起始符，当前行的处理方式就有所不同了，所以我们需要一个变量blocked来记录当前是否为块注释状态，初始化为false。建立空字符out，用来保存去除注释后的字符。然后我们遍历整个代码的每一行，遍历每一行中的每一个字符，如果当前字符是最后一个字符了，说明不会再有注释了，将当前字符加入out中，否则取出当前位置和下一个位置的两个字符，如果其正好是"/*"，说明之后的部分都是块注释了，我们将blocked赋值为true，然后指针向后移动一个，明明两个字符啊，为啥只移动一个呢，因为另一个可以在for循环中的++i移动；如果当前两个字符正好是"//"，说明当前行之后都是注释，我们并不care后面有啥，所以可以直接break掉当前行；如果都不是，说明当前字符是代码，将其加入out中。好，下面来看blocked为true的情况，说明之后的内容都是块注释的内容，我们唯一关心的是有没有结束符"*/"，所以还是先做判断，如果当前不是最后一个字符，说明至少还有两个字符，然后取出两个字符，如果正好是块注释结束符，那么我们将标识重置为false，指针要后移动一个。当前行遍历完后，如果out不为空，且blocked为false，则将out存入结果res中，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; removeComments(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> source) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">bool</span> blocked = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span> = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> line : source) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; line.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">blocked) {
+                    </span><span style="color: #0000ff;">if</span> (i == line.size() - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> line[i];
+                    </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">string</span> t = line.substr(i, <span style="color: #800080;">2</span><span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">if</span> (t == <span style="color: #800000;">"</span><span style="color: #800000;">/*</span><span style="color: #800000;">"</span>) blocked = <span style="color: #0000ff;">true</span>, ++<span style="color: #000000;">i;
+                        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (t == <span style="color: #800000;">"</span><span style="color: #800000;">//</span><span style="color: #800000;">"</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> line[i];
+                    }
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">if</span> (i &lt; line.size() - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                        </span><span style="color: #0000ff;">string</span> t = line.substr(i, <span style="color: #800080;">2</span><span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">if</span> (t == <span style="color: #800000;">"</span><span style="color: #800000;">*/</span><span style="color: #800000;">"</span>) blocked = <span style="color: #0000ff;">false</span>, ++<span style="color: #000000;">i;
+                    }
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">out</span>.empty() &amp;&amp; !<span style="color: #000000;">blocked) {
+                res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+                </span><span style="color: #0000ff;">out</span> = <span style="color: #800000;">""</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6022498.html">Ternary Expression Parser</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5771434.html">Mini Parser</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/109943/c-easy-solution">https://discuss.leetcode.com/topic/109943/c-easy-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/109637/c-o-n-one-pass">https://discuss.leetcode.com/topic/109637/c-o-n-one-pass</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

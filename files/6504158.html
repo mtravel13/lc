@@ -1,0 +1,101 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6504158.html">[LeetCode] Continuous Subarray Sum 连续的子数组之和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of <strong>non-negative</strong> numbers and a target <strong>integer</strong> k, write a function to check if the array has a continuous subarray of size at least 2 that sums up to the multiple of <strong>k</strong>, that is, sums up to n*k where n is also an <strong>integer</strong>.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> [23, 2, 4, 6, 7],  k=6
+<strong>Output:</strong> True
+<strong>Explanation:</strong> Because [2, 4] is a continuous subarray of size 2 and sums up to 6.
+</pre>
+<p><strong>Example 2:</strong><br />
+</p>
+<pre><strong>Input:</strong> [23, 2, 6, 4, 7],  k=6
+<strong>Output:</strong> True
+<strong>Explanation:</strong> Because [23, 2, 6, 4, 7] is an continuous subarray of size 5 and sums up to 42.
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol><ol>
+<li>The length of the array won't exceed 10,000.</li>
+<li>You may assume the sum of all the numbers is in the range of a signed 32-bit integer.</li>
+
+
+</ol></ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组和一个数字k，让我们求是否存在这样的一个连续的子数组，该子数组的数组之和可以整除k。遇到除法问题，我们肯定不能忘了除数为0的情况等处理。还有就是我们如何能快速的遍历所有的子数组，并且求和，我们肯定不能完全的暴力破解，这样OJ肯定不答应。我们需要适当的优化，如果是刷题老司机的话，遇到这种求子数组或者子矩阵之和的题，应该不难想到要建立累加和数组或者累加和矩阵来做。没错，这道题也得这么做，我们要遍历所有的子数组，然后利用累加和来快速求和。在得到每个子数组之和时，我们先和k比较，如果相同直接返回true，否则再判断，若k不为0，且sum能整除k，同样返回true，最后遍历结束返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> checkSubarraySum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> sum =<span style="color: #000000;"> nums[i];
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; nums.size(); ++<span style="color: #000000;">j) {
+                sum </span>+=<span style="color: #000000;"> nums[j];
+                </span><span style="color: #0000ff;">if</span> (sum == k) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (k != <span style="color: #800080;">0</span> &amp;&amp; sum % k == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法用了些技巧，那就是，若数字a和b分别除以数字c，若得到的余数相同，那么(a-b)必定能够整除c。这里就不证明了，博主也不会证明。明白了这条定理，那么我们用一个集合set来保存所有出现过的余数，如果当前的累加和除以k得到的余数在set中已经存在了，那么说明之前必定有一段子数组和可以整除k。需要注意的是k为0的情况，由于无法取余，我们就把当前累加和放入set中。还有就是题目要求子数组至少需要两个数字，那么我们需要一个变量pre来记录之前的和，我们每次存入set中的是pre，而不是当前的累积和，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> checkSubarraySum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), sum = <span style="color: #800080;">0</span>, pre = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            sum </span>+=<span style="color: #000000;"> nums[i];
+            </span><span style="color: #0000ff;">int</span> t = (k == <span style="color: #800080;">0</span>) ? sum : (sum %<span style="color: #000000;"> k);
+            </span><span style="color: #0000ff;">if</span> (st.count(t)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            st.insert(pre);
+            pre </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>既然set可以做，一般来说用哈希表也可以做，这里我们建立余数和当前位置之间的映射，由于有了位置信息，我们就不需要pre变量了，之前用保存的坐标和当前位置i比较判断就可以了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> checkSubarraySum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; m{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            sum </span>+=<span style="color: #000000;"> nums[i];
+            </span><span style="color: #0000ff;">int</span> t = (k == <span style="color: #800080;">0</span>) ? sum : (sum %<span style="color: #000000;"> k);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m.count(t)) {
+                </span><span style="color: #0000ff;">if</span> (i - m[t] &gt; <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> m[t] =<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/80975/java-solution" target="_blank">https://discuss.leetcode.com/topic/80975/java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/80793/java-o-n-time-o-k-space/2" target="_blank">https://discuss.leetcode.com/topic/80793/java-o-n-time-o-k-space/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/80892/concise-c-solution-use-set-instead-of-map" target="_blank">https://discuss.leetcode.com/topic/80892/concise-c-solution-use-set-instead-of-map</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

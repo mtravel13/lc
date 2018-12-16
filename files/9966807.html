@@ -1,0 +1,125 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9966807.html">[LeetCode] Design HashSet 设计HashSet</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a HashSet&nbsp;without using any built-in hash table libraries.</p>
+<p>To be specific, your design should include these functions:</p>
+<ul>
+<li><code>add(value)</code>:&nbsp;Insert a value into the HashSet.&nbsp;</li>
+<li><code>contains(value)</code>&nbsp;: Return whether the value exists in the HashSet or not.</li>
+<li><code>remove(value)</code>: Remove a value in&nbsp;the HashSet. If the value does not exist in the HashSet, do nothing.</li>
+</ul>
+<p><br />Example:</p>
+<pre>MyHashSet hashSet = new MyHashSet();
+hashSet.add(1); &nbsp; &nbsp; &nbsp; &nbsp; 
+hashSet.add(2); &nbsp; &nbsp; &nbsp; &nbsp; 
+hashSet.contains(1); &nbsp;&nbsp;&nbsp;// returns true
+hashSet.contains(3); &nbsp;&nbsp;&nbsp;// returns false (not found)
+hashSet.add(2); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+hashSet.contains(2); &nbsp;&nbsp;&nbsp;// returns true
+hashSet.remove(2); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+hashSet.contains(2); &nbsp;&nbsp;&nbsp;// returns false (already removed)
+</pre>
+<p><br />Note:</p>
+<ul>
+<ul>
+<li>All values will be in the range of&nbsp;<code>[0, 1000000]</code>.</li>
+<li>The number of operations will be in the range of&nbsp;<code>[1, 10000]</code>.</li>
+<li>Please do not use the built-in HashSet library.</li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+</ul>
+<p>&nbsp;</p>
+<p>这道题让我们设计HashSet，不能用自带的哈希表的数据结构，而且要我们主要实现添加，删除，以及判断是否存在，这三个函数。我们都知道HashSet最有用的地方就是其能够在常数的时间内判断某个元素是否存在，这都得归功于哈希表的作用。但是现在不让我们用了，但我们还是得保证其常数级的查找效率，那么就用空间来换时间吧。既然题目中说了数字的范围不会超过1000000，那么我们就申请这么大空间的数组，这样对于在HashSet中的数字，我们就将其标记为1，不在或者删除了的就标记为0，检测的时候就看其值是否为1即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyHashSet {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MyHashSet() {
+        data.resize(</span><span style="color: #800080;">1000000</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+    
+    </span><span style="color: #0000ff;">void</span> add(<span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        data[key] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">void</span> remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        data[key] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Returns true if this set contains the specified element </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> contains(<span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">return</span> data[key] == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> data;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以来适度的优化一下空间复杂度，由于存入HashSet的数字也许不会跨度很大，那么直接就申请长度为1000000的数组可能会有些浪费，那么我们其实可以使用1000个长度为1000的数组来代替，那么就要用个二维数组啦，实际上开始我们只申请了1000个空数组，对于每个要处理的元素，我们首先对1000取余，得到的值就当作哈希值，对应我们申请的那1000个空数组的位置，在加入元素时，一旦计算出了哈希值，我们将对应的空数组resize为长度1000，然后根据哈希值和key/1000来确定具体的加入位置。移除数字一样的，先计算出哈希值，如果对应的数组不为空的话，找到对应的位置并赋值为0。不过大家也可以看出来，我们在加入元素时会开辟1000的新空间，但是删除这个元素时，并没有检测这1000个位置是否均为0，是的话应该删除这1000个新空间。但是这样可能会使得删除函数变慢一些，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyHashSet {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MyHashSet() {
+        data.resize(</span><span style="color: #800080;">1000</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">());
+    }
+    
+    </span><span style="color: #0000ff;">void</span> add(<span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">int</span> hashKey = key % <span style="color: #800080;">1000</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (data[hashKey].empty()) {
+            data[hashKey].resize(</span><span style="color: #800080;">1000</span><span style="color: #000000;">);
+        } 
+        data[hashKey][key </span>/ <span style="color: #800080;">1000</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">void</span> remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">int</span> hashKey = key % <span style="color: #800080;">1000</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">data[hashKey].empty()) {
+            data[hashKey][key </span>/ <span style="color: #800080;">1000</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        } 
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Returns true if this set contains the specified element </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> contains(<span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">int</span> hashKey = key % <span style="color: #800080;">1000</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> !data[hashKey].empty() &amp;&amp; data[hashKey][key / <span style="color: #800080;">1000</span><span style="color: #000000;">];
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> data;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9972764.html">Design HashMap</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/design-hashset/" target="_blank">https://leetcode.com/problems/design-hashset/</a></p>
+<p><a href="https://leetcode.com/problems/design-hashset/discuss/185826/C%2B%2B-solution" target="_blank">https://leetcode.com/problems/design-hashset/discuss/185826/C%2B%2B-solution</a></p>
+<p><a href="https://leetcode.com/problems/design-hashset/discuss/193132/Solution-without-boolean-array" target="_blank">https://leetcode.com/problems/design-hashset/discuss/193132/Solution-without-boolean-array</a></p>
+<p><a href="https://leetcode.com/problems/design-hashset/discuss/143434/Beats-100-Real-Java-Solution-(Not-boolean-array)" target="_blank">https://leetcode.com/problems/design-hashset/discuss/143434/Beats-100-Real-Java-Solution-(Not-boolean-array)</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

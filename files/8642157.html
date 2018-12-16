@@ -1,0 +1,117 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8642157.html">[LeetCode] Prime Number of Set Bits in Binary Representation 二进制表示中的非零位个数为质数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Given two integers&nbsp;<code>L</code>&nbsp;and&nbsp;<code>R</code>, find the count of numbers in the range&nbsp;<code>[L, R]</code>&nbsp;(inclusive) having a prime number of set bits in their binary representation.</p>
+<p>(Recall that the number of set bits an integer has is the number of&nbsp;<code>1</code>s present when written in binary. For example,&nbsp;<code>21</code>&nbsp;written in binary is&nbsp;<code>10101</code>&nbsp;which has 3 set bits. Also, 1 is not a prime.)</p>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: L = 6, R = 10
+Output: 4
+Explanation:
+6 -&gt; 110 (2 set bits, 2 is prime)
+7 -&gt; 111 (3 set bits, 3 is prime)
+9 -&gt; 1001 (2 set bits , 2 is prime)
+10-&gt;1010 (2 set bits , 2 is prime)
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: L = 10, R = 15
+Output: 5
+Explanation:
+10 -&gt; 1010 (2 set bits, 2 is prime)
+11 -&gt; 1011 (3 set bits, 3 is prime)
+12 -&gt; 1100 (2 set bits, 2 is prime)
+13 -&gt; 1101 (3 set bits, 3 is prime)
+14 -&gt; 1110 (3 set bits, 3 is prime)
+15 -&gt; 1111 (4 set bits, 4 is not prime)
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li><code>L, R</code>&nbsp;will be integers&nbsp;<code>L &lt;= R</code>&nbsp;in the range&nbsp;<code>[1, 10^6]</code>.</li>
+<li><code>R - L</code>&nbsp;will be at most 10000.</li>
+</ol>
+<p>&nbsp;</p>
+</div>
+<p>这道题给了我们一个整数范围[L, R]，让我们统计其中有多个整数，其二进制表示中非零位个数为质数。参考题目中的例子不难理解题意，那么博主最先想到的就是暴力搜索啊，毕竟是到Easy题嘛，可能不需要太多的技巧。我们遍历整数范围[L, R]中的每一个数字，然后先统计出所有非零位个数cnt，通过和1相与，再右移一位的方式。然后就是来判断这个cnt是否是质数，判断的方法就是就是从其平方开始，一个一个的除，如果一直到2都没有约数，那么就是质数啦，结果res累加1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countPrimeSetBits(<span style="color: #0000ff;">int</span> L, <span style="color: #0000ff;">int</span><span style="color: #000000;"> R) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = L; i &lt;= R; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> t = i, cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (t &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (t &amp; <span style="color: #800080;">1</span> == <span style="color: #800080;">1</span>) ++<span style="color: #000000;">cnt;
+                t </span>&gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">bool</span> succ = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = sqrt(cnt); j &gt; <span style="color: #800080;">1</span>; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (cnt % j == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    succ </span>= <span style="color: #0000ff;">false</span>; <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (succ &amp;&amp; cnt != <span style="color: #800080;">1</span>) ++<span style="color: #000000;">res;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>好，下面我们来优化一下上面的解法，由于题目中给了数的大小范围 R &lt;= 10<sup>6</sup> &lt; 2<sup>20</sup>，那么我们统计出来的非零位个数cnt只需要检测是否是20以内的质数即可，所以我们将20以内的质数都放入一个HashSet中，然后统计出来cnt后，直接在HashSet中查找有没有即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countPrimeSetBits(<span style="color: #0000ff;">int</span> L, <span style="color: #0000ff;">int</span><span style="color: #000000;"> R) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt; primes{<span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">5</span>, <span style="color: #800080;">7</span>, <span style="color: #800080;">11</span>, <span style="color: #800080;">13</span>, <span style="color: #800080;">17</span>, <span style="color: #800080;">19</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = L; i &lt;= R; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &gt; <span style="color: #800080;">0</span>; j &gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                cnt </span>+= j &amp; <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            res </span>+=<span style="color: #000000;"> primes.count(cnt);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种写法就更简洁啦，直接使用了C++的内置函数__builtin_popcount来快速的求出非零位的个数cnt，然后又利用到了20以内的数，只要不能被2和3的一定是质数，又可以快速判断了质数了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countPrimeSetBits(<span style="color: #0000ff;">int</span> L, <span style="color: #0000ff;">int</span><span style="color: #000000;"> R) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = L; i &lt;= R; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> cnt =<span style="color: #000000;"> __builtin_popcount(i);
+            res </span>+= cnt &lt; <span style="color: #800080;">4</span> ? cnt &gt; <span style="color: #800080;">1</span> : (cnt % <span style="color: #800080;">2</span> &amp;&amp; cnt % <span style="color: #800080;">3</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4325432.html" target="_blank">Number of 1 Bits</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation/discuss/113225/Short-C++-12-ms">https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation/discuss/113225/Short-C++-12-ms</a></p>
+<p><a href="https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation/discuss/113227/JavaC++-Clean-Code">https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation/discuss/113227/JavaC++-Clean-Code</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,114 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7968035.html">[LeetCode] My Calendar II 我的日历之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement a&nbsp;<code>MyCalendarTwo</code>&nbsp;class to store your events. A new event can be added if adding the event will not cause a&nbsp;triple&nbsp;booking.</p>
+<p>Your class will have one method,&nbsp;<code>book(int start, int end)</code>. Formally, this represents a booking on the half open interval&nbsp;<code>[start, end)</code>, the range of real numbers&nbsp;<code>x</code>&nbsp;such that&nbsp;<code>start &lt;= x &lt; end</code>.</p>
+<p>A&nbsp;<em>triple booking</em>&nbsp;happens when&nbsp;three&nbsp;events have some non-empty intersection (ie., there is some time that is common to all 3 events.)</p>
+<p>For each call to the method&nbsp;<code>MyCalendar.book</code>, return&nbsp;<code>true</code>&nbsp;if the event can be added to the calendar successfully without causing a&nbsp;triple&nbsp;booking. Otherwise, return&nbsp;<code>false</code>&nbsp;and do not add the event to the calendar.</p>
+<p>Your class will be called like this:&nbsp;<code>MyCalendar cal = new MyCalendar();</code>&nbsp;<code>MyCalendar.book(start, end)</code></p>
+<p>Example 1:</p>
+<pre>MyCalendar();
+MyCalendar.book(10, 20); // returns true
+MyCalendar.book(50, 60); // returns true
+MyCalendar.book(10, 40); // returns true
+MyCalendar.book(5, 15); // returns false
+MyCalendar.book(5, 10); // returns true
+MyCalendar.book(25, 55); // returns true
+Explanation: 
+The first two events can be booked.  The third event can be double booked.
+The fourth event (5, 15) can't be booked, because it would result in a triple booking.
+The fifth event (5, 10) can be booked, as it does not use time 10 which is already double booked.
+The sixth event (25, 55) can be booked, as the time in [25, 40) will be double booked with the third event;
+the time [40, 50) will be single booked, and the time [50, 55) will be double booked with the second event.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The number of calls to&nbsp;<code>MyCalendar.book</code>&nbsp;per test case will be at most&nbsp;<code>1000</code>.</li>
+<li>In calls to&nbsp;<code>MyCalendar.book(start, end)</code>,&nbsp;<code>start</code>&nbsp;and&nbsp;<code>end</code>&nbsp;are integers in the range&nbsp;<code>[0, 10^9]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题是<a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7920253.html">My Calendar I</a>的拓展，之前那道题说是不能有任何的重叠区间，而这道题说最多容忍两个重叠区域，注意是重叠区域，不是事件。比如事件A，B，C互不重叠，但是有一个事件D，和这三个事件都重叠，这样是可以的，因为重叠的区域最多只有两个。所以关键还是要知道具体的重叠区域，如果两个事件重叠，那么重叠区域就是它们的交集，求交集的方法是两个区间的起始时间中的较大值，到结束时间中的较小值。那么我们可以用一个集合来专门存重叠区间，再用一个集合来存完整的区间，那么我们的思路就是，先遍历专门存重叠区间的集合，因为能在这里出现的区间，都已经是出现两次了，如果当前新的区间跟重叠区间有交集的话，说明此时三个事件重叠了，直接返回false。如果当前区间跟重叠区间没有交集的话，那么再来遍历完整区间的集合，如果有交集的话，那么应该算出重叠区间并且加入放重叠区间的集合中。最后记得将新区间加入完整区间的集合中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCalendarTwo {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    MyCalendarTwo() {}
+    
+    </span><span style="color: #0000ff;">bool</span> book(<span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span><span style="color: #000000;"> end) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : s2) {
+            </span><span style="color: #0000ff;">if</span> (start &gt;= a.second || end &lt;= a.first) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : s1) {
+            </span><span style="color: #0000ff;">if</span> (start &gt;= a.second || end &lt;= a.first) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> s2.insert({max(start, a.first), min(end, a.second)});
+        }
+        s1.insert({start, end});
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">set</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> s1, s2;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法相当的巧妙，我们建立一个时间点和次数之间的映射，规定遇到起始时间点，次数加1，遇到结束时间点，次数减1。那么我们首先更改新的起始时间start和结束时间end的映射，start对应值增1，end对应值减1。然后定义一个变量cnt，来统计当前的次数。我们使用treemap具有自动排序的功能，所以我们遍历的时候就是按时间顺序的，最先遍历到的一定是一个起始时间，所以加上其映射值，一定是个正数。那么我们想，如果此时只有一个区间，就是刚加进来的区间的话，那么首先肯定遍历到start，那么cnt此时加1，然后就会遍历到end，那么此时cnt减1，最后下来cnt为0，没有重叠。还是用具体数字来说吧，我们现在假设treemap中已经加入了一个区间[3, 5)了，那么我们就有下面的映射：</p>
+<p>3 -&gt; 1</p>
+<p>5 -&gt; -1</p>
+<p>假如我们此时要加入的区间为[6, 8)的话，那么在遍历到6的时候，前面经过3和5，分别加1减1，那么cnt又重置为0了，而后面的6和8也是分别加1减1，还是0。那么加入我们新加入的区间为[3, 8]时，那么此时的映射为：</p>
+<p>3 -&gt; 2</p>
+<p>5 -&gt; -1</p>
+<p>8 -&gt; -1</p>
+<p>那么我们最先遍历到3，cnt为2，没有超过3，我们知道此时有两个事件有重叠，是允许的。然后遍历5和8，分别减去1，最终又变成0了，始终cnt没有超过2，所以是符合题意的。如果此时我们再加入一个新的区间[1, 4)，那么此时的映射为：</p>
+<p>1 -&gt; 1</p>
+<p>3 -&gt; 2</p>
+<p>4 -&gt; -1</p>
+<p>5 -&gt; -1</p>
+<p>8 -&gt; -1</p>
+<p>那么我们先遍历到1，cnt为1，然后遍历到3，此时cnt为3了，那么我们就知道有三个事件有重叠区间了，所以这个新区间是不能加入的，那么我们要还原其start和end做的操作，把start的映射值减1，end的映射值加1，然后返回false。否则没有三个事件有共同重叠区间的话，返回true即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCalendarTwo {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    MyCalendarTwo() {}
+    
+    </span><span style="color: #0000ff;">bool</span> book(<span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span><span style="color: #000000;"> end) {
+        </span>++<span style="color: #000000;">freq[start];
+        </span>--<span style="color: #000000;">freq[end];
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto f : freq) {
+            cnt </span>+=<span style="color: #000000;"> f.second;
+            </span><span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">3</span><span style="color: #000000;">) {
+                </span>--<span style="color: #000000;">freq[start];
+                </span>++<span style="color: #000000;">freq[end];
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> freq;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7920253.html">My Calendar I</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/111276/simplified-winner-s-solution">https://discuss.leetcode.com/topic/111276/simplified-winner-s-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/111279/c-solution-easy-to-understand">https://discuss.leetcode.com/topic/111279/c-solution-easy-to-understand</a></p>
+<p><a href="https://discuss.leetcode.com/topic/111198/java-c-clean-code-with-explanation">https://discuss.leetcode.com/topic/111198/java-c-clean-code-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

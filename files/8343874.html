@@ -1,0 +1,118 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8343874.html">[LeetCode] Min Cost Climbing Stairs 爬楼梯的最小损失</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>On a staircase, the&nbsp;<code>i</code>-th step has some non-negative cost&nbsp;<code>cost[i]</code>&nbsp;assigned (0 indexed).</p>
+<p>Once you pay the cost, you can either climb one or two steps. You need to find minimum cost to reach the top of the floor, and you can either start from the step with index 0, or the step with index 1.</p>
+<p>Example 1:</p>
+<pre>Input: cost = [10, 15, 20]
+Output: 15
+Explanation: Cheapest is start on cost[1], pay that cost and go to the top.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: cost = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]
+Output: 6
+Explanation: Cheapest is start on cost[0], and only step on 1s, skipping cost[3].
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li><code>cost</code>&nbsp;will have a length in the range&nbsp;<code>[2, 1000]</code>.</li>
+<li>Every&nbsp;<code>cost[i]</code>&nbsp;will be an integer in the range&nbsp;<code>[0, 999]</code>.</li>
+</ol>
+<p>&nbsp;</p>
+</div>
+<p>这道题应该算是之前那道<a href="http://www.cnblogs.com/grandyang/p/4079165.html" target="_blank">Climbing Stairs</a>的拓展，这里不是求步数，而是每个台阶上都有一个cost，让我们求爬到顶端的最小cost是多少。换汤不换药，还是用动态规划Dynamic Programming来做。这里我们定义一个一维的dp数组，其中dp[i]表示爬到第i层的最小cost，然后我们来想dp[i]如何推导。我们来思考一下如何才能到第i层呢？是不是只有两种可能性，一个是从第i-2层上直接跳上来，一个是从第i-1层上跳上来。不会再有别的方法，所以我们的dp[i]只和前两层有关系，所以可以写做如下：</p>
+<p>dp[i] = min(dp[i- 2] + cost[i - 2], dp[i - 1] + cost[i - 1])</p>
+<p>最后我们返回最后一个数字dp[n]即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCostClimbingStairs(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> cost) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> cost.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt; n + <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            dp[i] </span>= min(dp[i- <span style="color: #800080;">2</span>] + cost[i - <span style="color: #800080;">2</span>], dp[i - <span style="color: #800080;">1</span>] + cost[i - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种DP的解法，跟上面的解法很相近，不同在于dp数组长度为n，其中dp[i]表示到第i+1层的最小cost，分别初始化dp[0]和dp[1]为cost[0]和cost[1]。然后从i=2处开始遍历，此时我们的更新思路是，要爬当前的台阶，肯定需要加上当前的cost[i]，那么我们还是要从前一层或者前两层的台阶上跳上来，那么我们选择dp值小的那个，所以递归式如下：</p>
+<p>dp[i] = cost[i] + min(dp[i- 1], dp[i - 2])</p>
+<p>最后我们在最后两个dp值中选择一个较小的返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCostClimbingStairs(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> cost) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> cost.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        dp[</span><span style="color: #800080;">0</span>] = cost[<span style="color: #800080;">0</span>]; dp[<span style="color: #800080;">1</span>] = cost[<span style="color: #800080;">1</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            dp[i] </span>= cost[i] + min(dp[i- <span style="color: #800080;">1</span>], dp[i - <span style="color: #800080;">2</span><span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">return</span> min(dp[n - <span style="color: #800080;">1</span>], dp[n - <span style="color: #800080;">2</span><span style="color: #000000;">]);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对空间复杂度进行优化，通过前面的分析我们可以发现，当前的dp值仅仅依赖前面两个的值，所以我们不必把整个dp数组都记录下来，只需用两个变量a和b来记录前两个值，然后不停的用新得到的值来覆盖它们就好了。我们初始化a和b均为0，然后遍历cost数组，首先将a和b中较小值加上num放入临时变量t中，然后把b赋给a，把t赋给b即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCostClimbingStairs(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> cost) {
+        </span><span style="color: #0000ff;">int</span> a = <span style="color: #800080;">0</span>, b = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : cost) {
+            </span><span style="color: #0000ff;">int</span> t = min(a, b) +<span style="color: #000000;"> num;
+            a </span>=<span style="color: #000000;"> b;
+            b </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> min(a, b);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们还可以用递归来写，需要优化计算量，即用哈希map来保存已经算过了台阶，用的还是dp的思想，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCostClimbingStairs(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> cost) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> memo;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> helper(cost, cost.size(), memo);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; cost, <span style="color: #0000ff;">int</span> i, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">if</span> (memo.count(i)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[i];
+        </span><span style="color: #0000ff;">if</span> (i &lt;= <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> memo[i] =<span style="color: #000000;"> cost[i];
+        </span><span style="color: #0000ff;">return</span> memo[i] = (i == cost.size() ? <span style="color: #800080;">0</span> : cost[i]) + min(helper(cost, i - <span style="color: #800080;">1</span>, memo), helper(cost, i - <span style="color: #800080;">2</span><span style="color: #000000;">, memo));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4079165.html" target="_blank">Climbing Stairs</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/114149/c-o-1-space">https://discuss.leetcode.com/topic/114149/c-o-1-space</a></p>
+<p><a href="https://discuss.leetcode.com/topic/114144/easy-to-understand-c-using-dp-with-detailed-explanation">https://discuss.leetcode.com/topic/114144/easy-to-understand-c-using-dp-with-detailed-explanation</a></p>
+<p>&nbsp;</p>
+<div id="cnblogs_post_body" class="blogpost-body">
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

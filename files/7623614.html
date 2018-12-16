@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7623614.html">[LeetCode] Next Closest Time 下一个最近时间点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Given a time represented in the format "HH:MM", form the next closest time by reusing the current digits. There is no limit on how many times a digit can be reused.</p>
+<p>You may assume the given input string is always valid. For example, "01:34", "12:09" are all valid. "1:34", "12:9" are all invalid.</p>
+<p>Example 1:</p>
+<pre>Input: "19:34"
+Output: "19:39"
+Explanation: The next closest time choosing from digits 1, 9, 3, 4, is 19:39, which occurs 5 minutes later.  It is not 19:33, because this occurs 23 hours and 59 minutes later.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: "23:59"
+Output: "22:22"
+Explanation: The next closest time choosing from digits 2, 3, 5, 9, is 22:22. It may be assumed that the returned time is next day's time since it is smaller than the input time numerically.
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个时间点，让我们求最近的下一个时间点，规定了不能产生新的数字，当下个时间点超过零点时，就当第二天的时间。为了找到下一个时间点，我们肯定是从分钟开始换数字，而且换的数字要是存在的数字，那么我们最先要做的就是统计当前时间点中的数字，由于可能有重复数字的存在，我们把数字都存入集合set中，这样可以去除重复数字，并且可以排序，然后再转为vector。下面就从低位分钟开始换数字了，如果低位分钟上的数字已经是最大的数字了，那么说明要转过一轮了，就要把低位分钟上的数字换成最小的那个数字；否则就将低位分钟上的数字换成下一个数字。然后再看高位分钟上的数字，同理，如果高位分钟上的数字已经是最大的数字，或则下一个数字大于5，那么直接换成最小值；否则就将高位分钟上的数字换成下一个数字。对于小时位上的数字也是同理，对于小时低位上的数字情况比较复杂，当小时高位不为2的时候，低位可以是任意数字，而当高位为2时，低位需要小于等于3。对于小时高位，其必须要小于等于2，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> nextClosestTime(<span style="color: #0000ff;">string</span><span style="color: #000000;"> time) {
+        </span><span style="color: #0000ff;">string</span> res =<span style="color: #000000;"> time;
+        </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">int</span>&gt; s{time[<span style="color: #800080;">0</span>], time[<span style="color: #800080;">1</span>], time[<span style="color: #800080;">3</span>], time[<span style="color: #800080;">4</span><span style="color: #000000;">]};
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> str(s.begin(), s.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = res.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (res[i] == <span style="color: #800000;">'</span><span style="color: #800000;">:</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> pos =<span style="color: #000000;"> str.find(res[i]);
+            </span><span style="color: #0000ff;">if</span> (pos == str.size() - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                res[i] </span>= str[<span style="color: #800080;">0</span><span style="color: #000000;">];
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">char</span> next = str[pos + <span style="color: #800080;">1</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">4</span><span style="color: #000000;">) {
+                    res[i] </span>=<span style="color: #000000;"> next;
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">3</span> &amp;&amp; next &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">5</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    res[i] </span>=<span style="color: #000000;"> next;
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res; 
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">1</span> &amp;&amp; (res[<span style="color: #800080;">0</span>] != <span style="color: #800000;">'</span><span style="color: #800000;">2</span><span style="color: #800000;">'</span> || (res[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">2</span><span style="color: #800000;">'</span> &amp;&amp; next &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">3</span><span style="color: #800000;">'</span><span style="color: #000000;">))) {
+                    res[i] </span>=<span style="color: #000000;"> next;
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> &amp;&amp; next &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">2</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    res[i] </span>=<span style="color: #000000;"> next;
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+                }
+                res[i] </span>= str[<span style="color: #800080;">0</span><span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法的写法比较简洁，实际上用了暴力搜索，由于按分钟算的话，一天只有1440分钟，也就是1440个时间点，我们可以从当前时间点开始，遍历一天的时间，也就是接下来的1440个时间点，得到一个新的整型时间点后，我们按位来更新结果res，对于每个更新的数字字符，看其是否在原时间点字符中存在，如果不存在，直接break，然后开始遍历下一个时间点，如果四个数字都成功存在了，那么将当前时间点中间夹上冒号返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> nextClosestTime(<span style="color: #0000ff;">string</span><span style="color: #000000;"> time) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">"</span><span style="color: #800000;">0000</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; v{<span style="color: #800080;">600</span>, <span style="color: #800080;">60</span>, <span style="color: #800080;">10</span>, <span style="color: #800080;">1</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">int</span> found = time.find(<span style="color: #800000;">"</span><span style="color: #800000;">:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> cur = stoi(time.substr(<span style="color: #800080;">0</span>, found)) * <span style="color: #800080;">60</span> + stoi(time.substr(found + <span style="color: #800080;">1</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>, d = <span style="color: #800080;">0</span>; i &lt;= <span style="color: #800080;">1440</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> next = (cur + i) % <span style="color: #800080;">1440</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (d = <span style="color: #800080;">0</span>; d &lt; <span style="color: #800080;">4</span>; ++<span style="color: #000000;">d) {
+                res[d] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> + next /<span style="color: #000000;"> v[d]; 
+                next </span>%=<span style="color: #000000;"> v[d];
+                </span><span style="color: #0000ff;">if</span> (time.find(res[d]) == <span style="color: #0000ff;">string</span>::npos) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (d &gt;= <span style="color: #800080;">4</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> res.substr(<span style="color: #800080;">0</span>, <span style="color: #800080;">2</span>) + <span style="color: #800000;">"</span><span style="color: #800000;">:</span><span style="color: #800000;">"</span> + res.substr(<span style="color: #800080;">2</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/104692/c-java-clean-code">https://discuss.leetcode.com/topic/104692/c-java-clean-code</a></p>
+<p><a href="https://discuss.leetcode.com/topic/104736/concise-java-solution">https://discuss.leetcode.com/topic/104736/concise-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/105411/short-simple-java-using-regular-expression">https://discuss.leetcode.com/topic/105411/short-simple-java-using-regular-expression</a></p>
+</div>
+<div id="interviewed-div">&nbsp;</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

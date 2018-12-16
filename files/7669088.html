@@ -1,0 +1,120 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7669088.html">[LeetCode] Coin Change 2 硬币找零之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>You are given coins of different denominations and a total amount of money. Write a function to compute the number of combinations that make up that amount. You may assume that you have infinite number of each kind of coin.</p>
+<p>Note:&nbsp;You can assume that</p>
+<ul>
+<li>0 &lt;= amount &lt;= 5000</li>
+<li>1 &lt;= coin &lt;= 5000</li>
+<li>the number of coins is less than 500</li>
+<li>the answer is guaranteed to fit into signed 32-bit integer</li>
+</ul>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: amount = 5, coins = [1, 2, 5]
+Output: 4
+Explanation: there are four ways to make up the amount:
+5=5
+5=2+2+1
+5=2+1+1+1
+5=1+1+1+1+1
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: amount = 3, coins = [2]
+Output: 0
+Explanation: the amount of 3 cannot be made up just with coins of 2.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: amount = 10, coins = [10] 
+Output: 1
+</pre>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/5138186.html">Coin Change</a>的拓展，那道题问我们最少能用多少个硬币组成给定的钱数，而这道题问的是组成给定钱数总共有多少种不同的方法。那么我们还是要使用DP来做，首先我们来考虑最简单的情况，如果只有一个硬币的话，那么给定钱数的组成方式就最多有1种，就看此钱数能否整除该硬币值。那么当有两个硬币的话，那么组成某个钱数的方式就可能有多种，比如可能由每种硬币单独来组成，或者是两种硬币同时来组成。那么我们怎么量化呢，比如我们有两个硬币[1,2]，钱数为5，那么钱数的5的组成方法是可以看作两部分组成，一种是由硬币1单独组成，那么仅有一种情况(1+1+1+1+1)；另一种是由1和2共同组成，说明我们的组成方法中至少需要由一个2，所以此时我们先取出一个硬币2，那么我们只要拼出钱数为3即可，这个3还是可以用硬币1和2来拼，所以就相当于求由硬币[1,2]组成的钱数为3的总方法。是不是不太好理解，多想想。那么我们的需要一个二维的dp数组，其中dp[i][j]表示用前i个硬币组成钱数为j的不同组合方法，那么怎么算才不会重复，也不会漏掉呢？我们采用的方法是一个硬币一个硬币的增加，每增加一个硬币，都从1遍历到amount，对于遍历到的当前钱数j，组成方法就是不加上当前硬币的频发dp[i-1][j]，还要加上，去掉当前硬币值的钱数的组成方法，当然钱数j要大于当前硬币值，那么我们的递推公式也在上面的分析中得到了：</p>
+<p>dp[i][j] = dp[i - 1][j] + (j &gt;= coins[i - 1] ? dp[i][j - coins[i - 1]] : 0)</p>
+<p>注意我们要初始化每行的第一个位置为0，参见代码如下： &nbsp; &nbsp; &nbsp;</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> change(<span style="color: #0000ff;">int</span> amount, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> coins) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(coins.size() + <span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;(amount + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        dp[</span><span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= coins.size(); ++<span style="color: #000000;">i) {
+            dp[i][</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt;= amount; ++<span style="color: #000000;">j) {
+                dp[i][j] </span>= dp[i - <span style="color: #800080;">1</span>][j] + (j &gt;= coins[i - <span style="color: #800080;">1</span>] ? dp[i][j - coins[i - <span style="color: #800080;">1</span>]] : <span style="color: #800080;">0</span><span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[coins.size()][amount];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对空间进行优化，我们发现dp[i][j]仅仅依赖于dp[i - 1][j] 和 dp[i][j - coins[i - 1]] 这两项，那么我们可以使用一个一维dp数组来代替，此时的dp[i]表示组成钱数i的不同方法。其实最开始的时候，博主就想着用一维的dp数组来写，但是博主开始想的方法是把里面两个for循环调换了一个位置，结果计算的种类数要大于正确答案，所以一定要注意for循环的顺序不能搞反，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> change(<span style="color: #0000ff;">int</span> amount, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> coins) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(amount + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        dp[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> coin : coins) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = coin; i &lt;= amount; ++<span style="color: #000000;">i) {
+                dp[i] </span>+= dp[i -<span style="color: #000000;"> coin];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[amount];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>在CareerCup中，有一道极其相似的题<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_39" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4840713.html">9.8 Represent N Cents 美分的组成</a>，书里面用的是那种递归的方法，博主想将其解法直接搬到这道题里，但是失败了，博主发现使用那种的递归的解法必须要有值为1的硬币存在，这点无法在这道题里满足。你以为这样博主就没有办法了吗？当然有，博主加了判断，当用到最后一个硬币时，我们判断当前还剩点钱数是否能整除这个硬币，不能的话就返回0，否则返回1。还有就是用二维数组的memo会TLE，所以博主换成了map，就可以通过啦～</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> change(<span style="color: #0000ff;">int</span> amount, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> coins) {
+        </span><span style="color: #0000ff;">if</span> (amount == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (coins.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        map</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> memo;
+        </span><span style="color: #0000ff;">return</span> helper(amount, coins, <span style="color: #800080;">0</span><span style="color: #000000;">, memo);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">int</span> amount, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; coins, <span style="color: #0000ff;">int</span> idx, map&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;, <span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">if</span> (amount == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (idx &gt;= coins.size()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (idx == coins.size() - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> amount % coins[idx] == <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (memo.count({amount, idx})) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[{amount, idx}];
+        </span><span style="color: #0000ff;">int</span> val = coins[idx], res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i * val &lt;= amount; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> rem = amount - i *<span style="color: #000000;"> val;
+            res </span>+= helper(rem, coins, idx + <span style="color: #800080;">1</span><span style="color: #000000;">, memo);
+        }
+        </span><span style="color: #0000ff;">return</span> memo[{amount, idx}] =<span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5138186.html">Coin Change</a></p>
+<p><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_39" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4840713.html">9.8 Represent N Cents 美分的组成</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/89238/golang-recursive-solution">https://discuss.leetcode.com/topic/89238/golang-recursive-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/79071/knapsack-problem-java-solution-with-thinking-process-o-nm-time-and-o-m-space">https://discuss.leetcode.com/topic/79071/knapsack-problem-java-solution-with-thinking-process-o-nm-time-and-o-m-space</a></p>
+</div>
+<div id="interviewed-div">&nbsp;</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

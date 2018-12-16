@@ -1,0 +1,172 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4315649.html">[LeetCode] Gray Code 格雷码</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The gray code is a binary numeral system where two successive values differ in only one bit.</p>
+<p>Given a non-negative integer <em>n</em> representing the total number of bits in the code, print the sequence of gray code. A gray code sequence must begin with 0.</p>
+<p>For example, given <em>n</em> = 2, return <code>[0,1,3,2]</code>. Its gray code sequence is:</p>
+<pre>00 - 0
+01 - 1
+11 - 3
+10 - 2
+</pre>
+<p><strong>Note:</strong><br />
+For a given <em>n</em>, a gray code sequence is not uniquely defined.
+</p>
+<p>For example, <code>[0,2,3,1]</code> is also a valid gray code sequence according to the above definition.</p>
+<p>For now, the judge is able to judge based on one instance of gray code sequence. Sorry about that.</p>
+<p>&nbsp;</p>
+<p>这道题是关于<a href="http://zh.wikipedia.org/wiki/%E6%A0%BC%E9%9B%B7%E7%A0%81" target="_blank">格雷码</a>的，猛地一看感觉完全没接触过<a href="http://zh.wikipedia.org/wiki/%E6%A0%BC%E9%9B%B7%E7%A0%81" target="_blank">格雷码</a>，但是看了维基百科后，隐约的感觉原来好像哪门可提到过，哎全还给老师了。这道题如果不了解格雷码，还真不太好做，幸亏脑补了维基百科，上面说格雷码是一种循环二进制单位距离码，主要特点是两个相邻数的代码只有一位二进制数不同的编码，格雷码的处理主要是位操作 Bit Operation，LeetCode中关于位操作的题也挺常见，比如&nbsp;<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_24" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4284205.html">Repeated DNA Sequences 求重复的DNA序列</a>，<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_57" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4130577.html">&nbsp;Single Number 单独的数字</a>, 和&nbsp;<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_35" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4263927.html">&nbsp;Single Number II 单独的数字之二</a>&nbsp;等等。三位的格雷码和二进制数如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Int    Grey Code    Binary
+ </span><span style="color: #800080;">0</span>  　　  <span style="color: #800080;">000</span>        <span style="color: #800080;">000</span>
+ <span style="color: #800080;">1</span>  　　  <span style="color: #800080;">001</span>        <span style="color: #800080;">001</span>
+ <span style="color: #800080;">2</span>   　 　<span style="color: #800080;">011</span>        <span style="color: #800080;">010</span>
+ <span style="color: #800080;">3</span>   　 　<span style="color: #800080;">010</span>        <span style="color: #800080;">011</span>
+ <span style="color: #800080;">4</span>   　 　<span style="color: #800080;">110</span>        <span style="color: #800080;">100</span>
+ <span style="color: #800080;">5</span>   　 　<span style="color: #800080;">111</span>        <span style="color: #800080;">101</span>
+ <span style="color: #800080;">6</span>   　 　<span style="color: #800080;">101</span>        <span style="color: #800080;">110</span>
+ <span style="color: #800080;">7</span>   　　 <span style="color: #800080;">100</span>        <span style="color: #800080;">111</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其实这道题还有多种解法。首先来看一种最简单的，是用到格雷码和二进制数之间的相互转化，可参见我之前的博客&nbsp;<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_1" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4315607.html">Convertion of grey code and binary 格雷码和二进制数之间的转换</a>&nbsp;，明白了转换方法后，这道题完全没有难度，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Binary to grey code</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; grayCode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; pow(<span style="color: #800080;">2</span>,n); ++<span style="color: #000000;">i) {
+            res.push_back((i </span>&gt;&gt; <span style="color: #800080;">1</span>) ^<span style="color: #000000;"> i);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>然后我们来看看其他的解法，参考维基百科上关于格雷码的性质，有一条是说<a href="http://zh.wikipedia.org/wiki/%E6%A0%BC%E9%9B%B7%E7%A0%81" target="_blank">镜面排列</a>的，n位元的格雷码可以从n-1位元的格雷码以上下镜射后加上新位元的方式快速的得到，如下图所示一般。</p>
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Binary-reflected_Gray_code_construction.svg/250px-Binary-reflected_Gray_code_construction.svg.png" alt="" /></p>
+<p>有了这条性质，我们很容易的写出代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Mirror arrangement</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; grayCode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res{<span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> res.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = size - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">j) {
+                res.push_back(res[j] </span>| (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i));
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p>维基百科上还有一条格雷码的性质是<a href="http://zh.wikipedia.org/wiki/%E6%A0%BC%E9%9B%B7%E7%A0%81" target="_blank">直接排列</a>，以二进制为0值的格雷码为第零项，第一项改变最右边的位元，第二项改变右起第一个为1的位元的左边位元，第三、四项方法同第一、二项，如此反复，即可排列出n个位元的格雷码。根据这条性质也可以写出代码，不过相比前面的略微复杂，代码如下：</p>
+<p>0 0 0<br />0 0 <span style="color: #ff0000;">1</span><br />0 <span style="color: #ff0000;">1</span> 1<br />0 1 <span style="color: #ff0000;">0</span><br /><span style="color: #ff0000;">1</span> 1 0<br />1 1 <span style="color: #ff0000;">1</span><br />1 <span style="color: #ff0000;">0</span> 1<br />1 0 <span style="color: #ff0000;">0</span></p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Direct arrangement </span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; grayCode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res{<span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">int</span> len = pow(<span style="color: #800080;">2</span><span style="color: #000000;">, n);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; len; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> pre =<span style="color: #000000;"> res.back();
+            </span><span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">2</span> == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                pre </span>= (pre &amp; (len - <span style="color: #800080;">2</span>)) | ((~pre) &amp; <span style="color: #800080;">1</span><span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">1</span>, t =<span style="color: #000000;"> pre;
+                </span><span style="color: #0000ff;">while</span> ((t &amp; <span style="color: #800080;">1</span>) != <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    </span>++<span style="color: #000000;">cnt;
+                    t </span>&gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">if</span> ((pre &amp; (<span style="color: #800080;">1</span> &lt;&lt; cnt)) == <span style="color: #800080;">0</span>) pre |= (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> cnt);
+                </span><span style="color: #0000ff;">else</span> pre &amp;= ~(<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> cnt);
+            }
+            res.push_back(pre);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面三种解法都需要事先了解格雷码及其性质，假如我们之前并没有接触过格雷码，那么我们其实也可以用比较笨的方法来找出结果，比如下面这种方法用到了一个set来保存已经产生的结果，我们从0开始，遍历其二进制每一位，对其取反，然后看其是否在set中出现过，如果没有，我们将其加入set和结果res中，然后再对这个数的每一位进行遍历，以此类推就可以找出所有的格雷码了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; grayCode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        helper(n, s, </span><span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> n, unordered_set&lt;<span style="color: #0000ff;">int</span>&gt;&amp; s, <span style="color: #0000ff;">int</span> <span style="color: #0000ff;">out</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!s.count(<span style="color: #0000ff;">out</span><span style="color: #000000;">)) {
+            s.insert(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> t = <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> ((t &amp; (<span style="color: #800080;">1</span> &lt;&lt; i)) == <span style="color: #800080;">0</span>) t |= (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i);
+            </span><span style="color: #0000ff;">else</span> t &amp;= ~(<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i);
+            </span><span style="color: #0000ff;">if</span> (s.count(t)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            helper(n, s, t, res);
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>既然递归方法可以实现，那么就有对应的迭代的写法，当然需要用stack来辅助，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法五：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; grayCode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res{<span style="color: #800080;">0</span><span style="color: #000000;">};
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        st.push(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+        s.insert(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">st.empty()) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> st.top(); st.pop();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> k =<span style="color: #000000;"> t;
+                </span><span style="color: #0000ff;">if</span> ((k &amp; (<span style="color: #800080;">1</span> &lt;&lt; i)) == <span style="color: #800080;">0</span>) k |= (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i);
+                </span><span style="color: #0000ff;">else</span> k &amp;= ~(<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i);
+                </span><span style="color: #0000ff;">if</span> (s.count(k)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                s.insert(k);
+                st.push(k);
+                res.push_back(k);
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/8557/an-accepted-three-line-solution-in-java" target="_blank">https://discuss.leetcode.com/topic/8557/an-accepted-three-line-solution-in-java</a></p>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,70 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4137302.html">[LeetCode] Linked List Cycle II 单链表中的环之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a linked list, return the node where the cycle begins. If there is no cycle, return&nbsp;<code>null</code>.</p>
+<p>To represent a cycle in the given linked list, we use an integer&nbsp;<code>pos</code>&nbsp;which represents the position (0-indexed)&nbsp;in the linked list where tail connects to. If&nbsp;<code>pos</code>&nbsp;is&nbsp;<code>-1</code>, then there is no cycle in the linked list.</p>
+<p>Note:&nbsp;Do not modify the linked list.</p>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: head = [3,2,0,-4], pos = 1
+Output: tail connects to node index 1
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+</pre>
+<p><img src="https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png" alt="" width="320" height="103" /></p>
+<p>Example 2:</p>
+<pre>Input: head = [1,2], pos = 0
+Output: tail connects to node index 0
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+</pre>
+<p><img src="https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test2.png" alt="" width="132" height="69" /></p>
+<p>Example 3:</p>
+<pre>Input: head = [1], pos = -1
+Output: no cycle
+Explanation: There is no cycle in the linked list.
+</pre>
+<p><img src="https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test3.png" alt="" width="43" height="43" /></p>
+<p>&nbsp;</p>
+<p>Follow up:<br />Can you solve it without using extra space?</p>
+<p>&nbsp;</p>
+<p>这个求单链表中的环的起始点是之前那个判断单链表中是否有环的延伸，可参之前那道<a href="http://www.cnblogs.com/grandyang/p/4137187.html" target="_blank">Linked List Cycle</a>。这里还是要设快慢指针，不过这次要记录两个指针相遇的位置，当两个指针相遇了后，让其中一个指针从链表头开始，一步两步，一步一步似爪牙，似魔鬼的步伐。。。哈哈，打住打住。。。此时再相遇的位置就是链表中环的起始位置，为啥是这样呢，这里直接贴上热心网友「飞鸟想飞」的解释哈，因为快指针每次走2，慢指针每次走1，快指针走的距离是慢指针的两倍。而快指针又比慢指针多走了一圈。所以head到环的起点+环的起点到他们相遇的点的距离 与 环一圈的距离相等。现在重新开始，head运行到环起点 和 相遇点到环起点 的距离也是相等的，相当于他们同时减掉了 环的起点到他们相遇的点的距离。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*detectCycle(ListNode *<span style="color: #000000;">head) {
+        ListNode </span>*slow = head, *fast =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (fast &amp;&amp; fast-&gt;<span style="color: #000000;">next) {
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;next-&gt;<span style="color: #000000;">next;
+            </span><span style="color: #0000ff;">if</span> (slow == fast) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (!fast || !fast-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        slow </span>=<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (slow !=<span style="color: #000000;"> fast) {
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> fast;
+    }
+};</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p>讨论：单链表中的环的问题还有许多扩展，比如求环的长度，或者是如何解除环等等，可参见网上大神的<a href="http://www.cnblogs.com/hiddenfox/p/3408931.html" target="_blank">这个总结贴</a>。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4137187.html" target="_blank">Linked List Cycle</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4843654.html" target="_blank">Find the Duplicate Number</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/linked-list-cycle-ii/" target="_blank">https://leetcode.com/problems/linked-list-cycle-ii/</a></p>
+<p><a href="https://leetcode.com/problems/linked-list-cycle-ii/discuss/44793/O(n)-solution-by-using-two-pointers-without-change-anything" target="_blank">https://leetcode.com/problems/linked-list-cycle-ii/discuss/44793/O(n)-solution-by-using-two-pointers-without-change-anything</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

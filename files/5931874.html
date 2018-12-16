@@ -1,0 +1,101 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5931874.html">[LeetCode] Longest Palindrome 最长回文串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string which consists of lowercase or uppercase letters, find the length of the longest palindromes that can be built with those letters.</p>
+<p>This is case sensitive, for example <code>"Aa"</code> is not considered a palindrome here.</p>
+<p><strong>Note:</strong><br />
+Assume the length of given string will not exceed 1,010.
+</p>
+<p><strong>Example: </strong>
+</p>
+<pre>Input:
+"abccccdd"
+
+Output:
+7
+
+Explanation:
+One longest palindrome that can be built is "dccaccd", whose length is 7.
+</pre>
+<p>&nbsp;</p>
+<p>这又是一道关于回文字符串的问题，LeetCode上关于回文串的题有十来道呢，也算一个比较重要的知识点。但是这道题确实不算一道难题，给了我们一个字符串，让我们找出可以组成的最长的回文串的长度，由于字符顺序可以打乱，所以问题就转化为了求偶数个字符的个数，我们了解回文串的都知道，回文串主要有两种形式，一个是左右完全对称的，比如noon, 还有一种是以中间字符为中心，左右对称，比如bob，level等，那么我们统计出来所有偶数个字符的出现总和，然后如果有奇数个字符的话，我们取取出其最大偶数，然后最后结果加1即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">bool</span> mid = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : s) ++<span style="color: #000000;">m[c];
+        </span><span style="color: #0000ff;">for</span> (auto it = m.begin(); it != m.end(); ++<span style="color: #000000;">it) {
+            res </span>+= it-&gt;<span style="color: #000000;">second;
+            </span><span style="color: #0000ff;">if</span> (it-&gt;second % <span style="color: #800080;">2</span> == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                res </span>-= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                mid </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            } 
+        }
+        </span><span style="color: #0000ff;">return</span> mid ? res + <span style="color: #800080;">1</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面那种方法是通过哈希表来建立字符串和其出现次数的映射，这里我们可以换一种思路，来找出搜有奇数个的字符，我们采用的方法是使用一个set集合，如果遍历到的字符不在set中，那么就将其加入set，如果已经在set里了，就将其从set中删去，这样遍历完成后set中就是所有出现个数是奇数个的字符了，那么我们最后只要用s的长度减去0和set长度减一之间的较大值即可，为啥这样呢，我们想，如果没有出现个数是奇数个的字符，那么t的长度就是0，减1成了-1，那么s的长度只要减去0即可；如果有奇数个的字符，那么字符个数减1，就是不能组成回文串的字符，因为回文串最多允许一个不成对出现的字符，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        unordered_set</span>&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;"> t;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : s) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">t.count(c)) t.insert(c);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> t.erase(c);
+        }
+        </span><span style="color: #0000ff;">return</span> s.size() - max(<span style="color: #800080;">0</span>, (<span style="color: #0000ff;">int</span>)t.size() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后这种方法利用到了STL中的count函数，就是找字符串中某个字符出现的个数，那么我们和1相与，就可以知道该个数是奇数还是偶数了，返回的写法和上面那种方法相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> odds = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c = <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;">c) {
+            odds </span>+= count(s.begin(), s.end(), c) &amp; <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> s.size() - max(<span style="color: #800080;">0</span>, odds - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5272039.html" target="_blank">Palindrome Pairs</a> </p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5315227.html" target="_blank">Palindrome Permutation II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5223238.html" target="_blank">Palindrome Permutation</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4635425.html">Palindrome Linked List</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4523624.html" target="_blank">Shortest Palindrome</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4271456.html" target="_blank">Palindrome Partitioning II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4270008.html" target="_blank">Palindrome Partitioning</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4030114.html" target="_blank">Valid Palindrome</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4125510.html" target="_blank">Palindrome Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4464476.html" target="_blank">Longest Palindromic Substring</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/61338/what-are-the-odds-python-c" target="_blank">https://discuss.leetcode.com/topic/61338/what-are-the-odds-python-c</a></p>
+<p><a href="https://discuss.leetcode.com/topic/61574/very-easy-to-understand-java-solution" target="_blank">https://discuss.leetcode.com/topic/61574/very-easy-to-understand-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

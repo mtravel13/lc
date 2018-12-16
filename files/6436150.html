@@ -1,0 +1,164 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6436150.html">[LeetCode] Find Mode in Binary Search Tree 找二分搜索数的众数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary search tree (BST) with duplicates, find all the&nbsp;<a href="https://en.wikipedia.org/wiki/Mode_(statistics)" target="_blank">mode(s)</a>&nbsp;(the most frequently occurred element) in the given BST.</p>
+<p>Assume a BST is defined as follows:</p>
+<ul>
+<li>The left subtree of a node contains only nodes with keys&nbsp;less than or equal to&nbsp;the node's key.</li>
+<li>The right subtree of a node contains only nodes with keys&nbsp;greater than or equal to&nbsp;the node's key.</li>
+<li>Both the left and right subtrees must also be binary search trees.</li>
+</ul>
+<p>&nbsp;</p>
+<p>For example:<br />Given BST&nbsp;<code>[1,null,2,2]</code>,</p>
+<pre>   1
+    \
+     2
+    /
+   2
+</pre>
+<p>&nbsp;</p>
+<p>return&nbsp;<code>[2]</code>.</p>
+<p>Note:&nbsp;If a tree has more than one mode, you can return them in any order.</p>
+<p>Follow up:&nbsp;Could you do that without using any extra space? (Assume that the implicit stack space incurred due to recursion does not count).</p>
+<p>&nbsp;</p>
+<p>这道题让我们求二分搜索树中的众数，这里定义的二分搜索树中左根右结点之间的关系是小于等于的，有些题目中是严格小于的，所以一定要看清题目要求。所谓的众数就是出现最多次的数字，可以有多个，那么这道题比较直接点思路就是利用一个哈希表来记录数字和其出现次数之前的映射，然后维护一个变量mx来记录当前最多的次数值，这样在遍历完树之后，根据这个mx值就能把对应的元素找出来。那么用这种方法的话就不需要用到二分搜索树的性质了，随意一种遍历方式都可以，下面我们来看递归的中序遍历的解法如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findMode(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> mx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m; 
+        inorder(root, m, mx);
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            </span><span style="color: #0000ff;">if</span> (a.second ==<span style="color: #000000;"> mx) {
+                res.push_back(a.first);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> inorder(TreeNode* node, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp; m, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> mx) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        inorder(node</span>-&gt;<span style="color: #000000;">left, m, mx);
+        mx </span>= max(mx, ++m[node-&gt;<span style="color: #000000;">val]);
+        inorder(node</span>-&gt;<span style="color: #000000;">right, m, mx);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是上面方法的迭代形式，也是用的中序遍历的方法，有兴趣的童鞋可以实现其他的遍历方法：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findMode(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        TreeNode </span>*p =<span style="color: #000000;"> root;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">int</span> mx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (!s.empty() ||<span style="color: #000000;"> p) {
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (p) {
+                s.push(p);
+                p </span>= p-&gt;<span style="color: #000000;">left;
+            }
+            p </span>=<span style="color: #000000;"> s.top(); s.pop();
+            mx </span>= max(mx, ++m[p-&gt;<span style="color: #000000;">val]);
+            p </span>= p-&gt;<span style="color: #000000;">right;
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            </span><span style="color: #0000ff;">if</span> (a.second ==<span style="color: #000000;"> mx) {
+                res.push_back(a.first);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>题目中的follow up说了让我们不用除了递归中的隐含栈之外的额外空间，那么我们就不能用哈希表了，不过这也不难，由于是二分搜索树，那么我们中序遍历出来的结果就是有序的，这样我们只要比较前后两个元素是否相等，就等统计出现某个元素出现的次数，因为相同的元素肯定是都在一起的。我们需要一个结点变量pre来记录上一个遍历到的结点，然后mx还是记录最大的次数，cnt来计数当前元素出现的个数，我们在中序遍历的时候，如果pre不为空，说明当前不是第一个结点，我们和之前一个结点值比较，如果相等，cnt自增1，如果不等，cnt重置1。如果此时cnt大于了mx，那么我们清空结果res，并把当前结点值加入结果res，如果cnt等于mx，那我们直接将当前结点值加入结果res，然后mx赋值为cnt。最后我们要把pre更新为当前结点，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findMode(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> mx = <span style="color: #800080;">0</span>, cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        TreeNode </span>*pre =<span style="color: #000000;"> NULL;
+        inorder(root, pre, cnt, mx, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> inorder(TreeNode* node, TreeNode*&amp; pre, <span style="color: #0000ff;">int</span>&amp; cnt, <span style="color: #0000ff;">int</span>&amp; mx, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        inorder(node</span>-&gt;<span style="color: #000000;">left, pre, cnt, mx, res);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (pre) {
+            cnt </span>= (node-&gt;val == pre-&gt;val) ? cnt + <span style="color: #800080;">1</span> : <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (cnt &gt;=<span style="color: #000000;"> mx) {
+            </span><span style="color: #0000ff;">if</span> (cnt &gt;<span style="color: #000000;"> mx) res.clear();
+            res.push_back(node</span>-&gt;<span style="color: #000000;">val);
+            mx </span>=<span style="color: #000000;"> cnt;
+        } 
+        pre </span>=<span style="color: #000000;"> node;
+        inorder(node</span>-&gt;<span style="color: #000000;">right, pre, cnt, mx, res);
+    }
+};</span></pre>
+</div>
+<p><span style="color: #0000ff;">&nbsp;</span></p>
+<p>下面这种方法是上面解法的迭代写法，思路基本相同，可以参考上面的讲解，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findMode(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        TreeNode </span>*p = root, *pre =<span style="color: #000000;"> NULL;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">int</span> mx = <span style="color: #800080;">0</span>, cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;;
+        </span><span style="color: #0000ff;">while</span> (!s.empty() ||<span style="color: #000000;"> p) {
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (p) {
+                s.push(p);
+                p </span>= p-&gt;<span style="color: #000000;">left;
+            }
+            p </span>=<span style="color: #000000;"> s.top(); s.pop();
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (pre) {
+                cnt </span>= (p-&gt;val == pre-&gt;val) ? cnt + <span style="color: #800080;">1</span> : <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (cnt &gt;=<span style="color: #000000;"> mx) {
+                </span><span style="color: #0000ff;">if</span> (cnt &gt;<span style="color: #000000;"> mx) res.clear();
+                res.push_back(p</span>-&gt;<span style="color: #000000;">val);
+                mx </span>=<span style="color: #000000;"> cnt;
+            }
+            pre </span>=<span style="color: #000000;"> p;
+            p </span>= p-&gt;<span style="color: #000000;">right;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4297300.html" target="_blank">Binary Tree Inorder Traversal</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/77335/proper-o-1-space" target="_blank">https://discuss.leetcode.com/topic/77335/proper-o-1-space</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77080/c-dfs-time-o-n-space-o-n" target="_blank">https://discuss.leetcode.com/topic/77080/c-dfs-time-o-n-space-o-n</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77077/ugly-but-straight-forward-java-solution" target="_blank">https://discuss.leetcode.com/topic/77077/ugly-but-straight-forward-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77330/java-4ms-beats-100-extra-o-1-solution-no-map" target="_blank">https://discuss.leetcode.com/topic/77330/java-4ms-beats-100-extra-o-1-solution-no-map</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

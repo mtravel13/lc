@@ -1,0 +1,99 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8331660.html">[LeetCode] Prefix and Suffix Search 前后缀搜索</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given many <code>words</code>, <code>words[i]</code> has weight <code>i</code>.</p>
+<p>Design a class <code>WordFilter</code> that supports one function, <code>WordFilter.f(String prefix, String suffix)</code>. It will return the word with given <code>prefix</code> and <code>suffix</code> with maximum weight. If no word exists, return -1.</p>
+<p><strong>Examples:</strong><br />
+</p>
+<pre><strong>Input:</strong>
+WordFilter(["apple"])
+WordFilter.f("a", "e") // returns 0
+WordFilter.f("b", "") // returns -1
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol><ol>
+<li><code>words</code> has length in range <code>[1, 15000]</code>.</li>
+<li>For each test case, up to <code>words.length</code> queries <code>WordFilter.f</code> may be made.</li>
+<li><code>words[i]</code> has length in range <code>[1, 10]</code>.</li>
+<li><code>prefix, suffix</code> have lengths in range <code>[0, 10]</code>.</li>
+<li><code>words[i]</code> and <code>prefix, suffix</code> queries consist of lowercase letters only.</li>
+
+
+</ol></ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一些单词，让我们通过输入单词的前缀和后缀来查找单词的位置。单词的位置就是其权重值，如果给定的前后缀能对应到不只一个单词，那么返回最大的权重。首先，一个单词如果长度为n的话，那么其就有n个前缀，比如对于单词apple，其前缀即为"a", "ap", "app", "appl", "apple"，同理，后缀也有n个。那么其组成的情况就有n<sup>2</sup>个，所以最简单的方法就是把这n<sup>2</sup>个前后缀组成一个字符串，和当前权重建立映射。如果后面的单词有相同的前后缀，直接用后面的大权重来覆盖之前的权重即可。为了将前后缀encode成一个字符串，我们可以在中间加上一个非字母字符，比如'#'，然后在查找的时候，我们先拼出&ldquo;前缀#后缀&rdquo;字符串，直接去哈希map中找即可，这种解法的WordFilter函数时间复杂度为O(NL^2)，其中N是单词个数，L是单词长度。f函数时间复杂度为O(1)，空间复杂度为O(NL^2)，适合需要大量查找的情况下使用，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> WordFilter {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    WordFilter(vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; words.size(); ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= words[k].size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt;= words[k].size(); ++<span style="color: #000000;">j) {
+                    m[words[k].substr(</span><span style="color: #800080;">0</span>, i) + <span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> + words[k].substr(words[k].size() - j)] =<span style="color: #000000;"> k;
+                }
+            }
+        }
+    }
+
+    </span><span style="color: #0000ff;">int</span> f(<span style="color: #0000ff;">string</span> prefix, <span style="color: #0000ff;">string</span><span style="color: #000000;"> suffix) {
+        </span><span style="color: #0000ff;">return</span> (m.count(prefix + <span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> + suffix)) ? m[prefix + <span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> + suffix] : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>如果我们希望节省一些空间的话，可以使用下面的方法。使用两个哈希map，一个建立所有前缀和权重数组之间的映射，另一个建立所有后缀和权重数组之间的映射。在WordFilter函数中，我们遍历每个单词，然后先遍历其所有前缀，将遍历到的前缀的映射数组中加入当前权重，同理再遍历其所有后缀，将遍历到的后缀的映射数组中加入当前权重。在搜索函数f中，首先判断，如果前缀或后缀不存在的话，直接返回-1。否则我们分别把前缀和后缀的权重数组取出来，然后用两个指针i和j，分别指向数组的最后一个位置。当i和j不小于0时进行循环，如果两者的权重相等，直接返回，如果前缀的权重数组值大，则j自减1，反之i自减1，这种解法的WordFilter函数时间复杂度为O(NL)，其中N是单词个数，L是单词长度。f函数时间复杂度为O(N)，空间复杂度为O(NL)，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> WordFilter {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    WordFilter(vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; words.size(); ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= words[k].size(); ++<span style="color: #000000;">i) {
+                mp[words[k].substr(</span><span style="color: #800080;">0</span><span style="color: #000000;">, i)].push_back(k);
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= words[k].size(); ++<span style="color: #000000;">i) {
+                ms[words[k].substr(words[k].size() </span>-<span style="color: #000000;"> i)].push_back(k);
+            }
+        }
+    }
+
+    </span><span style="color: #0000ff;">int</span> f(<span style="color: #0000ff;">string</span> prefix, <span style="color: #0000ff;">string</span><span style="color: #000000;"> suffix) {
+        </span><span style="color: #0000ff;">if</span> (!mp.count(prefix) || !ms.count(suffix)) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; pre = mp[prefix], suf =<span style="color: #000000;"> ms[suffix];
+        </span><span style="color: #0000ff;">int</span> i = pre.size() - <span style="color: #800080;">1</span>, j = suf.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &gt;= <span style="color: #800080;">0</span> &amp;&amp; j &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (pre[i] &lt; suf[j]) --<span style="color: #000000;">j;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (pre[i] &gt; suf[j]) --<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span><span style="color: #000000;"> pre[i];
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> mp, ms;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a href="https://discuss.leetcode.com/topic/113547/three-ways-to-solve-this-problem-in-java" target="_blank">moto72大神的帖子</a>中还有第三种解法，但是C++中没有startsWith()和endsWith()函数，以至于无法写出C++版本的，还是Java比较叼啊。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4507286.html" target="_blank">Add and Search Word - Data structure design</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/113547/three-ways-to-solve-this-problem-in-java" target="_blank">https://discuss.leetcode.com/topic/113547/three-ways-to-solve-this-problem-in-java</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

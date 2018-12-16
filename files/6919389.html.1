@@ -1,0 +1,140 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6919389.html">[LeetCode] Maximum Vacation Days 最大化休假日</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>LeetCode wants to give one of its best employees the option to travel among&nbsp;N&nbsp;cities to collect algorithm problems. But all work and no play makes Jack a dull boy, you could take vacations in some particular cities and weeks. Your job is to schedule the traveling to maximize the number of vacation days you could take, but there are certain rules and restrictions you need to follow.</p>
+<p>Rules and restrictions:</p>
+<ol>
+<li>You can only travel among&nbsp;N&nbsp;cities, represented by indexes from 0 to N-1. Initially, you are in the city indexed 0 on&nbsp;Monday.</li>
+<li>The cities are connected by flights. The flights are represented as a&nbsp;N*N&nbsp;matrix (not necessary symmetrical), called&nbsp;flights&nbsp;representing the airline status from the city i to the city j. If there is no flight from the city i to the city j,&nbsp;flights[i][j] = 0; Otherwise,&nbsp;flights[i][j] = 1. Also,&nbsp;flights[i][i] = 0&nbsp;for all i.</li>
+<li>You totally have&nbsp;K&nbsp;weeks (each week has 7 days) to travel. You can only take flights at most once&nbsp;per day&nbsp;and can only take flights on each week's&nbsp;Monday&nbsp;morning. Since flight time is so short, we don't consider the impact of flight time.</li>
+<li>For each city, you can only have restricted vacation days in different weeks, given an&nbsp;N*K&nbsp;matrix called&nbsp;days&nbsp;representing this relationship. For the value of&nbsp;days[i][j], it represents the maximum days you could take vacation in the city&nbsp;i&nbsp;in the week&nbsp;j.</li>
+</ol>
+<p>&nbsp;</p>
+<p>You're given the&nbsp;flights&nbsp;matrix and&nbsp;days&nbsp;matrix, and you need to output the maximum vacation days you could take during&nbsp;K&nbsp;weeks.</p>
+<p>Example 1:</p>
+<pre>Input:flights = [[0,1,1],[1,0,1],[1,1,0]], days = [[1,3,1],[6,0,3],[3,3,3]]
+Output: 12
+Explanation: <br />Ans = 6 + 3 + 3 = 12. <br />
+One of the best strategies is:
+1st week : fly from city 0 to city 1 on Monday, and play 6 days and work 1 day. <br />(Although you start at city 0, we could also fly to and start at other cities since it is Monday.) 
+2nd week : fly from city 1 to city 2 on Monday, and play 3 days and work 4 days.
+3rd week : stay at city 2, and play 3 days and work 4 days.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:flights = [[0,0,0],[0,0,0],[0,0,0]], days = [[1,1,1],[7,7,7],[7,7,7]]
+Output: 3
+Explanation: <br />Ans = 1 + 1 + 1 = 3. <br />
+Since there is no flights enable you to move to another city, you have to stay at city 0 for the whole 3 weeks. <br />For each week, you only have one day to play and six days to work. <br />So the maximum number of vacation days is 3.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input:flights = [[0,1,1],[1,0,1],[1,1,0]], days = [[7,0,0],[0,7,0],[0,0,7]]
+Output: 21
+Explanation:<br />Ans = 7 + 7 + 7 = 21<br />
+One of the best strategies is:
+1st week : stay at city 0, and play 7 days. 
+2nd week : fly from city 0 to city 1 on Monday, and play 7 days.
+3rd week : fly from city 1 to city 2 on Monday, and play 7 days.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>N and K&nbsp;are positive integers, which are in the range of [1, 100].</li>
+<li>In the matrix&nbsp;flights, all the values are integers in the range of [0, 1].</li>
+<li>In the matrix&nbsp;days, all the values are integers in the range [0, 7].</li>
+<li>You could stay at a city beyond the number of vacation days, but you should&nbsp;work&nbsp;on the extra days, which won't be counted as vacation days.</li>
+<li>If you fly from the city A to the city B and take the vacation on that day, the deduction towards vacation days will count towards the vacation days of city B in that week.</li>
+<li>We don't consider the impact of flight hours towards the calculation of vacation days.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个NxN的数组，表示城市i是否有飞机直达城市j，又给了我们一个NxK的数组days，表示在第j周能在城市i休假的天数，让我们找出一个行程能使我们休假的天数最大化。开始尝试写了个递归的暴力破解法，结果TLE了。其实这道题比较适合用DP来解，我们建立一个二维DP数组，其中dp[i][j]表示目前是第j周，并且在此时在城市i，总共已经获得休假的总日子数。我们采取从后往前更新的方式(不要问我为什么，因为从前往后更新的写法要复杂一些)，我们从第k周开始往第一周遍历，那么最后结果都累加在了dp[i][0]中，i的范围是[0, n-1]，找出其中的最大值就是我们能休息的最大假期数了。难点就在于找递推式了，我们想dp[i][j]表示的是当前是第j周并在城市i已经获得的休假总日子数，那么上一个状态，也就是j+1周(因为我们是从后往前更新)，跟当前状态有何联系，上一周我们可能还在城市i，也可能在其他城市p，那么在其他城市p的条件是，城市p有直飞城市i的飞机，那么我们可以用上一个状态的值dp[p][j+1]来更新当前值dp[i][j]，还要注意的是我们要从倒数第二周开始更新，因为倒数第一周没有上一个状态，还有就是每个状态dp[i][j]都初始化赋为days[i][j]来更新，这样一旦没有任何城市可以直飞当前城市，起码我们还可以享受当前城市的假期，最后要做的就是想上面所说在dp[i][0]中找最大值，下面的代码是把这一步融合到了for循环中，所以加上了一堆判断条件，我们也可以在dp数组整个更新结束之后再来找最大值，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxVacationDays(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; flights, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> days) {
+        </span><span style="color: #0000ff;">int</span> n = flights.size(), k = days[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;(k, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = k - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                dp[i][j] </span>=<span style="color: #000000;"> days[i][j];
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> p = <span style="color: #800080;">0</span>; p &lt; n; ++<span style="color: #000000;">p) {
+                    </span><span style="color: #0000ff;">if</span> ((i == p || flights[i][p]) &amp;&amp; j &lt; k - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                        dp[i][j] </span>= max(dp[i][j], dp[p][j + <span style="color: #800080;">1</span>] +<span style="color: #000000;"> days[i][j]);
+                    }
+                    </span><span style="color: #0000ff;">if</span> (j == <span style="color: #800080;">0</span> &amp;&amp; (i == <span style="color: #800080;">0</span> || flights[<span style="color: #800080;">0</span>][i])) res = max(res, dp[i][<span style="color: #800080;">0</span><span style="color: #000000;">]);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法优化了空间复杂度，只用了一个一维的DP数组，其中dp[i]表示在当前周，在城市i时已经获得的最大假期数，并且除了第一个数初始化为0，其余均初始化为整型最小值，然后我们从第一周往后遍历，我们新建一个临时数组t，初始化为整型最小值，然后遍历每一个城市，对于每一个城市，我们遍历其他所有城市，看是否有飞机能直达当前城市，或者就是当前的城市，我们用dp[p] + days[i][j]来更更新dp[i]，当每个城市都遍历完了之后，我们将t整个赋值给dp，然后进行下一周的更新，最后只要在dp数组中找出最大值返回即可，这种写法不但省空间，而且也相对简洁一些，很赞啊～</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxVacationDays(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; flights, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> days) {
+        </span><span style="color: #0000ff;">int</span> n = flights.size(), k = days[<span style="color: #800080;">0</span>].size()<span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> dp(n, INT_MIN);
+        dp[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; k; ++<span style="color: #000000;">j) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> t(n, INT_MIN);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> p = <span style="color: #800080;">0</span>; p &lt; n; ++<span style="color: #000000;">p) {
+                    </span><span style="color: #0000ff;">if</span> (i == p ||<span style="color: #000000;"> flights[p][i]) {
+                        t[i] </span>= max(t[i], dp[p] +<span style="color: #000000;"> days[i][j]);
+                    }
+                }
+            }
+            dp </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span> *<span style="color: #000000;">max_element(dp.begin(), dp.end());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>之前提到了递归的DFS会TLE，但是如果我们使用一个memo数组来保存中间计算结果，就能省去大量的重复计算，并且能够通过OJ，解题思想跟解法一非常的类似，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxVacationDays(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; flights, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> days) {
+        </span><span style="color: #0000ff;">int</span> n = flights.size(), k = days[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; memo(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;(k, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">return</span> helper(flights, days, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, memo);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; flights, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; days, <span style="color: #0000ff;">int</span> city, <span style="color: #0000ff;">int</span> day, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> memo) {
+        </span><span style="color: #0000ff;">int</span> n = flights.size(), k = days[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (day == k) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (memo[city][day] &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> memo[city][day];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i == city || flights[city][i] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                res </span>= max(res, days[i][day] + helper(flights, days, i, day + <span style="color: #800080;">1</span><span style="color: #000000;">, memo));
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> memo[city][day] =<span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/87865/java-dfs-tle-and-dp-solutions/2" target="_blank">https://discuss.leetcode.com/topic/87865/java-dfs-tle-and-dp-solutions/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/87869/c-clean-code-graphic-explanation" target="_blank">https://discuss.leetcode.com/topic/87869/c-clean-code-graphic-explanation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/89353/short-java-recursion-dfs-memoization" target="_blank">https://discuss.leetcode.com/topic/89353/short-java-recursion-dfs-memoization</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

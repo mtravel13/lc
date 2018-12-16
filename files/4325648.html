@@ -1,0 +1,57 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4325648.html">[LeetCode] Search in Rotated Sorted Array 在旋转有序数组中搜索</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Suppose a sorted array is rotated at some pivot unknown to you beforehand.</p>
+<p>(i.e.,&nbsp;<code>0 1 2 4 5 6 7</code>&nbsp;might become&nbsp;<code>4 5 6 7 0 1 2</code>).</p>
+<p>You are given a target value to search. If found in the array return its index, otherwise return -1.</p>
+<p>You may assume no duplicate exists in the array.</p>
+<p>&nbsp;</p>
+<p>这道题让在旋转数组中搜索一个给定值，若存在返回坐标，若不存在返回-1。我们还是考虑二分搜索法，但是这道题的难点在于我们不知道原数组在哪旋转了，我们还是用题目中给的例子来分析，对于数组[0 1 2 4 5 6 7] 共有下列七种旋转方法：</p>
+<p>0　　1　　2　　&nbsp;<span style="color: #ff0000;"><strong>4　　5　　6　　7</strong></span></p>
+<p>7　　0　　1　　&nbsp;<span style="color: #ff0000;"><strong>2　　4　　5　　6</strong></span></p>
+<p>6　　7　　0　　&nbsp;<span style="color: #ff0000;"><strong>1　　2　　4　　5</strong></span></p>
+<p>5　　6　　7　　&nbsp;<span style="color: #ff0000;"><strong>0　　1　　2　　4</strong></span></p>
+<p><span style="color: #ff0000;"><strong>4　　5　　6　　7</strong></span>　　0　　1　　2</p>
+<p><span style="color: #ff0000;"><strong>2　　4　　5　　6</strong></span>　　7　　0　　1</p>
+<p><span style="color: #ff0000;"><strong>1　　2　　4　　5</strong></span>　　6　　7　　0</p>
+<p>二分搜索法的关键在于获得了中间数后，判断下面要搜索左半段还是右半段，我们观察上面红色的数字都是升序的，由此我们可以观察出规律，如果中间的数小于最右边的数，则右半段是有序的，若中间数大于最右边数，则左半段是有序的，我们只要在有序的半段里用首尾两个数组来判断目标值是否在这一区域内，这样就可以确定保留哪半边了，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> search(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = nums.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;=<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (nums[mid] == target) <span style="color: #0000ff;">return</span><span style="color: #000000;"> mid;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (nums[mid] &lt;<span style="color: #000000;"> nums[right]) {
+                </span><span style="color: #0000ff;">if</span> (nums[mid] &lt; target &amp;&amp; nums[right] &gt;= target) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> right = mid - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (nums[left] &lt;= target &amp;&amp; nums[mid] &gt; target) right = mid - <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4325840.html" target="_blank">Search in Rotated Sorted Array II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4032934.html" target="_blank">Find Minimum in Rotated Sorted Array</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/description/">https://leetcode.com/problems/search-in-rotated-sorted-array/description/</a></p>
+<p><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/discuss/14436/Revised-Binary-Search">https://leetcode.com/problems/search-in-rotated-sorted-array/discuss/14436/Revised-Binary-Search</a></p>
+<p><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/discuss/14435/Clever-idea-making-it-simple">https://leetcode.com/problems/search-in-rotated-sorted-array/discuss/14435/Clever-idea-making-it-simple</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

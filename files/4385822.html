@@ -1,0 +1,72 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4385822.html">[LeetCode] Group Anagrams 群组错位词</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of strings, group anagrams together.</p>
+<p>For example, given:&nbsp;<code>["eat", "tea", "tan", "ate", "nat", "bat"]</code>,&nbsp;<br />Return:</p>
+<pre>[
+  ["ate", "eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;All inputs will be in lower-case.</p>
+<p>&nbsp;</p>
+<p>这道题让我们群组给定字符串集中所有的错位词，所谓的错位词就是两个字符串中字母出现的次数都一样，只是位置不同，比如abc，bac, cba等它们就互为错位词，那么我们如何判断两者是否是错位词呢，我们发现如果把错位词的字符顺序重新排列，那么会得到相同的结果，所以重新排序是判断是否互为错位词的方法，由于错位词重新排序后都会得到相同的字符串，我们以此作为key，将所有错位词都保存到字符串数组中，建立key和字符串数组之间的映射，最后再存入结果res中即可，擦巾代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; groupAnagrams(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> strs) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> str : strs) {
+            </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> str;
+            sort(t.begin(), t.end());
+            m[t].push_back(str);
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            res.push_back(a.second);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法没有用到排序，提高了运算效率，我们用一个大小为26的int数组来统计每个单词中字符出现的次数，然后将int数组转为一个唯一的字符串，跟字符串数组进行映射，这样我们就不用给字符串排序了，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; groupAnagrams(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> strs) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> str : strs) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; cnt(<span style="color: #800080;">26</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">string</span> t = <span style="color: #800000;">""</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : str) ++cnt[c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> d : cnt) t += to_string(d) + <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            m[t].push_back(str);
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            res.push_back(a.second);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/24494/share-my-short-java-solution" target="_blank">https://discuss.leetcode.com/topic/24494/share-my-short-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/21038/10-lines-76ms-easy-c-solution-updated-function-signature/2" target="_blank">https://discuss.leetcode.com/topic/21038/10-lines-76ms-easy-c-solution-updated-function-signature/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

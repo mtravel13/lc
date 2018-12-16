@@ -1,0 +1,93 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5735205.html">[LeetCode] Design Phone Directory 设计电话目录</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a Phone Directory which supports the following operations:</p>
+<p>&nbsp;</p>
+<ol>
+<li><code>get</code>: Provide a number which is not assigned to anyone.</li>
+<li><code>check</code>: Check if a number is available or not.</li>
+<li><code>release</code>: Recycle or release a number.</li>
+</ol>
+<p><strong>Example:</strong></p>
+<pre>// Init a phone directory containing a total of 3 numbers: 0, 1, and 2.
+PhoneDirectory directory = new PhoneDirectory(3);
+
+// It can return any available phone number. Here we assume it returns 0.
+directory.get();
+
+// Assume it returns 1.
+directory.get();
+
+// The number 2 is available, so return true.
+directory.check(2);
+
+// It returns 2, the only number that is left.
+directory.get();
+
+// The number 2 is no longer available, so return false.
+directory.check(2);
+
+// Release number 2 back to the pool.
+directory.release(2);
+
+// Number 2 is available again, return true.
+directory.check(2);
+</pre>
+<p>&nbsp;</p>
+<p>又是一道设计题，让我们设计一个电话目录管理系统，可以分配电话号码，查询某一个号码是否已经被使用，释放一个号码，需要注意的是，之前释放的号码下一次应该被优先分配。这题对C++解法的时间要求非常苛刻，尝试了好几种用set，或者stack/queue，或者使用vector的push_back等等，都TLE了，终于找到了一种可以通过OJ的解法。这里用两个一维数组recycle和flag，分别来保存被回收的号码和某个号码的使用状态，还有变量max_num表示最大数字，next表示下一个可以分配的数字，idx表示recycle数组中可以被重新分配的数字的位置，然后在get函数中，没法分配的情况是，当next等于max_num并且index小于等于0，此时返回-1。否则我们先看recycle里有没有数字，有的话先分配recycle里的数字，没有的话再分配next。记得更新相对应的flag中的使用状态，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> PhoneDirectory {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here
+        @param maxNumbers - The maximum numbers that can be stored in the phone directory. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    PhoneDirectory(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> maxNumbers) {
+        max_num </span>=<span style="color: #000000;"> maxNumbers;
+        next </span>= idx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        recycle.resize(max_num);
+        flag.resize(max_num, </span><span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Provide a number which is not assigned to anyone.
+        @return - Return an available number. Return -1 if none is available. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span> <span style="color: #0000ff;">get</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">if</span> (next == max_num &amp;&amp; idx &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (idx &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> t = recycle[--<span style="color: #000000;">idx];
+            flag[t] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t;
+        }
+        flag[next] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> next++<span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Check if a number is available or not. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">bool</span> check(<span style="color: #0000ff;">int</span><span style="color: #000000;"> number) {
+        </span><span style="color: #0000ff;">return</span> number &gt;= <span style="color: #800080;">0</span> &amp;&amp; number &lt; max_num &amp;&amp;<span style="color: #000000;"> flag[number];
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Recycle or release a number. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> release(<span style="color: #0000ff;">int</span><span style="color: #000000;"> number) {
+        </span><span style="color: #0000ff;">if</span> (number &gt;= <span style="color: #800080;">0</span> &amp;&amp; number &lt; max_num &amp;&amp; !<span style="color: #000000;">flag[number]) {
+            recycle[idx</span>++] =<span style="color: #000000;"> number;
+            flag[number] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> max_num, next, idx;
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> recycle, flag;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/53136/all-c-solutions-got-lte/2" target="_blank">https://discuss.leetcode.com/topic/53136/all-c-solutions-got-lte/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

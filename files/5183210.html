@@ -1,0 +1,91 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5183210.html">[LeetCode] Reconstruct Itinerary 重建行程单</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of airline tickets represented by pairs of departure and arrival airports&nbsp;<code>[from, to]</code>, reconstruct the itinerary in order. All of the tickets belong to a man who departs from&nbsp;<code>JFK</code>. Thus, the itinerary must begin with&nbsp;<code>JFK</code>.</p>
+<p>Note:</p>
+<ol>
+<li>If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string. For example, the itinerary&nbsp;<code>["JFK", "LGA"]</code>&nbsp;has a smaller lexical order than&nbsp;<code>["JFK", "LGB"]</code>.</li>
+<li>All airports are represented by three capital letters (IATA code).</li>
+<li>You may assume all tickets may form at least one valid itinerary.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:<br /><code>tickets</code>&nbsp;=&nbsp;<code>[["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]</code><br />Return&nbsp;<code>["JFK", "MUC", "LHR", "SFO", "SJC"]</code>.</p>
+<p>Example 2:<br /><code>tickets</code>&nbsp;=&nbsp;<code>[["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]</code><br />Return&nbsp;<code>["JFK","ATL","JFK","SFO","ATL","SFO"]</code>.<br />Another possible reconstruction is&nbsp;<code>["JFK","SFO","ATL","JFK","ATL","SFO"]</code>. But it is larger in lexical order.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/dietpepsi">@dietpepsi</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给我们一堆飞机票，让我们建立一个行程单，如果有多种方法，取其中字母顺序小的那种方法。这道题的本质是有向图的遍历问题，那么LeetCode关于有向图的题只有两道<a href="http://www.cnblogs.com/grandyang/p/4484571.html" target="_blank">Course Schedule</a>和<a href="http://www.cnblogs.com/grandyang/p/4504793.html" target="_blank">Course Schedule II</a>，而那两道是关于有向图的顶点的遍历的，而本题是关于有向图的边的遍历。每张机票都是有向图的一条边，我们需要找出一条经过所有边的路径，那么DFS不是我们的不二选择。先来看递归的结果，我们首先把图建立起来，通过邻接链表来建立。由于题目要求解法按字母顺序小的，那么我们考虑用multiset，可以自动排序。等我们图建立好了以后，从节点JFK开始遍历，只要当前节点映射的multiset里有节点，我们取出这个节点，将其在multiset里删掉，然后继续递归遍历这个节点，由于题目中限定了一定会有解，那么等图中所有的multiset中都没有节点的时候，我们把当前节点存入结果中，然后再一层层回溯回去，将当前节点都存入结果，那么最后我们结果中存的顺序和我们需要的相反的，我们最后再翻转一下即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findItinerary(vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> tickets) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, multiset&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : tickets) {
+            m[a.first].insert(a.second);
+        }
+        dfs(m, </span><span style="color: #800000;">"</span><span style="color: #800000;">JFK</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span> vector&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> (res.rbegin(), res.rend());
+    }
+    </span><span style="color: #0000ff;">void</span> dfs(unordered_map&lt;<span style="color: #0000ff;">string</span>, multiset&lt;<span style="color: #0000ff;">string</span>&gt;&gt;&amp; m, <span style="color: #0000ff;">string</span> s, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (m[s].size()) {
+            </span><span style="color: #0000ff;">string</span> t = *<span style="color: #000000;">m[s].begin();
+            m[s].erase(m[s].begin());
+            dfs(m, t, res);
+        }
+        res.push_back(s);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看迭代的解法，需要借助栈来实现，来实现回溯功能。比如对下面这个例子：</p>
+<p>tickets = [["JFK", "KUL"], ["JFK", "NRT"], ["MRT", "JFK"]]</p>
+<p>那么建立的图如下：</p>
+<p>JFK -&gt; KUL, NRT</p>
+<p>NRT -&gt; JFK</p>
+<p>由于multiset是按顺序存的，所有KUL会在NRT之前，那么我们起始从JFK开始遍历，先到KUL，但是KUL没有下家了，这时候图中的边并没有遍历完，此时我们需要将KUL存入栈中，然后继续往下遍历，最后再把栈里的节点存回结果即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findItinerary(vector&lt;pair&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> tickets) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        stack</span>&lt;<span style="color: #0000ff;">string</span>&gt; st{{<span style="color: #800000;">"</span><span style="color: #800000;">JFK</span><span style="color: #800000;">"</span><span style="color: #000000;">}};
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, multiset&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto t : tickets) {
+            m[t.first].insert(t.second);
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">st.empty()) {
+            </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> st.top(); 
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m[t].empty()) {
+                res.insert(res.begin(), t);
+                st.pop();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                st.push(</span>*<span style="color: #000000;">m[t].begin());
+                m[t].erase(m[t].begin());
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4484571.html" target="_blank">Course Schedule</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4504793.html" target="_blank">Course Schedule II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/36370/short-ruby-python-java-c" target="_blank">https://discuss.leetcode.com/topic/36370/short-ruby-python-java-c</a></p>
+<p><a href="https://discuss.leetcode.com/topic/36721/short-c-dfs-iterative-44ms-solution-with-explanation-no-recursive-calls-no-backtracking" target="_blank">https://discuss.leetcode.com/topic/36721/short-c-dfs-iterative-44ms-solution-with-explanation-no-recursive-calls-no-backtracking</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

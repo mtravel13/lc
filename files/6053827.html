@@ -1,0 +1,74 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6053827.html">[LeetCode] Minimum Moves to Equal Array Elements 最少移动次数使数组元素相等</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a&nbsp;non-empty&nbsp;integer array of size&nbsp;<em>n</em>, find the minimum number of moves required to make all array elements equal, where a move is incrementing&nbsp;<em>n</em>&nbsp;- 1 elements by 1.</p>
+<p>Example:</p>
+<pre>Input:
+[1,2,3]
+
+Output:
+3
+
+Explanation:
+Only three moves are needed (remember each move increments two elements):
+
+[1,2,3]  =&gt;  [2,3,3]  =&gt;  [3,4,3]  =&gt;  [4,4,4]
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个长度为n的数组，说是我们每次可以对n-1个数字同时加1，问最少需要多少次这样的操作才能让数组中所有的数字相等。那么我们想，为了快速的缩小差距，该选择哪些数字加1呢，不难看出每次需要给除了数组最大值的所有数字加1，这样能快速的到达平衡状态。但是这道题如果我们老老实实的每次找出最大值，然后给其他数字加1，再判断是否平衡，思路是正确，但是OJ不答应。正确的解法相当的巧妙，需要换一个角度来看问题，其实给n-1个数字加1，效果等同于给那个未被选中的数字减1，比如数组[1，2，3], 给除去最大值的其他数字加1，变为[2，3，3]，我们全体减1，并不影响数字间相对差异，变为[1，2，2]，这个结果其实就是原始数组的最大值3自减1，那么问题也可能转化为，将所有数字都减小到最小值，这样难度就大大降低了，我们只要先找到最小值，然后累加每个数跟最小值之间的差值即可，参见代码如下：</p>
+<div>&nbsp;</div>
+<div>解法一：</div>
+<div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMoves(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> mn = INT_MAX, res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> num : nums) mn =<span style="color: #000000;"> min(mn, num);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> num : nums) res += num -<span style="color: #000000;"> mn;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以求出数组的数字之和sum，然后用sum减去最小值和数组长度的乘积，也能得到答案：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMoves(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> mn = INT_MAX, sum = <span style="color: #800080;">0</span>, res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            mn </span>=<span style="color: #000000;"> min(mn, num);
+            sum </span>+=<span style="color: #000000;"> num;
+        }
+        </span><span style="color: #0000ff;">return</span> sum - mn *<span style="color: #000000;"> nums.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/66562/simple-one-liners" target="_blank">https://discuss.leetcode.com/topic/66562/simple-one-liners</a></p>
+<p><a href="https://discuss.leetcode.com/topic/66557/java-o-n-solution-short" target="_blank">https://discuss.leetcode.com/topic/66557/java-o-n-solution-short</a></p>
+<p>&nbsp;</p>
+</div>
+<div><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</div>
+</div>
+</div>
+</div>
+</div>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

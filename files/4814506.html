@@ -1,0 +1,59 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4814506.html">[LeetCode] Expression Add Operators 表达式增加操作符</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string that contains only digits&nbsp;<code>0-9</code>&nbsp;and a target value, return all possibilities to add operators&nbsp;<code>+</code>,&nbsp;<code>-</code>, or&nbsp;<code>*</code>&nbsp;between the digits so they evaluate to the target value.</p>
+<p>Examples:&nbsp;</p>
+<pre>"123", 6 -&gt; ["1+2+3", "1*2*3"] 
+"232", 8 -&gt; ["2*3+2", "2+3*2"]
+"00", 0 -&gt; ["0+0", "0-0", "0*0"]
+"3456237490", 9191 -&gt; []
+</pre>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/davidtan1890">@davidtan1890</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个只由数字组成的字符串，让我们再其中添加+,-或*号来形成一个表达式，该表达式的计算和为给定了target值，让我们找出所有符合要求的表达式来。题目中给的几个例子其实并不好，很容易让人误以为是必须拆成个位数字，其实不是的，比如"123", 15能返回"12+3"，说明连着的数字也可以。如果非要在过往的题中找一道相似的题，我觉得跟<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4419386.html">Combination Sum II 组合之和之二</a>很类似。不过这道题要更复杂麻烦一些。还是用递归来解题，我们需要两个变量diff和curNum，一个用来记录将要变化的值，另一个是当前运算后的值，而且它们都需要用long long型的，因为字符串转为int型很容易溢出，所以我们用长整型。对于加和减，diff就是即将要加上的数和即将要减去的数的负值，而对于乘来说稍有些复杂，此时的diff应该是上一次的变化的diff乘以即将要乘上的数，有点不好理解，那我们来举个例子，比如2+3*2，即将要运算到乘以2的时候，上次循环的curNum = 5, diff = 3, 而如果我们要算这个乘2的时候，新的变化值diff应为3*2=6，而我们要把之前+3操作的结果去掉，再加上新的diff，即(5-3)+6=8，即为新表达式2+3*2的值，有点难理解，大家自己一步一步推算吧。</p>
+<p>还有一点需要注意的是，如果输入为"000",0的话，容易出现以下的错误：</p>
+<p>Wrong:<span id="result_wa_testcase_output" class="testcase-info text-danger ng-binding" style="color: #ff0000;">["0+0+0","0+0-0","0+0*0","0-0+0","0-0-0","0-0*0","0*0+0","0*0-0","0*0*0","0+00","0-00","0*00","00+0","00-0",</span></p>
+<p><span id="result_wa_testcase_output" class="testcase-info text-danger ng-binding" style="color: #ff0000;">"00*0","000"]</span></p>
+<p>Correct：<span id="result_wa_testcase_expected" class="testcase-info text-success ng-binding" style="color: #339966;">["0*0*0","0*0+0","0*0-0","0+0*0","0+0+0","0+0-0","0-0*0","0-0+0","0-0-0"]</span></p>
+<p>我们可以看到错误的结果中有0开头的字符串出现，明显这不是数字，所以我们要去掉这些情况，过滤方法也很简单，我们只要判断长度大于1且首字符是&lsquo;0&rsquo;的字符串，将其滤去即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; addOperators(<span style="color: #0000ff;">string</span> num, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        addOperatorsDFS(num, target, </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800000;">""</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> addOperatorsDFS(<span style="color: #0000ff;">string</span> num, <span style="color: #0000ff;">int</span> target, <span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> diff, <span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> curNum, <span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span>, vector&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (num.size() == <span style="color: #800080;">0</span> &amp;&amp; curNum ==<span style="color: #000000;"> target) {
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= num.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> cur = num.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i);
+            </span><span style="color: #0000ff;">if</span> (cur.size() &gt; <span style="color: #800080;">1</span> &amp;&amp; cur[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">string</span> next =<span style="color: #000000;"> num.substr(i);
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">out</span>.size() &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                addOperatorsDFS(next, target, stoll(cur), curNum </span>+ stoll(cur), <span style="color: #0000ff;">out</span> + <span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> cur, res);
+                addOperatorsDFS(next, target, </span>-stoll(cur), curNum - stoll(cur), <span style="color: #0000ff;">out</span> + <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> cur, res);
+                addOperatorsDFS(next, target, diff </span>* stoll(cur), (curNum - diff) + diff * stoll(cur), <span style="color: #0000ff;">out</span> + <span style="color: #800000;">"</span><span style="color: #800000;">*</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> cur, res);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                addOperatorsDFS(next, target, stoll(cur), stoll(cur), cur, res);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/58547/accepted-c-solution" target="_blank">https://leetcode.com/discuss/58547/accepted-c-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

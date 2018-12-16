@@ -1,0 +1,83 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6886673.html">[LeetCode] Optimal Division 最优分隔</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of&nbsp;positive integers, the adjacent integers will perform the float division. For example, [2,3,4] -&gt; 2 / 3 / 4.</p>
+<p>However, you can add any number of parenthesis at any position to change the priority of operations. You should find out how to add parenthesis to get the&nbsp;maximum&nbsp;result, and return the corresponding expression in string format.&nbsp;Your expression should NOT contain redundant parenthesis.</p>
+<p>Example:</p>
+<pre>Input: [1000,100,10,2]
+Output: "1000/(100/10/2)"
+Explanation:
+1000/(100/10/2) = 1000/((100/10)/2) = 200
+However, the bold parenthesis in "1000/((100/10)/2)" are redundant, <br />since they don't influence the operation priority. So you should return "1000/(100/10/2)". 
+
+Other cases:
+1000/(100/10)/2 = 50
+1000/(100/(10/2)) = 50
+1000/100/10/2 = 0.5
+1000/100/(10/2) = 2
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The length of the input array is [1, 10].</li>
+<li>Elements in the given array will be in range [2, 1000].</li>
+<li>There is only one optimal division for each test case.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，让我们确定除法的顺序，从而得到值最大的运算顺序，并且不能加多余的括号。刚开始博主没看清题，以为是要返回最大的值，就直接写了个递归的暴力搜索的方法，结果发现是要返回带括号的字符串，尝试的修改了一下，觉得挺麻烦。于是直接放弃抵抗，上网参考大神们的解法，结果大吃一惊，这题原来还可以这么解，完全是数学上的知识啊，太tricky了。数组中n个数字，如果不加括号就是：</p>
+<p>x1 / x2 / x3 / ... / xn</p>
+<p>那么我们如何加括号使得其值最大呢，那么就是将x2后面的除数都变成乘数，比如只有三个数字的情况 a / b / c，如果我们在后两个数上加上括号 a / (b / c)，实际上就是a / b * c。而且b永远只能当除数，a也永远只能当被除数。同理，x1只能当被除数，x2只能当除数，但是x3之后的数，只要我们都将其变为乘数，那么得到的值肯定是最大的，所以就只有一种加括号的方式，即:</p>
+<p>x1 / (x2 / x3 / ... / xn)</p>
+<p>这样的话就完全不用递归了，这道题就变成了一个道简单的字符串操作的题目了，这思路，博主服了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> optimalDivision(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = to_string(nums[<span style="color: #800080;">0</span><span style="color: #000000;">]);
+        </span><span style="color: #0000ff;">if</span> (nums.size() == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">if</span> (nums.size() == <span style="color: #800080;">2</span>) <span style="color: #0000ff;">return</span> res + <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span> + to_string(nums[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+        res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">/(</span><span style="color: #800000;">"</span> + to_string(nums[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> to_string(nums[i]);
+        }
+        </span><span style="color: #0000ff;">return</span> res + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法的思路和上面基本相同，就是写法上略有不同，直接看代码吧：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> optimalDivision(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span>) res += <span style="color: #800000;">"</span><span style="color: #800000;">/</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">1</span> &amp;&amp; n &gt; <span style="color: #800080;">2</span>) res += <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            res </span>+=<span style="color: #000000;"> to_string(nums[i]);
+            </span><span style="color: #0000ff;">if</span> (i == n - <span style="color: #800080;">1</span> &amp;&amp; n &gt; <span style="color: #800080;">2</span>) res += <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/86487/c-java-clean-code" target="_blank">https://discuss.leetcode.com/topic/86487/c-java-clean-code</a></p>
+<p><a href="https://discuss.leetcode.com/topic/86483/easy-to-understand-simple-o-n-solution-with-explanation/2" target="_blank">https://discuss.leetcode.com/topic/86483/easy-to-understand-simple-o-n-solution-with-explanation/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5592635.html">[LeetCode] Logger Rate Limiter 记录速率限制器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a logger system that receive stream of messages along with its timestamps, each message should be printed if and only if it is not printed in the last 10 seconds.<br /><br />Given a message and a timestamp (in seconds granularity), return true if the message should be printed in the given timestamp, otherwise returns false.<br /><br />It is possible that several messages arrive roughly at the same time.<br /><br />Example:<br /><br />Logger logger = new Logger();<br /><br />// logging string "foo" at timestamp 1<br />logger.shouldPrintMessage(1, "foo"); returns true; <br /><br />// logging string "bar" at timestamp 2<br />logger.shouldPrintMessage(2,"bar"); returns true;<br /><br />// logging string "foo" at timestamp 3<br />logger.shouldPrintMessage(3,"foo"); returns false;<br /><br />// logging string "bar" at timestamp 8<br />logger.shouldPrintMessage(8,"bar"); returns false;<br /><br />// logging string "foo" at timestamp 10<br />logger.shouldPrintMessage(10,"foo"); returns false;<br /><br />// logging string "foo" at timestamp 11<br />logger.shouldPrintMessage(11,"foo"); returns true;<br /><br />Credits:<br />Special thanks to @memoryless for adding this problem and creating all test cases. </p>
+<p>&nbsp;</p>
+<p>这道题让我们设计一个记录系统每次接受信息并保存时间戳，然后让我们打印出该消息，前提是最近10秒内没有打印出这个消息。这不是一道难题，我们可以用哈希表来做，建立消息和时间戳之间的映射，如果某个消息不再哈希表表，我们建立其和时间戳的映射，并返回true。如果应经在哈希表里了，我们看当前时间戳是否比哈希表中保存的时间戳大10，如果是，更新哈希表，并返回true，反之返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Logger {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Logger() {}
+    
+    </span><span style="color: #0000ff;">bool</span> shouldPrintMessage(<span style="color: #0000ff;">int</span> timestamp, <span style="color: #0000ff;">string</span><span style="color: #000000;"> message) {
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">m.count(message)) {
+            m[message] </span>=<span style="color: #000000;"> timestamp;
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        } 
+        </span><span style="color: #0000ff;">if</span> (timestamp - m[message] &gt;= <span style="color: #800080;">10</span><span style="color: #000000;">) {
+            m[message] </span>=<span style="color: #000000;"> timestamp;
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p><br />我们还可以写的更精简一些，如下所示：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Logger {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Logger() {}
+    
+    </span><span style="color: #0000ff;">bool</span> shouldPrintMessage(<span style="color: #0000ff;">int</span> timestamp, <span style="color: #0000ff;">string</span><span style="color: #000000;"> message) {
+        </span><span style="color: #0000ff;">if</span> (timestamp &lt; m[message]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        m[message] </span>= timestamp + <span style="color: #800080;">10</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/108703/short-c-java-python-bit-different" target="_blank">https://leetcode.com/discuss/108703/short-c-java-python-bit-different</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

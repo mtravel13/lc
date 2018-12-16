@@ -1,0 +1,155 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9065702.html">[LeetCode] Letter Case Permutation 字母大小写全排列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string S, we can transform every letter individually&nbsp;to be lowercase or uppercase to create another string.&nbsp; Return a list of all possible strings we could create.</p>
+<pre>Examples:
+Input: S = "a1b2"
+Output: ["a1b2", "a1B2", "A1b2", "A1B2"]
+
+Input: S = "3z4"
+Output: ["3z4", "3Z4"]
+
+Input: S = "12345"
+Output: ["12345"]
+</pre>
+<p>Note:</p>
+<ul>
+<li><code>S</code>&nbsp;will be a string with length at most&nbsp;<code>12</code>.</li>
+<li><code>S</code>&nbsp;will consist only of letters or digits.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们一个只包含字母和数字的字符串，让我们将字母以大小写进行全排列，给的例子很好的说明了题意。博主认为这道题给Easy有点不合适，至少应该是Medium的水准。这题主要参考了<a href="https://leetcode.com/problems/letter-case-permutation/solution/" target="_blank">官方解答贴</a>的解法，我们关心的是字母，数字的处理很简单，直接加上就可以了。比如说S = "abc"，那么先让 res = [""]，然后res中的每个字符串分别加上第一个字符a和A，得到 ["a", "A"]，然后res中的每个字符串分别加上第二个字符b和B，得到 ["ab", "Ab", "aB", "AB"]，然后res中的每个字符串分别加上第三个字符c和C，得到 ["abc", "Abc", "aBc", "ABc", "abC", "AbC", "aBC", "ABC"]，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; letterCasePermutation(<span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; res{<span style="color: #800000;">""</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : S) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> res.size();
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">str : res) str.push_back(c);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+                    res.push_back(res[i]);
+                    res[i].push_back(tolower(c));
+                    res[len </span>+<span style="color: #000000;"> i].push_back(toupper(c));
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法跟上面的解法没有太大的区别，只不过没有用到tolower()和toupper()这两个built-in函数，而是使用了一个trick来flip大小写字母，通过亦或32实现，为什么呢？因为我们知道&nbsp;'A' = 65, 'B' = 66, 和 'a' = 97, 'b' = 98, 小写字母的ASCII码比大写字母多32，刚好是(1 &lt;&lt; 5)，那么我们只要flip第五位上的1，就可以实现大小写的交替了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; letterCasePermutation(<span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; res{<span style="color: #800000;">""</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : S) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> res.size();
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">str : res) str.push_back(c);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+                    res.push_back(res[i]);
+                    res[i].push_back(c);
+                    res[len </span>+ i].push_back(c ^ <span style="color: #800080;">32</span><span style="color: #000000;">);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们再来看一种递归的写法，是一种回溯的思路，比如说S = "abc"，用一个pos指向当前处理的位置，初始化带入0，然后再递归函数中，如果pos等于s的长度了，那么将s存入结果res再返回；否则调用递归函数，此时带入pos+1，那么递归函数就会一直深入，直到pos等于s的长度了，那么此时就把"abc"存入结果res了，返回后此时pos=2，发现s[pos]是字母，则用上面解法中的flip方法来翻转字母，并且调用递归函数，这样"abC"就会存入结果res中，然后回溯到pos=1的位置，s[pos]是字符，可以flip，并且调用递归函数，这样"aBC"就会存入结果res中，然后pos继续往后遍历，这样"aBc"就会存入结果res中，然后回溯到pos=0的位置，s[pos]是字符，可以flip，并且调用递归函数，这样"ABc"就会存入结果res中，然后继续回溯，这样"ABC"就会存入结果res中，pos又回溯到1的位置，s[pos]是字符，可以flip，并且调用递归函数，这样"AbC"就会存入结果res中，然后pos继续往后遍历，这样"Abc"就会存入结果res中，整个的顺序为：[abc abC aBC aBc ABc ABC AbC Abc]，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; letterCasePermutation(<span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        helper(S, </span><span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">string</span>&amp; s, <span style="color: #0000ff;">int</span> pos, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (pos ==<span style="color: #000000;"> s.size()) {
+            res.push_back(s);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        helper(s, pos </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">if</span> (s[pos] &gt; <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            s[pos] </span>^= <span style="color: #800080;">32</span><span style="color: #000000;">;
+            helper(s, pos </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是<a href="https://leetcode.com/problems/letter-case-permutation/solution/" target="_blank">官方解答贴</a>的Binary Mask解法，感觉也很巧妙，如果我们仔细观察S = "abc"这个例子，结果会返回8个，为什么是8个呢，因为每个字母都有大小写两种可能，那么三个字母就有2x2x2=8，正好是2的三次方，那么不正好和二进制数相对应么，如果1对应大写字母，0对应小写字母，则有：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">000</span> -&gt;<span style="color: #000000;"> ABC
+</span><span style="color: #800080;">001</span> -&gt;<span style="color: #000000;"> ABc
+</span><span style="color: #800080;">010</span> -&gt;<span style="color: #000000;"> AbC
+</span><span style="color: #800080;">011</span> -&gt;<span style="color: #000000;"> Abc
+</span><span style="color: #800080;">100</span> -&gt;<span style="color: #000000;"> aBC
+</span><span style="color: #800080;">101</span> -&gt;<span style="color: #000000;"> aBc
+</span><span style="color: #800080;">110</span> -&gt;<span style="color: #000000;"> abC
+</span><span style="color: #800080;">111</span> -&gt; abc</pre>
+</div>
+<p>这样的话，我们只需要先统计出S中字母的个数cnt，然后遍历 [0, 2^cnt) 中的每个数字，对于每个数字，再遍历S中的每个字符，如果是字母，那么如果当前位是1，则加入小写字母，反之加入大写字母；如果是数字，则直接加入即可。我们用j指向位，每次处理完一位后j自增1，表示对下一位进行处理，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; letterCasePermutation(<span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : S) {
+            </span><span style="color: #0000ff;">if</span> (c &gt; <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; (<span style="color: #800080;">1</span> &lt;&lt; cnt); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">string</span> word = <span style="color: #800000;">""</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : S) {
+                </span><span style="color: #0000ff;">if</span> (c &gt; <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (((i &gt;&gt; j++) &amp; <span style="color: #800080;">1</span>) == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                        word.push_back(tolower(c));
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        word.push_back(toupper(c));
+                    }
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    word.push_back(c);
+                }
+            }
+            res.push_back(word);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4309345.html" target="_blank">Subsets</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/letter-case-permutation/solution/">https://leetcode.com/problems/letter-case-permutation/solution/</a></p>
+<p><a href="https://leetcode.com/problems/letter-case-permutation/discuss/115515/C++-backtrack-solution-w-trick">https://leetcode.com/problems/letter-case-permutation/discuss/115515/C++-backtrack-solution-w-trick</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

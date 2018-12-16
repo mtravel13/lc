@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5192426.html">[LeetCode] Shortest Word Distance III 最短单词距离之三</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>This is a follow up of Shortest Word Distance. The only difference is now word1 could be the same as word2.</p>
+<p>Given a list of words and two words word1 and word2, return the shortest distance between these two words in the list.</p>
+<p>word1 and word2 may be the same and they represent two individual words in the list.</p>
+<p>For example,<br />Assume that words = ["practice", "makes", "perfect", "coding", "makes"].</p>
+<p>Given word1 = &ldquo;makes&rdquo;, word2 = &ldquo;coding&rdquo;, return 1.<br />Given word1 = "makes", word2 = "makes", return 3.</p>
+<p>Note:<br />You may assume word1 and word2 are both in the list. </p>
+<p>&nbsp;</p>
+<p>这道题还是让我们求最短单词距离，有了之前两道题<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5187640.html">Shortest Word Distance II</a>和<a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5187041.html">Shortest Word Distance</a>的基础，就大大降低了题目本身的难度。这道题增加了一个条件，就是说两个单词可能会相同，所以在第一题中的解法的基础上做一些修改，我最先想的解法是基于第一题中的解法二，由于会有相同的单词的情况，那么p1和p2就会相同，这样结果就会变成0，显然不对，所以我们要对word1和word2是否的相等的情况分开处理，如果相等了，由于p1和p2会相同，所以我们需要一个变量t来记录上一个位置，这样如果t不为-1，且和当前的p1不同，我们可以更新结果，如果word1和word2不等，那么还是按原来的方法做，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> shortestWordDistance(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">string</span> word1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> word2) {
+        </span><span style="color: #0000ff;">int</span> p1 = -<span style="color: #800080;">1</span>, p2 = -<span style="color: #800080;">1</span>, res =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> p1;
+            </span><span style="color: #0000ff;">if</span> (words[i] == word1) p1 =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">if</span> (words[i] == word2) p2 =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">if</span> (p1 != -<span style="color: #800080;">1</span> &amp;&amp; p2 != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (word1 == word2 &amp;&amp; t != -<span style="color: #800080;">1</span> &amp;&amp; t !=<span style="color: #000000;"> p1) {
+                    res </span>= min(res, abs(t -<span style="color: #000000;"> p1));
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (p1 !=<span style="color: #000000;"> p2) {
+                    res </span>= min(res, abs(p1 -<span style="color: #000000;"> p2));
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述代码其实可以优化一下，我们并不需要变量t来记录上一个位置，我们将p1初始化为数组长度，p2初始化为数组长度的相反数，然后当word1和word2相等的情况，我们用p1来保存p2的结果，p2赋为当前的位置i，这样我们就可以更新结果了，如果word1和word2不相等，则还跟原来的做法一样，这种思路真是挺巧妙的，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> shortestWordDistance(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">string</span> word1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> word2) {
+        </span><span style="color: #0000ff;">int</span> p1 = words.size(), p2 = -words.size(), res =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (words[i] == word1) p1 = word1 == word2 ?<span style="color: #000000;"> p2 : i;
+            </span><span style="color: #0000ff;">if</span> (words[i] == word2) p2 =<span style="color: #000000;"> i;
+            res </span>= min(res, abs(p1 -<span style="color: #000000;"> p2));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们再来看一种更进一步优化的方法，只用一个变量idx，这个idx的作用就相当于记录上一次的位置，当前idx不等-1时，说明当前i和idx不同，然后我们在word1和word2相同或者words[i]和words[idx]相同的情况下更新结果，最后别忘了将idx赋为i，参见代码如下；</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> shortestWordDistance(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">string</span> word1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> word2) {
+        </span><span style="color: #0000ff;">int</span> idx = -<span style="color: #800080;">1</span>, res =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (words[i] == word1 || words[i] ==<span style="color: #000000;"> word2) {
+                </span><span style="color: #0000ff;">if</span> (idx != -<span style="color: #800080;">1</span> &amp;&amp; (word1 == word2 || words[i] !=<span style="color: #000000;"> words[idx])) {
+                    res </span>= min(res, i -<span style="color: #000000;"> idx);
+                }
+                idx </span>=<span style="color: #000000;"> i;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5187640.html">Shortest Word Distance II</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5187041.html">Shortest Word Distance</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/69493/c-o-n-solution" target="_blank">https://leetcode.com/discuss/69493/c-o-n-solution</a></p>
+<p><a href="https://leetcode.com/discuss/70327/short-solution-lines-modified-from-shortest-word-distance" target="_blank">https://leetcode.com/discuss/70327/short-solution-lines-modified-from-shortest-word-distance</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

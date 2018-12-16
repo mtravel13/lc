@@ -1,0 +1,75 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5196960.html">[LeetCode] Strobogrammatic Number 对称数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).</p>
+<p>Write a function to determine if a number is strobogrammatic. The number is represented as a string.</p>
+<p>Example 1:</p>
+<pre>Input:  "69"
+Output: true
+</pre>
+<p>Example 2:</p>
+<pre>Input:  "88"
+Output: true</pre>
+<p>Example 3:</p>
+<pre>Input:  "962"
+Output: false</pre>
+<p>&nbsp;</p>
+<p>这道题定义了一种对称数，就是说一个数字旋转180度和原来一样，也就是倒过来看一样，比如609，倒过来还是609等等，满足这种条件的数字其实没有几个，只有0,1,8,6,9。这道题其实可以看做求回文数的一种特殊情况，我们还是用双指针来检测，那么首尾两个数字如果相等的话，那么只有它们是0,1,8中间的一个才行，如果它们不相等的话，必须一个是6一个是9，或者一个是9一个是6，其他所有情况均返回false，参见代码如下；</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isStrobogrammatic(<span style="color: #0000ff;">string</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">int</span> l = <span style="color: #800080;">0</span>, r = num.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (l &lt;=<span style="color: #000000;"> r) {
+            </span><span style="color: #0000ff;">if</span> (num[l] ==<span style="color: #000000;"> num[r]) {
+                </span><span style="color: #0000ff;">if</span> (num[l] != <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span> &amp;&amp; num[l] != <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; num[l] != <span style="color: #800000;">'</span><span style="color: #800000;">8</span><span style="color: #800000;">'</span><span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> ((num[l] != <span style="color: #800000;">'</span><span style="color: #800000;">6</span><span style="color: #800000;">'</span> || num[r] != <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span>) &amp;&amp; (num[l] != <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span> || num[r] != <span style="color: #800000;">'</span><span style="color: #800000;">6</span><span style="color: #800000;">'</span><span style="color: #000000;">)) {
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+            }
+            </span>++l; --<span style="color: #000000;">r;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于满足题意的数字不多，所以我们可以用哈希表来做，把所有符合题意的映射都存入哈希表中，然后双指针扫描，看对应位置的两个数字是否在哈希表里存在映射，若不存在，返回false，遍历完成返回true，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isStrobogrammatic(<span style="color: #0000ff;">string</span><span style="color: #000000;"> num) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">char</span>&gt; m {{<span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>}, {<span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span>}, {<span style="color: #800000;">'</span><span style="color: #800000;">8</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">8</span><span style="color: #800000;">'</span>}, {<span style="color: #800000;">'</span><span style="color: #800000;">6</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span>}, {<span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">6</span><span style="color: #800000;">'</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= num.size() / 2; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (m[num[i]] != num[num.size() - i - <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5200919.html" target="_blank">Strobogrammatic Number II</a>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5203228.html" target="_blank">Strobogrammatic Number III</a>&nbsp;</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/strobogrammatic-number/" target="_blank">https://leetcode.com/problems/strobogrammatic-number/</a></p>
+<p><a href="https://leetcode.com/problems/strobogrammatic-number/discuss/67182/Accepted-Java-solution" target="_blank">https://leetcode.com/problems/strobogrammatic-number/discuss/67182/Accepted-Java-solution</a></p>
+<p><a href="https://leetcode.com/problems/strobogrammatic-number/discuss/67257/5-lines-concise-and-easy-understand-C%2B%2B-solution" target="_blank">https://leetcode.com/problems/strobogrammatic-number/discuss/67257/5-lines-concise-and-easy-understand-C%2B%2B-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

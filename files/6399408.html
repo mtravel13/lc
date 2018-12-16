@@ -1,0 +1,49 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6399408.html">[LeetCode] Teemo Attacking 提莫攻击</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>In LLP world, there is a hero called Teemo and his attacking can make his enemy Ashe be in poisoned condition. Now, given the Teemo's attacking&nbsp;ascending&nbsp;time series towards Ashe and the poisoning time duration per Teemo's attacking, you need to output the total time that Ashe is in poisoned condition.</p>
+<p>You may assume that Teemo attacks at the very beginning of a specific time point, and makes Ashe be in poisoned condition immediately.</p>
+<p>Example 1:</p>
+<pre>Input: [1,4], 2
+Output: 4
+Explanation: At time point 1, Teemo starts attacking Ashe and makes Ashe be poisoned immediately. <br />This poisoned status will last 2 seconds until the end of time point 2. <br />And at time point 4, Teemo attacks Ashe again, and causes Ashe to be in poisoned status for another 2 seconds. <br />So you finally need to output 4.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [1,2], 2
+Output: 3
+Explanation: At time point 1, Teemo starts attacking Ashe and makes Ashe be poisoned. <br />This poisoned status will last 2 seconds until the end of time point 2. <br />However, at the beginning of time point 2, Teemo attacks Ashe again who is already in poisoned status. <br />Since the poisoned status won't add up together, though the second poisoning attack will still work at time point 2, it will stop at the end of time point 3. <br />So you finally need to output 3.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>You may assume the length of given time series array won't exceed 10000.</li>
+<li>You may assume the numbers in the Teemo's attacking time series and his poisoning time duration per attacking are non-negative integers, which won't exceed 10,000,000.</li>
+</ol>
+<p>&nbsp;</p>
+<p>LeetCode果然花样百出，连提莫都搬上题目了，那个草丛里乱种蘑菇的小提莫，那个&ldquo;团战可以输提莫必须死&rdquo;的提莫？？可以，服了，坐等女枪女警轮子妈的题目了～好了，不闲扯了，其实这道题蛮简单的，感觉不能算一道medium的题，就直接使用贪心算法，比较相邻两个时间点的时间差，如果小于duration，就加上这个差，如果大于或等于，就加上duration即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findPoisonedDuration(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; timeSeries, <span style="color: #0000ff;">int</span><span style="color: #000000;"> duration) {
+        </span><span style="color: #0000ff;">if</span> (timeSeries.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> timeSeries.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> diff = timeSeries[i] - timeSeries[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            res </span>+= (diff &lt; duration) ?<span style="color: #000000;"> diff : duration;
+        }
+        </span><span style="color: #0000ff;">return</span> res +<span style="color: #000000;"> duration;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

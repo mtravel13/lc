@@ -1,0 +1,86 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4395963.html">[LeetCode] First Missing Positive 首个缺失的正数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<div>
+<p>Given an unsorted integer array, find the smallest missing&nbsp;positive integer.</p>
+<p>Example 1:</p>
+<pre>Input: [1,2,0]
+Output: 3
+</pre>
+<p>Example 2:</p>
+<pre>Input: [3,4,-1,1]
+Output: 2
+</pre>
+<p>Example 3:</p>
+<pre>Input: [7,8,9,11,12]
+Output: 1
+</pre>
+<p>Note:</p>
+<p>Your algorithm should run in&nbsp;<em>O</em>(<em>n</em>) time and uses constant extra space.</p>
+<p>&nbsp;</p>
+</div>
+</div>
+<p>这道题让我们找缺失的首个正数，由于限定了O(n)的时间，所以一般的排序方法都不能用，最开始我没有看到还限制了空间复杂度，所以想到了用HashSet来解，这个思路很简单，第一遍遍历数组把所有的数都存入HashSet中，并且找出数组的最大值，下次循环从1开始递增找数字，哪个数字找不到就返回哪个数字，如果一直找到了最大的数字，则返回最大值+1，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> NOT constant space</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> firstMissingPositive(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> mx = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            </span><span style="color: #0000ff;">if</span> (num &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            s.insert(num);
+            mx </span>=<span style="color: #000000;"> max(mx, num);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= mx; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!s.count(i)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">return</span> mx + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但是上面的解法不是O(1)的空间复杂度，所以我们需要另想一种解法，既然不能建立新的数组，那么我们只能覆盖原有数组，我们的思路是把1放在数组第一个位置nums[0]，2放在第二个位置nums[1]，即需要把nums[i]放在nums[nums[i] - 1]上，那么我们遍历整个数组，如果nums[i] != i + 1, 而nums[i]为整数且不大于n，另外nums[i]不等于nums[nums[i] - 1]的话，我们将两者位置调换，如果不满足上述条件直接跳过，最后我们再遍历一遍数组，如果对应位置上的数不正确则返回正确的数，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> firstMissingPositive(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">while</span> (nums[i] &gt; <span style="color: #800080;">0</span> &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i] - <span style="color: #800080;">1</span>] !=<span style="color: #000000;"> nums[i]) {
+                swap(nums[i], nums[nums[i] </span>- <span style="color: #800080;">1</span><span style="color: #000000;">]);
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] != i + <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> n + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4756677.html" target="_blank">Missing Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4843654.html" target="_blank">Find the Duplicate Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6222149.html">Find All Numbers Disappeared in an Array</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl11_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8716597.html">Couples Holding Hands</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/first-missing-positive/" target="_blank">https://leetcode.com/problems/first-missing-positive/</a></p>
+<p><a href="https://leetcode.com/problems/first-missing-positive/discuss/17071/My-short-c++-solution-O(1)-space-and-O(n)-time">https://leetcode.com/problems/first-missing-positive/discuss/17071/My-short-c++-solution-O(1)-space-and-O(n)-time</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

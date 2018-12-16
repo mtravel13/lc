@@ -1,0 +1,159 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5261569.html">[LeetCode] Generalized Abbreviation 通用简写</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a function to generate the generalized abbreviations of a word.</p>
+<p>Example:</p>
+<p>Given word =&nbsp;<code>"word"</code>, return the following list (order does not matter):</p>
+<pre>["word", "1ord", "w1rd", "wo1d", "wor1", "2rd", "w2d", "wo2", "1o1d", "1or1", "w1r1", "1o2", "2r1", "3d", "w3", "4"]</pre>
+<p>&nbsp;</p>
+<p>这道题让我们对一个单词进行部分简写，简写的规则是若干个字母可以用数字来表示，但是不能有两个相邻的数字，具体可以参考题目中给的例子，根据我以往的经验，这种列举所有情况的必定是要用DFS来写的，但是我一时半会又没想到该咋递归，后来我数了一下题目中给的例子的所有情况的个数，是16个，而word有4个字母，刚好是2的4次方，这是巧合吗，当然不是，后来我又发现如果把0到15的二进制写出来，每一个可以对应一种情况，如下所示：</p>
+<p>0000 word<br />0001 wor1<br />0010 wo1d<br />0011 wo2<br />0100 w1rd<br />0101 w1r1<br />0110 w2d<br />0111 w3<br />1000 1ord<br />1001 1or1<br />1010 1o1d<br />1011 1o2<br />1100 2rd<br />1101 2r1<br />1110 3d<br />1111 4</p>
+<p>&nbsp;</p>
+<p>那么我们就可以观察出规律，凡是0的地方都是原来的字母，单独的1还是1，如果是若干个1连在一起的话，就要求出1的个数，用这个数字来替换对应的字母，既然规律找出来了，那么代码就很好写了，如下所示：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generateAbbreviations(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; pow(<span style="color: #800080;">2</span>, word.size()); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span> = <span style="color: #800000;">""</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span>, t =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; word.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (t &amp; <span style="color: #800080;">1</span> == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    </span>++<span style="color: #000000;">cnt;
+                    </span><span style="color: #0000ff;">if</span> (j == word.size() - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> to_string(cnt);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">if</span> (cnt != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                        </span><span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> to_string(cnt);
+                        cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    }
+                    </span><span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> word[j];
+                }
+                t </span>&gt;&gt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述方法返回结果的顺序为：</p>
+<p>["word","1ord","w1rd","2rd","wo1d","1o1d","w2d","3d","wor1","1or1","w1r1","2r1","wo2","1o2","w3","4"]</p>
+<p>我们可以对上面代码稍稍改写一下，变的稍微简洁一点：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generateAbbreviations(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; pow(<span style="color: #800080;">2</span>, word.size()); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span> = <span style="color: #800000;">""</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; word.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> ((i &gt;&gt; j) &amp; <span style="color: #800080;">1</span>) ++<span style="color: #000000;">cnt;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">if</span> (cnt != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                        </span><span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> to_string(cnt);
+                        cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    }
+                    </span><span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> word[j];
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (cnt &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> to_string(cnt);
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>那么迭代的写法看完了，来考虑一些递归的写法吧，上网搜了一下，发现下面三种写法比较容易理解，&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generateAbbreviations(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res{word};
+        helper(word, </span><span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">string</span> word, <span style="color: #0000ff;">int</span> pos, vector&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = pos; i &lt; word.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; i + j &lt;= word.size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">string</span> t = word.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i);
+                t </span>+= to_string(j) + word.substr(i +<span style="color: #000000;"> j);
+                res.push_back(t);
+                helper(t, i </span>+ <span style="color: #800080;">1</span> +<span style="color: #000000;"> to_string(j).size(), res);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述方法返回结果的顺序为：</p>
+<p>["word","1ord","1o1d","1o2","1or1","2rd","2r1","3d","4","w1rd","w1r1","w2d","w3","wo1d","wo2","wor1"]</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generateAbbreviations(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        helper(word, </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800000;">""</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">string</span> word, <span style="color: #0000ff;">int</span> pos, <span style="color: #0000ff;">int</span> cnt, <span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span>, vector&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (pos ==<span style="color: #000000;"> word.size()) {
+            </span><span style="color: #0000ff;">if</span> (cnt &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">out</span> +=<span style="color: #000000;"> to_string(cnt);
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            helper(word, pos </span>+ <span style="color: #800080;">1</span>, cnt + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+            helper(word, pos </span>+ <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #0000ff;">out</span> + (cnt &gt; <span style="color: #800080;">0</span> ? to_string(cnt) : <span style="color: #800000;">""</span>) +<span style="color: #000000;"> word[pos], res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述方法返回结果的顺序为：</p>
+<p>&nbsp;["4","3d","2r1","2rd","1o2","1o1d","1or1","1ord","w3","w2d","w1r1","w1rd","wo2","wo1d","wor1","word"]</p>
+<p>&nbsp;</p>
+<p>解法五：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generateAbbreviations(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;</span><span style="color: #000000;">
+        res.push_back(word.size() </span>== <span style="color: #800080;">0</span> ? <span style="color: #800000;">""</span><span style="color: #000000;"> : to_string(word.size()));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; word.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (auto a : generateAbbreviations(word.substr(i + <span style="color: #800080;">1</span><span style="color: #000000;">))) {
+                </span><span style="color: #0000ff;">string</span> left = i &gt; <span style="color: #800080;">0</span> ? to_string(i) : <span style="color: #800000;">""</span><span style="color: #000000;">;
+                res.push_back(left </span>+ word.substr(i, <span style="color: #800080;">1</span>) +<span style="color: #000000;"> a);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述方法返回结果的顺序为：</p>
+<p>["4","w3","wo2","wor1","word","wo1d","w1r1","w1rd","w2d","1o2","1or1","1ord","1o1d","2r1","2rd","3d"]</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/75528/9-line-easy-java-solution" target="_blank">https://leetcode.com/discuss/75528/9-line-easy-java-solution</a></p>
+<p><a href="https://leetcode.com/discuss/75754/java-backtracking-solution" target="_blank">https://leetcode.com/discuss/75754/java-backtracking-solution</a></p>
+<p><a href="https://leetcode.com/discuss/77280/c-straightforward-recursive-solution" target="_blank">https://leetcode.com/discuss/77280/c-straightforward-recursive-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

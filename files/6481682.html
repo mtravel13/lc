@@ -1,0 +1,90 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6481682.html">[LeetCode] Most Frequent Subtree Sum 出现频率最高的子树和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given the root of a tree, you are asked to find the most frequent subtree sum. The subtree sum of a node is defined as the sum of all the node values formed by the subtree rooted at that node (including the node itself). So what is the most frequent subtree sum value? If there is a tie, return all the values with the highest frequency in any order.</p>
+<p>Examples 1<br />Input:</p>
+<pre>  5
+ /  \
+2   -3
+</pre>
+<p>return [2, -3, 4], since all the values happen only once, return all of them in any order.</p>
+<p>&nbsp;</p>
+<p>Examples 2<br />Input:</p>
+<pre>  5
+ /  \
+2   -5
+</pre>
+<p>return [2], since 2 happens twice, however -5 only occur once.</p>
+<p>&nbsp;</p>
+<p>Note:&nbsp;You may assume the sum of values in any subtree is in the range of 32-bit signed integer.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个二叉树，让我们求出现频率最高的子树之和，求树的结点和并不是很难，就是遍历所有结点累加起来即可。那么这道题的暴力解法就是遍历每个结点，对于每个结点都看作子树的根结点，然后再遍历子树所有结点求和，这样也许可以通过OJ，但是绝对不是最好的方法。我们想下子树有何特点，必须是要有叶结点，单独的一个叶结点也可以当作是子树，那么子树是从下往上构建的，这种特点很适合使用后序遍历，我们使用一个哈希表来建立子树和跟其出现频率的映射，用一个变量cnt来记录当前最多的次数，递归函数返回的是以当前结点为根结点的子树结点值之和，然后在递归函数中，我们先对当前结点的左右子结点调用递归函数，然后加上当前结点值，然后更新对应的哈希表中的值，然后看此时哈希表中的值是否大于等于cnt，大于的话首先要清空res，等于的话不用，然后将sum值加入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findFrequentTreeSum(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        postorder(root, m, cnt, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> postorder(TreeNode* node, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp; m, <span style="color: #0000ff;">int</span>&amp; cnt, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = postorder(node-&gt;<span style="color: #000000;">left, m, cnt, res);
+        </span><span style="color: #0000ff;">int</span> right = postorder(node-&gt;<span style="color: #000000;">right, m, cnt, res);
+        </span><span style="color: #0000ff;">int</span> sum = left + right + node-&gt;<span style="color: #000000;">val;
+        </span>++<span style="color: #000000;">m[sum];
+        </span><span style="color: #0000ff;">if</span> (m[sum] &gt;=<span style="color: #000000;"> cnt) {
+            </span><span style="color: #0000ff;">if</span> (m[sum] &gt;<span style="color: #000000;"> cnt) res.clear();
+            res.push_back(sum);
+            cnt </span>=<span style="color: #000000;"> m[sum];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法跟上面的基本一样，就是没有在递归函数中更新结果res，更是利用cnt，最后再更新res，这样做能略微高效一些，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findFrequentTreeSum(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        postorder(root, m, cnt);
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            </span><span style="color: #0000ff;">if</span> (a.second ==<span style="color: #000000;"> cnt) res.push_back(a.first);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> postorder(TreeNode* node, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp; m, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> cnt) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = postorder(node-&gt;<span style="color: #000000;">left, m, cnt);
+        </span><span style="color: #0000ff;">int</span> right = postorder(node-&gt;<span style="color: #000000;">right, m, cnt);
+        </span><span style="color: #0000ff;">int</span> sum = left + right + node-&gt;<span style="color: #000000;">val;
+        cnt </span>= max(cnt, ++<span style="color: #000000;">m[sum]);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>开始我还在想能不能利用后序遍历的迭代形式来解，后来想了半天发现不太容易实现，因为博主无法想出有效的机制来保存左子树结点之和，而计算完对应的右子树结点之和后要用到对应的左子树结点之和，才能继续往上算。可能博主不够smart，有大神如果知道如何用迭代的形式来解，请一定要留言告知博主啊，多谢啦～</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/77775/verbose-java-solution-postorder-traverse-hashmap-18ms" target="_blank">https://discuss.leetcode.com/topic/77775/verbose-java-solution-postorder-traverse-hashmap-18ms</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,65 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5319384.html">[LeetCode] Paint House 粉刷房子</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>There are a row of&nbsp;<em>n</em>&nbsp;houses, each house can be painted with one of the three colors: red, blue or green. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.</p>
+<p>The cost of painting each house with a certain color is represented by a&nbsp;<code><em>n</em>&nbsp;x&nbsp;<em>3</em></code>&nbsp;cost matrix. For example,&nbsp;<code>costs[0][0]</code>&nbsp;is the cost of painting house 0 with color red;&nbsp;<code>costs[1][2]</code>&nbsp;is the cost of painting house 1 with color green, and so on... Find the minimum cost to paint all houses.</p>
+<p>Note:<br />All costs are positive integers.</p>
+<p>&nbsp;</p>
+<p>这道题说有n个房子，每个房子可以用红绿蓝三种颜色刷，每个房子的用每种颜色刷的花费都不同，限制条件是相邻的房子不能用相同的颜色来刷，现在让我们求刷完所有的房子的最低花费是多少。这题跟<a href="http://www.cnblogs.com/grandyang/p/4518674.html" target="_blank">House Robber II</a>和<a href="http://www.cnblogs.com/grandyang/p/4383632.html" target="_blank">House Robber</a>很类似，不过那题不是每个房子都抢，相邻的房子不抢，而这道题是每个房子都刷，相邻的房子不能刷同一种颜色。而<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_24" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/5231220.html">Paint Fence</a>那道题主要考察我们有多少种刷法，这几道题很类似，但都不一样，需要我们分别区分。但是它们的解题思想都一样，需要用动态规划Dynamic Programming来做，这道题我们需要维护一个二维的动态数组dp，其中dp[i][j]表示刷到第i+1房子用颜色j的最小花费，递推式为:</p>
+<p>dp[i][j] = dp[i][j] + <span style="color: #800080;"><span style="color: #800080;"><span style="color: #800080;"><span style="color: #800080;"><span style="color: #800080;"><span style="color: #800080;"><span style="color: #000000;">min(dp[i - 1][(j + 1) % 3], dp[i - 1][(j + 2) % 3])；</span></span></span></span></span></span></span></p>
+<p>这个也比较好理解，如果当前的房子要用红色刷，那么上一个房子只能用绿色或蓝色来刷，那么我们要求刷到当前房子，且当前房子用红色刷的最小花费就等于当前房子用红色刷的钱加上刷到上一个房子用绿色和刷到上一个房子用蓝色的较小值，这样当我们算到最后一个房子时，我们只要取出三个累计花费的最小值即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCost(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> costs) {
+        </span><span style="color: #0000ff;">if</span> (costs.empty() || costs[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp =<span style="color: #000000;"> costs;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; dp.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">3</span>; ++<span style="color: #000000;">j) {
+                dp[i][j] </span>+= min(dp[i - <span style="color: #800080;">1</span>][(j + <span style="color: #800080;">1</span>) % <span style="color: #800080;">3</span>], dp[i - <span style="color: #800080;">1</span>][(j + <span style="color: #800080;">2</span>) % <span style="color: #800080;">3</span><span style="color: #000000;">]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> min(min(dp.back()[<span style="color: #800080;">0</span>], dp.back()[<span style="color: #800080;">1</span>]), dp.back()[<span style="color: #800080;">2</span><span style="color: #000000;">]);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于只有红绿蓝三张颜色，所以我们就可以分别写出各种情况，这样写可能比上面的写法更加一目了然一些，更容易理解一点吧：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCost(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> costs) {
+        </span><span style="color: #0000ff;">if</span> (costs.empty() || costs[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp =<span style="color: #000000;"> costs;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; dp.size(); ++<span style="color: #000000;">i) {
+            dp[i][</span><span style="color: #800080;">0</span>] += min(dp[i - <span style="color: #800080;">1</span>][<span style="color: #800080;">1</span>], dp[i - <span style="color: #800080;">1</span>][<span style="color: #800080;">2</span><span style="color: #000000;">]);
+            dp[i][</span><span style="color: #800080;">1</span>] += min(dp[i - <span style="color: #800080;">1</span>][<span style="color: #800080;">0</span>], dp[i - <span style="color: #800080;">1</span>][<span style="color: #800080;">2</span><span style="color: #000000;">]);
+            dp[i][</span><span style="color: #800080;">2</span>] += min(dp[i - <span style="color: #800080;">1</span>][<span style="color: #800080;">0</span>], dp[i - <span style="color: #800080;">1</span>][<span style="color: #800080;">1</span><span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">return</span> min(min(dp.back()[<span style="color: #800080;">0</span>], dp.back()[<span style="color: #800080;">1</span>]), dp.back()[<span style="color: #800080;">2</span><span style="color: #000000;">]);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4518674.html" target="_blank">House Robber II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4383632.html" target="_blank">House Robber</a></p>
+<p><a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_24" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/5231220.html">Paint Fence</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/51721/simple-java-dp-solution" target="_blank">https://leetcode.com/discuss/51721/simple-java-dp-solution</a></p>
+<p><a href="https://leetcode.com/discuss/63863/simple-15-line-code-with-o-n-time-and-o-1-memory-solution-java" target="_blank">https://leetcode.com/discuss/63863/simple-15-line-code-with-o-n-time-and-o-1-memory-solution-java</a></p>
+<p>&nbsp;</p>
+<p><span class="s1"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></span></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,127 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5325761.html">[LeetCode] Word Pattern II 词语模式之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a&nbsp;<code>pattern</code>&nbsp;and a string&nbsp;<code>str</code>, find if&nbsp;<code>str</code>&nbsp;follows the same pattern.</p>
+<p>Here&nbsp;follow&nbsp;means a full match, such that there is a bijection between a letter in&nbsp;<code>pattern</code>&nbsp;and a&nbsp;non-empty&nbsp;substring in&nbsp;<code>str</code>.</p>
+<p>Examples:</p>
+<ol>
+<li>pattern =&nbsp;<code>"abab"</code>, str =&nbsp;<code>"redblueredblue"</code>&nbsp;should return true.</li>
+<li>pattern =&nbsp;<code>"aaaa"</code>, str =&nbsp;<code>"asdasdasdasd"</code>&nbsp;should return true.</li>
+<li>pattern =&nbsp;<code>"aabb"</code>, str =&nbsp;<code>"xyzabcxzyabc"</code>&nbsp;should return false.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Notes:<br />You may assume both&nbsp;<code>pattern</code>&nbsp;and&nbsp;<code>str</code>&nbsp;contains only lowercase letters.</p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/4857022.html">Word Pattern</a>的拓展，之前那道题词语之间都有空格隔开，这样我们可以一个单词一个单词的读入，然后来判断是否符合给定的特征，而这道题没有空格了，那么难度就大大的增加了，因为我们不知道对应的单词是什么，所以得自行分开，那么我们可以用回溯法来生成每一种情况来判断，我们还是需要用哈希表来建立模式字符和单词之间的映射，我们还需要用变量p和r来记录当前递归到的模式字符和单词串的位置，在递归函数中，如果p和r分别等于模式字符串和单词字符串的长度，说明此时匹配成功结束了，返回ture，反之如果一个达到了而另一个没有，说明匹配失败了，返回false。如果都不满足上述条件的话，我们取出当前位置的模式字符，然后从单词串的r位置开始往后遍历，每次取出一个单词，如果模式字符已经存在哈希表中，而且对应的单词和取出的单词也相等，那么我们再次调用递归函数在下一个位置，如果返回true，那么我们就返回true。反之如果该模式字符不在哈希表中，我们要看有没有别的模式字符已经映射了当前取出的单词，如果没有的话，我们建立新的映射，并且调用递归函数，注意如果递归函数返回false了，我们要在哈希表中删去这个映射，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> wordPatternMatch(<span style="color: #0000ff;">string</span> pattern, <span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">return</span> helper(pattern, <span style="color: #800080;">0</span>, str, <span style="color: #800080;">0</span><span style="color: #000000;">, m);
+    }
+    </span><span style="color: #0000ff;">bool</span> helper(<span style="color: #0000ff;">string</span> pattern, <span style="color: #0000ff;">int</span> p, <span style="color: #0000ff;">string</span> str, <span style="color: #0000ff;">int</span> r, unordered_map&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">m) {
+        </span><span style="color: #0000ff;">if</span> (p == pattern.size() &amp;&amp; r == str.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (p == pattern.size() || r == str.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> pattern[p];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = r; i &lt; str.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> t = str.substr(r, i - r + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (m.count(c) &amp;&amp; m[c] ==<span style="color: #000000;"> t) {
+                </span><span style="color: #0000ff;">if</span> (helper(pattern, p + <span style="color: #800080;">1</span>, str, i + <span style="color: #800080;">1</span>, m)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">m.count(c)) {
+                </span><span style="color: #0000ff;">bool</span> b = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto it : m) {
+                    </span><span style="color: #0000ff;">if</span> (it.second == t) b = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                } 
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">b) {
+                    m[c] </span>=<span style="color: #000000;"> t;
+                    </span><span style="color: #0000ff;">if</span> (helper(pattern, p + <span style="color: #800080;">1</span>, str, i + <span style="color: #800080;">1</span>, m)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    m.erase(c);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法和上面那种方法很类似，不同点在于使用了set，而使用其的原因也是为了记录所有和模式字符建立过映射的单词，这样我们就不用每次遍历哈希表了，只要在set中查找取出的单词是否存在，如果存在了则跳过后面的处理，反之则进行和上面相同的处理，注意还要在set中插入新的单词，最后也要同时删除掉，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> wordPatternMatch(<span style="color: #0000ff;">string</span> pattern, <span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">return</span> helper(pattern, <span style="color: #800080;">0</span>, str, <span style="color: #800080;">0</span><span style="color: #000000;">, m, s);
+    }
+    </span><span style="color: #0000ff;">bool</span> helper(<span style="color: #0000ff;">string</span> pattern, <span style="color: #0000ff;">int</span> p, <span style="color: #0000ff;">string</span> str, <span style="color: #0000ff;">int</span> r, unordered_map&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">string</span>&gt; &amp;m, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt; &amp;<span style="color: #000000;">s) {
+        </span><span style="color: #0000ff;">if</span> (p == pattern.size() &amp;&amp; r == str.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (p == pattern.size() || r == str.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> pattern[p];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = r; i &lt; str.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> t = str.substr(r, i - r + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (m.count(c) &amp;&amp; m[c] ==<span style="color: #000000;"> t) {
+                </span><span style="color: #0000ff;">if</span> (helper(pattern, p + <span style="color: #800080;">1</span>, str, i + <span style="color: #800080;">1</span>, m, s)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">m.count(c)) {
+                </span><span style="color: #0000ff;">if</span> (s.count(t)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                m[c] </span>=<span style="color: #000000;"> t;
+                s.insert(t);
+                </span><span style="color: #0000ff;">if</span> (helper(pattern, p + <span style="color: #800080;">1</span>, str, i + <span style="color: #800080;">1</span>, m, s)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                m.erase(c);
+                s.erase(t);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种不写helper函数的解法，可以调用自身，思路和上面的方法完全相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> wordPatternMatch(<span style="color: #0000ff;">string</span> pattern, <span style="color: #0000ff;">string</span><span style="color: #000000;"> str) {
+        </span><span style="color: #0000ff;">if</span> (pattern.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> str.empty();
+        </span><span style="color: #0000ff;">if</span> (m.count(pattern[<span style="color: #800080;">0</span><span style="color: #000000;">])) {
+            </span><span style="color: #0000ff;">string</span> t = m[pattern[<span style="color: #800080;">0</span><span style="color: #000000;">]];
+            </span><span style="color: #0000ff;">if</span> (t.size() &gt; str.size() || str.substr(<span style="color: #800080;">0</span>, t.size()) != t) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (wordPatternMatch(pattern.substr(<span style="color: #800080;">1</span>), str.substr(t.size()))) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= str.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (s.count(str.substr(<span style="color: #800080;">0</span>, i))) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                m[pattern[</span><span style="color: #800080;">0</span>]] = str.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i);
+                s.insert(str.substr(</span><span style="color: #800080;">0</span><span style="color: #000000;">, i));
+                </span><span style="color: #0000ff;">if</span> (wordPatternMatch(pattern.substr(<span style="color: #800080;">1</span>), str.substr(i))) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                m.erase(pattern[</span><span style="color: #800080;">0</span><span style="color: #000000;">]);
+                s.erase(str.substr(</span><span style="color: #800080;">0</span><span style="color: #000000;">, i));
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> m;
+    unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4857022.html">Word Pattern</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/81648/my-simplified-java-version" target="_blank">https://leetcode.com/discuss/81648/my-simplified-java-version</a></p>
+<p><a href="https://leetcode.com/discuss/63252/share-my-java-backtracking-solution" target="_blank">https://leetcode.com/discuss/63252/share-my-java-backtracking-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

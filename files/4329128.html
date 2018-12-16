@@ -1,0 +1,58 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4329128.html">[LeetCode] Remove Duplicates from Sorted Array 有序数组中去除重复项</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a sorted array, remove the duplicates in place such that each element appear only&nbsp;<em>once</em>&nbsp;and return the new length.</p>
+<p>Do not allocate extra space for another array, you must do this in place with constant memory.</p>
+<p>For example,<br />Given input array A =&nbsp;<code>[1,1,2]</code>,</p>
+<p>Your function should return length =&nbsp;<code>2</code>, and A is now&nbsp;<code>[1,2]</code>.</p>
+<p>&nbsp;</p>
+<p>这道题要我们从有序数组中去除重复项，和之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4066453.html">&nbsp;Remove Duplicates from Sorted List 移除有序链表中的重复项</a>&nbsp;的题很类似，但是要简单一些，因为毕竟数组的值可以通过下标直接访问，而链表不行。那么这道题的解题思路是，我们使用快慢指针来记录遍历的坐标，最开始时两个指针都指向第一个数字，如果两个指针指的数字相同，则快指针向前走一步，如果不同，则两个指针都向前走一步，这样当快指针走完整个数组后，慢指针当前的坐标加1就是数组中不同数字的个数，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> removeDuplicates(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> pre = <span style="color: #800080;">0</span>, cur = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">while</span> (cur &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">if</span> (nums[pre] == nums[cur]) ++<span style="color: #000000;">cur;
+            </span><span style="color: #0000ff;">else</span> nums[++pre] = nums[cur++<span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">return</span> pre + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用for循环来写，这里的j就是上面解法中的pre，i就是cur，所以本质上都是一样的，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> removeDuplicates(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] != nums[j]) nums[++j] =<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">return</span> j + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4066453.html" target="_blank">Remove Duplicates from Sorted List</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4069003.html" target="_blank">Remove Duplicates from Sorted List II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4329295.html" target="_blank">Remove Duplicates from Sorted Array II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606700.html" target="_blank">Remove Element</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,54 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5966473.html">[LeetCode] Fizz Buzz 嘶嘶嗡嗡</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a program that outputs the string representation of numbers from 1 to&nbsp;<em>n</em>.</p>
+<p>But for multiples of three it should output &ldquo;Fizz&rdquo; instead of the number and for the multiples of five output &ldquo;Buzz&rdquo;. For numbers which are multiples of both three and five output &ldquo;FizzBuzz&rdquo;.</p>
+<p>Example:</p>
+<pre>n = 15,
+
+Return:
+[
+    "1",
+    "2",
+    "Fizz",
+    "4",
+    "Buzz",
+    "Fizz",
+    "7",
+    "8",
+    "Fizz",
+    "Buzz",
+    "11",
+    "Fizz",
+    "13",
+    "14",
+    "FizzBuzz"
+]</pre>
+<p>&nbsp;</p>
+<p>这道题真心没有什么可讲的，就是分情况处理就行了。</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; fizzBuzz(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">15</span> == <span style="color: #800080;">0</span>) res.push_back(<span style="color: #800000;">"</span><span style="color: #800000;">FizzBuzz</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">3</span> == <span style="color: #800080;">0</span>) res.push_back(<span style="color: #800000;">"</span><span style="color: #800000;">Fizz</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">5</span> == <span style="color: #800080;">0</span>) res.push_back(<span style="color: #800000;">"</span><span style="color: #800000;">Buzz</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> res.push_back(to_string(i));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

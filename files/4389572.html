@@ -1,0 +1,87 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4389572.html">[LeetCode] Rotate Image 旋转图像</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given an&nbsp;<em>n</em>&nbsp;x&nbsp;<em>n</em>&nbsp;2D matrix representing an image.</p>
+<p>Rotate the image by 90 degrees (clockwise).</p>
+<p>Follow up:<br />Could you do this in-place?</p>
+<p>&nbsp;</p>
+<p>在计算机图像处理里，旋转图片是很常见的，由于图片的本质是二维数组，所以也就变成了对数组的操作处理，翻转的本质就是某个位置上数移动到另一个位置上，比如用一个简单的例子来分析：</p>
+<p>1 &nbsp;2 &nbsp;3　　　 　　 7 &nbsp;4 &nbsp;1　</p>
+<p>4 &nbsp;5 &nbsp;6　　--&gt;　　 8 &nbsp;5 &nbsp;2　　</p>
+<p>7 &nbsp;8 &nbsp;9&nbsp;　　　 　　9 &nbsp;6 &nbsp;3</p>
+<p>对于90度的翻转有很多方法，一步或多步都可以解，我们先来看一种直接的方法，对于当前位置，计算旋转后的新位置，然后再计算下一个新位置，第四个位置又变成当前位置了，所以这个方法每次循环换四个数字，如下所示：</p>
+<p>1 &nbsp;2 &nbsp;3 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span style="color: #ff0000;">7</span> &nbsp;2 &nbsp;<span style="color: #ff0000;">1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>7 &nbsp;<span style="color: #ff0000;">4</span> &nbsp;1</p>
+<p>4 &nbsp;5 &nbsp;6 &nbsp; &nbsp; &nbsp;--&gt; &nbsp; &nbsp; &nbsp;4 &nbsp;5 &nbsp;6　　 --&gt; &nbsp;　 <span style="color: #ff0000;">8</span> &nbsp;5 &nbsp;<span style="color: #ff0000;">2</span>　　</p>
+<p>7 &nbsp;8 &nbsp;9 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span style="color: #ff0000;">9</span> &nbsp;8 &nbsp;<span style="color: #ff0000;">3</span>　　　　　 9 &nbsp;<span style="color: #ff0000;">6</span> &nbsp;3</p>
+<p>解法一</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">matrix) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> matrix.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n / <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; n - <span style="color: #800080;">1</span> - i; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> tmp =<span style="color: #000000;"> matrix[i][j];
+                matrix[i][j] </span>= matrix[n - <span style="color: #800080;">1</span> -<span style="color: #000000;"> j][i];
+                matrix[n </span>- <span style="color: #800080;">1</span> - j][i] = matrix[n - <span style="color: #800080;">1</span> - i][n - <span style="color: #800080;">1</span> -<span style="color: #000000;"> j];
+                matrix[n </span>- <span style="color: #800080;">1</span> - i][n - <span style="color: #800080;">1</span> - j] = matrix[j][n - <span style="color: #800080;">1</span> -<span style="color: #000000;"> i];
+                matrix[j][n </span>- <span style="color: #800080;">1</span> - i] =<span style="color: #000000;"> tmp;
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种解法，首先以从对角线为轴翻转，然后再以x轴中线上下翻转即可得到结果，如下图所示(其中蓝色数字表示翻转轴)：</p>
+<p>1 &nbsp;2 &nbsp;3　　　 　　 <span style="color: #ff0000;">9</span> &nbsp;<span style="color: #ff0000;">6</span> &nbsp;<span style="color: #0000ff;">3</span>　　　　　 &nbsp;<span style="color: #ff0000;">7 &nbsp;4&nbsp;&nbsp;1</span></p>
+<p>4 &nbsp;5 &nbsp;6　　--&gt;　　&nbsp;<span style="color: #ff0000;">8</span> &nbsp;<span style="color: #0000ff;">5</span> &nbsp;<span style="color: #ff0000;">2</span>　　 --&gt; &nbsp; 　<span style="color: #0000ff;">&nbsp;8&nbsp;&nbsp;5 &nbsp;2</span>　　</p>
+<p>7 &nbsp;8 &nbsp;9&nbsp;　　　 　　<span style="color: #0000ff;">7</span> &nbsp;<span style="color: #ff0000;">4</span> &nbsp;<span style="color: #ff0000;">1</span>　　　　　 <span style="color: #ff0000;">&nbsp;9 &nbsp;6&nbsp;&nbsp;3</span></p>
+<p>解法二</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">matrix) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> matrix.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n - i; ++<span style="color: #000000;">j) {
+                swap(matrix[i][j], matrix[n </span>- <span style="color: #800080;">1</span>- j][n - <span style="color: #800080;">1</span> -<span style="color: #000000;"> i]);
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n / <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                swap(matrix[i][j], matrix[n </span>- <span style="color: #800080;">1</span> -<span style="color: #000000;"> i][j]);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后再来看一种方法，这种方法首先对原数组取其转置矩阵，然后把每行的数字翻转可得到结果，如下所示(其中蓝色数字表示翻转轴)：</p>
+<p>1 &nbsp;2 &nbsp;3　　　 　　&nbsp;<span style="color: #0000ff;">1</span>&nbsp;&nbsp;<span style="color: #ff0000;">4</span>&nbsp;&nbsp;<span style="color: #ff0000;">7</span>　　　　　 &nbsp;<span style="color: #ff0000;">7</span> &nbsp;<span style="color: #0000ff;">4</span>&nbsp;&nbsp;<span style="color: #ff0000;">1</span></p>
+<p>4 &nbsp;5 &nbsp;6　　--&gt;　　&nbsp;<span style="color: #ff0000;">2</span>&nbsp;&nbsp;<span style="color: #0000ff;">5</span>&nbsp;&nbsp;<span style="color: #ff0000;">8</span>　　 --&gt; &nbsp;　 &nbsp;<span style="color: #ff0000;">8</span>&nbsp;&nbsp;<span style="color: #0000ff;">5</span> &nbsp;<span style="color: #ff0000;">2</span>　　</p>
+<p>7 &nbsp;8 &nbsp;9&nbsp;　　　 　　<span style="color: #ff0000;">3</span>&nbsp;&nbsp;<span style="color: #ff0000;">6</span>&nbsp;&nbsp;<span style="color: #0000ff;">9</span>　　　　 &nbsp; &nbsp; &nbsp;<span style="color: #ff0000;">9</span> &nbsp;<span style="color: #0000ff;">6</span>&nbsp;&nbsp;<span style="color: #ff0000;">3</span></p>
+<p>解法三</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">matrix) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> matrix.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                swap(matrix[i][j], matrix[j][i]);
+            }
+            reverse(matrix[i].begin(), matrix[i].end());
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

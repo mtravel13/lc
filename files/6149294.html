@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6149294.html">[LeetCode] Count The Repetitions 计数重复个数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Define&nbsp;<code>S = [s,n]</code>&nbsp;as the string S which consists of n connected strings s. For example,&nbsp;<code>["abc", 3]</code>&nbsp;="abcabcabc".</p>
+<p>On the other hand, we define that string s1 can be obtained from string s2 if we can remove some characters from s2 such that it becomes s1. For example, &ldquo;abc&rdquo; can be obtained from &ldquo;abdbec&rdquo; based on our definition, but it can not be obtained from &ldquo;acbbe&rdquo;.</p>
+<p>You are given two non-empty strings s1 and s2 (each at most 100 characters long) and two integers 0 &le; n1 &le; 106and 1 &le; n2 &le; 106. Now consider the strings S1 and S2, where&nbsp;<code>S1=[s1,n1]</code>&nbsp;and&nbsp;<code>S2=[s2,n2]</code>. Find the maximum integer M such that&nbsp;<code>[S2,M]</code>&nbsp;can be obtained from&nbsp;<code>S1</code>.</p>
+<p>Example:</p>
+<pre>Input:
+s1="acb", n1=4
+s2="ab", n2=2
+
+Return:
+2</pre>
+<p>&nbsp;</p>
+<p>这道题放了好久才写，主要是因为这道题难度确实不小，光是分析研究网上大神们的帖子就搞了好久，就是现在也不能说完全理解了这道题，哎，将就着写吧，有不足的地方欢迎指正。主要参考了网上<a href="https://discuss.leetcode.com/topic/72105/c-solution-inspired-by-70664914-with-organized-explanation" target="_blank">大神lzl124631x的帖子</a>，还有<a href="https://discuss.leetcode.com/topic/70887/very-clean-and-short-7ms-java-solution-based-on-70664914-s-idea" target="_blank">大神aaaeeeo的帖子</a>。 &nbsp;这道题的Java版本的brute force可以通过OJ，但是C++的就不行了，我们需要使用重复模式来优化我们的方法，我们知道：</p>
+<p>如果s2在S1中出现了N次，那么S2肯定在S1中出现了N/n2次，注意这里的大写表示字符串加上重复次数组成的大字符串。</p>
+<p>所以我们得出结论，我们只要算出s2出现的次数，然后除以n2，就可以得出S2出现的次数了。</p>
+<p>那么问题就是我们表示重复，我们遍历s1字符串n1次，表示每个s1字符串为一段，对于每段，我们有：</p>
+<p>1. 出现在该段的s2字符串的累计出现次数</p>
+<p>2. 一个nextIndex，其中s2[nextIndex]表示在下一段s1中你所要寻找的s2中的一个字符。(比如说s1="abc", s2="bac", 由于第一个s1中只能匹配上s2中的b，那么只有在下一段s1中才能继续匹配s2中的a，所以nextIndex=1，即a在s2中的位置为1；同理，比如s1="abca", s2="bac"，第一个s1可以匹配上s2中的ba，那么后面的c只能在下一段s1中匹配上，那么nextIndex=2，即c在s2中的位置为2)</p>
+<p>表示重复关键就在于nextIndex，比如对于下面这个例子：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Input:
+s1</span>=<span style="color: #800000;">"</span><span style="color: #800000;">abacb</span><span style="color: #800000;">"</span>, n1=<span style="color: #800080;">6</span><span style="color: #000000;">
+s2</span>=<span style="color: #800000;">"</span><span style="color: #800000;">bcaa</span><span style="color: #800000;">"</span>, n2=<span style="color: #800080;">1</span><span style="color: #000000;">
+
+Return:
+</span><span style="color: #800080;">3</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>j ---------------&gt;  <span style="color: #800080;">1</span> <span style="color: #800080;">2</span>    <span style="color: #800080;">3</span> <span style="color: #800080;">0</span> <span style="color: #800080;">1</span>      <span style="color: #800080;">2</span>    <span style="color: #800080;">3</span> <span style="color: #800080;">0</span> <span style="color: #800080;">1</span>      <span style="color: #800080;">2</span>    <span style="color: #800080;">3</span> <span style="color: #800080;">0</span><span style="color: #000000;">   
+S1 </span>--------------&gt; a<span style="color: #ff0000;">b</span>a<span style="color: #ff0000;">c</span>b | <span style="color: #ff0000;">a</span>b<span style="color: #ff0000;">a</span>c<span style="color: #ff0000;">b</span> | aba<span style="color: #ff0000;">c</span>b | <span style="color: #ff0000;">a</span>b<span style="color: #ff0000;">a</span>c<span style="color: #ff0000;">b</span> | aba<span style="color: #ff0000;">c</span>b |<span style="color: #000000;"><span style="color: #ff0000;"> a</span>b<span style="color: #ff0000;">a</span>cb 
+
+repeatCount </span>-----&gt;    <span style="color: #800080;">0</span>  |   <span style="color: #800080;">1</span>   |   <span style="color: #800080;">1</span>   |   <span style="color: #800080;">2</span>   |   <span style="color: #800080;">2</span>   |   <span style="color: #800080;">3</span><span style="color: #000000;">
+
+nextIndex </span>-------&gt;    <span style="color: #ff0000;">2</span>  |   <span style="color: #800080;">1</span>   |   <span style="color: #ff0000;">2</span>   |   <span style="color: #800080;">1</span>   |   <span style="color: #800080;">2</span>   |   <span style="color: #800080;">1</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>nextIndex的范围从0到s2.size()-1，根据鸽巢原理(又称抽屉原理)，你一定会找到相同的两个nextIndex在遍历s1段s2.size()+1次之后。在上面的例子中，重复的nextIndex出现在第三段，和第一段一样都为2，那么重复的pattern就找到了，是第二段和第三段中的aabc，而且从第四段开始，每两段就有一个aabc，现在我们的目标就是统计出整个S1中有多少个s2。</p>
+<p>由于pattern占用了两段，所以interval为2，我们然后看整个S1中有多少个这样的两段，repeat = (n1 - start) / interval。start表示pattern的起始段数，之前的不是pattern，然后我们算在整个S1中有多少个pattern出现，patternCnt = (repeatCnt[k] - repeatCnt[start]) * repeat，注意这里的repeatCnt[k] - repeatCnt[start]表示一个pattern中有多少个字符串s2，个人感觉一般来说都是1个。然后我们算出剩下的非pattern的字符串里能包含几个s2，remainCnt = repeatCnt[start + (n1 - start) % interval]，然后我们把patternCnt + remainCnt之和算出来除以n2就是需要的结果啦。如果pattern未曾出现，那么我们直接用repeatCnt[n1] / n2也能得到正确的结果，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getMaxRepetitions(<span style="color: #0000ff;">string</span> s1, <span style="color: #0000ff;">int</span> n1, <span style="color: #0000ff;">string</span> s2, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n2) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; repeatCnt(n1 + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; nextIdx(n1 + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>, cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">1</span>; k &lt;= n1; ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s1.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (s1[i] ==<span style="color: #000000;"> s2[j]) {
+                    </span>++<span style="color: #000000;">j;
+                    </span><span style="color: #0000ff;">if</span> (j ==<span style="color: #000000;"> s2.size()) {  
+                        j </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                        </span>++<span style="color: #000000;">cnt;
+                    }
+                }
+            }
+            repeatCnt[k] </span>=<span style="color: #000000;"> cnt;
+            nextIdx[k] </span>=<span style="color: #000000;"> j;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> start = <span style="color: #800080;">0</span>; start &lt; k; ++<span style="color: #000000;">start) {
+                </span><span style="color: #0000ff;">if</span> (nextIdx[start] ==<span style="color: #000000;"> j) {
+                    </span><span style="color: #0000ff;">int</span> interval = k -<span style="color: #000000;"> start;
+                    </span><span style="color: #0000ff;">int</span> repeat = (n1 - start) /<span style="color: #000000;"> interval;
+                    </span><span style="color: #0000ff;">int</span> patternCnt = (repeatCnt[k] - repeatCnt[start]) *<span style="color: #000000;"> repeat;
+                    </span><span style="color: #0000ff;">int</span> remainCnt = repeatCnt[start + (n1 - start) %<span style="color: #000000;"> interval];
+                    </span><span style="color: #0000ff;">return</span> (patternCnt + remainCnt) /<span style="color: #000000;"> n2;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> repeatCnt[n1] /<span style="color: #000000;"> n2;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/70667/c-0ms-o-str1-length-str2-length/2" target="_blank">https://discuss.leetcode.com/topic/70667/c-0ms-o-str1-length-str2-length/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/70707/ugly-java-brute-force-solution-but-accepted-1088ms" target="_blank">https://discuss.leetcode.com/topic/70707/ugly-java-brute-force-solution-but-accepted-1088ms</a></p>
+<p><a href="https://discuss.leetcode.com/topic/72105/c-solution-inspired-by-70664914-with-organized-explanation" target="_blank">https://discuss.leetcode.com/topic/72105/c-solution-inspired-by-70664914-with-organized-explanation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/70887/very-clean-and-short-7ms-java-solution-based-on-70664914-s-idea" target="_blank">https://discuss.leetcode.com/topic/70887/very-clean-and-short-7ms-java-solution-based-on-70664914-s-idea</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

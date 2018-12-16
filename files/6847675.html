@@ -1,0 +1,67 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6847675.html">[LeetCode] Distribute Candies 分糖果</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer array with&nbsp;even&nbsp;length, where different numbers in this array represent different&nbsp;kinds&nbsp;of candies. Each number means one candy of the corresponding kind. You need to distribute these candies&nbsp;equally&nbsp;in number to brother and sister. Return the maximum number of&nbsp;kinds&nbsp;of candies the sister could gain.</p>
+<p>Example 1:</p>
+<pre>Input: candies = [1,1,2,2,3,3]
+Output: 3
+Explanation:
+There are three different kinds of candies (1, 2 and 3), and two candies for each kind.
+Optimal distribution: The sister has candies [1,2,3] and the brother has candies [1,2,3], too. 
+The sister has three different kinds of candies. 
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: candies = [1,1,2,3]
+Output: 2
+Explanation: For example, the sister has candies [2,3] and the brother has candies [1,1]. 
+The sister has two different kinds of candies, the brother has only one kind of candies. 
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The length of the given array is in range [2, 10,000], and will be even.</li>
+<li>The number in given array is in range [-100,000, 100,000].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给我们一堆糖，每种糖的个数不定，分给两个人，让我们求其中一个人能拿到的最大的糖的种类数。那么我们想，如果总共有n个糖，平均分给两个人，每人得到n/2块糖，那么能拿到的最大的糖的种类数也就是n／2种，不可能再多，只可能再少。那么我们要做的就是统计出总共的糖的种类数，如果糖的种类数小于n/2，说明拿不到n/2种糖，最多能拿到的种类数数就是当前糖的总种类数，明白了这点就很容易了，我们利用集合set的自动去重复特性来求出糖的种类数，然后跟n/2比较，取二者之中的较小值返回即可，参加代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> distributeCandies(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> candies) {
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> candy : candies) s.insert(candy);
+        </span><span style="color: #0000ff;">return</span> min(s.size(), candies.size() / <span style="color: #800080;">2</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法叼的不行，直接用把上面的解法浓缩为了一行，有种显摆的感觉：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> distributeCandies(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> candies) {
+        </span><span style="color: #0000ff;">return</span> min(unordered_set&lt;<span style="color: #0000ff;">int</span>&gt;(candies.begin(), candies.end()).size(), candies.size() / <span style="color: #800080;">2</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/distribute-candies/" target="_blank">https://leetcode.com/problems/distribute-candies/</a></p>
+<p><a href="https://leetcode.com/problems/distribute-candies/discuss/102946/c-1-liner" target="_blank">https://leetcode.com/problems/distribute-candies/discuss/102946/c-1-liner</a></p>
+<p><a href="https://leetcode.com/problems/distribute-candies/discuss/102939/java-8-one-line-solution-on" target="_blank">https://leetcode.com/problems/distribute-candies/discuss/102939/java-8-one-line-solution-on</a></p>
+<p><a href="https://leetcode.com/problems/distribute-candies/discuss/102879/java-solution-3-lines-hashset" target="_blank">https://leetcode.com/problems/distribute-candies/discuss/102879/java-solution-3-lines-hashset</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

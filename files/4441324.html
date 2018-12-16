@@ -1,0 +1,139 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4441324.html">[LeetCode] Reverse Nodes in k-Group 每k个一组翻转链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a linked list, reverse the nodes of a linked list&nbsp;<em>k</em>&nbsp;at a time and return its modified list.</p>
+<p><em>k</em>&nbsp;is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of&nbsp;<em>k</em>&nbsp;then left-out nodes in the end should remain as it is.</p>
+<p>Example:</p>
+<p>Given this linked list:&nbsp;<code>1-&gt;2-&gt;3-&gt;4-&gt;5</code></p>
+<p>For&nbsp;<em>k</em>&nbsp;= 2, you should return:&nbsp;<code>2-&gt;1-&gt;4-&gt;3-&gt;5</code></p>
+<p>For&nbsp;<em>k</em>&nbsp;= 3, you should return:&nbsp;<code>3-&gt;2-&gt;1-&gt;4-&gt;5</code></p>
+<p>Note:</p>
+<ul>
+<li>Only constant extra memory is allowed.</li>
+<li>You may not alter the values in the list's nodes, only nodes itself may be changed.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题让我们以每k个为一组来翻转链表，实际上是把原链表分成若干小段，然后分别对其进行翻转，那么肯定总共需要两个函数，一个是用来分段的，一个是用来翻转的，我们就以题目中给的例子来看，对于给定链表1-&gt;2-&gt;3-&gt;4-&gt;5，一般在处理链表问题时，我们大多时候都会在开头再加一个dummy node，因为翻转链表时头结点可能会变化，为了记录当前最新的头结点的位置而引入的dummy node，那么我们加入dummy node后的链表变为-1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;5，如果k为3的话，我们的目标是将1,2,3翻转一下，那么我们需要一些指针，pre和next分别指向要翻转的链表的前后的位置，然后翻转后pre的位置更新到如下新的位置：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>-<span style="color: #800080;">1</span>-&gt;<span style="color: #800080;">1</span>-&gt;<span style="color: #800080;">2</span>-&gt;<span style="color: #800080;">3</span>-&gt;<span style="color: #800080;">4</span>-&gt;<span style="color: #800080;">5</span>
+ |           |<span style="color: #000000;">
+pre         next
+
+</span>-<span style="color: #800080;">1</span>-&gt;<span style="color: #800080;">3</span>-&gt;<span style="color: #800080;">2</span>-&gt;<span style="color: #800080;">1</span>-&gt;<span style="color: #800080;">4</span>-&gt;<span style="color: #800080;">5</span>
+          |  |<span style="color: #000000;">
+         pre next</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>以此类推，只要next走过k个节点，就可以调用翻转函数来进行局部翻转了，代码如下所示：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*reverseKGroup(ListNode *head, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (!head || k == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        ListNode </span>*pre = dummy, *cur =<span style="color: #000000;"> head;
+        dummy</span>-&gt;next =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+            </span>++<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">if</span> (i % k == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                pre </span>= reverseOneGroup(pre, cur-&gt;<span style="color: #000000;">next);
+                cur </span>= pre-&gt;<span style="color: #000000;">next;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur </span>= cur-&gt;<span style="color: #000000;">next;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+    ListNode </span>*reverseOneGroup(ListNode *pre, ListNode *<span style="color: #000000;">next) {
+        ListNode </span>*last = pre-&gt;<span style="color: #000000;">next;
+        ListNode </span>*cur = last-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">while</span>(cur !=<span style="color: #000000;"> next) {
+            last</span>-&gt;next = cur-&gt;<span style="color: #000000;">next;
+            cur</span>-&gt;next = pre-&gt;<span style="color: #000000;">next;
+            pre</span>-&gt;next =<span style="color: #000000;"> cur;
+            cur </span>= last-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> last;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以在一个函数中完成，我们首先遍历整个链表，统计出链表的长度，然后如果长度大于等于k，我们开始交换节点，当k=2时，每段我们只需要交换一次，当k=3时，每段需要交换2此，所以i从1开始循环，注意交换一段后更新pre指针，然后num自减k，直到num&lt;k时循环结束，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* reverseKGroup(ListNode* head, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span>), *pre = dummy, *cur =<span style="color: #000000;"> pre;
+        dummy</span>-&gt;next =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">int</span> num = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (cur = cur-&gt;next) ++<span style="color: #000000;">num;
+        </span><span style="color: #0000ff;">while</span> (num &gt;=<span style="color: #000000;"> k) {
+            cur </span>= pre-&gt;<span style="color: #000000;">next;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; k; ++<span style="color: #000000;">i) {
+                ListNode </span>*t = cur-&gt;<span style="color: #000000;">next;
+                cur</span>-&gt;next = t-&gt;<span style="color: #000000;">next;
+                t</span>-&gt;next = pre-&gt;<span style="color: #000000;">next;
+                pre</span>-&gt;next =<span style="color: #000000;"> t;
+            }
+            pre </span>=<span style="color: #000000;"> cur;
+            num </span>-=<span style="color: #000000;"> k;
+        }
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用递归来做，我们用head记录每段的开始位置，cur记录结束位置的下一个节点，然后我们调用reverse函数来将这段翻转，然后得到一个new_head，原来的head就变成了末尾，这时候后面接上递归调用下一段得到的新节点，返回new_head即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* reverseKGroup(ListNode* head, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        ListNode </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; k; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!cur) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+        }
+        ListNode </span>*new_head =<span style="color: #000000;"> reverse(head, cur);
+        head</span>-&gt;next =<span style="color: #000000;"> reverseKGroup(cur, k);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> new_head;
+    }
+    ListNode</span>* reverse(ListNode* head, ListNode*<span style="color: #000000;"> tail) {
+        ListNode </span>*pre =<span style="color: #000000;"> tail;
+        </span><span style="color: #0000ff;">while</span> (head !=<span style="color: #000000;"> tail) {
+            ListNode </span>*t = head-&gt;<span style="color: #000000;">next;
+            head</span>-&gt;next =<span style="color: #000000;"> pre;
+            pre </span>=<span style="color: #000000;"> head;
+            head </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> pre;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4441680.html" target="_blank">Swap Nodes in Pairs</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/reverse-nodes-in-k-group/">https://leetcode.com/problems/reverse-nodes-in-k-group/</a></p>
+<p><a href="https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11435/C%2B%2B-Elegant-and-Small">https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11435/C%2B%2B-Elegant-and-Small</a></p>
+<p><a href="https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11457/20-line-iterative-C%2B%2B-solution">https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11457/20-line-iterative-C%2B%2B-solution</a></p>
+<p><a href="https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11440/Non-recursive-Java-solution-and-idea">https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11440/Non-recursive-Java-solution-and-idea</a></p>
+<p><a href="https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11423/Short-but-recursive-Java-code-with-comments">https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11423/Short-but-recursive-Java-code-with-comments</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

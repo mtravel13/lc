@@ -1,0 +1,101 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4800552.html">[LeetCode] Perfect Squares 完全平方数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a positive integer <em>n</em>, find the least number of perfect square numbers (for example, <code>1, 4, 9, 16, ...</code>) which sum to <em>n</em>.</p>
+<p>For example, given <em>n</em> = <code>12</code>, return <code>3</code> because <code>12 = 4 + 4 + 4</code>; given <em>n</em> = <code>13</code>, return <code>2</code> because <code>13 = 4 + 9</code>.</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/jianchao.li.fighter">@jianchao.li.fighter</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>又是超哥一个人辛苦的更新题目，一个人托起LeetCode免费题的一片天空啊，赞一个~ 这道题说是给我们一个正整数，求它最少能由几个完全平方数组成。这道题是考察<a href="https://zh.wikipedia.org/wiki/%E5%9B%9B%E5%B9%B3%E6%96%B9%E5%92%8C%E5%AE%9A%E7%90%86" target="_blank">四平方和定理</a>，to be honest, 这是我第一次听说这个定理，天啦撸，我的数学是语文老师教的么?! 闲话不多扯，回来做题。先来看第一种很高效的方法，根据四平方和定理，任意一个正整数均可表示为4个整数的平方和，其实是可以表示为4个以内的平方数之和，那么就是说返回结果只有1,2,3或4其中的一个，首先我们将数字化简一下，由于一个数如果含有因子4，那么我们可以把4都去掉，并不影响结果，比如2和8,3和12等等，返回的结果都相同，读者可自行举更多的栗子。还有一个可以化简的地方就是，如果一个数除以8余7的话，那么肯定是由4个完全平方数组成，这里就不证明了，因为我也不会证明，读者可自行举例验证。那么做完两步后，一个很大的数有可能就会变得很小了，大大减少了运算时间，下面我们就来尝试的将其拆为两个平方数之和，如果拆成功了那么就会返回1或2，因为其中一个平方数可能为0. (注：由于输入的n是正整数，所以不存在两个平方数均为0的情况)。注意下面的<span style="color: #ff0000;">!!a + !!b</span>这个表达式，可能很多人不太理解这个的意思，其实很简单，感叹号<span style="color: #ff0000;">!</span>表示逻辑取反，那么一个正整数逻辑取反为0，再取反为1，所以用两个感叹号<span style="color: #ff0000;">!!</span>的作用就是看a和b是否为正整数，都为正整数的话返回2，只有一个是正整数的话返回1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numSquares(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">while</span> (n % <span style="color: #800080;">4</span> == <span style="color: #800080;">0</span>) n /= <span style="color: #800080;">4</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (n % <span style="color: #800080;">8</span> == <span style="color: #800080;">7</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">4</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> a = <span style="color: #800080;">0</span>; a * a &lt;= n; ++<span style="color: #000000;">a) {
+            </span><span style="color: #0000ff;">int</span> b = sqrt(n - a *<span style="color: #000000;"> a);
+            </span><span style="color: #0000ff;">if</span> (a * a + b * b ==<span style="color: #000000;"> n) {
+                </span><span style="color: #0000ff;">return</span> !!a + !!<span style="color: #000000;">b;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">3</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题远不止这一种解法，我们还可以用动态规划Dynamic Programming来做，我们建立一个长度为n+1的一维dp数组，将第一个值初始化为0，其余值都初始化为INT_MAX, i从0循环到n，j从1循环到i+j*j &lt;= n的位置，然后每次更新dp[i+j*j]的值，动态更新dp数组，其中dp[i]表示正整数i能少能由多个完全平方数组成，那么我们求n，就是返回dp[n]即可，也就是dp数组的最后一个数字，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> DP</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numSquares(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n + <span style="color: #800080;">1</span><span style="color: #000000;">, INT_MAX);
+        dp[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; i + j * j &lt;= n; ++<span style="color: #000000;">j) {
+                dp[i </span>+ j * j] = min(dp[i + j * j], dp[i] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面再来看一种DP解法，这种解法跟上面有些不同，上面那种解法是初始化了整个长度为n+1的dp数字，但是初始化的顺序不定的，而这个种方法只初始化了第一个值为0，那么在循环里计算，每次增加一个dp数组的长度，里面那个for循环一次循环结束就算好下一个数由几个完全平方数组成，直到增加到第n+1个，返回即可，想更直观的看这两种DP方法的区别，建议每次循环后都打印出dp数字的值来观察其更新的顺序，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> DP</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numSquares(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">while</span> (dp.size() &lt;=<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">int</span> m = dp.size(), val =<span style="color: #000000;"> INT_MAX;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i * i &lt;= m; ++<span style="color: #000000;">i) {
+                val </span>= min(val, dp[m - i * i] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+            dp.push_back(val);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后我们来介绍一种递归Recursion的解法，这种方法的好处是写法简洁，但是运算效率不敢恭维。我们的目的是遍历所有比n小的完全平方数，然后对n与完全平方数的差值递归调用函数，目的是不断更新最终结果，知道找到最小的那个，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recrusion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numSquares(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> res = n, num = <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (num * num &lt;=<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">int</span> a = n / (num * num), b = n % (num *<span style="color: #000000;"> num);
+            res </span>= min(res, a +<span style="color: #000000;"> numSquares(b));
+            </span>++<span style="color: #000000;">num;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>PS：解法二三四的运算效率真的不高，强推解法一，高效又易懂，如果想强行优化后三个算法，可以将解法一的前两个if判断加到后三个的算法的开头，能很大的提高运算效率。</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/56983/simple-java-dp-solution" target="_blank">https://leetcode.com/discuss/56983/simple-java-dp-solution</a><br /><a href="https://leetcode.com/discuss/56993/static-dp-c-12-ms-python-172-ms-ruby-384-ms" target="_blank">https://leetcode.com/discuss/56993/static-dp-c-12-ms-python-172-ms-ruby-384-ms</a><br /><a href="https://leetcode.com/discuss/57089/my-recursive-solution-java" target="_blank">https://leetcode.com/discuss/57089/my-recursive-solution-java</a><br /><a href="http://bookshadow.com/weblog/2015/09/09/leetcode-perfect-squares/" target="_blank">http://bookshadow.com/weblog/2015/09/09/leetcode-perfect-squares/</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

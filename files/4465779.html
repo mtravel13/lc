@@ -1,0 +1,58 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4465779.html">[LeetCode] Isomorphic Strings  同构字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="content__eAC7">
+<div>
+<p>Given two strings&nbsp;<em>s</em>&nbsp;and&nbsp;<em>t</em>, determine if they are isomorphic.</p>
+<p>Two strings are isomorphic if the characters in&nbsp;<em>s</em>&nbsp;can be replaced to get&nbsp;<em>t</em>.</p>
+<p>All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character but a character may map to itself.</p>
+<p>Example 1:</p>
+<pre>Input: <em>s</em> = <code>"egg", </code><em>t = </em><code>"add"</code>
+Output: true
+</pre>
+<p>Example 2:</p>
+<pre>Input: <em>s</em> = <code>"foo", </code><em>t = </em><code>"bar"</code>
+Output: false</pre>
+<p>Example 3:</p>
+<pre>Input: <em>s</em> = <code>"paper", </code><em>t = </em><code>"title"</code>
+Output: true</pre>
+<p>Note:<br />You may assume both&nbsp;<em>s&nbsp;</em>and&nbsp;<em>t&nbsp;</em>have the same length.</p>
+
+</div>
+
+</div>
+<div>&nbsp;&nbsp;</div>
+<p>这道题让我们求同构字符串，就是说原字符串中的每个字符可由另外一个字符替代，可以被其本身替代，相同的字符一定要被同一个字符替代，且一个字符不能被多个字符替代，即不能出现一对多的映射。根据一对一映射的特点，我们需要用两个哈希表分别来记录原字符串和目标字符串中字符出现情况，由于ASCII码只有256个字符，所以我们可以用一个256大小的数组来代替哈希表，并初始化为0，我们遍历原字符串，分别从源字符串和目标字符串取出一个字符，然后分别在两个哈希表中查找其值，若不相等，则返回false，若相等，将其值更新为i + 1，因为默认的值是0，所以我们更新值为i + 1，这样当 i=0 时，则映射为1，如果不加1的话，那么就无法区分是否更新了，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isIsomorphic(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">string</span><span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">int</span> m1[<span style="color: #800080;">256</span>] = {<span style="color: #800080;">0</span>}, m2[<span style="color: #800080;">256</span>] = {<span style="color: #800080;">0</span>}, n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (m1[s[i]] != m2[t[i]]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            m1[s[i]] </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            m2[t[i]] </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4857022.html">Word Pattern</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/isomorphic-strings/" target="_blank">https://leetcode.com/problems/isomorphic-strings/</a></p>
+<p><a href="https://leetcode.com/problems/isomorphic-strings/discuss/57796/My-6-lines-solution">https://leetcode.com/problems/isomorphic-strings/discuss/57796/My-6-lines-solution</a></p>
+<p><a href="https://leetcode.com/problems/isomorphic-strings/discuss/57810/Short-Java-solution-without-maps">https://leetcode.com/problems/isomorphic-strings/discuss/57810/Short-Java-solution-without-maps</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

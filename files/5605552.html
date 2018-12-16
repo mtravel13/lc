@@ -1,0 +1,155 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5605552.html">[LeetCode] Design Hit Counter 设计点击计数器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a hit counter which counts the number of hits received in the past 5 minutes.</p>
+<p>Each function accepts a timestamp parameter (in seconds granularity) and you may assume that calls are being made to the system in chronological order (ie, the timestamp is monotonically increasing). You may assume that the earliest timestamp starts at 1.</p>
+<p>It is possible that several hits arrive roughly at the same time.</p>
+<p><strong>Example:</strong><br />
+</p>
+<pre>HitCounter counter = new HitCounter();
+
+// hit at timestamp 1.
+counter.hit(1);
+
+// hit at timestamp 2.
+counter.hit(2);
+
+// hit at timestamp 3.
+counter.hit(3);
+
+// get hits at timestamp 4, should return 3.
+counter.getHits(4);
+
+// hit at timestamp 300.
+counter.hit(300);
+
+// get hits at timestamp 300, should return 4.
+counter.getHits(300);
+
+// get hits at timestamp 301, should return 3.
+counter.getHits(301); 
+</pre>
+<p><strong>Follow up:</strong><br />
+What if the number of hits per second could be very large? Does your design scale?
+</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://discuss.leetcode.com/user/elmirap">@elmirap</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题让我们设计一个点击计数器，能够返回五分钟内的点击数，提示了有可能同一时间内有多次点击。由于操作都是按时间顺序的，下一次的时间戳都会大于等于本次的时间戳，那么最直接的方法就是用一个队列queue，每次点击时都将当前时间戳加入queue中，然后在需要获取点击数时，我们从队列开头开始看，如果开头的时间戳在5分钟以外了，就删掉，直到开头的时间戳在5分钟以内停止，然后返回queue的元素个数即为所求的点击数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> HitCounter {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    HitCounter() {}
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> hit(<span style="color: #0000ff;">int</span><span style="color: #000000;"> timestamp) {
+        q.push(timestamp);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span> getHits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> timestamp) {
+        </span><span style="color: #0000ff;">while</span> (!q.empty() &amp;&amp; timestamp - q.front() &gt;= <span style="color: #800080;">300</span><span style="color: #000000;">) {
+            q.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q.size();
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法和上面的方法很像，用了一个数组保存所有的时间戳，然后要返回点击数时，只需要从开头找到第一个在5分钟的时间戳的坐标，然后用数组总长度减去这个坐标即可，和上面的方法不同的是，这个方法不删掉之前的时间戳，缺点是会很占空间，而且越到后面效率越低，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> HitCounter {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    HitCounter() {}
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> hit(<span style="color: #0000ff;">int</span><span style="color: #000000;"> timestamp) {
+        v.push_back(timestamp);
+    }
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span> getHits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> timestamp) {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, j;
+        </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i &lt; v.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (v[i] &gt; timestamp - <span style="color: #800080;">300</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> v.size() -<span style="color: #000000;"> i;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于Follow up中说每秒中会有很多点击，下面这种方法就比较巧妙了，定义了两个大小为300的一维数组times和hits，分别用来保存时间戳和点击数，在点击函数中，将时间戳对300取余，然后看此位置中之前保存的时间戳和当前的时间戳是否一样，一样说明是同一个时间戳，那么对应的点击数自增1，如果不一样，说明已经过了五分钟了，那么将对应的点击数重置为1。那么在返回点击数时，我们需要遍历times数组，找出所有在5分中内的位置，然后把hits中对应位置的点击数都加起来即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> HitCounter {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    HitCounter() {
+        times.resize(</span><span style="color: #800080;">300</span><span style="color: #000000;">);
+        hits.resize(</span><span style="color: #800080;">300</span><span style="color: #000000;">);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> hit(<span style="color: #0000ff;">int</span><span style="color: #000000;"> timestamp) {
+        </span><span style="color: #0000ff;">int</span> idx = timestamp % <span style="color: #800080;">300</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (times[idx] !=<span style="color: #000000;"> timestamp) {
+            times[idx] </span>=<span style="color: #000000;"> timestamp;
+            hits[idx] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span>++<span style="color: #000000;">hits[idx];
+        }
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span> getHits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> timestamp) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">300</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (timestamp - times[i] &lt; <span style="color: #800080;">300</span><span style="color: #000000;">) {
+                res </span>+=<span style="color: #000000;"> hits[i];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> times, hits;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5592635.html">Logger Rate Limiter</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/109492/java-solution-easy-to-understand" target="_blank">https://leetcode.com/discuss/109492/java-solution-easy-to-understand</a></p>
+<p><a href="https://leetcode.com/discuss/109489/simple-java-solution-with-explanation" target="_blank">https://leetcode.com/discuss/109489/simple-java-solution-with-explanation</a></p>
+<p><a href="https://leetcode.com/discuss/109499/super-easy-design-hit-gethits-fancy-data-structure-is-needed" target="_blank">https://leetcode.com/discuss/109499/super-easy-design-hit-gethits-fancy-data-structure-is-needed</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

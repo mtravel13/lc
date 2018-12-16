@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6201215.html">[LeetCode] Hamming Distance 汉明距离</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The&nbsp;<a href="https://en.wikipedia.org/wiki/Hamming_distance" target="_blank">Hamming distance</a>&nbsp;between two integers is the number of positions at which the corresponding bits are different.</p>
+<p>Given two integers&nbsp;<code>x</code>&nbsp;and&nbsp;<code>y</code>, calculate the Hamming distance.</p>
+<p>Note:<br />0 &le;&nbsp;<code>x</code>,&nbsp;<code>y</code>&nbsp;&lt; 231.</p>
+<p>Example:</p>
+<pre>Input: x = 1, y = 4
+
+Output: 2
+
+Explanation:
+1   (0 0 0 1)
+4   (0 1 0 0)
+       &uarr;   &uarr;
+
+The above arrows point to positions where the corresponding bits are different.</pre>
+<p>&nbsp;</p>
+<p>这道题让我求两个数字之间的<a href="https://zh.wikipedia.org/wiki/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB" target="_blank">汉明距离</a>，题目中解释的很清楚了，两个数字之间的汉明距离就是其二进制数对应位不同的个数，那么最直接了当的做法就是按位分别取出两个数对应位上的数并异或，我们知道异或的性质上相同的为0，不同的为1，我们只要把为1的情况累加起来就是汉明距离了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> hammingDistance(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> ((x &amp; (<span style="color: #800080;">1</span> &lt;&lt; i)) ^ (y &amp; (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i))) {
+                </span>++<span style="color: #000000;">res;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对上面的代码进行优化，我们可以一开始直接将两个数字异或起来，然后我们遍历异或结果的每一位，统计为1的个数，也能达到同样的效果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> hammingDistance(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, exc = x ^<span style="color: #000000;"> y;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">32</span>; ++<span style="color: #000000;">i) {
+            res </span>+= (exc &gt;&gt; i) &amp; <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>经过副博主@fantasywindy的提醒，上面的遍历每一位的方法并不高效，还可以进一步优化，假如数为num, num &amp; (num - 1)可以快速地移除最右边的bit 1， 一直循环到num为0, 总的循环数就是num中bit 1的个数。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> hammingDistance(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, exc = x ^<span style="color: #000000;"> y;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (exc) {
+            </span>++<span style="color: #000000;">res;
+            exc </span>&amp;= (exc - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们再来看一种递归的写法，非常的简洁，递归终止的条件是当两个数异或为0时，表明此时两个数完全相同，我们返回0，否则我们返回异或和对2取余加上对x/2和y/2调用递归的结果。异或和对2取余相当于检查最低位是否相同，而对x/2和y/2调用递归相当于将x和y分别向右移动一位，这样每一位都可以比较到，也能得到正确结果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> hammingDistance(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">if</span> ((x ^ y) == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> (x ^ y) % <span style="color: #800080;">2</span> + hammingDistance(x / <span style="color: #800080;">2</span>, y / <span style="color: #800080;">2</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/72089/java-3-line-solution" target="_blank">https://discuss.leetcode.com/topic/72089/java-3-line-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/72093/java-1-line-solution-d" target="_blank">https://discuss.leetcode.com/topic/72093/java-1-line-solution-d</a></p>
+<p><a href="https://discuss.leetcode.com/topic/72289/0ms-c-two-line-solution" target="_blank">https://discuss.leetcode.com/topic/72289/0ms-c-two-line-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

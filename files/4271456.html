@@ -1,0 +1,48 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4271456.html">[LeetCode] Palindrome Partitioning II 拆分回文串之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string <em>s</em>, partition <em>s</em> such that every substring of the partition is a palindrome.</p>
+<p>Return the minimum cuts needed for a palindrome partitioning of <em>s</em>.</p>
+<p> For example, given <em>s</em> = <code>"aab"</code>,<br />
+Return <code>1</code> since the palindrome partitioning <code>["aa","b"]</code> could be produced using 1 cut.
+</p>
+<p>&nbsp;</p>
+<p>这道题是让找到把原字符串拆分成回文串的最小切割数，需要用动态规划Dynamic Programming来做，使用DP的核心是在于找出递推公式，之前有道<a href="http://www.cnblogs.com/grandyang/p/4233035.html" target="_blank">地牢游戏Dungeon Game</a>的题也是需要用DP来做，而那道题是二维DP来解，这道题由于只是拆分一个字符串，需要一个一维的递推公式，我们还是从后往前推，递推公式为：dp[i] = min(dp[i], 1+dp[j+1] ) &nbsp; &nbsp;i&lt;=j &lt;n，那么还有个问题，是否对于i到j之间的子字符串s[i][j]每次都判断一下是否是回文串，其实这个也可以用DP来简化，其DP递推公式为P[i][j] = s[i] == s[j] &amp;&amp; P[i+1][j-1]，其中P[i][j] = true if [i,j]为回文。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minCut(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> P[len][len];
+        </span><span style="color: #0000ff;">int</span> dp[len + <span style="color: #800080;">1</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= len; ++<span style="color: #000000;">i) {
+            dp[i] </span>= len - i - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; len; ++<span style="color: #000000;">j) {
+                P[i][j] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = len - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; len; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (s[i] == s[j] &amp;&amp; (j - i &lt;= <span style="color: #800080;">1</span> || P[i + <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span><span style="color: #000000;">])) {
+                    P[i][j] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    dp[i] </span>= min(dp[i], dp[j + <span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[<span style="color: #800080;">0</span><span style="color: #000000;">];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

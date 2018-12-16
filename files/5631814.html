@@ -1,0 +1,67 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5631814.html">[LeetCode] Sum of Two Integers 两数之和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Calculate the sum of two integers <em>a</em> and <em>b</em>, but you are <strong>not allowed</strong> to use the operator <code>+</code> and <code>-</code>.</p>
+<p><strong>Example:</strong><br />
+Given <em>a</em> = 1 and <em>b</em> = 2, return 3.
+</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://discuss.leetcode.com/user/fujiaozhu">@fujiaozhu</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题是CareerCup上的一道原题，难道现在LeetCode的新题都是到处抄来的么，讲解可以参见我之前的博客<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_12" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/5451942.html">18.1 Add Two Numbers</a>。简而言之就是用异或算不带进位的和，用与并左移1位来算进位，然后把两者加起来即可，先来看递归的写法如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getSum(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b) {
+        </span><span style="color: #0000ff;">if</span> (b == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> a;
+        </span><span style="color: #0000ff;">int</span> sum = a ^<span style="color: #000000;"> b;
+        </span><span style="color: #0000ff;">int</span> carry = (a &amp; b) &lt;&lt; <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> getSum(sum, carry);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的解法可以精简到一行，哈哈，叼不叼？</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getSum(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b) {
+        </span><span style="color: #0000ff;">return</span> b == <span style="color: #800080;">0</span> ? a : getSum(a ^ b, (a &amp; b) &lt;&lt; <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>也可以写成迭代的样子，思路都是一样的~</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getSum(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b) {
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (b) {
+            </span><span style="color: #0000ff;">int</span> carry = (a &amp; b) &lt;&lt; <span style="color: #800080;">1</span><span style="color: #000000;">;
+            a </span>= a ^<span style="color: #000000;"> b;
+            b </span>=<span style="color: #000000;"> carry;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> a;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5451942.html" target="_blank">http://www.cnblogs.com/grandyang/p/5451942.html</a></p>
+<p><a href="https://leetcode.com/discuss/111682/one-line-java-code" target="_blank">https://leetcode.com/discuss/111682/one-line-java-code</a></p>
+<p><a href="https://leetcode.com/discuss/111601/6-line-java-solution" target="_blank">https://leetcode.com/discuss/111601/6-line-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

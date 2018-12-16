@@ -1,0 +1,152 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7823424.html">[LeetCode] Max Stack 最大栈</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Design a max stack that supports push, pop, top, peekMax and popMax.</p>
+<p>&nbsp;</p>
+<ol>
+<li>push(x) -- Push element x onto stack.</li>
+<li>pop() -- Remove the element on top of the stack and return it.</li>
+<li>top() -- Get the element on the top.</li>
+<li>peekMax() -- Retrieve the maximum element in the stack.</li>
+<li>popMax() -- Retrieve the maximum element in the stack, and remove it. If you find more than one maximum elements, only remove the top-most one.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>MaxStack stack = new MaxStack();
+stack.push(5); 
+stack.push(1);
+stack.push(5);
+stack.top(); -&gt; 5
+stack.popMax(); -&gt; 5
+stack.top(); -&gt; 1
+stack.peekMax(); -&gt; 5
+stack.pop(); -&gt; 1
+stack.top(); -&gt; 5
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>-1e7 &lt;= x &lt;= 1e7</li>
+<li>Number of operations won't exceed 10000.</li>
+<li>The last four operations won't be called when stack is empty.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们实现一个最大栈，包含一般栈的功能，但是还新加了两个功能peekMax()和popMax()，随时随地可以查看和返回最大值。之前有一道很类似的题<a href="http://www.cnblogs.com/grandyang/p/4091064.html" target="_blank">Min Stack</a>，所以我们可以借鉴那道题的解法，使用两个栈来模拟，s1为普通的栈，用来保存所有的数字，而s2为最大栈，用来保存出现的最大的数字。</p>
+<p>在push()函数中，我们先来看s2，如果s2为空，或者s2的栈顶元素小于等于x，将x压入s2中。因为s2保存的是目前为止最大的数字，所以一旦新数字大于等于栈顶元素，说明遇到更大的数字了，压入栈。然后将数组压入s1，s1保存所有的数字，所以都得压入栈。</p>
+<p>在pop()函数中，当s2的栈顶元素和s1的栈顶元素相同时，我们要移除s2的栈顶元素，因为一个数字不在s1中了，就不能在s2中。然后取出s1的栈顶元素，并移除s1，返回即可。</p>
+<p>在top()函数中，直接返回s1的top()函数即可。</p>
+<p>在peekMax()函数中，直接返回s2的top()函数即可。</p>
+<p>在popMax()函数中，先将s2的栈顶元素保存到一个变量mx中，然后我们要在s1中删除这个元素，由于栈无法直接定位元素，所以我们用一个临时栈t，将s1的出栈元素保存到临时栈t中，当s1的栈顶元素和s2的栈顶元素相同时退出while循环，此时我们在s1中找到了s2的栈顶元素，分别将s1和s2的栈顶元素移除，然后要做的是将临时栈t中的元素加回s1中，注意此时容易犯的一个错误是，没有同时更新s2，所以我们直接调用push()函数即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MaxStack {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MaxStack() {}
+    
+    </span><span style="color: #0000ff;">void</span> push(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #0000ff;">if</span> (s2.empty() || s2.top() &lt;=<span style="color: #000000;"> x) s2.push(x);
+        s1.push(x);
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> pop() {
+        </span><span style="color: #0000ff;">if</span> (!s2.empty() &amp;&amp; s2.top() ==<span style="color: #000000;"> s1.top()) s2.pop();
+        </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> s1.top(); s1.pop();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t;
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> top() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s1.top();
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> peekMax() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s2.top();
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> popMax() {
+        </span><span style="color: #0000ff;">int</span> mx =<span style="color: #000000;"> s2.top();
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> t;
+        </span><span style="color: #0000ff;">while</span> (s1.top() !=<span style="color: #000000;"> s2.top()) {
+            t.push(s1.top()); s1.pop();
+        }
+        s1.pop(); s2.pop();
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">t.empty()) {
+            push(t.top()); t.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mx;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s1, s2;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法没有利用一般的stack，而是建立一种较为复杂的数据结构，首先用一个list链表来保存所有的数字，然后建立一个数字和包含所有相同的数字的位置iterator的向量容器的映射map。</p>
+<p>在push()函数中，把新数字加到list表头，然后把数字x的位置iterator加到数字映射的向量容器的末尾。</p>
+<p>在pop()函数中，先得到表头数字，然后把该数字对应的iterator向量容器的末尾元素删掉，如果此时向量容器为空了，将这个映射直接删除，移除表头数字，返回该数字即可。</p>
+<p>在top()函数中，直接返回表头数字即可。</p>
+<p>在peekMax()函数中，因为map是按key值自动排序的，直接尾映射的key值即可。</p>
+<p>在popMax()函数中，首先保存尾映射的key值，也就是最大值到变量x中，然后在其对应的向量容器的末尾取出其在list中的iterator。然后删除该向量容器的尾元素，如果此时向量容器为空了，将这个映射直接删除。根据之前取出的iterator，在list中删除对应的数字，返回x即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MaxStack {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MaxStack() {}
+    
+    </span><span style="color: #0000ff;">void</span> push(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        v.insert(v.begin(), x);
+        m[x].push_back(v.begin());
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> pop() {
+        </span><span style="color: #0000ff;">int</span> x = *<span style="color: #000000;">v.begin();
+        m[x].pop_back();
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m[x].empty()) m.erase(x);
+        v.erase(v.begin());
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> top() {
+        </span><span style="color: #0000ff;">return</span> *<span style="color: #000000;">v.begin();
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> peekMax() {
+        </span><span style="color: #0000ff;">return</span> m.rbegin()-&gt;<span style="color: #000000;">first;
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> popMax() {
+        </span><span style="color: #0000ff;">int</span> x = m.rbegin()-&gt;<span style="color: #000000;">first;
+        auto it </span>=<span style="color: #000000;"> m[x].back();
+        m[x].pop_back();
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (m[x].empty()) m.erase(x);
+        v.erase(it);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    list</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+    map</span>&lt;<span style="color: #0000ff;">int</span>, vector&lt;list&lt;<span style="color: #0000ff;">int</span>&gt;::iterator&gt;&gt;<span style="color: #000000;"> m;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4091064.html" target="_blank">Min Stack</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/110014/c-using-two-stack">https://discuss.leetcode.com/topic/110014/c-using-two-stack</a></p>
+<p><a href="https://discuss.leetcode.com/topic/110066/c-o-logn-for-write-ops-o-1-for-reads">https://discuss.leetcode.com/topic/110066/c-o-logn-for-write-ops-o-1-for-reads</a>&nbsp;</p>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

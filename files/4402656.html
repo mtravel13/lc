@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4402656.html">[LeetCode] Number of Islands 岛屿的数量</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a 2d grid map of&nbsp;<code>'1'</code>s (land) and&nbsp;<code>'0'</code>s (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
+<p><em>Example 1:</em></p>
+<pre>11110<br />11010<br />11000<br />00000</pre>
+<p>Answer: 1</p>
+<p><em>Example 2:</em></p>
+<pre>11000<br />11000<br />00100<br />00011</pre>
+<p>Answer: 3</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/mithmatt">@mithmatt</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道求岛屿数量的题的本质是求矩阵中连续区域的个数，很容易想到需要用深度优先搜索DFS来解，我们需要建立一个visited数组用来记录某个位置是否被访问过，对于一个为&lsquo;1&rsquo;且未被访问过的位置，我们递归进入其上下左右位置上为&lsquo;1&rsquo;的数，将其visited对应值赋为true，继续进入其所有相连的邻位置，这样可以将这个连通区域所有的数找出来，并将其对应的visited中的值赋true，找完次区域后，我们将结果res自增1，然后我们在继续找下一个为&lsquo;1&rsquo;且未被访问过的位置，以此类推直至遍历完整个原数组即可得到最终结果，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numIslands(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt; &amp;<span style="color: #000000;">grid) {
+        </span><span style="color: #0000ff;">if</span> (grid.empty() || grid[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = grid.size(), n = grid[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt; &gt; visited(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span> &amp;&amp; !<span style="color: #000000;">visited[i][j]) {
+                    numIslandsDFS(grid, visited, i, j);
+                    </span>++<span style="color: #000000;">res;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> numIslandsDFS(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt; &amp;grid, vector&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt; &gt; &amp;visited, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= grid.size()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (y &lt; <span style="color: #800080;">0</span> || y &gt;= grid[<span style="color: #800080;">0</span>].size()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (grid[x][y] != <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span> || visited[x][y]) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        visited[x][y] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        numIslandsDFS(grid, visited, x </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, y);
+        numIslandsDFS(grid, visited, x </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, y);
+        numIslandsDFS(grid, visited, x, y </span>- <span style="color: #800080;">1</span><span style="color: #000000;">);
+        numIslandsDFS(grid, visited, x, y </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5190419.html" target="_blank">Number of Islands II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/14595/c-with-union-find" target="_blank">https://discuss.leetcode.com/topic/14595/c-with-union-find</a></p>
+<p><a href="https://discuss.leetcode.com/topic/13248/very-concise-java-ac-solution" target="_blank">https://discuss.leetcode.com/topic/13248/very-concise-java-ac-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

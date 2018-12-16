@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5194599.html">[LeetCode] Increasing Triplet Subsequence 递增的三元子序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an unsorted array return whether an increasing subsequence of length 3 exists or not in the array.</p>
+<p>Formally the function should:</p>
+<blockquote>Return true if there exists&nbsp;<em>i, j, k&nbsp;</em><br />such that&nbsp;<em>arr[i]</em>&nbsp;&lt;&nbsp;<em>arr[j]</em>&nbsp;&lt;&nbsp;<em>arr[k]</em>&nbsp;given 0 &le;&nbsp;<em>i</em>&nbsp;&lt;&nbsp;<em>j</em>&nbsp;&lt;&nbsp;<em>k</em>&nbsp;&le;&nbsp;<em>n</em>-1 else return false.</blockquote>
+<p>&nbsp;</p>
+<p>Your algorithm should run in O(<em>n</em>) time complexity and O(<em>1</em>) space complexity.</p>
+<p>Examples:<br />Given&nbsp;<code>[1, 2, 3, 4, 5]</code>,<br />return&nbsp;<code>true</code>.</p>
+<p>Given&nbsp;<code>[5, 4, 3, 2, 1]</code>,<br />return&nbsp;<code>false</code>.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/DjangoUnchained">@DjangoUnchained</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求一个无序数组中是否有任意三个数字是递增关系的，我最先相处的方法是用一个dp数组，dp[i]表示在i位置之前小于等于nums[i]的数字的个数(包括其本身)，我们初始化dp数组都为1，然后我们开始遍历原数组，对当前数字nums[i]，我们遍历其之前的所有数字，如果之前某个数字nums[j]小于nums[i]，那么我们更新dp[i] = max(dp[i], dp[j] + 1)，如果此时dp[i]到3了，则返回true，若遍历完成，则返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Dumped, brute force</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> increasingTriplet(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(nums.size(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (nums[j] &lt;<span style="color: #000000;"> nums[i]) {
+                    dp[i] </span>= max(dp[i], dp[j] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">if</span> (dp[i] &gt;= <span style="color: #800080;">3</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但是题目中要求我们O(n)的时间复杂度和O(1)的空间复杂度，上面的那种方法一条都没满足，所以白写了。我们下面来看满足题意的方法，这个思路是使用两个指针m1和m2，初始化为整型最大值，我们遍历数组，如果m1大于等于当前数字，则将当前数字赋给m1；如果m1小于当前数字且m2大于等于当前数字，那么将当前数字赋给m2，一旦m2被更新了，说明一定会有一个数小于m2，那么我们就成功的组成了一个长度为2的递增子序列，所以我们一旦遍历到比m2还大的数，我们直接返回ture。如果我们遇到比m1小的数，还是要更新m1，有可能的话也要更新m2为更小的值，毕竟m2的值越小，能组成长度为3的递增序列的可能性越大，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> increasingTriplet(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> m1 = INT_MAX, m2 =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nums) {
+            </span><span style="color: #0000ff;">if</span> (m1 &gt;= a) m1 =<span style="color: #000000;"> a;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (m2 &gt;= a) m2 =<span style="color: #000000;"> a;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>如果觉得上面的解法不容易想出来，那么如果能想出下面这种解法，估计面试官也会为你点赞。这种方法的虽然不满足常数空间的要求，但是作为对暴力搜索的优化，也是一种非常好的解题思路。这个解法的思路是建立两个数组，forward数组和backward数组，其中forward[i]表示[0, i]之间最小的数，backward[i]表示[i, n-1]之间最大的数，那么对于任意一个位置i，如果满足 forward[i] &lt; nums[i] &lt; backward[i]，则表示这个递增三元子序列存在，举个例子来看吧，比如：</p>
+<p>nums: &nbsp; &nbsp; &nbsp; &nbsp;8 &nbsp;3 &nbsp;5 &nbsp;1 &nbsp;6</p>
+<p>foward: &nbsp; &nbsp; &nbsp;8 &nbsp;3 &nbsp;3 &nbsp;1 &nbsp;1</p>
+<p>backward: &nbsp;8 &nbsp;6 &nbsp;6 &nbsp;6 &nbsp;6</p>
+<p>我们发现数字5满足forward[i] &lt; nums[i] &lt; backward[i]，所以三元子序列存在。</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> increasingTriplet(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.size() &lt; <span style="color: #800080;">3</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; f(n, nums[<span style="color: #800080;">0</span><span style="color: #000000;">]), b(n, nums.back());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            f[i] </span>= min(f[i - <span style="color: #800080;">1</span><span style="color: #000000;">], nums[i]);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">2</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            b[i] </span>= max(b[i + <span style="color: #800080;">1</span><span style="color: #000000;">], nums[i]);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] &gt; f[i] &amp;&amp; nums[i] &lt; b[i]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/86593/clean-and-short-with-comments-c" target="_blank">https://leetcode.com/discuss/86593/clean-and-short-with-comments-c</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,107 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5599289.html">[LeetCode] Bomb Enemy 炸弹人</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a 2D grid, each cell is either a wall <code>'W'</code>, an enemy <code>'E'</code> or empty <code>'0'</code> (the number zero), return the maximum enemies you can kill using one bomb.<br />
+ The bomb kills all the enemies in the same row and column from the 
+planted point until it hits the wall since the wall is too strong to be 
+destroyed.<br />
+ Note that you can only put the bomb at an empty cell. </p>
+<p><strong>Example:</strong><br />
+</p>
+<pre>For the given grid
+
+0 E 0 0
+E 0 W E
+0 E 0 0
+
+return 3. (Placing a bomb at (1,1) kills 3 enemies)
+</pre>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://discuss.leetcode.com/user/memoryless">@memoryless</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题相当于一个简单的炸弹人游戏，让我想起了小时候玩的红白机的炸弹人游戏，放一个炸弹，然后爆炸后会炸出个&lsquo;十&rsquo;字，上下左右的东西都炸掉了。这道题是个简化版，字母E代表敌人，W代表墙壁，这里说明了炸弹无法炸穿墙壁。数字0表示可以放炸弹的位置，让我们找出一个放炸弹的位置可以炸死最多的敌人。那么我最开始想出的方法是建立四个累加数组v1, v2, v3, v4，其中v1是水平方向从左到右的累加数组，v2是水平方向从右到左的累加数组，v3是竖直方向从上到下的累加数组，v4是竖直方向从下到上的累加数组，我们建立好这个累加数组后，对于任意位置(i, j)，其可以炸死的最多敌人数就是v1[i][j] + v2[i][j] + v3[i][j] + v4[i][j]，最后我们通过比较每个位置的累加和，就可以得到结果，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxKilledEnemies(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">if</span> (grid.empty() || grid[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = grid.size(), n = grid[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; v1(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span>)), v2 = v1, v3 = v1, v4 =<span style="color: #000000;"> v1;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> t = (j == <span style="color: #800080;">0</span> || grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span>) ? <span style="color: #800080;">0</span> : v1[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+                v1[i][j] </span>= grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span> ? t + <span style="color: #800080;">1</span><span style="color: #000000;"> : t;
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = n - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> t = (j == n - <span style="color: #800080;">1</span> || grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span>) ? <span style="color: #800080;">0</span> : v2[i][j + <span style="color: #800080;">1</span><span style="color: #000000;">];
+                v2[i][j] </span>= grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span> ? t + <span style="color: #800080;">1</span><span style="color: #000000;"> : t;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> t = (i == <span style="color: #800080;">0</span> || grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span>) ? <span style="color: #800080;">0</span> : v3[i - <span style="color: #800080;">1</span><span style="color: #000000;">][j];
+                v3[i][j] </span>= grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span> ? t + <span style="color: #800080;">1</span><span style="color: #000000;"> : t;
+            }
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = m - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> t = (i == m - <span style="color: #800080;">1</span> || grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span>) ? <span style="color: #800080;">0</span> : v4[i + <span style="color: #800080;">1</span><span style="color: #000000;">][j];
+                v4[i][j] </span>= grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span> ? t + <span style="color: #800080;">1</span><span style="color: #000000;"> : t;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    res </span>= max(res, v1[i][j] + v2[i][j] + v3[i][j] +<span style="color: #000000;"> v4[i][j]);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我在论坛里看到了史蒂芬大神提出的另一种解法，感觉挺巧妙，就搬了过来。这种解法比较省空间，写法也比较简洁，需要一个rowCnt变量，用来记录到下一个墙之前的敌人个数。还需要一个数组colCnt，其中colCnt[j]表示第j列到下一个墙之前的敌人个数。算法思路是遍历整个数组grid，对于一个位置grid[i][j]，对于水平方向，如果当前位置是开头一个或者前面一个是墙壁，我们开始从当前位置往后遍历，遍历到末尾或者墙的位置停止，计算敌人个数。对于竖直方向也是同样，如果当前位置是开头一个或者上面一个是墙壁，我们开始从当前位置向下遍历，遍历到末尾或者墙的位置停止，计算敌人个数。可能会有人有疑问，为啥rowCnt就可以用一个变量，而colCnt就需要用一个数组呢，为啥colCnt不能也用一个变量呢？原因是由我们的遍历顺序决定的，我们是逐行遍历的，在每行的开头就统计了该行的敌人总数，所以再该行遍历没必要用数组，但是每次移动时就会换到不同的列，我们总不能没换个列就重新统计一遍吧，所以就在第一行时一起统计了存到数组中供后来使用。有了水平方向和竖直方向敌人的个数，那么如果当前位置是0，表示可以放炸弹，我们更新结果res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxKilledEnemies(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">if</span> (grid.empty() || grid[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = grid.size(), n = grid[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">, rowCnt, colCnt[n];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (j == <span style="color: #800080;">0</span> || grid[i][j - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    rowCnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = j; k &lt; n &amp;&amp; grid[i][k] != <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;">k) {
+                        rowCnt </span>+= grid[i][k] == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                    }
+                }
+                </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> || grid[i - <span style="color: #800080;">1</span>][j] == <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    colCnt[j] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = i; k &lt; m &amp;&amp; grid[k][j] != <span style="color: #800000;">'</span><span style="color: #800000;">W</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;">k) {
+                        colCnt[j] </span>+= grid[k][j] == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                    }
+                }
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    res </span>= max(res, rowCnt +<span style="color: #000000;"> colCnt[j]);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/48565/short-o-mn-time-o-n-space-solution" target="_blank">https://discuss.leetcode.com/topic/48565/short-o-mn-time-o-n-space-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

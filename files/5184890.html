@@ -1,0 +1,42 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5184890.html">[LeetCode] Missing Ranges 缺失区间</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a sorted integer array where the range of elements are [0, 99] inclusive, return its missing ranges.<br />For example, given [0, 1, 3, 50, 75], return [&ldquo;2&rdquo;, &ldquo;4-&gt;49&rdquo;, &ldquo;51-&gt;74&rdquo;, &ldquo;76-&gt;99&rdquo;] </p>
+<p>&nbsp;</p>
+<p>这道题让我们求缺失区间，跟之前那道<a href="http://www.cnblogs.com/grandyang/p/4603555.html" target="_blank">Summary Ranges</a>很类似，这道题让我们求缺失的空间，给了一个空间的范围[lower upper]，缺失的空间的范围需要在给定的空间范围内。我们首先将lower赋给l，然后开始遍历nums数组，如果i小于nums长度且当前数字小于等于upper，我们让r等于当前数字，否则如果<span style="line-height: 1.5;">当i等于nums的长度时或者当前数字大于upper时，将r赋为upper+1。然后判断l和r的值，若相同，l自增1，否则当r大于l时，说明缺失空间存在，我们看l和r是否差1，如果是，说明只缺失了一个数字，若不是，则说明缺失了一个区间，我们分别加上数字或者区间即可，参见代码如下：</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findMissingRanges(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> lower, <span style="color: #0000ff;">int</span><span style="color: #000000;"> upper) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> l =<span style="color: #000000;"> lower;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> r = (i &lt; nums.size() &amp;&amp; nums[i] &lt;= upper) ? nums[i] : upper + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (l == r) ++<span style="color: #000000;">l;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (r &gt;<span style="color: #000000;"> l) {
+                res.push_back(r </span>- l == <span style="color: #800080;">1</span> ? to_string(l) : to_string(l) + <span style="color: #800000;">"</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">"</span> + to_string(r - <span style="color: #800080;">1</span><span style="color: #000000;">));
+                l </span>= r + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4603555.html" target="_blank">Summary Ranges</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/29206/my-concise-java-accepted-solution" target="_blank">https://leetcode.com/discuss/29206/my-concise-java-accepted-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

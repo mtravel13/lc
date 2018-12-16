@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5006441.html">[LeetCode] Burst Balloons 打气球游戏</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given <code>n</code> balloons, indexed from <code>0</code> to <code>n-1</code>. Each balloon is painted with a number on it represented by array <code>nums</code>. You are asked to burst all the balloons. If the you burst balloon <code>i</code> you will get <code>nums[left] * nums[i] * nums[right]</code> coins. Here <code>left</code> and <code>right</code> are adjacent indices of <code>i</code>. After the burst, the <code>left</code> and <code>right</code> then becomes adjacent.</p>
+<p>Find the maximum coins you can collect by bursting the balloons wisely.</p>
+<p> <strong>Note:</strong> <br />
+    (1) You may imagine <code>nums[-1] = nums[n] = 1</code>. They are not real therefore you can not burst them.<br />
+    (2) 0 &le; <code>n</code> &le; 500, 0 &le; <code>nums[i]</code> &le; 100
+</p>
+<p>
+    <strong>Example:</strong>
+</p>
+<p>
+    Given <code>[3, 1, 5, 8]</code>
+</p>
+<p>
+    Return <code>167</code>
+</p>
+<pre>    nums = [3,1,5,8] --&gt; [3,5,8] --&gt;   [3,8]   --&gt;  [8]  --&gt; []
+   coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
+</pre>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/peisi">@peisi</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题提出了一种打气球的游戏，每个气球都对应着一个数字，我们每次打爆一个气球，得到的金币数是被打爆的气球的数字和其两边的气球上的数字相乘，如果旁边没有气球了，则按1算，以此类推，求能得到的最多金币数。像这种求极值问题，我们一般都要考虑用动态规划Dynamic Programming来做，我们维护一个二维动态数组dp，其中dp[i][j]表示打爆区间[i,j]中的所有气球能得到的最多金币。题目中说明了边界情况，当气球周围没有气球的时候，旁边的数字按1算，这样我们可以在原数组两边各填充一个1，这样方便于计算。这道题的最难点就是找递归式，如下所示：</p>
+<p>dp[i][j] = max(dp[i][j], nums[i - 1]*nums[k]*nums[j + 1] + dp[i][k - 1] + dp[k + 1][j])&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( i <span class="t"><span id="whlm">&le; </span></span>k <span class="t"><span id="whlm">&le;</span></span> j )</p>
+<p>有了递推式，我们可以写代码，我们其实只是更新了dp数组的右上三角区域，我们最终要返回的值存在dp[1][n]中，其中n是两端添加1之前数组nums的个数。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Non-recursion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxCoins(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        nums.insert(nums.begin(), </span><span style="color: #800080;">1</span><span style="color: #000000;">);
+        nums.push_back(</span><span style="color: #800080;">1</span><span style="color: #000000;">);
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; dp(nums.size(), vector&lt;<span style="color: #0000ff;">int</span>&gt;(nums.size() , <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> len = <span style="color: #800080;">1</span>; len &lt;= n; ++<span style="color: #000000;">len) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> left = <span style="color: #800080;">1</span>; left &lt;= n - len + <span style="color: #800080;">1</span>; ++<span style="color: #000000;">left) {
+                </span><span style="color: #0000ff;">int</span> right = left + len - <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = left; k &lt;= right; ++<span style="color: #000000;">k) {
+                    dp[left][right] </span>= max(dp[left][right], nums[left - <span style="color: #800080;">1</span>] * nums[k] * nums[right + <span style="color: #800080;">1</span>] + dp[left][k - <span style="color: #800080;">1</span>] + dp[k + <span style="color: #800080;">1</span><span style="color: #000000;">][right]);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[<span style="color: #800080;">1</span><span style="color: #000000;">][n];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>对于题目中的例子<code>[3, 1, 5, 8]</code>，得到的dp数组如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">30</span>   <span style="color: #800080;">159</span>  <span style="color: #800080;">167</span>  <span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">15</span>   <span style="color: #800080;">135</span>  <span style="color: #800080;">159</span>  <span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">40</span>   <span style="color: #800080;">48</span>   <span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">40</span>   <span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span>    <span style="color: #800080;">0</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这题还有递归解法，思路都一样，就是写法略有不同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxCoins(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        nums.insert(nums.begin(), </span><span style="color: #800080;">1</span><span style="color: #000000;">);
+        nums.push_back(</span><span style="color: #800080;">1</span><span style="color: #000000;">);
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; dp(nums.size(), vector&lt;<span style="color: #0000ff;">int</span>&gt;(nums.size() , <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">return</span> burst(nums, dp, <span style="color: #800080;">1</span><span style="color: #000000;"> , n);</span><span style="color: #000000;">
+    }
+    </span><span style="color: #0000ff;">int</span> burst(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;nums, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;dp, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span><span style="color: #000000;"> right) {
+        </span><span style="color: #0000ff;">if</span> (left &gt; right) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (dp[left][right] &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[left][right];
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = left; k &lt;= right; ++<span style="color: #000000;">k) {
+            res </span>= max(res, nums[left - <span style="color: #800080;">1</span>] * nums[k] * nums[right + <span style="color: #800080;">1</span>] + burst(nums, dp, left, k - <span style="color: #800080;">1</span>) + burst(nums, dp, k + <span style="color: #800080;">1</span><span style="color: #000000;">, right));
+        }
+        dp[left][right] </span>=<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6759881.html" target="_blank">Zuma Game</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6850657.html">Remove Boxes</a><a href="http://www.cnblogs.com/grandyang/p/6759881.html" target="_blank"><br /></a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8319913.html">Strange Printer</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/72216/share-some-analysis-and-explanations" target="_blank">https://leetcode.com/discuss/72216/share-some-analysis-and-explanations</a></p>
+<p><a href="https://leetcode.com/discuss/72186/c-dynamic-programming-o-n-3-1100-ms-with-comments" target="_blank">https://leetcode.com/discuss/72186/c-dynamic-programming-o-n-3-1100-ms-with-comments</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

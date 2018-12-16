@@ -1,0 +1,151 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4249905.html">[LeetCode] Sort List 链表排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Sort a linked list in&nbsp;<em>O</em>(<em>n</em>&nbsp;log&nbsp;<em>n</em>) time using constant space complexity.</p>
+<p>&nbsp;</p>
+<p>常见排序方法有很多，插入排序，选择排序，堆排序，快速排序，冒泡排序，归并排序，桶排序等等。。它们的时间复杂度不尽相同，而这里题目限定了时间必须为O(nlgn)，符合要求只有快速排序，归并排序，堆排序，而根据单链表的特点，最适于用归并排序。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* sortList(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*slow = head, *fast = head, *pre =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (fast &amp;&amp; fast-&gt;<span style="color: #000000;">next) {
+            pre </span>=<span style="color: #000000;"> slow;
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;next-&gt;<span style="color: #000000;">next;
+        }
+        pre</span>-&gt;next =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> merge(sortList(head), sortList(slow));
+    }
+    ListNode</span>* merge(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        ListNode </span>*cur =<span style="color: #000000;"> dummy;
+        </span><span style="color: #0000ff;">while</span> (l1 &amp;&amp;<span style="color: #000000;"> l2) {
+            </span><span style="color: #0000ff;">if</span> (l1-&gt;val &lt; l2-&gt;<span style="color: #000000;">val) {
+                cur</span>-&gt;next =<span style="color: #000000;"> l1;
+                l1 </span>= l1-&gt;<span style="color: #000000;">next;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur</span>-&gt;next =<span style="color: #000000;"> l2;
+                l2 </span>= l2-&gt;<span style="color: #000000;">next;
+            }
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">if</span> (l1) cur-&gt;next =<span style="color: #000000;"> l1;
+        </span><span style="color: #0000ff;">if</span> (l2) cur-&gt;next =<span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode sortList(ListNode head) {
+        </span><span style="color: #0000ff;">if</span> (head == <span style="color: #0000ff;">null</span> || head.next == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode slow </span>= head, fast = head, pre =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (fast != <span style="color: #0000ff;">null</span> &amp;&amp; fast.next != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            pre </span>=<span style="color: #000000;"> slow;
+            slow </span>=<span style="color: #000000;"> slow.next;
+            fast </span>=<span style="color: #000000;"> fast.next.next;
+        }
+        pre.next </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> merge(sortList(head), sortList(slow));
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode merge(ListNode l1, ListNode l2) {
+        ListNode dummy </span>= <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        ListNode cur </span>=<span style="color: #000000;"> dummy;
+        </span><span style="color: #0000ff;">while</span> (l1 != <span style="color: #0000ff;">null</span> &amp;&amp; l2 != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (l1.val &lt;<span style="color: #000000;"> l2.val) {
+                cur.next </span>=<span style="color: #000000;"> l1;
+                l1 </span>=<span style="color: #000000;"> l1.next;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur.next </span>=<span style="color: #000000;"> l2;
+                l2 </span>=<span style="color: #000000;"> l2.next;
+            }
+            cur </span>=<span style="color: #000000;"> cur.next;
+        }
+        </span><span style="color: #0000ff;">if</span> (l1 != <span style="color: #0000ff;">null</span>) cur.next =<span style="color: #000000;"> l1;
+        </span><span style="color: #0000ff;">if</span> (l2 != <span style="color: #0000ff;">null</span>) cur.next =<span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dummy.next;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法也是归并排序，而且在merge函数中也使用了递归，这样使代码更加简洁啦～</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* sortList(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*slow = head, *fast = head, *pre =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (fast &amp;&amp; fast-&gt;<span style="color: #000000;">next) {
+            pre </span>=<span style="color: #000000;"> slow;
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;next-&gt;<span style="color: #000000;">next;
+        }
+        pre</span>-&gt;next =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> merge(sortList(head), sortList(slow));
+    }
+    ListNode</span>* merge(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        </span><span style="color: #0000ff;">if</span> (!l1) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">if</span> (!l2) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        </span><span style="color: #0000ff;">if</span> (l1-&gt;val &lt; l2-&gt;<span style="color: #000000;">val) {
+            l1</span>-&gt;next = merge(l1-&gt;<span style="color: #000000;">next, l2);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            l2</span>-&gt;next = merge(l1, l2-&gt;<span style="color: #000000;">next);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode sortList(ListNode head) {
+        </span><span style="color: #0000ff;">if</span> (head == <span style="color: #0000ff;">null</span> || head.next == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode slow </span>= head, fast = head, pre =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (fast != <span style="color: #0000ff;">null</span> &amp;&amp; fast.next != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            pre </span>=<span style="color: #000000;"> slow;
+            slow </span>=<span style="color: #000000;"> slow.next;
+            fast </span>=<span style="color: #000000;"> fast.next.next;
+        }
+        pre.next </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> merge(sortList(head), sortList(slow));
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode merge(ListNode l1, ListNode l2) {
+        </span><span style="color: #0000ff;">if</span> (l1 == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        </span><span style="color: #0000ff;">if</span> (l2 == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        </span><span style="color: #0000ff;">if</span> (l1.val &lt;<span style="color: #000000;"> l2.val) {
+            l1.next </span>=<span style="color: #000000;"> merge(l1.next, l2);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l1;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            l2.next </span>=<span style="color: #000000;"> merge(l1, l2.next);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l2;
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/sort-list/description/" target="_blank">https://leetcode.com/problems/sort-list/description/</a></p>
+<p><a href="https://leetcode.com/problems/sort-list/description/" target="_blank">https://discuss.leetcode.com/topic/40212/java-solution-using-merge-sort</a></p>
+<p><a href="https://discuss.leetcode.com/topic/17150/clean-and-short-merge-sort-solution-in-c" target="_blank">https://discuss.leetcode.com/topic/17150/clean-and-short-merge-sort-solution-in-c</a></p>
+<p><a href="https://discuss.leetcode.com/topic/15029/56ms-c-solutions-using-quicksort-with-explanations" target="_blank">https://discuss.leetcode.com/topic/15029/56ms-c-solutions-using-quicksort-with-explanations</a></p>
+<p><a href="https://discuss.leetcode.com/topic/643/i-have-a-pretty-good-mergesort-method-can-anyone-speed-up-the-run-time-or-reduce-the-memory-usage/2" target="_blank">https://discuss.leetcode.com/topic/643/i-have-a-pretty-good-mergesort-method-can-anyone-speed-up-the-run-time-or-reduce-the-memory-usage/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4053384.html">[LeetCode] Same Tree 判断相同树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two binary trees, write a function to check if they are equal or not.</p>
+<p>Two binary trees are considered equal if they are structurally identical and the nodes have the same value.</p>
+<p>&nbsp;</p>
+<p>判断两棵树是否相同和之前的判断两棵树是否对称都是一样的原理，利用深度优先搜索DFS来递归。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isSameTree(TreeNode *p, TreeNode *<span style="color: #000000;">q) {
+        </span><span style="color: #0000ff;">if</span> (!p &amp;&amp; !q) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> ((p &amp;&amp; !q) || (!p &amp;&amp; q) || (p-&gt;val != q-&gt;val)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> isSameTree(p-&gt;left, q-&gt;left) &amp;&amp; isSameTree(p-&gt;right, q-&gt;<span style="color: #000000;">right);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有非递归的解法，因为二叉树的四种遍历(层序，先序，中序，后序)均有各自的迭代和递归的写法，这里我们先来看先序的迭代写法，相当于同时遍历两个数，然后每个节点都进行比较，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isSameTree(TreeNode* p, TreeNode*<span style="color: #000000;"> q) {
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s1, s2;
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (p) s1.push(p);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (q) s2.push(q);
+        </span><span style="color: #0000ff;">while</span> (!s1.empty() &amp;&amp; !<span style="color: #000000;">s2.empty()) {
+            TreeNode </span>*t1 =<span style="color: #000000;"> s1.top(); s1.pop();
+            TreeNode </span>*t2 =<span style="color: #000000;"> s2.top(); s2.pop();
+            </span><span style="color: #0000ff;">if</span> (t1-&gt;val != t2-&gt;val) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (t1-&gt;left) s1.push(t1-&gt;<span style="color: #000000;">left);
+            </span><span style="color: #0000ff;">if</span> (t2-&gt;left) s2.push(t2-&gt;<span style="color: #000000;">left);
+            </span><span style="color: #0000ff;">if</span> (s1.size() != s2.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (t1-&gt;right) s1.push(t1-&gt;<span style="color: #000000;">right);
+            </span><span style="color: #0000ff;">if</span> (t2-&gt;right) s2.push(t2-&gt;<span style="color: #000000;">right);
+            </span><span style="color: #0000ff;">if</span> (s1.size() != s2.size()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> s1.size() ==<span style="color: #000000;"> s2.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其他几种遍历顺序的迭代写法应该也能实现，有时间补充完整~</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/22197/my-non-recursive-method" target="_blank">https://leetcode.com/discuss/22197/my-non-recursive-method</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

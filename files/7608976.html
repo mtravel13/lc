@@ -1,0 +1,70 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7608976.html">[LeetCode] Longest Continuous Increasing Subsequence 最长连续递增序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an unsorted array of integers, find the length of longest&nbsp;<code>continuous</code>&nbsp;increasing subsequence.</p>
+<p>Example 1:</p>
+<pre>Input: [1,3,5,4,7]
+Output: 3
+Explanation: The longest continuous increasing subsequence is [1,3,5], its length is 3. 
+Even though [1,3,5,7] is also an increasing subsequence, it's not a continuous one where 5 and 7 are separated by 4. 
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [2,2,2,2,2]
+Output: 1
+Explanation: The longest continuous increasing subsequence is [2], its length is 1. 
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;Length of the array will not exceed 10,000.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求一个数组的最长连续递增序列，由于有了连续这个条件，跟之前那道<a href="http://www.cnblogs.com/grandyang/p/7603903.html">Number of Longest Increasing Subsequence</a>比起来，其实难度就降低了很多。我们可以使用一个计数器，如果遇到大的数字，计数器自增1；如果是一个小的数字，则计数器重置为1。我们用一个变量cur来表示前一个数字，初始化为整型最大值，当前遍历到的数字num就和cur比较就行了，每次用cnt来更新结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLengthOfLCIS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, cnt = <span style="color: #800080;">0</span>, cur =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            </span><span style="color: #0000ff;">if</span> (num &gt; cur) ++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">else</span> cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            res </span>=<span style="color: #000000;"> max(res, cnt);
+            cur </span>=<span style="color: #000000;"> num;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法的思路和上面的解法一样，每次都和前面一个数字来比较，注意处理无法取到钱一个数字的情况，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLengthOfLCIS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, cnt = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> || nums[i - <span style="color: #800080;">1</span>] &lt; nums[i]) res = max(res, ++<span style="color: #000000;">cnt);
+            </span><span style="color: #0000ff;">else</span> cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7603903.html">Number of Longest Increasing Subsequence</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/102999/java-c-clean-solution">https://discuss.leetcode.com/topic/102999/java-c-clean-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

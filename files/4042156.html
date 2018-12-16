@@ -1,0 +1,98 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4042156.html">[LeetCode] Path Sum II 二叉树路径之和之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.</p>
+<p>For example:<br />Given the below binary tree and&nbsp;<code>sum = 22</code>,</p>
+<pre>              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+</pre>
+<p>return</p>
+<pre>[
+   [5,4,11,2],
+   [5,8,4,5]
+]<br /><br /></pre>
+<p>这道二叉树路径之和在之前的基础上又需要找出路径 (可以参见我之前的博客 <a href="http://www.cnblogs.com/grandyang/p/4036961.html" target="_blank">http://www.cnblogs.com/grandyang/p/4036961.html</a>)，但是基本思想都一样，还是需要用深度优先搜索DFS，只不过数据结构相对复杂一点，需要用到二维的vector，而且每当DFS搜索到新节点时，都要保存该节点。而且每当找出一条路径之后，都将这个保存为一维vector的路径保存到最终结果二位vector中。并且，每当DFS搜索到子节点，发现不是路径和时，返回上一个结点时，需要把该节点从一维vector中移除。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; pathSum(TreeNode *root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> sum) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        helper(root, sum, </span><span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span> sum, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; <span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">out</span>.push_back(node-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">if</span> (sum == node-&gt;val &amp;&amp; !node-&gt;left &amp;&amp; !node-&gt;<span style="color: #000000;">right) {
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        }
+        helper(node</span>-&gt;left, sum - node-&gt;val, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        helper(node</span>-&gt;right, sum - node-&gt;val, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是迭代的写法，用的是中序遍历的顺序，参考之前那道<a href="http://www.cnblogs.com/grandyang/p/4297300.html" target="_blank">Binary Tree Inorder Traversal</a>，中序遍历本来是要用栈来辅助运算的，由于我们要取出路径上的节点值，所以我们用一个vector来代替stack，首先利用while循环找到最左子节点，在找的过程中，把路径中的节点值都加起来，这时候我们取出vector中的尾元素，如果其左右子节点都不存在且当前累加值正好等于sum了，我们将这条路径取出来存入结果res中，下面的部分是和一般的迭代中序写法有所不同的地方，因为如果当前最左节点已经是个叶节点了，我们要转移到其他的节点上时需要把当前的节点值减去，而如果当前最左节点不是叶节点，下面还有一个右子节点，这时候移动指针时就不能减去当前节点值，为了区分这两种情况，我们需要用一个额外指针pre来指向前一个节点，如果右子节点存在且不等于pre，我们直接将指针移到右子节点，反之我们更新pre为cur，cur重置为空，val减去当前节点，s删掉最后一个节点，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; pathSum(TreeNode *root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> sum) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s;
+        TreeNode </span>*cur = root, *pre =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">int</span> val = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (cur || !<span style="color: #000000;">s.empty()) {
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+                s.push_back(cur);
+                val </span>+= cur-&gt;<span style="color: #000000;">val;
+                cur </span>= cur-&gt;<span style="color: #000000;">left;
+            }
+            cur </span>=<span style="color: #000000;"> s.back(); 
+            </span><span style="color: #0000ff;">if</span> (!cur-&gt;left &amp;&amp; !cur-&gt;right &amp;&amp; val ==<span style="color: #000000;"> sum) {
+                vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto it : s) {
+                    v.push_back(it</span>-&gt;<span style="color: #000000;">val);
+                }
+                res.push_back(v);
+            }
+            </span><span style="color: #0000ff;">if</span> (cur-&gt;right &amp;&amp; cur-&gt;right != pre) cur = cur-&gt;<span style="color: #000000;">right;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                pre </span>=<span style="color: #000000;"> cur;
+                val </span>-= cur-&gt;<span style="color: #000000;">val;
+                s.pop_back();
+                cur </span>=<span style="color: #000000;"> NULL;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4036961.html" target="_blank">Path Sum</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/18454/12ms-11-lines-c-solution" target="_blank">https://discuss.leetcode.com/topic/18454/12ms-11-lines-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/39728/c-dfs-17ms-non-recursive-solution" target="_blank">https://discuss.leetcode.com/topic/39728/c-dfs-17ms-non-recursive-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/19646/accepted-cpp-dfs-solution-only-one-function" target="_blank">https://discuss.leetcode.com/topic/19646/accepted-cpp-dfs-solution-only-one-function</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

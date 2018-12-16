@@ -1,0 +1,69 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6583004.html">[LeetCode] Reverse String II 翻转字符串之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string and an integer k, you need to reverse the first k characters for every 2k characters counting from the start of the string. If there are less than k characters left, reverse all of them. If there are less than 2k but greater than or equal to k characters, then reverse the first k characters and left the other as original.</p>
+<p>&nbsp;</p>
+<p>Example:</p>
+<pre>Input: s = "abcdefg", k = 2
+Output: "bacdfeg"
+</pre>
+<p>&nbsp;</p>
+<p>Restrictions:</p>
+<ol>
+<li>The string consists of lower English letters only.</li>
+<li>Length of the given string and k will in the range [1, 10000]</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题是之前那道题<a href="http://www.cnblogs.com/grandyang/p/5420836.html">Reverse String</a>的拓展，同样是翻转字符串，但是这里是每隔k隔字符，翻转k个字符，最后如果不够k个了的话，剩几个就翻转几个。比较直接的方法就是先用n／k算出来原字符串s能分成几个长度为k的字符串，然后开始遍历这些字符串，遇到2的倍数就翻转，翻转的时候注意考虑下是否已经到s末尾了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseStr(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> n = s.size(), cnt = n /<span style="color: #000000;"> k;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= cnt; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (i * k + k &lt;<span style="color: #000000;"> n) {
+                    reverse(s.begin() </span>+ i * k, s.begin() + i * k +<span style="color: #000000;"> k);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    reverse(s.begin() </span>+ i *<span style="color: #000000;"> k, s.end());
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>在论坛里又发现了写法更为简洁的方法，就是每2k个字符来遍历原字符串s，然后进行翻转，翻转的结尾位置是取i+k和末尾位置之间的较小值，感觉很叼，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseStr(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); i += <span style="color: #800080;">2</span> *<span style="color: #000000;"> k) {
+            reverse(s.begin() </span>+ i, min(s.begin() + i +<span style="color: #000000;"> k, s.end()));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5420836.html">Reverse String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/82652/one-line-c/2" target="_blank">https://discuss.leetcode.com/topic/82652/one-line-c/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/82626/java-concise-solution" target="_blank">https://discuss.leetcode.com/topic/82626/java-concise-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

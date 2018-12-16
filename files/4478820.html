@@ -1,0 +1,57 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4478820.html">[LeetCode] Reverse Linked List 倒置链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Reverse a singly linked list.</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/reverse-linked-list/">click to show more hints.</a></p>
+<div class="spoilers">Hint:
+<p>A linked list can be reversed either iteratively or recursively. Could you implement both?</p>
+<p>&nbsp;</p>
+<p>之前做到<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4306611.html">&nbsp;Reverse Linked List II 倒置链表之二</a>的时候我还纳闷怎么只有二没有一呢，原来真是忘了啊，现在才加上，这道题跟之前那道比起来简单不少，题目为了增加些许难度，让我们分别用迭代和递归来实现，但难度还是不大。我们先来看迭代的解法，思路是在原链表之前建立一个dummy node，因为首节点会变，然后从head开始，将之后的一个节点移到dummy node之后，重复此操作知道head成为末节点为止，代码如下：</p>
+</div>
+<p>解法一</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Iterative</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* reverseList(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        dummy</span>-&gt;next =<span style="color: #000000;"> head;
+        ListNode </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (cur-&gt;<span style="color: #000000;">next) {
+            ListNode </span>*tmp = cur-&gt;<span style="color: #000000;">next;
+            cur</span>-&gt;next = tmp-&gt;<span style="color: #000000;">next;
+            tmp</span>-&gt;next = dummy-&gt;<span style="color: #000000;">next;
+            dummy</span>-&gt;next =<span style="color: #000000;"> tmp;
+        }
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看递归解法，代码量更少，递归解法的思路是，不断的进入递归函数，直到head指向最后一个节点，p指向之前一个节点，然后调换head和p的位置，再返回上一层递归函数，再交换p和head的位置，每次交换后，head节点后面都是交换好的顺序，直到p为首节点，然后再交换，首节点就成了为节点，此时整个链表也完成了翻转，代码如下：</p>
+<p>解法二</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursive</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* reverseList(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*p =<span style="color: #000000;"> head;
+        head </span>= reverseList(p-&gt;<span style="color: #000000;">next);
+        p</span>-&gt;next-&gt;next =<span style="color: #000000;"> p;
+        p</span>-&gt;next =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

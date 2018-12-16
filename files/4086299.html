@@ -1,0 +1,62 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4086299.html">[LeetCode] Count and Say 计数和读法</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The count-and-say sequence is the sequence of integers beginning as follows:<br /><code>1, 11, 21, 1211, 111221, ...</code></p>
+<p><code>1</code>&nbsp;is read off as&nbsp;<code>"one 1"</code>&nbsp;or&nbsp;<code>11</code>.<br /><code>11</code>&nbsp;is read off as&nbsp;<code>"two 1s"</code>&nbsp;or&nbsp;<code>21</code>.<br /><code>21</code>&nbsp;is read off as&nbsp;<code>"one 2</code>, then&nbsp;<code>one 1"</code>&nbsp;or&nbsp;<code>1211</code>.</p>
+<p>Given an integer&nbsp;<em>n</em>, generate the&nbsp;<em>n</em>th&nbsp;sequence.</p>
+<p>Note: The sequence of integers will be represented as a string.</p>
+<p>&nbsp;</p>
+<p>这道计数和读法问题还是第一次遇到，看似挺复杂，其实仔细一看，算法很简单，就是对于前一个数，找出相同元素的个数，把个数和该元素存到新的string里。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> countAndSay(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (--<span style="color: #000000;">n) {
+            </span><span style="color: #0000ff;">string</span> cur = <span style="color: #800000;">""</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; res.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (i + <span style="color: #800080;">1</span> &lt; res.size() &amp;&amp; res[i] == res[i + <span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                    </span>++<span style="color: #000000;">cnt;
+                    </span>++<span style="color: #000000;">i;
+                }
+                cur </span>+= to_string(cnt) +<span style="color: #000000;"> res[i];
+            }
+            res </span>=<span style="color: #000000;"> cur;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>博主出于好奇打印出了前12个数字，发现一个很有意思的现象，不管打印到后面多少位，出现的数字只是由1,2和3组成，网上也有人发现了并分析了原因 (<a href="http://www.cnblogs.com/TenosDoIt/p/3776356.html" target="_blank">http://www.cnblogs.com/TenosDoIt/p/3776356.html</a>)，前十二个数字如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">2</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span>
+<span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> <span style="color: #800080;">1</span> <span style="color: #800080;">1</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/20195/c-solution-easy-understand">https://discuss.leetcode.com/topic/20195/c-solution-easy-understand</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

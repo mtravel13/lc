@@ -1,0 +1,76 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4353555.html">[LeetCode] Unique Paths 不同的路径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A robot is located at the top-left corner of a&nbsp;<em>m</em>&nbsp;x&nbsp;<em>n</em>&nbsp;grid (marked 'Start' in the diagram below).</p>
+<p>The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).</p>
+<p>How many possible unique paths are there?</p>
+<p><img src="https://assets.leetcode.com/uploads/2018/10/22/robot_maze.png" alt="" /><br /><small>Above is a 7 x 3 grid. How many possible unique paths are there?</small></p>
+<p>Note:&nbsp;<em>m</em>&nbsp;and&nbsp;<em>n</em>&nbsp;will be at most 100.</p>
+<p>Example 1:</p>
+<pre>Input: m = 3, n = 2
+Output: 3
+Explanation:
+From the top-left corner, there are a total of 3 ways to reach the bottom-right corner:
+1. Right -&gt; Right -&gt; Down
+2. Right -&gt; Down -&gt; Right
+3. Down -&gt; Right -&gt; Right
+</pre>
+<p>Example 2:</p>
+<pre>Input: m = 7, n = 3
+Output: 28</pre>
+<p>&nbsp;</p>
+<p>这道题让求所有不同的路径的个数，一开始还真把我难住了，因为之前好像没有遇到过这类的问题，所以感觉好像有种无从下手的感觉。在网上找攻略之后才恍然大悟，原来这跟之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4079165.html">&nbsp;Climbing Stairs</a>&nbsp;很类似，那道题是说可以每次能爬一格或两格，问到达顶部的所有不同爬法的个数。而这道题是每次可以向下走或者向右走，求到达最右下角的所有不同走法的个数。那么跟爬梯子问题一样，我们需要用动态规划Dynamic Programming来解，我们可以维护一个二维数组dp，其中dp[i][j]表示到当前位置不同的走法的个数，然后可以得到递推式为: dp[i][j] = dp[i - 1][j] + dp[i][j - 1]，这里为了节省空间，我们使用一维数组dp，一行一行的刷新也可以，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> uniquePaths(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(n, <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                dp[j] </span>+= dp[j - <span style="color: #800080;">1</span><span style="color: #000000;">]; 
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[n - <span style="color: #800080;">1</span><span style="color: #000000;">];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题其实还有另一种很数学的解法，参见网友<a href="http://blog.csdn.net/linhuanmars/article/details/22126357" target="_blank">Code Ganker的博客</a>，实际相当于机器人总共走了m + n - 2步，其中m - 1步向下走，n - 1步向右走，那么总共不同的方法个数就相当于在步数里面m - 1和n - 1中较小的那个数的取法，实际上是一道组合数的问题，写出代码如下:</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> uniquePaths(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">double</span> num = <span style="color: #800080;">1</span>, denom = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> small = m &gt; n ?<span style="color: #000000;"> n : m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= small - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            num </span>*= m + n - <span style="color: #800080;">1</span> -<span style="color: #000000;"> i;
+            denom </span>*=<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">return</span> (<span style="color: #0000ff;">int</span>)(num /<span style="color: #000000;"> denom);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4353680.html" target="_blank">Unique Paths II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4353255.html" target="_blank">Minimum Path Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4233035.html" target="_blank">Dungeon Game</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/unique-paths/" target="_blank">https://leetcode.com/problems/unique-paths/</a></p>
+<p><a href="https://leetcode.com/problems/unique-paths/discuss/22981/My-AC-solution-using-formula" target="_blank">https://leetcode.com/problems/unique-paths/discuss/22981/My-AC-solution-using-formula</a></p>
+<p><a href="https://leetcode.com/problems/unique-paths/discuss/22954/0ms-5-lines-DP-Solution-in-C%2B%2B-with-Explanations" target="_blank">https://leetcode.com/problems/unique-paths/discuss/22954/0ms-5-lines-DP-Solution-in-C%2B%2B-with-Explanations</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

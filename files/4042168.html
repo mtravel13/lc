@@ -1,0 +1,44 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4042168.html">[LeetCode] Minimum Depth of Binary Tree 二叉树的最小深度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, find its minimum depth.</p>
+<p>The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.</p>
+<p>&nbsp;</p>
+<p>二叉树的经典问题之最小深度问题就是就最短路径的节点个数，还是用深度优先搜索DFS来完成，万能的递归啊。。。请看代码：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minDepth(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (root == NULL) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left == NULL &amp;&amp; root-&gt;right == NULL) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left == NULL) <span style="color: #0000ff;">return</span> minDepth(root-&gt;right) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (root-&gt;right == NULL) <span style="color: #0000ff;">return</span> minDepth(root-&gt;left) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> + min(minDepth(root-&gt;left), minDepth(root-&gt;<span style="color: #000000;">right));
+    }
+    
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>求二叉树的最大深度可以参见我的博文：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4051348.html" target="_blank">http://www.cnblogs.com/grandyang/p/4051348.html</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

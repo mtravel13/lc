@@ -1,0 +1,144 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6228252.html">[LeetCode] Delete Node in a BST 删除二叉搜索树中的节点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.</p>
+<p>Basically, the deletion can be divided into two stages:</p>
+<ol>
+<li>Search for a node to remove.</li>
+<li>If the node is found, delete the node.</li>
+</ol>
+<p><strong>Note:</strong> Time complexity should be O(height of tree).</p>
+<p><strong>Example:</strong></p>
+<pre>root = [5,3,6,2,4,null,7]
+key = 3
+
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Given key to delete is 3. So we find the node with value 3 and delete it.
+
+One valid answer is [5,4,6,2,null,null,7], shown in the following BST.
+
+    5
+   / \
+  4   6
+ /     \
+2       7
+
+Another valid answer is [5,2,6,null,4,null,7].
+
+    5
+   / \
+  2   6
+   \   \
+    4   7
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们删除二叉搜索树中的一个节点，这道题的难点在于删除完节点并补上那个节点的位置后还应该是一棵二叉搜索树。被删除掉的节点位置，不一定是由其的左右子节点补上，比如下面这棵树：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / \<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4&nbsp;&nbsp; 8<br />&nbsp;&nbsp;&nbsp;&nbsp; /&nbsp;&nbsp; \&nbsp; &nbsp;<br />&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp; 6<br />&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp; /<br />&nbsp;&nbsp; &nbsp;&nbsp; 3 5</p>
+<p>如果我们要删除节点4，那么应该将节点5补到4的位置，这样才能保证还是BST，那么结果是如下这棵树：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / \<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5&nbsp;&nbsp; 8<br />&nbsp;&nbsp;&nbsp;&nbsp; /&nbsp;&nbsp; \&nbsp; &nbsp;<br />&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp; 6<br />&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&nbsp; 3 </p>
+<p>我们先来看一种递归的解法，首先判断根节点是否为空。由于BST的左&lt;根&lt;右的性质，使得我们可以快速定位到要删除的节点，我们对于当前节点值不等于key的情况，根据大小关系对其左右子节点分别调用递归函数。若当前节点就是要删除的节点，我们首先判断是否有一个子节点不存在，那么我们就将root指向另一个节点，如果左右子节点都不存在，那么root就赋值为空了，也正确。难点就在于处理左右子节点都存在的情况，我们需要在右子树找到最小值，即右子树中最左下方的节点，然后将该最小值赋值给root，然后再在右子树中调用递归函数来删除这个值最小的节点，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode</span>* deleteNode(TreeNode* root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;val &gt;<span style="color: #000000;"> key) {
+            root</span>-&gt;left = deleteNode(root-&gt;<span style="color: #000000;">left, key);
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (root-&gt;val &lt;<span style="color: #000000;"> key) {
+            root</span>-&gt;right = deleteNode(root-&gt;<span style="color: #000000;">right, key);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (!root-&gt;left || !root-&gt;<span style="color: #000000;">right) {
+                root </span>= (root-&gt;left) ? root-&gt;left : root-&gt;<span style="color: #000000;">right;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                TreeNode </span>*cur = root-&gt;<span style="color: #000000;">right;
+                </span><span style="color: #0000ff;">while</span> (cur-&gt;left) cur = cur-&gt;<span style="color: #000000;">left;
+                root</span>-&gt;val = cur-&gt;<span style="color: #000000;">val;
+                root</span>-&gt;right = deleteNode(root-&gt;right, cur-&gt;<span style="color: #000000;">val);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看迭代的写法，还是通过BST的性质来快速定位要删除的节点，如果没找到直接返回空。遍历的过程要记录上一个位置的节点pre，如果pre不存在，说明要删除的是根节点，如果要删除的节点在pre的左子树中，那么pre的左子节点连上删除后的节点，反之pre的右子节点连上删除后的节点。在删除函数中，如果左右子节点都不存在，那么返回空；如果有一个不存在，那么我们返回那个存在的；难点还是在于处理左右子节点都存在的情况，还是要找到需要删除节点的右子树中的最小值，然后把最小值赋值给要删除节点，然后就是要处理最小值可能存在的右子树的连接问题，如果要删除节点的右子节点没有左子节点了的话，那么最小值的右子树直接连到要删除节点的右子节点上即可(因为此时原本要删除的节点的值已经被最小值替换了，所以现在其实是要删掉最小值节点)。否则我们就把最小值节点的右子树连到其父节点的左子节点上。文字表述确实比较绕，请大家自行带例子一步一步观察就会很清晰明了了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode</span>* deleteNode(TreeNode* root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        TreeNode </span>*cur = root, *pre =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+            </span><span style="color: #0000ff;">if</span> (cur-&gt;val == key) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            pre </span>=<span style="color: #000000;"> cur;
+            </span><span style="color: #0000ff;">if</span> (cur-&gt;val &gt; key) cur = cur-&gt;<span style="color: #000000;">left;
+            </span><span style="color: #0000ff;">else</span> cur = cur-&gt;<span style="color: #000000;">right;
+        }
+        </span><span style="color: #0000ff;">if</span> (!cur) <span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">if</span> (!pre) <span style="color: #0000ff;">return</span><span style="color: #000000;"> del(cur);
+        </span><span style="color: #0000ff;">if</span> (pre-&gt;left &amp;&amp; pre-&gt;left-&gt;val == key) pre-&gt;left =<span style="color: #000000;"> del(cur);
+        </span><span style="color: #0000ff;">else</span> pre-&gt;right =<span style="color: #000000;"> del(cur);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+    }
+    TreeNode</span>* del(TreeNode*<span style="color: #000000;"> node) {
+        </span><span style="color: #0000ff;">if</span> (!node-&gt;left &amp;&amp; !node-&gt;right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">if</span> (!node-&gt;left || !node-&gt;<span style="color: #000000;">right) {
+            </span><span style="color: #0000ff;">return</span> (node-&gt;left) ? node-&gt;left : node-&gt;<span style="color: #000000;">right;
+        }
+        TreeNode </span>*pre = node, *cur = node-&gt;<span style="color: #000000;">right;
+        </span><span style="color: #0000ff;">while</span> (cur-&gt;<span style="color: #000000;">left) {
+            pre </span>=<span style="color: #000000;"> cur;
+            cur </span>= cur-&gt;<span style="color: #000000;">left;
+        }
+        node</span>-&gt;val = cur-&gt;<span style="color: #000000;">val;
+        (pre </span>== node ? node-&gt;right : pre-&gt;left) = cur-&gt;<span style="color: #000000;">right;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> node;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看一种对于二叉树通用的解法，适用于所有二叉树，所以并没有利用BST的性质，而是遍历了所有的节点，然后删掉和key值相同的节点，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode</span>* deleteNode(TreeNode* root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> key) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;val ==<span style="color: #000000;"> key) {
+            </span><span style="color: #0000ff;">if</span> (!root-&gt;right) <span style="color: #0000ff;">return</span> root-&gt;<span style="color: #000000;">left;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                TreeNode </span>*cur = root-&gt;<span style="color: #000000;">right;
+                </span><span style="color: #0000ff;">while</span> (cur-&gt;left) cur = cur-&gt;<span style="color: #000000;">left;
+                swap(root</span>-&gt;val, cur-&gt;<span style="color: #000000;">val);
+            }
+        }
+        root</span>-&gt;left = deleteNode(root-&gt;<span style="color: #000000;">left, key);
+        root</span>-&gt;right = deleteNode(root-&gt;<span style="color: #000000;">right, key);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/65792/recursive-easy-to-understand-java-solution/2" target="_blank">https://discuss.leetcode.com/topic/65792/recursive-easy-to-understand-java-solution/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/66165/very-concise-c-solution-for-general-binary-tree-not-only-bst" target="_blank">https://discuss.leetcode.com/topic/66165/very-concise-c-solution-for-general-binary-tree-not-only-bst</a></p>
+<p><a href="https://discuss.leetcode.com/topic/69674/concise-c-iterative-solution-and-recursive-solution-with-explanations/2" target="_blank">https://discuss.leetcode.com/topic/69674/concise-c-iterative-solution-and-recursive-solution-with-explanations/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

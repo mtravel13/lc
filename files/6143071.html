@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6143071.html">[LeetCode] Unique Substrings in Wraparound String 封装字符串中的独特子字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Consider the string&nbsp;<code>s</code>&nbsp;to be the infinite wraparound string of "abcdefghijklmnopqrstuvwxyz", so&nbsp;<code>s</code>&nbsp;will look like this: "...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....".</p>
+<p>Now we have another string&nbsp;<code>p</code>. Your job is to find out how many unique non-empty substrings of&nbsp;<code>p</code>&nbsp;are present in&nbsp;<code>s</code>. In particular, your input is the string&nbsp;<code>p</code>&nbsp;and you need to output the number of different non-empty substrings of&nbsp;<code>p</code>&nbsp;in the string&nbsp;<code>s</code>.</p>
+<p>Note:&nbsp;<code>p</code>&nbsp;consists of only lowercase English letters and the size of p might be over 10000.</p>
+<p>Example 1:</p>
+<pre>Input: "a"
+Output: 1
+
+Explanation: Only the substring "a" of string "a" is in the string s.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: "cac"
+Output: 2
+Explanation: There are two substrings "a", "c" of string "cac" in the string s.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: "zab"
+Output: 6
+Explanation: There are six substrings "z", "a", "b", "za", "ab", "zab" of string "zab" in the string s.
+</pre>
+<p>&nbsp;</p>
+<p>这道题说有一个无限长的封装字符串，然后又给了我们另一个字符串p，问我们p有多少非空子字符串在封装字符串中。我们通过观察题目中的例子可以发现，由于封装字符串是26个字符按顺序无限循环组成的，那么满足题意的p的子字符串要么是单一的字符，要么是按字母顺序的子字符串。这道题遍历p的所有子字符串会TLE，因为如果p很大的话，子字符串很多，会有大量的满足题意的重复子字符串，必须要用到trick，而所谓技巧就是一般来说你想不到的方法。我们看abcd这个字符串，以d结尾的子字符串有abcd, bcd, cd, d，那么我们可以发现bcd或者cd这些以d结尾的字符串的子字符串都包含在abcd中，那么我们知道以某个字符结束的最大字符串包含其他以该字符结束的字符串的所有子字符串，说起来很拗口，但是理解了我上面举的例子就行。那么题目就可以转换为分别求出以每个字符(a-z)为结束字符的最长连续字符串就行了，我们用一个数组cnt记录下来，最后在求出数组cnt的所有数字之和就是我们要的结果啦，参见代码如下：</p>
+<div>
+<div id="company_tags" class="btn btn-xs btn-warning">&nbsp;</div>
+<div class="btn btn-xs btn-warning">解法一：</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="interviewed-div">
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findSubstringInWraproundString(<span style="color: #0000ff;">string</span><span style="color: #000000;"> p) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; cnt(<span style="color: #800080;">26</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> len = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; p.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span> &amp;&amp; (p[i] == p[i - <span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span> || p[i - <span style="color: #800080;">1</span>] - p[i] == <span style="color: #800080;">25</span><span style="color: #000000;">)) {
+                </span>++<span style="color: #000000;">len;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                len </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            cnt[p[i] </span>- <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>] = max(cnt[p[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">], len);
+        }
+        </span><span style="color: #0000ff;">return</span> accumulate(cnt.begin(), cnt.end(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法跟上面的基本一样，就是在更新每个最大长度时，把差值累加到结果中，这跟最后统一加上最大值的效果一样，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findSubstringInWraproundString(<span style="color: #0000ff;">string</span><span style="color: #000000;"> p) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; cnt(<span style="color: #800080;">26</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, len = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; p.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> cur = p[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span> &amp;&amp; p[i - <span style="color: #800080;">1</span>] != (cur + <span style="color: #800080;">26</span> - <span style="color: #800080;">1</span>) % <span style="color: #800080;">26</span> + <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>) len = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (++len &gt;<span style="color: #000000;"> cnt[cur]) {
+                res </span>+= len -<span style="color: #000000;"> cnt[cur];
+                cnt[cur] </span>=<span style="color: #000000;"> len;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/70654/c-concise-solution" target="_blank">https://discuss.leetcode.com/topic/70654/c-concise-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/70658/concise-java-solution-using-dp/2" target="_blank">https://discuss.leetcode.com/topic/70658/concise-java-solution-using-dp/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

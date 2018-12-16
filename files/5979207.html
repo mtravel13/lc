@@ -1,0 +1,124 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5979207.html">[LeetCode] Battleships in a Board 平板上的战船</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an 2D board, count how many different battleships are in it. The battleships are represented with&nbsp;<code>'X'</code>s, empty slots are represented with&nbsp;<code>'.'</code>s. You may assume the following rules:</p>
+<ul>
+<li>You receive a valid board, made of only battleships or empty slots.</li>
+<li>Battleships can only be placed horizontally or vertically. In other words, they can only be made of the shape&nbsp;<code>1xN</code>&nbsp;(1 row, N columns) or&nbsp;<code>Nx1</code>&nbsp;(N rows, 1 column), where N can be of any size.</li>
+<li>At least one horizontal or vertical cell separates between two battleships - there are no adjacent battleships.</li>
+</ul>
+<p>Example:</p>
+<pre>X..X
+...X
+...X
+</pre>
+<p>In the above board there are 2 battleships.</p>
+<p>Invalid Example:</p>
+<pre>...X
+XXXX
+...X
+</pre>
+<p>This is not a valid board - as battleships will always have a cell separating between them.</p>
+<p>Your algorithm should not modify the value of the board.</p>
+<p>&nbsp;</p>
+<p>这道题好像之前在地里面见过，忘了是哪家公司的面试题了，现在被LeetCode收录了，感觉现在LeetCode更新越来越快了，感觉要成为第一大题库了，赞一个👍。这道题让我们求战舰的个数，所谓的战舰就是只能是一行或者一列，不能有拐弯。这道题降低了难度的做法是限定了不会有相邻的两个战舰的存在，有了这一点限制，那么我们只需要遍历一次二维数组就行了，只要找出战舰的起始点。所谓的战舰起始点，就是为X的点，而且该点的上方和左边的点不能为X，所以我们只要找出所有满足这个条件的点即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countBattleships(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">if</span> (board.empty() || board[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, m = board.size(), n = board[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span> || (i &gt; <span style="color: #800080;">0</span> &amp;&amp; board[i - <span style="color: #800080;">1</span>][j] == <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span>) || (j &gt; <span style="color: #800080;">0</span> &amp;&amp; board[i][j - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span>)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span>++<span style="color: #000000;">res;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>然而我自己在做的时候并没有注意到题目中限制了两艘战舰不能相邻的情况，我加上了处理方法，首先我算出来了所有连续X的区域的个数，方法跟之前那道<a href="http://www.cnblogs.com/grandyang/p/4402656.html" target="_blank">Number of Islands</a>一样，稍有不同的是，我分别记录下来每一个连续区域的i和j，把所有的点的横纵坐标分别或了起来，这样做的好处是如果是在一条直线上的战舰，那么所有点肯定是要么横坐标都相同，要么纵坐标都相同，所以最后我们检测如果横纵坐标的累积或都跟之前的i和j不同的话，那么一定不是题目中定义的战舰，那么我们就不累加结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countBattleships(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">if</span> (board.empty() || board[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = board.size(), n = board[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; visited(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span> &amp;&amp; !<span style="color: #000000;">visited[i][j]) {
+                    </span><span style="color: #0000ff;">int</span> vertical = <span style="color: #800080;">0</span>, horizontal = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    dfs(board, visited, vertical, horizontal, i, j);
+                    </span><span style="color: #0000ff;">if</span> (vertical == i || horizontal == j) ++<span style="color: #000000;">res;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> dfs(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp; board, vector&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt;&amp; visited, <span style="color: #0000ff;">int</span>&amp; vertical, <span style="color: #0000ff;">int</span>&amp; horizontal, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">int</span> m = board.size(), n = board[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">if</span> (i &lt; <span style="color: #800080;">0</span> || i &gt;= m || j &lt; <span style="color: #800080;">0</span> || j &gt;= n || visited[i][j] || board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        vertical </span>|= i; horizontal |=<span style="color: #000000;"> j;
+        visited[i][j] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        dfs(board, visited, vertical, horizontal, i </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, j);
+        dfs(board, visited, vertical, horizontal, i </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, j);
+        dfs(board, visited, vertical, horizontal, i, j </span>- <span style="color: #800080;">1</span><span style="color: #000000;">);
+        dfs(board, visited, vertical, horizontal, i, j </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>既然DFS能实现，那么BFS就应该没啥问题，这里完全按题目的要求，默认两个战舰不会相邻，并没有添加解法二中的过滤条件，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countBattleships(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">if</span> (board.empty() || board[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, m = board.size(), n = board[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; visited(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span> &amp;&amp; !<span style="color: #000000;">visited[i][j]) {
+                    </span>++<span style="color: #000000;">res;
+                    queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+                    q.push({i, j});
+                    </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+                        auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+                        visited[t.first][t.second] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                            </span><span style="color: #0000ff;">int</span> x = t.first + dir[<span style="color: #800080;">0</span>], y = t.second + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                            </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n || visited[x][y] || board[x][y] == <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                            q.push({x, y});
+                        }
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/62970/simple-java-solution" target="_blank">https://discuss.leetcode.com/topic/62970/simple-java-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/62997/dfs-bfs-flood-fill-algorithm-with-c/2" target="_blank">https://discuss.leetcode.com/topic/62997/dfs-bfs-flood-fill-algorithm-with-c/2</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

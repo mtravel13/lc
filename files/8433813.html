@@ -1,0 +1,121 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8433813.html">[LeetCode] Number Of Corner Rectangles 边角矩形的数量</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a grid where each entry is only 0 or 1, find the number of corner rectangles.</p>
+<p>A&nbsp;<em>corner rectangle</em>&nbsp;is 4 distinct 1s on the grid that form an axis-aligned rectangle. Note that only the corners need to have the value 1. Also, all four 1s used must be distinct.</p>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: grid = 
+[[1, 0, 0, 1, 0],
+ [0, 0, 1, 0, 1],
+ [0, 0, 0, 1, 0],
+ [1, 0, 1, 0, 1]]
+Output: 1
+Explanation: There is only one corner rectangle, with corners grid[1][2], grid[1][4], grid[3][2], grid[3][4].
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: grid = 
+[[1, 1, 1],
+ [1, 1, 1],
+ [1, 1, 1]]
+Output: 9
+Explanation: There are four 2x2 rectangles, four 2x3 and 3x2 rectangles, and one 3x3 rectangle.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: grid = 
+[[1, 1, 1, 1]]
+Output: 0
+Explanation: Rectangles must have four distinct corners.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The number of rows and columns of&nbsp;<code>grid</code>&nbsp;will each be in the range&nbsp;<code>[1, 200]</code>.</li>
+<li>Each&nbsp;<code>grid[i][j]</code>&nbsp;will be either&nbsp;<code>0</code>&nbsp;or&nbsp;<code>1</code>.</li>
+<li>The number of&nbsp;<code>1</code>s in the grid will be at most&nbsp;<code>6000</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个由0和1组成的二维数组，这里定义了一种边角矩形，其四个顶点均为1，让我们求这个二维数组中有多少个不同的边角矩形。那么最简单直接的方法就是暴力破解啦，我们遍历所有的子矩形，并且检验其四个顶点是否为1即可。先确定左上顶点，每个顶点都可以当作左上顶点，所以需要两个for循环，然后我们直接跳过非1的左上顶点，接下来就是要确定右上顶点和左下顶点了，先用一个for循环确定左下顶点的位置，同理，如果左下顶点为0，直接跳过。再用一个for循环确定右上顶点的位置，如果右上顶点位置也确定了，那么此时四个顶点中确定了三个，右下顶点的位置也就确定了，此时如果右上和右下顶点均为1，则结果res自增1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countCornerRectangles(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">int</span> m = grid.size(), n = grid[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> h = <span style="color: #800080;">1</span>; h &lt; m - i; ++<span style="color: #000000;">h) {
+                    </span><span style="color: #0000ff;">if</span> (grid[i + h][j] == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> w = <span style="color: #800080;">1</span>; w &lt; n - j; ++<span style="color: #000000;">w) {
+                        </span><span style="color: #0000ff;">if</span> (grid[i][j + w] == <span style="color: #800080;">1</span> &amp;&amp; grid[i + h][j + w] == <span style="color: #800080;">1</span>) ++<span style="color: #000000;">res;
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们来看一种优化了时间复杂度的方法，这种方法的原理是两行同时遍历，如果两行中相同列位置的值都为1，则计数器cnt自增1，那么最后就相当于有了(cnt - 1)个相邻的格子，问题就转化为了求cnt-1个相邻的格子能组成多少个矩形，就变成了初中数学问题了，共有cnt*(cnt-1)/2个，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countCornerRectangles(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">int</span> m = grid.size(), n = grid[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; m; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; n; ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">if</span> (grid[i][k] == <span style="color: #800080;">1</span> &amp;&amp; grid[j][k] == <span style="color: #800080;">1</span>) ++<span style="color: #000000;">cnt;
+                }
+                res </span>+= cnt * (cnt - <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法由热心网友edyyy提供，最大亮点是将解法二的beat 65%提高到了beat 97%，速度杠杠的，要飞起来了的节奏。在遍历前一行的时候，将所有为1的位置存入到了一个数组ones中，然后在遍历其他行时，直接检测ones数组中的那些位置是否为1，这样省去了检查一些之前行为0的步骤，提高了运行速度，但是也牺牲了一些空间，比如需要ones数组，算是个trade off吧，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countCornerRectangles(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">int</span> m = grid.size(), n = grid[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m - <span style="color: #800080;">1</span>; i++<span style="color: #000000;">) { 
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ones;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; n; k++) <span style="color: #0000ff;">if</span><span style="color: #000000;"> (grid[i][k]) ones.push_back(k);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; m; j++<span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> l = <span style="color: #800080;">0</span>; l &lt; ones.size(); l++<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (grid[j][ones[l]]) cnt++<span style="color: #000000;">;
+                }
+                res </span>+= cnt * (cnt - <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            }           
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/114177/short-java-ac-solution-o-m-2-n-with-explanation" target="_blank">https://discuss.leetcode.com/topic/114177/short-java-ac-solution-o-m-2-n-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

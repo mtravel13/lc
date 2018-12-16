@@ -1,0 +1,63 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5348900.html">[LeetCode] Combine Two Tables 联合两表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Table:&nbsp;<code>Person</code></p>
+<pre>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| PersonId    | int     |
+| FirstName   | varchar |
+| LastName    | varchar |
++-------------+---------+
+PersonId is the primary key column for this table.
+</pre>
+<p>Table:&nbsp;<code>Address</code></p>
+<pre>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| AddressId   | int     |
+| PersonId    | int     |
+| City        | varchar |
+| State       | varchar |
++-------------+---------+
+AddressId is the primary key column for this table.
+</pre>
+<p>&nbsp;</p>
+<p>Write a SQL query for a report that provides the following information for each person in the Person table, regardless if there is an address for each of those people:</p>
+<pre>FirstName, LastName, City, State</pre>
+<p>&nbsp;</p>
+<p>LeetCode还出了是来到数据库的题，来那么也来做做吧，这道题是第一道，相对来说比较简单，是一道两表联合查找的问题，我们需要用到Join操作，关于一些Join操作可以看我之前的博客<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5346963.html">SQL Left Join, Right Join, Inner Join, and Natural Join 各种Join小结</a>，最直接的方法就是用Left Join来做，根据PersonId这项来把两个表联合起来：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Person.FirstName, Person.LastName, Address.City, Address.State <span style="color: #0000ff;">FROM</span> Person <span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> Address <span style="color: #0000ff;">ON</span> Person.PersonId <span style="color: #808080;">=</span> Address.PersonId;</pre>
+</div>
+<p>&nbsp;</p>
+<p>在使用Left Join时，我们也可以使用关键Using来声明我们相用哪个列名来进行联合：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Person.FirstName, Person.LastName, Address.City, Address.State <span style="color: #0000ff;">FROM</span> Person <span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> Address USING(PersonId);</pre>
+</div>
+<p>&nbsp;</p>
+<p>或者我们可以加上Natural关键字，这样我们就不用声明具体的列，MySQL可以自行搜索相同的列：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Person.FirstName, Person.LastName, Address.City, Address.State <span style="color: #0000ff;">FROM</span> Person NATURAL <span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> Address;</pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/21216/its-a-simple-question-of-left-join-my-solution-attached" target="_blank">https://leetcode.com/discuss/21216/its-a-simple-question-of-left-join-my-solution-attached</a></p>
+<p><a href="https://leetcode.com/discuss/53001/comparative-solution-between-left-using-natural-left-join" target="_blank">https://leetcode.com/discuss/53001/comparative-solution-between-left-using-natural-left-join</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

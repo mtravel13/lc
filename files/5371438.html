@@ -1,0 +1,70 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5371438.html">[LeetCode] Rising Temperature 上升温度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a&nbsp;<code>Weather</code>&nbsp;table, write a SQL query to find all dates' Ids with higher temperature compared to its previous (yesterday's) dates.</p>
+<pre>+---------+------------+------------------+
+| Id(INT) | Date(DATE) | Temperature(INT) |
++---------+------------+------------------+
+|       1 | 2015-01-01 |               10 |
+|       2 | 2015-01-02 |               25 |
+|       3 | 2015-01-03 |               20 |
+|       4 | 2015-01-04 |               30 |
++---------+------------+------------------+
+</pre>
+<p>For example, return the following Ids for the above Weather table:</p>
+<pre>+----+
+| Id |
++----+
+|  2 |
+|  4 |
++----+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个Weather表，让我们找出比前一天温度高的Id，由于Id的排列未必是按顺序的，所以我们要找前一天就得根据日期来找，我们可以使用MySQL的函数Datadiff来计算两个日期的差值，我们的限制条件是温度高且日期差1，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> w1.Id <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Weather w1, Weather w2
+</span><span style="color: #0000ff;">WHERE</span> w1.Temperature <span style="color: #808080;">&gt;</span> w2.Temperature <span style="color: #808080;">AND</span> <span style="color: #ff00ff;">DATEDIFF</span>(w1.Date, w2.Date) <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">1</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法我们使用了MySQL的TO_DAYS函数，用来将日期换算成天数，其余跟上面相同：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> w1.Id <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Weather w1, Weather w2
+</span><span style="color: #0000ff;">WHERE</span> w1.Temperature <span style="color: #808080;">&gt;</span> w2.Temperature <span style="color: #808080;">AND</span> TO_DAYS(w1.Date) <span style="color: #808080;">=</span> TO_DAYS(w2.Date) <span style="color: #808080;">+</span> <span style="color: #800000; font-weight: bold;">1</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用Subdate函数，来实现日期减1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> w1.Id <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Weather w1, Weather w2
+</span><span style="color: #0000ff;">WHERE</span> w1.Temperature <span style="color: #808080;">&gt;</span> w2.Temperature <span style="color: #808080;">AND</span> SUBDATE(w1.Date, <span style="color: #800000; font-weight: bold;">1</span>) <span style="color: #808080;">=</span> w2.Date;</pre>
+</div>
+<p>&nbsp;</p>
+<p>最后来一种完全不一样的解法，使用了两个变量pre_t和pre_d分别表示上一个温度和上一个日期，然后当前温度要大于上一温度，且日期差为1，满足上述两条件的话选出来为Id，否则为NULL，然后更新pre_t和pre_d为当前的值，最后选出的Id不为空即可：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Id <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> (
+</span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">CASE</span> <span style="color: #0000ff;">WHEN</span> Temperature <span style="color: #808080;">&gt;</span> <span style="color: #008000;">@pre_t</span> <span style="color: #808080;">AND</span> <span style="color: #ff00ff;">DATEDIFF</span>(Date, <span style="color: #008000;">@pre_d</span>) <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">1</span> <span style="color: #0000ff;">THEN</span> Id <span style="color: #0000ff;">ELSE</span> <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">END</span> <span style="color: #0000ff;">AS</span><span style="color: #000000;"> Id,
+</span><span style="color: #008000;">@pre_t</span> :<span style="color: #808080;">=</span> Temperature, <span style="color: #008000;">@pre_d</span> :<span style="color: #808080;">=</span><span style="color: #000000;"> Date 
+</span><span style="color: #0000ff;">FROM</span> Weather, (<span style="color: #0000ff;">SELECT</span> <span style="color: #008000;">@pre_t</span> :<span style="color: #808080;">=</span> <span style="color: #0000ff;">NULL</span>, <span style="color: #008000;">@pre_d</span> :<span style="color: #808080;">=</span> <span style="color: #0000ff;">NULL</span>) <span style="color: #0000ff;">AS</span> init <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> Date <span style="color: #0000ff;">ASC</span><span style="color: #000000;">
+) id </span><span style="color: #0000ff;">WHERE</span> Id <span style="color: #0000ff;">IS</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/33641/two-solutions" target="_blank">https://leetcode.com/discuss/33641/two-solutions</a></p>
+<p><a href="https://leetcode.com/discuss/52370/my-simple-solution-using-inner-join" target="_blank">https://leetcode.com/discuss/52370/my-simple-solution-using-inner-join</a></p>
+<p><a href="https://leetcode.com/discuss/86435/a-simple-straightforward-solution-and-its-very-fast" target="_blank">https://leetcode.com/discuss/86435/a-simple-straightforward-solution-and-its-very-fast</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

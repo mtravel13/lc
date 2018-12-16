@@ -1,0 +1,151 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4938187.html">[LeetCode] Longest Increasing Subsequence 最长递增子序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an unsorted array of integers, find the length of longest increasing subsequence.</p>
+<p>Example:</p>
+<pre>Input: <code>[10,9,2,5,3,7,101,18]
+</code>Output: 4 
+Explanation: The longest increasing subsequence is <code>[2,3,7,101]</code>, therefore the length is <code>4</code>. </pre>
+<p>Note:</p>
+<ul>
+<li>There may be more than one LIS combination, it is only necessary for you to return the length.</li>
+<li>Your algorithm should run in O(<em>n2</em>) complexity.</li>
+</ul>
+<p>Follow up:&nbsp;Could you improve it to O(<em>n</em>&nbsp;log&nbsp;<em>n</em>) time complexity?</p>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>这道题让我们求最长递增子串Longest Increasing Subsequence的长度，简称LIS的长度。我最早接触到这道题是在LintCode上，可参见我之前的博客<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4891500.html">Longest Increasing Subsequence 最长递增子序列</a>，那道题写的解法略微复杂，下面我们来看其他的一些解法。首先来看一种动态规划Dynamic Programming的解法，这种解法的时间复杂度为O(n<sup>2</sup>)，类似brute force的解法，我们维护一个一维dp数组，其中dp[i]表示以nums[i]为结尾的最长递增子串的长度，对于每一个nums[i]，我们从第一个数再搜索到i，如果发现某个数小于nums[i]，我们更新dp[i]，更新方法为<span style="color: #000000;">dp[i] = max(dp[i], dp[j] + <span style="color: #800080;">1<span style="color: #000000;">)，即比较当前dp[i]的值和那个小于num[i]的数的dp值加1的大小，我们就这样不断的更新dp数组，到最后dp数组中最大的值就是我们要返回的LIS的长度，参见代码如下：</span></span></span></div>
+<div>&nbsp;</div>
+<div>解法一：</div>
+<div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLIS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dp(nums.size(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (nums[i] &gt;<span style="color: #000000;"> nums[j]) {
+                    dp[i] </span>= max(dp[i], dp[j] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+            res </span>=<span style="color: #000000;"> max(res, dp[i]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看一种优化时间复杂度到O(nlgn)的解法，这里用到了二分查找法，所以才能加快运行时间哇。思路是，我们先建立一个数组ends，把首元素放进去，然后比较之后的元素，如果遍历到的新元素比ends数组中的首元素小的话，替换首元素为此新元素，如果遍历到的新元素比ends数组中的末尾元素还大的话，将此新元素添加到ends数组末尾(注意不覆盖原末尾元素)。如果遍历到的新元素比ends数组首元素大，比尾元素小时，此时用二分查找法找到第一个不小于此新元素的位置，覆盖掉位置的原来的数字，以此类推直至遍历完整个nums数组，此时ends数组的长度就是我们要求的LIS的长度，<span style="color: #ff0000;">特别注意的是ends数组的值可能不是一个真实的LIS</span>，比如若输入数组nums为{4, 2， 4， 5， 3， 7}，那么算完后的ends数组为{2， 3， 5， 7}，可以发现它不是一个原数组的LIS，只是长度相等而已，千万要注意这点。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLIS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ends{nums[<span style="color: #800080;">0</span><span style="color: #000000;">]};
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nums) {
+            </span><span style="color: #0000ff;">if</span> (a &lt; ends[<span style="color: #800080;">0</span>]) ends[<span style="color: #800080;">0</span>] =<span style="color: #000000;"> a;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (a &gt;<span style="color: #000000;"> ends.back()) ends.push_back(a);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right =<span style="color: #000000;"> ends.size();
+                </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                    </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (ends[mid] &lt; a) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+                }
+                ends[right] </span>=<span style="color: #000000;"> a;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ends.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们来看一种思路更清晰的二分查找法，跟上面那种方法很类似，思路是先建立一个空的dp数组，然后开始遍历原数组，对于每一个遍历到的数字，我们用二分查找法在dp数组找第一个不小于它的数字，如果这个数字不存在，那么直接在dp数组后面加上遍历到的数字，如果存在，则将这个数字更新为当前遍历到的数字，最后返回dp数字的长度即可，注意的是，跟上面的方法一样，<span style="color: #ff0000;">特别注意的是dp数组的值可能不是一个真实的LIS</span>。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLIS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> dp;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right =<span style="color: #000000;"> dp.size();
+            </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (dp[mid] &lt; nums[i]) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+            }
+            </span><span style="color: #0000ff;">if</span> (right &gt;=<span style="color: #000000;"> dp.size()) dp.push_back(nums[i]);
+            </span><span style="color: #0000ff;">else</span> dp[right] =<span style="color: #000000;"> nums[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看两种比较tricky的解法，利用到了C++中STL的lower_bound函数，lower_bound返回数组中第一个不小于指定值的元素，跟上面的算法类似，我们还需要一个一维数组v，然后对于遍历到的nums中每一个元素，找其lower_bound，如果没有lower_bound，说明新元素比一维数组的尾元素还要大，直接添加到数组v中，跟解法二的思路相同了。如果有lower_bound，说明新元素不是最大的，将其lower_bound替换为新元素，这个过程跟算法二的二分查找法的部分实现相同功能，最后也是返回数组v的长度，注意数组v也不一定是真实的LIS，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLIS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nums) {
+            auto it </span>=<span style="color: #000000;"> lower_bound(v.begin(), v.end(), a);
+            </span><span style="color: #0000ff;">if</span> (it ==<span style="color: #000000;"> v.end()) v.push_back(a);
+            </span><span style="color: #0000ff;">else</span> *it =<span style="color: #000000;"> a;
+        }<br /></span><span style="color: #0000ff;">　　　　　 　return</span><span style="color: #000000;"> v.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>既然能用lower_bound，那么upper_bound就耐不住寂寞了，也要出来解个题。upper_bound是返回数组中第一个大于指定值的元素，和lower_bound的区别时，它不能返回和指定值相等的元素，那么当新进来的数和数组中尾元素一样大时，upper_bound无法返回这个元素，那么按算法三的处理方法是加到数组中，这样就不是严格的递增子串了，所以我们要做个处理，在处理每个新进来的元素时，先判断数组v中有无此元素，有的话直接跳过，这样就避免了相同数字的情况，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法五：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthOfLIS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nums) {
+            </span><span style="color: #0000ff;">if</span> (find(v.begin(), v.end(), a) != v.end()) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            auto it </span>=<span style="color: #000000;"> upper_bound(v.begin(), v.end(), a);
+            </span><span style="color: #0000ff;">if</span> (it ==<span style="color: #000000;"> v.end()) v.push_back(a);
+            </span><span style="color: #0000ff;">else</span> *it =<span style="color: #000000;"> a;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> v.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种稍微复杂点的方法，参见我的另一篇博客<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4891500.html">Longest Increasing Subsequence 最长递增子序列</a>，那是LintCode上的题，但是有点不同的是，那道题让求的LIS不是严格的递增的，允许相同元素存在。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5194599.html" target="_blank">Increasing Triplet Subsequence</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5568818.html">Russian Doll Envelopes</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7381633.html">Maximum Length of Pair Chain</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7603903.html">Number of Longest Increasing Subsequence</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7752002.html" target="_blank">Minimum ASCII Delete Sum for Two Strings</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">https://leetcode.com/problems/longest-increasing-subsequence/</a></p>
+<p><a href="https://leetcode.com/problems/longest-increasing-subsequence/discuss/74825/Short-Java-solution-using-DP-O(n-log-n)" target="_blank">https://leetcode.com/problems/longest-increasing-subsequence/discuss/74825/Short-Java-solution-using-DP-O(n-log-n)</a></p>
+<p><a href="https://leetcode.com/problems/longest-increasing-subsequence/discuss/74848/9-lines-C%2B%2B-code-with-O(NlogN)-complexity" target="_blank">https://leetcode.com/problems/longest-increasing-subsequence/discuss/74848/9-lines-C%2B%2B-code-with-O(NlogN)-complexity</a></p>
+<p><a href="https://leetcode.com/problems/longest-increasing-subsequence/discuss/74824/JavaPython-Binary-search-O(nlogn)-time-with-explanation" target="_blank">https://leetcode.com/problems/longest-increasing-subsequence/discuss/74824/JavaPython-Binary-search-O(nlogn)-time-with-explanation</a></p>
+<p><a href="https://leetcode.com/problems/longest-increasing-subsequence/discuss/74989/C%2B%2B-Typical-DP-N2-solution-and-NLogN-solution-from-GeekForGeek" target="_blank">https://leetcode.com/problems/longest-increasing-subsequence/discuss/74989/C%2B%2B-Typical-DP-N2-solution-and-NLogN-solution-from-GeekForGeek</a></p>
+<p><a href="http://www.cnblogs.com/lishiblog/p/4190936.html" target="_blank">&nbsp;</a></p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

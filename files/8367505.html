@@ -1,0 +1,124 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8367505.html">[LeetCode] Kth Smallest Number in Multiplication Table 乘法表中的第K小的数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Nearly every one have used the&nbsp;<a href="https://en.wikipedia.org/wiki/Multiplication_table">Multiplication Table</a>. But could you find out the&nbsp;<code>k-th</code>&nbsp;smallest number quickly from the multiplication table?</p>
+<p>Given the height&nbsp;<code>m</code>&nbsp;and the length&nbsp;<code>n</code>&nbsp;of a&nbsp;<code>m * n</code>&nbsp;Multiplication Table, and a positive integer&nbsp;<code>k</code>, you need to return the&nbsp;<code>k-th</code>&nbsp;smallest number in this table.</p>
+<p>Example 1:</p>
+<pre>Input: m = 3, n = 3, k = 5
+Output: 
+Explanation: 
+The Multiplication Table:
+1	2	3
+2	4	6
+3	6	9
+
+The 5-th smallest number is 3 (1, 2, 2, 3, 3).
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: m = 2, n = 3, k = 6
+Output: 
+Explanation: 
+The Multiplication Table:
+1	2	3
+2	4	6
+
+The 6-th smallest number is 6 (1, 2, 2, 3, 4, 6).
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The&nbsp;<code>m</code>&nbsp;and&nbsp;<code>n</code>&nbsp;will be in the range [1, 30000].</li>
+<li>The&nbsp;<code>k</code>&nbsp;will be in the range [1, m * n]</li>
+</ol>
+<p>&nbsp;</p>
+</div>
+<p>这道题跟之前那道<a href="http://www.cnblogs.com/grandyang/p/5727892.html">Kth Smallest Element in a Sorted Matrix</a>没有什么太大的区别，这里的乘法表也是各行各列分别有序的。那么之前帖子里的方法都可以拿来参考。之前帖子中的解法一在这道题中无法通过OJ，维护一个大小为k的优先队列实在是没有利用到这道题乘法表的特点，但是后两种解法都是可以的。为了快速定位出第K小的数字，我们采用二分搜索法，由于是有序矩阵，那么左上角的数字一定是最小的，而右下角的数字一定是最大的，所以这个是我们搜索的范围，然后我们算出中间数字mid，由于矩阵中不同行之间的元素并不是严格有序的，所以我们要在每一行都查找一下mid，由于乘法表每行都是连续数字1，2，3...乘以当前行号（从1开始计数），所以我们甚至不需要在每行中使用二分查找，而是直接定位出位置。具体做法是，先比较mid和该行最后一个数字的大小，最后一数字是n * i，i是行数，n是该行数字的个数，如果mid大的话，直接将该行所有数字的个数加入cnt，否则的话加上mid / i，比如当前行是2, 4, 6, 8, 10，如果我们要查找小于7的个数，那么就是7除以2，得3，就是有三个数小于7，直接加入cnt即可。这样我们就可以快速算出矩阵中所有小于mid的个数，根据cnt和k的大小关系，来更新我们的范围，循环推出后，left就是第K小的数字，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+ </span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+     </span><span style="color: #0000ff;">int</span> findKthNumber(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+         </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">1</span>, right = m *<span style="color: #000000;"> n;
+         </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+             </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span>, cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+             </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= m; ++<span style="color: #000000;">i) {
+                 cnt </span>+= (mid &gt; n * i) ? n : (mid /<span style="color: #000000;"> i);
+             }
+             </span><span style="color: #0000ff;">if</span> (cnt &lt; k) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+             </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+         }
+         </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> right;
+     }
+ };</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法在统计小于mid的数字个数的方法上有些不同，并不是逐行来统计，而是从左下角的数字开始统计，如果该数字小于mid，说明该数字及上方所有数字都小于mid，cnt加上i个，然后向右移动一位继续比较。如果当前数字小于mid了，那么向上移动一位，直到横纵方向有一个越界停止，其他部分都和上面的解法相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+ </span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+     </span><span style="color: #0000ff;">int</span> findKthNumber(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+         </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">1</span>, right = m *<span style="color: #000000;"> n;
+         </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+             </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span>, cnt = <span style="color: #800080;">0</span>, i = m, j = <span style="color: #800080;">1</span><span style="color: #000000;">;
+             </span><span style="color: #0000ff;">while</span> (i &gt;= <span style="color: #800080;">1</span> &amp;&amp; j &lt;=<span style="color: #000000;"> n) {
+                 </span><span style="color: #0000ff;">if</span> (i * j &lt;=<span style="color: #000000;"> mid) {
+                     cnt </span>+=<span style="color: #000000;"> i;
+                     </span>++<span style="color: #000000;">j;
+                 } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                     </span>--<span style="color: #000000;">i;
+                 }
+             }
+             </span><span style="color: #0000ff;">if</span> (cnt &lt; k) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+             </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+         }
+         </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> right;
+     }
+ };</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法由网友bambu提供，是对解法二的优化，再快一点，使用除法来快速定位新的j值，然后迅速算出当前行的小于mid的数的个数，然后快速更新i的值，这比之前那种一次只加1或减1的方法要高效许多，感觉像是解法一和解法二的混合体，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+ </span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+     </span><span style="color: #0000ff;">int</span> findKthNumber(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">1</span>, right = m *<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span>, cnt = <span style="color: #800080;">0</span>, i = m, j = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (i &gt;= <span style="color: #800080;">1</span> &amp;&amp; j &lt;=<span style="color: #000000;"> n) {
+                 </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> j;
+                 j </span>= (mid &gt; n * i) ? n + <span style="color: #800080;">1</span> : (mid / i + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                 cnt </span>+= (j - t) *<span style="color: #000000;"> i;
+                 i </span>= mid /<span style="color: #000000;"> j;
+             }
+            </span><span style="color: #0000ff;">if</span> (cnt &lt; k) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> right;
+     }
+ };</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5727892.html">Kth Smallest Element in a Sorted Matrix</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/8627783.html" target="_blank">Find K-th Smallest Pair Distance</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/101194/my-8-lines-c-solution">https://discuss.leetcode.com/topic/101194/my-8-lines-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/101132/java-solution-binary-search">https://discuss.leetcode.com/topic/101132/java-solution-binary-search</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

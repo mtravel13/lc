@@ -1,0 +1,83 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4051321.html">[LeetCode] Binary Tree Level Order Traversal 二叉树层序遍历</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, return the&nbsp;<em>level order</em>&nbsp;traversal of its nodes' values. (ie, from left to right, level by level).</p>
+<p>For example:<br />Given binary tree&nbsp;<code>{3,9,20,#,#,15,7}</code>,</p>
+<pre>    3
+   / \
+  9  20
+    /  \
+   15   7
+</pre>
+<p>&nbsp;</p>
+<p>return its level order traversal as:</p>
+<pre>[
+  [3],
+  [9,20],
+  [15,7]
+]<br /><br /></pre>
+<p>层序遍历二叉树是典型的广度优先搜索BFS的应用，但是这里稍微复杂一点的是，我们要把各个层的数分开，存到一个二维向量里面，大体思路还是基本相同的，建立一个queue，然后先把根节点放进去，这时候找根节点的左右两个子节点，这时候去掉根节点，此时queue里的元素就是下一层的所有节点，用一个for循环遍历它们，然后存到一个一维向量里，遍历完之后再把这个一维向量存到二维向量里，以此类推，可以完成层序遍历。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Iterative</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; levelOrder(TreeNode *<span style="color: #000000;">root) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">if</span> (root == NULL) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+
+        queue</span>&lt;TreeNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> oneLevel;
+            </span><span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; size; ++<span style="color: #000000;">i) {
+                TreeNode </span>*node =<span style="color: #000000;"> q.front();
+                q.pop();
+                oneLevel.push_back(node</span>-&gt;<span style="color: #000000;">val);
+                </span><span style="color: #0000ff;">if</span> (node-&gt;left) q.push(node-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (node-&gt;right) q.push(node-&gt;<span style="color: #000000;">right);
+            }
+            res.push_back(oneLevel);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看递归的写法，核心就在于我们需要一个二维数组，和一个变量level，当level递归到上一层的个数，我们新建一个空层，继续往里面加数字，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursive</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; levelOrder(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        levelorder(root, </span><span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> levelorder(TreeNode *root, <span style="color: #0000ff;">int</span> level, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (res.size() ==<span style="color: #000000;"> level) res.push_back({});
+        res[level].push_back(root</span>-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left) levelorder(root-&gt;left, level + <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">if</span> (root-&gt;right) levelorder(root-&gt;right, level + <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4051326.html" target="_blank">Binary Tree Level Order Traversal II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4297009.html" target="_blank">Binary Tree Zigzag Level Order Traversal</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

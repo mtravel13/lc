@@ -1,0 +1,107 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5148030.html">[LeetCode] Longest Increasing Path in a Matrix 矩阵中的最长递增路径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer matrix, find the length of the longest increasing path.</p>
+<p>From each cell, you can either move to four directions: left, right, up or down. You may NOT move diagonally or move outside of the boundary (i.e. wrap-around is not allowed).</p>
+<p>Example 1:</p>
+<pre>nums = [
+  [<span style="color: red;">9</span>,9,4],
+  [<span style="color: red;">6</span>,6,8],
+  [<span style="color: red;">2</span>,<span style="color: red;">1</span>,1]
+]
+</pre>
+<p>&nbsp;</p>
+<p>Return&nbsp;<code>4</code><br />The longest increasing path is&nbsp;<code>[1, 2, 6, 9]</code>.</p>
+<p>Example 2:</p>
+<pre>nums = [
+  [<span style="color: red;">3</span>,<span style="color: red;">4</span>,<span style="color: red;">5</span>],
+  [3,2,<span style="color: red;">6</span>],
+  [2,2,1]
+]
+</pre>
+<p>&nbsp;</p>
+<p>Return&nbsp;<code>4</code><br />The longest increasing path is&nbsp;<code>[3, 4, 5, 6]</code>. Moving diagonally is not allowed.</p>
+<p>&nbsp;</p>
+<p>这道题给我们一个二维数组，让我们求矩阵中最长的递增路径，规定我们只能上下左右行走，不能走斜线或者是超过了边界。那么这道题的解法要用递归和DP来解，用DP的原因是为了提高效率，避免重复运算。我们需要维护一个二维动态数组dp，其中dp[i][j]表示数组中以(i,j)为起点的最长递增路径的长度，初始将dp数组都赋为0，当我们用递归调用时，遇到某个位置(x, y), 如果dp[x][y]不为0的话，我们直接返回dp[x][y]即可，不需要重复计算。我们需要以数组中每个位置都为起点调用递归来做，比较找出最大值。在以一个位置为起点用DFS搜索时，对其四个相邻位置进行判断，如果相邻位置的值大于上一个位置，则对相邻位置继续调用递归，并更新一个最大值，搜素完成后返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs = {{<span style="color: #800080;">0</span>, -<span style="color: #800080;">1</span>}, {-<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>}, {<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>}, {<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">}};
+    </span><span style="color: #0000ff;">int</span> longestIncreasingPath(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">1</span>, m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                res </span>=<span style="color: #000000;"> max(res, dfs(matrix, dp, i, j));
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> dfs(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;matrix, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;dp, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">if</span> (dp[i][j]) <span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[i][j];
+        </span><span style="color: #0000ff;">int</span> mx = <span style="color: #800080;">1</span>, m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : dirs) {
+            </span><span style="color: #0000ff;">int</span> x = i + a[<span style="color: #800080;">0</span>], y = j + a[<span style="color: #800080;">1</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> |a| y &gt;= n || matrix[x][y] &lt;= matrix[i][j]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> len = <span style="color: #800080;">1</span> +<span style="color: #000000;"> dfs(matrix, dp, x, y);
+            mx </span>=<span style="color: #000000;"> max(mx, len);
+        }
+        dp[i][j] </span>=<span style="color: #000000;"> mx;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mx;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面再来看一种BFS的解法，需要用queue来辅助遍历，我们还是需要dp数组来减少重复运算。遍历数组中的每个数字，跟上面的解法一样，把每个遍历到的点都当作BFS遍历的起始点，需要优化的是，如果当前点的dp值大于0了，说明当前点已经计算过了，我们直接跳过。否则就新建一个queue，然后把当前点的坐标加进去，再用一个变量cnt，初始化为1，表示当前点为起点的递增长度，然后进入while循环，然后cnt自增1，这里先自增1没有关系，因为只有当周围有合法的点时候才会用cnt来更新。由于当前结点周围四个相邻点距当前点距离都一样，所以采用类似二叉树层序遍历的方式，先出当前queue的长度，然后遍历跟长度相同的次数，取出queue中的首元素，对周围四个点进行遍历，计算出相邻点的坐标后，要进行合法性检查，横纵坐标不能越界，且相邻点的值要大于当前点的值，并且相邻点点dp值要小于cnt，才有更新的必要。用cnt来更新dp[x][y]，并用cnt来更新结果res，然后把相邻点排入queue中继续循环即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestIncreasingPath(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(m, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j ) {
+                </span><span style="color: #0000ff;">if</span> (dp[i][j] &gt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q{{{i, j}}};
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+                    </span>++<span style="color: #000000;">cnt;
+                    </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> q.size();
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; len; ++<span style="color: #000000;">k) {
+                        auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+                        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                            </span><span style="color: #0000ff;">int</span> x = t.first + dir[<span style="color: #800080;">0</span>], y = t.second + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                            </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n || matrix[x][y] &lt;= matrix[t.first][t.second] || cnt &lt;= dp[x][y]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                            dp[x][y] </span>=<span style="color: #000000;"> cnt;
+                            res </span>=<span style="color: #000000;"> max(res, cnt);
+                            q.push({x, y});
+                        }
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/35052/iterative-java-bfs-solution">https://discuss.leetcode.com/topic/35052/iterative-java-bfs-solution</a><a href="https://leetcode.com/discuss/81389/15ms-concise-java-solution" target="_blank"><br /></a></p>
+<div><a href="https://discuss.leetcode.com/topic/34835/15ms-concise-java-solution" target="_blank">https://discuss.leetcode.com/topic/34835/15ms-concise-java-solution</a></div>
+<div>&nbsp;</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

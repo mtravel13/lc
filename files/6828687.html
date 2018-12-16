@@ -1,0 +1,97 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6828687.html">[LeetCode] Subtree of Another Tree 另一个树的子树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two non-empty binary trees&nbsp;s&nbsp;and&nbsp;t, check whether tree&nbsp;t&nbsp;has exactly the same structure and node values with a subtree of&nbsp;s. A subtree of&nbsp;s&nbsp;is a tree consists of a node in&nbsp;s&nbsp;and all of this node's descendants. The tree&nbsp;scould also be considered as a subtree of itself.</p>
+<p>Example 1:<br />Given tree s:</p>
+<pre>     3
+    / \
+   4   5
+  / \
+ 1   2
+</pre>
+<p>Given tree t:</p>
+<pre>   4 
+  / \
+ 1   2
+</pre>
+<p>Return&nbsp;true, because t has the same structure and node values with a subtree of s.</p>
+<p>&nbsp;</p>
+<p>Example 2:<br />Given tree s:</p>
+<pre>     3
+    / \
+   4   5
+  / \
+ 1   2
+    /
+   0
+</pre>
+<p>Given tree t:</p>
+<pre>   4
+  / \
+ 1   2
+</pre>
+<p>Return&nbsp;false.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求一个数是否是另一个树的子树，从题目中的第二个例子中可以看出，子树必须是从叶结点开始的，中间某个部分的不能算是子树，那么我们转换一下思路，是不是从s的某个结点开始，跟t的所有结构都一样，那么问题就转换成了判断两棵树是否相同，也就是<a href="http://www.cnblogs.com/grandyang/p/4053384.html" target="_blank">Same Tree</a>的问题了，这点想通了其实代码就很好写了，用递归来写十分的简洁，我们先从s的根结点开始，跟t比较，如果两棵树完全相同，那么返回true，否则就分别对s的左子结点和右子结点调用递归再次来判断是否相同，只要有一个返回true了，就表示可以找得到。</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isSubtree(TreeNode* s, TreeNode*<span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (!s) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (isSame(s, t)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> isSubtree(s-&gt;left, t) || isSubtree(s-&gt;<span style="color: #000000;">right, t);
+    }
+    </span><span style="color: #0000ff;">bool</span> isSame(TreeNode* s, TreeNode*<span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (!s &amp;&amp; !t) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (!s || !t) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (s-&gt;val != t-&gt;val) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> isSame(s-&gt;left, t-&gt;left) &amp;&amp; isSame(s-&gt;right, t-&gt;<span style="color: #000000;">right);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这道题的解法用到了之前那道<a href="http://www.cnblogs.com/grandyang/p/4913869.html">Serialize and Deserialize Binary Tree</a>的解法，思路是对s和t两棵树分别进行序列化，各生成一个字符串，如果t的字符串是s的子串的话，就说明t是s的子树，但是需要注意的是，为了避免出现[12], [2], 这种情况，虽然2也是12的子串，但是[2]却不是[12]的子树，所以我们再序列化的时候要特殊处理一下，就是在每个结点值前面都加上一个字符，比如','，来分隔开，那么[12]序列化后就是",12,#"，而[2]序列化之后就是",2,#"，这样就可以完美的解决之前的问题了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isSubtree(TreeNode* s, TreeNode*<span style="color: #000000;"> t) {
+        ostringstream os1, os2;
+        serialize(s, os1);
+        serialize(t, os2);
+        </span><span style="color: #0000ff;">return</span> os1.str().find(os2.str()) != <span style="color: #0000ff;">string</span><span style="color: #000000;">::npos;
+    }
+    </span><span style="color: #0000ff;">void</span> serialize(TreeNode* node, ostringstream&amp;<span style="color: #000000;"> os) {
+        </span><span style="color: #0000ff;">if</span> (!node) os &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">,#</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            os </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">,</span><span style="color: #800000;">"</span> &lt;&lt; node-&gt;<span style="color: #000000;">val;
+            serialize(node</span>-&gt;<span style="color: #000000;">left, os);
+            serialize(node</span>-&gt;<span style="color: #000000;">right, os);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5206862.html" target="_blank">Count Univalue Subtrees</a>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6481682.html">Most Frequent Subtree Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4913869.html">Serialize and Deserialize Binary Tree</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4053384.html" target="_blank">Same Tree</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/88508/java-solution-tree-traversal" target="_blank">https://discuss.leetcode.com/topic/88508/java-solution-tree-traversal</a></p>
+<p><a href="https://discuss.leetcode.com/topic/88491/java-concise-o-n-m-time-o-n-m-space" target="_blank">https://discuss.leetcode.com/topic/88491/java-concise-o-n-m-time-o-n-m-space</a></p>
+<p><a href="https://discuss.leetcode.com/topic/88700/easy-o-n-java-solution-using-inorder-and-preorder-traversal" target="_blank">https://discuss.leetcode.com/topic/88700/easy-o-n-java-solution-using-inorder-and-preorder-traversal</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,158 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4944875.html">[LeetCode] Remove Invalid Parentheses 移除非法括号</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.</p>
+<p>Note: The input string may contain letters other than the parentheses <code>(</code> and <code>)</code>.</p>
+<p> <strong>Examples:</strong><br />
+</p>
+<pre>"()())()" -&gt; ["()()()", "(())()"]
+"(a)())()" -&gt; ["(a)()()", "(a())()"]
+")(" -&gt; [""]
+</pre>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/hpplayer">@hpplayer</a> for adding this problem and creating all test cases.</p>
+<div>
+<p><a href="https://leetcode.com/subscribe/">Subscribe</a> to see which companies asked this question</p>
+
+
+
+
+
+
+                </div>
+<div>&nbsp;</div>
+<div>这道题让我们移除最少的括号使得给定字符串为一个合法的含有括号的字符串，我们从小数学里就有括号，所以应该对合法的含有括号的字符串并不陌生，字符串中的左右括号数应该相同，而且每个右括号左边一定有其对应的左括号，而且题目中给的例子也说明了去除方法不唯一，我们需要找出所有合法的取法。参考了网上大神的解法，这道题首先可以用BFS来解，我们先把给定字符串排入队中，然后取出检测其是否合法，若合法直接返回，不合法的话，我们对其进行遍历，对于遇到的左右括号的字符，我们去掉括号字符生成一个新的字符串，如果这个字符串之前没有遇到过，将其排入队中，我们用哈希集合记录一个字符串是否出现过。我们对队列中的每个元素都进行相同的操作，直到队列为空还没找到合法的字符串的话，那就返回空集，参见代码如下：</div>
+<div>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; removeInvalidParentheses(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> visited{{s}};
+        queue</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> q{{s}};
+        </span><span style="color: #0000ff;">bool</span> found = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isValid(t)) {
+                res.push_back(t);
+                found </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (found) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; t.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (t[i] != <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span> &amp;&amp; t[i] != <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">string</span> str = t.substr(<span style="color: #800080;">0</span>, i) + t.substr(i + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">visited.count(str)) {
+                    q.push(str);
+                    visited.insert(str);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">bool</span> isValid(<span style="color: #0000ff;">string</span><span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; t.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (t[i] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (t[i] == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span> &amp;&amp; --cnt &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> cnt == <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看一种递归解法，这种解法首先统计了多余的半括号的数量，用cnt1表示多余的左括号，cnt2表示多余的右括号，因为给定字符串左右括号要么一样多，要么左括号多，要么右括号多，也可能左右括号都多，比如")("。所以cnt1和cnt2要么都为0，要么都大于0，要么一个为0，另一个大于0。好，下面进入我们的递归函数，首先判断，如果当cnt1和cnt2都为0时，说明此时左右括号个数相等了，我们调用isValid子函数来判断是否正确，正确的话加入结果res中并返回即可。否则从start开始遍历，这里的变量start表示当前递归开始的位置，我们不需要每次都从头开始，会有大量重复计算。而且对于多个相同的半括号在一起，我们只删除第一个，比如"())"，这里有两个右括号，我们不管删第一个还是删第二个右括号都会得到"()"，没有区别，所以只用算一次就行了，我们通过和上一个字符比较，如果不相同，说明是第一个右括号，如果相同则直接跳过。此时来看如果cnt1大于0，说明此时左括号多，而如果当前字符正好是左括号的时候，我们可以删掉当前左括号，继续调用递归，此时cnt1的值就应该减1，因为已经删掉了一个左括号。同理，如果cnt2大于0，说明此时右括号多，而如果当前字符正好是右括号的时候，我们可以删掉当前右括号，继续调用递归，此时cnt2的值就应该减1，因为已经删掉了一个右括号。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; removeInvalidParentheses(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> cnt1 = <span style="color: #800080;">0</span>, cnt2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : s) {
+            cnt1 </span>+= (c == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (cnt1 == <span style="color: #800080;">0</span>) cnt2 += (c == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span> cnt1 -= (c == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        }
+        helper(s, </span><span style="color: #800080;">0</span><span style="color: #000000;">, cnt1, cnt2, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span> cnt1, <span style="color: #0000ff;">int</span> cnt2, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (cnt1 == <span style="color: #800080;">0</span> &amp;&amp; cnt2 == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isValid(s)) res.push_back(s);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i != start &amp;&amp; s[i] == s[i - <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (cnt1 &gt; <span style="color: #800080;">0</span> &amp;&amp; s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                helper(s.substr(</span><span style="color: #800080;">0</span>, i) + s.substr(i + <span style="color: #800080;">1</span>), i, cnt1 - <span style="color: #800080;">1</span><span style="color: #000000;">, cnt2, res);
+            }
+            </span><span style="color: #0000ff;">if</span> (cnt2 &gt; <span style="color: #800080;">0</span> &amp;&amp; s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                helper(s.substr(</span><span style="color: #800080;">0</span>, i) + s.substr(i + <span style="color: #800080;">1</span>), i, cnt1, cnt2 - <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">bool</span> isValid(<span style="color: #0000ff;">string</span><span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; t.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (t[i] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (t[i] == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span> &amp;&amp; --cnt &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> cnt == <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是论坛上的高票解法，思路确实很巧妙。递归函数的参数中，last_i表示当前遍历到的位置，相当上面解法中的start，last_j表示上一个删除的位置，这样可以避免重复计算。然后有个括号字符数组，初始化时放入左括号和右括号，博主认为这个字符数组是此解法最精髓的地方，因为其顺序可以改变，可以变成反向括号，这个就比较叼了，后面再讲它到底有多叼吧。我们在递归函数中，从last_i开始遍历，在找正向括号的时候，用变量cnt表示括号数组中的左括号出现的次数，遇到左括号自增1，遇到右括号自减1。当左括号大于等于右括号的时候，我们直接跳过。这个循环的目的是要删除多余的右括号，所以当cnt小于0的时候，我们从上一个删除位置last_j开始遍历，如果当前是右括号，且是第一个右括号（关于这块可以参见上面解法中的分析），我们删除当前右括号，并调用递归函数。注意这个for循环结束后要直接返回，因为进这个for循环的都是右括号多的，删到最后最多是删成和左括号一样多，不需要再去翻转删左括号。好，最后来说这个最叼的翻转，当字符串的左括号个数大于等于右括号的时候，不会进入第二个for循环，自然也不会return。那么由于左括号的个数可能会要大于右括号，所以我们还要删除多余的左括号，所以我们将字符串反转一下，比如"(()"，反转变成")(("，此时虽然我们还是要删除多余的左括号，但是反转后就没有合法的括号了，所以变成了找反向括号")("，那么还是可以删除多余的左括号，然后我们判断此时括号数组的状态，如果是正向括号，说明此时正要删除左括号，那么就调用递归函数，last_i和last_j均重置为0，括号数组初始化为反向括号。如果此时已经是反向括号了，说明之前的左括号已经删掉了变成了")("，然后又反转了一下，变回来了"()"，那么就可以直接加入结果res了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; removeInvalidParentheses(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        helper(s, </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, {<span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">}, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span> last_i, <span style="color: #0000ff;">int</span> last_j, vector&lt;<span style="color: #0000ff;">char</span>&gt; p, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = last_i; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == p[<span style="color: #800080;">0</span>]) ++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s[i] == p[<span style="color: #800080;">1</span>]) --<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">if</span> (cnt &gt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = last_j; j &lt;= i; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (s[j] == p[<span style="color: #800080;">1</span>] &amp;&amp; (j == last_j || s[j] != s[j - <span style="color: #800080;">1</span><span style="color: #000000;">])) {
+                    helper(s.substr(</span><span style="color: #800080;">0</span>, j) + s.substr(j + <span style="color: #800080;">1</span><span style="color: #000000;">), i, j, p, res);
+                }
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">string</span> rev = <span style="color: #0000ff;">string</span><span style="color: #000000;">(s.rbegin(), s.rend());
+        </span><span style="color: #0000ff;">if</span> (p[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span>) helper(rev, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, {<span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">}, res);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> res.push_back(rev);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4682458.html">Different Ways to Add Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424731.html" target="_blank">Longest Valid Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4444160.html" target="_blank">Generate Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424587.html" target="_blank">Valid Parentheses</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/28827/share-my-java-bfs-solution">https://discuss.leetcode.com/topic/28827/share-my-java-bfs-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/34875/easy-short-concise-and-fast-java-dfs-3-ms-solution">https://discuss.leetcode.com/topic/34875/easy-short-concise-and-fast-java-dfs-3-ms-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/28819/c-depth-limited-dfs-3ms-eliminate-duplicates-without-hashmap">https://discuss.leetcode.com/topic/28819/c-depth-limited-dfs-3ms-eliminate-duplicates-without-hashmap</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

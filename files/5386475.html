@@ -1,0 +1,77 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5386475.html">[LeetCode] Word Frequency 单词频率</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a bash script to calculate the frequency of each word in a text file <code>words.txt</code>.</p>
+<p>For simplicity sake, you may assume:</p>
+<ul>
+<li><code>words.txt</code> contains only lowercase characters and space <code>' '</code> characters.</li>
+<li>Each word must consist of lowercase characters only.</li>
+<li>Words are separated by one or more whitespace characters.</li>
+</ul>
+<p>For example, assume that <code>words.txt</code> has the following content:</p>
+<pre>the day is sunny the the
+the sunny is is
+</pre>
+<p>Your script should output the following, sorted by descending frequency:</p>
+<pre>the 4
+is 3
+sunny 2
+day 1
+</pre>
+<p> <strong>Note:</strong><br />
+Don't worry about handling ties, it is guaranteed that each word's frequency count is unique.
+</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/word-frequency/">[show hint]</a></p>
+<div class="spoilers" style="display: block;"><strong>Hint:</strong><br />
+Could you write it in one-line using <a href="http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-4.html">Unix pipes</a>?
+</div>
+<p>&nbsp;</p>
+<p>这道题给了我们一个文本文件，让我们统计里面单词出现的个数，提示中让我们用管道Pipes来做，在之前那道<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5376902.html">Tenth Line</a>中，我们使用过管道命令，管道命令的讲解请参见<a href="http://www.programgo.com/article/6462705832/;jsessionid=01A7179C41368EACBD963D21018878B2" target="_blank">这个帖子</a>。提示中让我们用管道连接各种命令，然后一行搞定，那么我们先来看第一种解法，乍一看啥都不明白，咋办？没关系，容我慢慢来讲解。首先用的关键字是grep命令，该命令一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来，详解请参见<a href="http://www.cnblogs.com/peida/archive/2012/12/17/2821195.html" target="_blank">这个帖子</a>。后面紧跟的-oE '[a-z]+'参数表示原文本内容变成一个单词一行的存储方式，于是此时文本的内容就变成了：</p>
+<p>the<br />day<br />is<br />sunny<br />the<br />the<br />the<br />sunny<br />is</p>
+<p>下面的sort命令就是用来排序的，参见<a href="http://blog.csdn.net/monkeyduck/article/details/10097829" target="_blank">这个帖子</a>。排完序的结果为：</p>
+<p>day<br />is<br />is<br />is<br />sunny<br />sunny<br />the<br />the<br />the<br />the</p>
+<p>后面的uniq命令是表示去除重复行命令(参见<a href="http://blog.51yip.com/shell/1022.html" target="_blank">这个帖子</a>)，后面的参数-c表示在每行前加上表示相应行目出现次数的前缀编号，得到结果如下： </p>
+<p>&nbsp;&nbsp; 1 day<br />&nbsp;&nbsp; 3 is<br />&nbsp;&nbsp; 2 sunny<br />&nbsp;&nbsp; 4 the</p>
+<p>然后我们再sort一下，后面的参数-nr表示按数值进行降序排列，得到结果：</p>
+<p>&nbsp;&nbsp; 4 the<br />&nbsp;&nbsp; 3 is<br />&nbsp;&nbsp; 2 sunny<br />&nbsp;&nbsp; 1 day&nbsp; </p>
+<p>而最后的awk命令就是将结果输出，两列颠倒位置即可：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">grep</span> -oE <span style="color: #800000;">'</span><span style="color: #800000;">[a-z]+</span><span style="color: #800000;">'</span> words.txt | <span style="color: #0000ff;">sort</span> | <span style="color: #0000ff;">uniq</span> -c | <span style="color: #0000ff;">sort</span> -nr | <span style="color: #0000ff;">awk</span> <span style="color: #800000;">'</span><span style="color: #800000;">{print $2" "$1}</span><span style="color: #800000;">'</span> </pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="color: #333333;">下面这种方法用的关键字是tr命令，该命令主要用来进行字符替换或者大小写替换，详解请参见<a href="http://www.cnblogs.com/leaven/archive/2011/01/05/1926194.html" target="_blank"><span style="color: #333333;">这个帖子</span></a>。后面紧跟的-s参数表示如果发现连续的字符，就把它们缩减为1个，而后面的&lsquo; &rsquo;和&lsquo;\n'就是空格和回车，意思是把所有的空格都换成回车，那么第一段命令tr -s ' ' '\n' &lt; words.txt 就好理解了，将单词之间的空格都换成回车，跟上面的第一段实现的作用相同，后面就完全一样了，参见上面的讲解：</span></p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">tr</span> -s <span style="color: #800000;">'</span> <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span> &lt; words.txt | <span style="color: #0000ff;">sort</span> | <span style="color: #0000ff;">uniq</span> -c | <span style="color: #0000ff;">sort</span> -nr | <span style="color: #0000ff;">awk</span> <span style="color: #800000;">'</span><span style="color: #800000;">{print $2, $1}</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>下面这种方法就没有用管道命令进行一行写法了，而是使用了强大的文本分析工具awk进行写类C的代码来实现，这种写法在之前的那道<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5382166.html">Transpose File</a><span class="postTitle2">已经讲解过了，这里就不多说了，最后要注意的是sort命令的参数-nr -k 2表示按第二列的降序数值排列：</span></p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">awk</span> <span style="color: #800000;">'</span><span style="color: #800000;">{</span>
+    <span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">1</span>; i &lt;= NF; ++i) ++<span style="color: #000000;">s[$i];
+} END {
+    </span><span style="color: #0000ff;">for</span> (i <span style="color: #0000ff;">in</span><span style="color: #000000;"> s) print i, s[i];
+}</span><span style="color: #800000;">'</span><span style="color: #800000;"> words.txt | sort -nr -k 2</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/33353/my-accepted-answer-using-tr-sort-uniq-and-awk" target="_blank">https://leetcode.com/discuss/33353/my-accepted-answer-using-tr-sort-uniq-and-awk</a></p>
+<p><a href="https://leetcode.com/discuss/46976/my-ac-solution-one-pipe-command-but-cost-20ms" target="_blank">https://leetcode.com/discuss/46976/my-ac-solution-one-pipe-command-but-cost-20ms</a></p>
+<p><a href="https://leetcode.com/discuss/29001/solution-using-awk-and-pipes-with-explaination" target="_blank">https://leetcode.com/discuss/29001/solution-using-awk-and-pipes-with-explaination</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

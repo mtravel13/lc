@@ -1,0 +1,65 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5348961.html">[LeetCode] Second Highest Salary 第二高薪水</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a SQL query to get the second highest salary from the&nbsp;<code>Employee</code>&nbsp;table.</p>
+<pre>+----+--------+
+| Id | Salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+</pre>
+<p>For example, given the above Employee table, the second highest salary is&nbsp;<code>200</code>. If there is no second highest salary, then the query should return&nbsp;<code>null</code>.</p>
+<p>&nbsp;</p>
+<p>这道题让我们找表中某列第二大的数，这道题有很多种解法，先来看一种使用Limit和Offset两个关键字的解法，MySQL中Limit后面的数字限制了我们返回数据的个数，Offset是偏移量，那么如果我们想找第二高薪水，我们首先可以先对薪水进行降序排列，然后我们将Offset设为1，那么就是从第二个开始，也就是第二高薪水，然后我们将Limit设为1，就是只取出第二高薪水，如果将Limit设为2，那么就将第二高和第三高薪水都取出来：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Salary <span style="color: #0000ff;">FROM</span> Employee <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> Salary
+</span><span style="color: #0000ff;">UNION</span> <span style="color: #808080;">ALL</span> (<span style="color: #0000ff;">SELECT</span> <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">AS</span><span style="color: #000000;"> Salary)
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> Salary <span style="color: #0000ff;">DESC</span> LIMIT <span style="color: #800000; font-weight: bold;">1</span> OFFSET <span style="color: #800000; font-weight: bold;">1</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用Max函数来做，这个返回最大值，逻辑是我们取出的不包含最大值的数字中的最大值，即为第二大值：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee 
+</span><span style="color: #0000ff;">WHERE</span> Salary <span style="color: #808080;">NOT</span> <span style="color: #808080;">IN</span><span style="color: #000000;">
+(</span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span> Employee);</pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法和上面基本一样，就是用小于号&lt;代替了Not in关键字，效果相同：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee
+</span><span style="color: #0000ff;">Where</span> Salary <span style="color: #808080;">&lt;</span><span style="color: #000000;">
+(</span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span> Employee);</pre>
+</div>
+<p>&nbsp;</p>
+<p>最后来看一种可以扩展到找到第N高的薪水的方法，只要将下面语句中的1改为N-1即可，第二高的薪水带入N-1就是1，下面语句的逻辑是，假如我们要找第二高的薪水，那么我们允许其中一个最大值存在，然后在其余的数字中找出最大的，即为整个的第二大的值；</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee E1
+</span><span style="color: #0000ff;">WHERE</span> <span style="color: #800000; font-weight: bold;">1</span> <span style="color: #808080;">=</span><span style="color: #000000;">
+(</span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span>(E2.Salary)) <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee E2
+</span><span style="color: #0000ff;">WHERE</span> E2.Salary <span style="color: #808080;">&gt;</span> E1.Salary);</pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/47041/very-very-simple-solution" target="_blank">https://leetcode.com/discuss/47041/very-very-simple-solution</a></p>
+<p><a href="https://leetcode.com/discuss/42849/general-solution-not-using-max" target="_blank">https://leetcode.com/discuss/42849/general-solution-not-using-max</a></p>
+<p><a href="https://leetcode.com/discuss/21751/simple-query-which-handles-the-null-situation" target="_blank">https://leetcode.com/discuss/21751/simple-query-which-handles-the-null-situation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

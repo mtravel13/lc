@@ -1,0 +1,159 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5577038.html">[LeetCode] Design Twitter 设计推特</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a simplified version of Twitter where users can post tweets, follow/unfollow another user and is able to see the 10 most recent tweets in the user's news feed. Your design should support the following methods:</p>
+<p>&nbsp;</p>
+<ol>
+<li><strong>postTweet(userId, tweetId)</strong>: Compose a new tweet.</li>
+<li><strong>getNewsFeed(userId)</strong>: Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent.</li>
+<li><strong>follow(followerId, followeeId)</strong>: Follower follows a followee.</li>
+<li><strong>unfollow(followerId, followeeId)</strong>: Follower unfollows a followee.</li>
+</ol>
+<p><strong>Example:</strong></p>
+<pre>Twitter twitter = new Twitter();
+
+// User 1 posts a new tweet (id = 5).
+twitter.postTweet(1, 5);
+
+// User 1's news feed should return a list with 1 tweet id -&gt; [5].
+twitter.getNewsFeed(1);
+
+// User 1 follows user 2.
+twitter.follow(1, 2);
+
+// User 2 posts a new tweet (id = 6).
+twitter.postTweet(2, 6);
+
+// User 1's news feed should return a list with 2 tweet ids -&gt; [6, 5].
+// Tweet id 6 should precede tweet id 5 because it is posted after tweet id 5.
+twitter.getNewsFeed(1);
+
+// User 1 unfollows user 2.
+twitter.unfollow(1, 2);
+
+// User 1's news feed should return a list with 1 tweet id -&gt; [5],
+// since user 1 is no longer following user 2.
+twitter.getNewsFeed(1);
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们设计个简单的推特，具有发布消息，获得新鲜事，添加关注和取消关注等功能。我们需要用两个哈希表来做，第一个是建立用户和其所有好友之间的映射，另一个是建立用户和其所有消息之间的映射。由于获得新鲜事是需要按时间顺序排列的，那么我们可以用一个整型变量cnt来模拟时间点，每发一个消息，cnt自增1，那么我们就知道cnt大的是最近发的。那么我们在建立用户和其所有消息之间的映射时，还需要建立每个消息和其时间点cnt之间的映射。这道题的主要难点在于实现getNewsFeed()函数，这个函数获取自己和好友的最近10条消息，我们的做法是用户也添加到自己的好友列表中，然后遍历该用户的所有好友，遍历每个好友的所有消息，维护一个大小为10的哈希表，如果新遍历到的消息比哈希表中最早的消息要晚，那么将这个消息加入，然后删除掉最早的那个消息，这样我们就可以找出最近10条消息了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Twitter {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    Twitter() {
+        cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Compose a new tweet. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> postTweet(<span style="color: #0000ff;">int</span> userId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> tweetId) {
+        follow(userId, userId);
+        tweets[userId].insert({cnt</span>++<span style="color: #000000;">, tweetId});
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; getNewsFeed(<span style="color: #0000ff;">int</span><span style="color: #000000;"> userId) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> top10;
+        </span><span style="color: #0000ff;">for</span> (auto it = friends[userId].begin(); it != friends[userId].end(); ++<span style="color: #000000;">it) {
+            </span><span style="color: #0000ff;">int</span> t = *<span style="color: #000000;">it;
+            </span><span style="color: #0000ff;">for</span> (auto a = tweets[t].begin(); a != tweets[t].end(); ++<span style="color: #000000;">a) {</span><span style="color: #000000;">
+                top10.insert({a</span>-&gt;first, a-&gt;<span style="color: #000000;">second});
+                </span><span style="color: #0000ff;">if</span> (top10.size() &gt; <span style="color: #800080;">10</span><span style="color: #000000;">) top10.erase(top10.begin());
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (auto it = top10.rbegin(); it != top10.rend(); ++<span style="color: #000000;">it) {
+            res.push_back(it</span>-&gt;<span style="color: #000000;">second);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Follower follows a followee. If the operation is invalid, it should be a no-op. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> follow(<span style="color: #0000ff;">int</span> followerId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> followeeId) {
+        friends[followerId].insert(followeeId);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Follower unfollows a followee. If the operation is invalid, it should be a no-op. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> unfollow(<span style="color: #0000ff;">int</span> followerId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> followeeId) {
+        </span><span style="color: #0000ff;">if</span> (followerId !=<span style="color: #000000;"> followeeId) {
+            friends[followerId].erase(followeeId);
+        }
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt;
+    unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> friends;
+    unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> tweets;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法和上面的基本一样，就是在保存用户所有消息的时候，用的是vector&lt;pair&lt;int, int&gt;&gt;，这样我们可以用priority_queue来帮助我们找出最新10条消息，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Twitter {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    Twitter() {
+        cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Compose a new tweet. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> postTweet(<span style="color: #0000ff;">int</span> userId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> tweetId) {
+        follow(userId, userId);
+        tweets[userId].push_back({cnt</span>++<span style="color: #000000;">, tweetId});
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; getNewsFeed(<span style="color: #0000ff;">int</span><span style="color: #000000;"> userId) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        priority_queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;, vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;, greater&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span> (auto it = friends[userId].begin(); it != friends[userId].end(); ++<span style="color: #000000;">it) {
+            </span><span style="color: #0000ff;">for</span> (auto a = tweets[*it].begin(); a != tweets[*it].end(); ++<span style="color: #000000;">a) {
+                </span><span style="color: #0000ff;">if</span> (q.size() &gt; <span style="color: #800080;">0</span> &amp;&amp; q.top().first &gt; a-&gt;first &amp;&amp; q.size() &gt; <span style="color: #800080;">10</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                q.push(</span>*<span style="color: #000000;">a);
+                </span><span style="color: #0000ff;">if</span> (q.size() &gt; <span style="color: #800080;">10</span><span style="color: #000000;">) q.pop();
+            }
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            res.push_back(q.top().second);
+            q.pop();
+        }
+        reverse(res.begin(), res.end());
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Follower follows a followee. If the operation is invalid, it should be a no-op. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> follow(<span style="color: #0000ff;">int</span> followerId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> followeeId) {
+        friends[followerId].insert(followeeId);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Follower unfollows a followee. If the operation is invalid, it should be a no-op. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> unfollow(<span style="color: #0000ff;">int</span> followerId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> followeeId) {
+        </span><span style="color: #0000ff;">if</span> (followerId !=<span style="color: #000000;"> followeeId) {
+            friends[followerId].erase(followeeId);
+        }
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt;
+    unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> friends;
+    unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;&gt;<span style="color: #000000;"> tweets;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/107612/my-wa-c-code" target="_blank">https://leetcode.com/discuss/107612/my-wa-c-code</a></p>
+<p><a href="https://leetcode.com/discuss/107637/short-c-solution" target="_blank">https://leetcode.com/discuss/107637/short-c-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

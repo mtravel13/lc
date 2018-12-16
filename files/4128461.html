@@ -1,0 +1,128 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4128461.html">[LeetCode] Intersection of Two Linked Lists  求两个链表的交点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a program to find the node at which the intersection of two singly linked lists begins.</p>
+<p>&nbsp;</p>
+<p>For example, the following two linked lists:</p>
+<pre>A:          a1 &rarr; a2
+                      ↘
+                        c1 &rarr; c2 &rarr; c3
+                      ↗            
+B:     b1 &rarr; b2 &rarr; b3
+</pre>
+<p>begin to intersect at node c1.</p>
+<p>&nbsp;</p>
+<p>Notes:</p>
+<ul>
+<li>If the two linked lists have no intersection at all, return&nbsp;<code>null</code>.</li>
+<li>The linked lists must retain their original structure after the function returns.</li>
+<li>You may assume there are no cycles anywhere in the entire linked structure.</li>
+<li>Your code should preferably run in O(n) time and use only O(1) memory.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://oj.leetcode.com/discuss/user/stellari">@stellari</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>我还以为以后在不能免费做OJ的题了呢，想不到OJ又放出了不需要买书就能做的题，业界良心啊，哈哈^_^。这道求两个链表的交点题要求执行时间为O(n)，则不能利用类似冒泡法原理去暴力查找相同点，事实证明如果链表很长的话，那样的方法效率很低。我也想到会不会是像之前删除重复元素的题一样需要用两个指针来遍历，可是想了好久也没想出来怎么弄。无奈上网搜大神们的解法，发觉其实解法很简单，因为如果两个链长度相同的话，那么对应的一个个比下去就能找到，所以只需要把长链表变短即可。具体算法为：分别遍历两个链表，得到分别对应的长度。然后求长度的差值，把较长的那个链表向后移动这个差值的个数，然后一一比较即可。代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*getIntersectionNode(ListNode *headA, ListNode *<span style="color: #000000;">headB) {
+        </span><span style="color: #0000ff;">if</span> (!headA || !headB) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">int</span> lenA = getLength(headA), lenB =<span style="color: #000000;"> getLength(headB);
+        </span><span style="color: #0000ff;">if</span> (lenA &lt;<span style="color: #000000;"> lenB) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; lenB - lenA; ++i) headB = headB-&gt;<span style="color: #000000;">next;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; lenA - lenB; ++i) headA = headA-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">while</span> (headA &amp;&amp; headB &amp;&amp; headA !=<span style="color: #000000;"> headB) {
+            headA </span>= headA-&gt;<span style="color: #000000;">next;
+            headB </span>= headB-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span> (headA &amp;&amp; headB) ?<span style="color: #000000;"> headA : NULL;
+    }
+    </span><span style="color: #0000ff;">int</span> getLength(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (head) {
+            </span>++<span style="color: #000000;">cnt;
+            head </span>= head-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        </span><span style="color: #0000ff;">if</span> (headA == <span style="color: #0000ff;">null</span> || headB == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> lenA = getLength(headA), lenB =<span style="color: #000000;"> getLength(headB);
+        </span><span style="color: #0000ff;">if</span> (lenA &gt;<span style="color: #000000;"> lenB) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; lenA - lenB; ++i) headA =<span style="color: #000000;"> headA.next;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; lenB - lenA; ++i) headB =<span style="color: #000000;"> headB.next;
+        }
+        </span><span style="color: #0000ff;">while</span> (headA != <span style="color: #0000ff;">null</span> &amp;&amp; headB != <span style="color: #0000ff;">null</span> &amp;&amp; headA !=<span style="color: #000000;"> headB) {
+            headA </span>=<span style="color: #000000;"> headA.next;
+            headB </span>=<span style="color: #000000;"> headB.next;
+        }
+        </span><span style="color: #0000ff;">return</span> (headA != <span style="color: #0000ff;">null</span> &amp;&amp; headB != <span style="color: #0000ff;">null</span>) ? headA : <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getLength(ListNode head) {
+        </span><span style="color: #0000ff;">int</span> cnt = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (head != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span>++<span style="color: #000000;">cnt;
+            head </span>=<span style="color: #000000;"> head.next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有一种特别巧妙的方法，虽然题目中强调了链表中不存在环，但是我们可以用环的思想来做，我们让两条链表分别从各自的开头开始往后遍历，当其中一条遍历到末尾时，我们跳到另一个条链表的开头继续遍历。两个指针最终会相等，而且只有两种情况，一种情况是在交点处相遇，另一种情况是在各自的末尾的空节点处相等。为什么一定会相等呢，因为两个指针走过的路程相同，是两个链表的长度之和，所以一定会相等。这个思路真的很巧妙，而且更重要的是代码写起来特别的简洁，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*getIntersectionNode(ListNode *headA, ListNode *<span style="color: #000000;">headB) {
+        </span><span style="color: #0000ff;">if</span> (!headA || !headB) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        ListNode </span>*a = headA, *b =<span style="color: #000000;"> headB;
+        </span><span style="color: #0000ff;">while</span> (a !=<span style="color: #000000;"> b) {
+            a </span>= a ? a-&gt;<span style="color: #000000;">next : headB;
+            b </span>= b ? b-&gt;<span style="color: #000000;">next : headA;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> a;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        </span><span style="color: #0000ff;">if</span> (headA == <span style="color: #0000ff;">null</span> || headB == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ListNode a </span>= headA, b =<span style="color: #000000;"> headB;
+        </span><span style="color: #0000ff;">while</span> (a !=<span style="color: #000000;"> b) {
+            a </span>= (a != <span style="color: #0000ff;">null</span>) ?<span style="color: #000000;"> a.next : headB;
+            b </span>= (b != <span style="color: #0000ff;">null</span>) ?<span style="color: #000000;"> b.next : headA;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> a;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/intersection-of-two-linked-lists/" target="_blank">https://leetcode.com/problems/intersection-of-two-linked-lists/</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

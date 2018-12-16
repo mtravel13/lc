@@ -1,0 +1,96 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5367670.html">[LeetCode] Department Top Three Salaries 系里前三高薪水</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The&nbsp;<code>Employee</code>&nbsp;table holds all employees. Every employee has an Id, and there is also a column for the department Id.</p>
+<pre>+----+-------+--------+--------------+
+| Id | Name  | Salary | DepartmentId |
++----+-------+--------+--------------+
+| 1  | Joe   | 70000  | 1            |
+| 2  | Henry | 80000  | 2            |
+| 3  | Sam   | 60000  | 2            |
+| 4  | Max   | 90000  | 1            |
+| 5  | Janet | 69000  | 1            |
+| 6  | Randy | 85000  | 1            |
++----+-------+--------+--------------+
+</pre>
+<p>The&nbsp;<code>Department</code>&nbsp;table holds all departments of the company.</p>
+<pre>+----+----------+
+| Id | Name     |
++----+----------+
+| 1  | IT       |
+| 2  | Sales    |
++----+----------+
+</pre>
+<p>Write a SQL query to find employees who earn the top three salaries in each of the department. For the above tables, your SQL query should return the following rows.</p>
+<pre>+------------+----------+--------+
+| Department | Employee | Salary |
++------------+----------+--------+
+| IT         | Max      | 90000  |
+| IT         | Randy    | 85000  |
+| IT         | Joe      | 70000  |
+| Sales      | Henry    | 80000  |
+| Sales      | Sam      | 60000  |
++------------+----------+--------+</pre>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5366412.html">Department Highest Salary</a>的拓展，难度标记为Hard，还是蛮有难度的一道题，综合了前面很多题的知识点，首先看使用Select Count(Distinct)的方法，我们内交Employee和Department两张表，然后我们找出比当前薪水高的最多只能有两个，那么前三高的都能被取出来了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> d.Name <span style="color: #0000ff;">AS</span> Department, e.Name <span style="color: #0000ff;">AS</span> Employee, e.Salary <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee e
+</span><span style="color: #808080;">JOIN</span> Department d <span style="color: #0000ff;">on</span> e.DepartmentId <span style="color: #808080;">=</span><span style="color: #000000;"> d.Id
+</span><span style="color: #0000ff;">WHERE</span> (<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span> Salary) <span style="color: #0000ff;">FROM</span> Employee <span style="color: #0000ff;">WHERE</span> Salary <span style="color: #808080;">&gt;</span><span style="color: #000000;"> e.Salary
+</span><span style="color: #808080;">AND</span> DepartmentId <span style="color: #808080;">=</span> d.Id) <span style="color: #808080;">&lt;</span> <span style="color: #800000; font-weight: bold;">3</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> d.Name, e.Salary <span style="color: #0000ff;">DESC</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法将上面方法中的&lt;3换成了IN (0, 1, 2)，是一样的效果：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> d.Name <span style="color: #0000ff;">AS</span> Department, e.Name <span style="color: #0000ff;">AS</span> Employee, e.Salary <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee e, Department d
+</span><span style="color: #0000ff;">WHERE</span> (<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span> Salary) <span style="color: #0000ff;">FROM</span> Employee <span style="color: #0000ff;">WHERE</span> Salary <span style="color: #808080;">&gt;</span><span style="color: #000000;"> e.Salary
+</span><span style="color: #808080;">AND</span> DepartmentId <span style="color: #808080;">=</span> d.Id) <span style="color: #808080;">IN</span> (<span style="color: #800000; font-weight: bold;">0</span>, <span style="color: #800000; font-weight: bold;">1</span>, <span style="color: #800000; font-weight: bold;">2</span>) <span style="color: #808080;">AND</span> e.DepartmentId <span style="color: #808080;">=</span> d.Id <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> d.Name, e.Salary <span style="color: #0000ff;">DESC</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>或者我们也可以使用Group by Having Count(Distinct ..) 关键字来做：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> d.Name <span style="color: #0000ff;">AS</span> Department, e.Name <span style="color: #0000ff;">AS</span> Employee, e.Salary <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> 
+(</span><span style="color: #0000ff;">SELECT</span> e1.Name, e1.Salary, e1.DepartmentId <span style="color: #0000ff;">FROM</span> Employee e1 <span style="color: #808080;">JOIN</span><span style="color: #000000;"> Employee e2 
+</span><span style="color: #0000ff;">ON</span> e1.DepartmentId <span style="color: #808080;">=</span> e2.DepartmentId <span style="color: #808080;">AND</span> e1.Salary <span style="color: #808080;">&lt;=</span> e2.Salary <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> e1.Id 
+</span><span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span> e2.Salary) <span style="color: #808080;">&lt;=</span> <span style="color: #800000; font-weight: bold;">3</span>) e <span style="color: #808080;">JOIN</span> Department d <span style="color: #0000ff;">ON</span> e.DepartmentId <span style="color: #808080;">=</span><span style="color: #000000;"> d.Id 
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> d.Name, e.Salary <span style="color: #0000ff;">DESC</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法略微复杂一些，用到了变量，跟<a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_2" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5354173.html">Consecutive Numbers</a>中的解法三使用的方法一样，目的是为了给每个人都按照薪水的高低增加一个rank，最后返回rank值小于等于3的项即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> d.Name <span style="color: #0000ff;">AS</span> Department, e.Name <span style="color: #0000ff;">AS</span> Employee, e.Salary <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> 
+(</span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> Name, Salary, DepartmentId,
+</span><span style="color: #008000;">@rank</span> :<span style="color: #808080;">=</span> <span style="color: #0000ff;">IF</span>(<span style="color: #008000;">@pre_d</span> <span style="color: #808080;">=</span> DepartmentId, <span style="color: #008000;">@rank</span> <span style="color: #808080;">+</span> (<span style="color: #008000;">@pre_s</span> <span style="color: #808080;">&lt;&gt;</span> Salary), <span style="color: #800000; font-weight: bold;">1</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> rank,
+</span><span style="color: #008000;">@pre_d</span> :<span style="color: #808080;">=</span> DepartmentId, <span style="color: #008000;">@pre_s</span> :<span style="color: #808080;">=</span><span style="color: #000000;"> Salary 
+</span><span style="color: #0000ff;">FROM</span> Employee, (<span style="color: #0000ff;">SELECT</span> <span style="color: #008000;">@pre_d</span> :<span style="color: #808080;">=</span> <span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">1</span>, <span style="color: #008000;">@pre_s</span> :<span style="color: #808080;">=</span> <span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">1</span>, <span style="color: #008000;">@rank</span> :<span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">1</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> init
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> DepartmentId, Salary <span style="color: #0000ff;">DESC</span>) e <span style="color: #808080;">JOIN</span> Department d <span style="color: #0000ff;">ON</span> e.DepartmentId <span style="color: #808080;">=</span><span style="color: #000000;"> d.Id
+</span><span style="color: #0000ff;">WHERE</span> e.rank <span style="color: #808080;">&lt;=</span> <span style="color: #800000; font-weight: bold;">3</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> d.Name, e.Salary <span style="color: #0000ff;">DESC</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5366412.html">Department Highest Salary</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_2" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348961.html">Second Highest Salary</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_3" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348900.html">Combine Two Tables</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/23002/my-tidy-solution" target="_blank">https://leetcode.com/discuss/23002/my-tidy-solution</a></p>
+<p><a href="https://leetcode.com/discuss/91087/yet-another-solution-using-having-count-distinct" target="_blank">https://leetcode.com/discuss/91087/yet-another-solution-using-having-count-distinct</a></p>
+<p><a href="https://leetcode.com/discuss/69880/two-solutions-1-count-join-2-three-variables-join" target="_blank">https://leetcode.com/discuss/69880/two-solutions-1-count-join-2-three-variables-join</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

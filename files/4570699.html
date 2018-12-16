@@ -1,0 +1,137 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4570699.html">[LeetCode] Basic Calculator 基本计算器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement a basic calculator to evaluate a simple expression string.</p>
+<p>The expression string may contain open <code>(</code> and closing parentheses <code>)</code>, the plus <code>+</code> or minus sign <code>-</code>, <strong>non-negative</strong> integers and empty spaces <code> </code>.</p>
+<p>You may assume that the given expression is always valid.</p>
+<p>Some examples:<br />
+</p>
+<pre>"1 + 1" = 2
+" 2-1 + 2 " = 3
+"(1+(4+5+2)-3)+(6+8)" = 23
+</pre>
+<p><strong>Note:</strong> <strong>Do not</strong> use the <code>eval</code> built-in library function.</p>
+<p>&nbsp;</p>
+<p>这道题让我们实现一个基本的计算器来计算简单的算数表达式，而且题目限制了表达式中只有加减号，数字，括号和空格，没有乘除，那么就没啥计算的优先级之分了。于是这道题就变的没有那么复杂了。我们需要一个栈来辅助计算，用个变量sign来表示当前的符号，我们遍历给定的字符串s，如果遇到了数字，由于可能是个多位数，所以我们要用while循环把之后的数字都读进来，然后用sign*num来更新结果res；如果遇到了加号，则sign赋为1，如果遇到了符号，则赋为-1；如果遇到了左括号，则把当前结果res和符号sign压入栈，res重置为0，sign重置为1；如果遇到了右括号，结果res乘以栈顶的符号，栈顶元素出栈，结果res加上栈顶的数字，栈顶元素出栈。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> calculate(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, sign = <span style="color: #800080;">1</span>, n =<span style="color: #000000;"> s.size();
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> s[i];
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">int</span> num = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; s[i] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    num </span>= <span style="color: #800080;">10</span> * num + s[i++] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                }
+                res </span>+= sign *<span style="color: #000000;"> num;
+                </span>--<span style="color: #000000;">i;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                sign </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                sign </span>= -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                st.push(res);
+                st.push(sign);
+                res </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                sign </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                res </span>*=<span style="color: #000000;"> st.top(); st.pop();
+                res </span>+=<span style="color: #000000;"> st.top(); st.pop();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法和上面的基本一样，只不过对于数字的处理略微不同，上面的方法是连续读入数字，而这种方法是使用了一个变量来保存读入的num，所以在遇到其他字符的时候，都要用sign*num来更新结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> calculate(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, num = <span style="color: #800080;">0</span>, sign = <span style="color: #800080;">1</span>, n =<span style="color: #000000;"> s.size();
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> s[i];
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                num </span>= <span style="color: #800080;">10</span> * num + (c - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                res </span>+= sign *<span style="color: #000000;"> num;
+                num </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                sign </span>= (c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span>) ? <span style="color: #800080;">1</span> : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+             } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                st.push(res);
+                st.push(sign);
+                res </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                sign </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                res </span>+= sign *<span style="color: #000000;"> num;
+                num </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                res </span>*=<span style="color: #000000;"> st.top(); st.pop();
+                res </span>+=<span style="color: #000000;"> st.top(); st.pop();
+            }
+        }
+        res </span>+= sign *<span style="color: #000000;"> num;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>在做了<a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8873471.html">Basic Calculator III</a>之后，再反过头来看这道题，发现递归处理括号的方法在这道题也同样适用，我们用一个变量cnt，遇到左括号自增1，遇到右括号自减1，当cnt为0的时候，说明括号正好完全匹配，这个trick在验证括号是否valid的时候经常使用到。然后我们就是根据左右括号的位置提取出中间的子字符串调用递归函数，返回值赋给num，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> calculate(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, num = <span style="color: #800080;">0</span>, sign = <span style="color: #800080;">1</span>, n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> s[i];
+            </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                num </span>= <span style="color: #800080;">10</span> * num + (c - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">int</span> j = i, cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (; i &lt; n; ++<span style="color: #000000;">i) {
+                    </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt;
+                    </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span>) --<span style="color: #000000;">cnt;
+                    </span><span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+                num </span>= calculate(s.substr(j + <span style="color: #800080;">1</span>, i - j - <span style="color: #800080;">1</span><span style="color: #000000;">));
+            }
+            </span><span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> || i == n - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                res </span>+= sign *<span style="color: #000000;"> num;
+                num </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                sign </span>= (c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span>) ? <span style="color: #800080;">1</span> : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+             } 
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8934427.html">Basic Calculator IV</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8873471.html">Basic Calculator III</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4601208.html" target="_blank">Basic Calculator II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/basic-calculator/discuss/62361/Iterative-Java-solution-with-stack">https://leetcode.com/problems/basic-calculator/discuss/62361/Iterative-Java-solution-with-stack</a></p>
+<p>&nbsp;</p>
+<p><a href="https://leetcode.com/problems/basic-calculator/discuss/62362/JAVA-Easy-Version-To-Understand!!!!!">https://leetcode.com/problems/basic-calculator/discuss/62362/JAVA-Easy-Version-To-Understand!!!!!</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

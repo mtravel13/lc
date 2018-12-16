@@ -1,0 +1,47 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4424731.html">[LeetCode] Longest Valid Parentheses 最长有效括号</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string containing just the characters&nbsp;<code>'('</code>&nbsp;and&nbsp;<code>')'</code>, find the length of the longest valid (well-formed) parentheses substring.</p>
+<p>For&nbsp;<code>"(()"</code>, the longest valid parentheses substring is&nbsp;<code>"()"</code>, which has length = 2.</p>
+<p>Another example is&nbsp;<code>")()())"</code>, where the longest valid parentheses substring is&nbsp;<code>"()()"</code>, which has length = 4.</p>
+<p>&nbsp;</p>
+<p>这道求最长有效括号比之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4424587.html">&nbsp;Valid Parentheses 验证括号</a>难度要大一些，这里我们还是借助栈来求解，需要定义个start变量来记录合法括号串的起始位置，我们遍历字符串，如果遇到左括号，则将当前下标压入栈，如果遇到右括号，如果当前栈为空，则将下一个坐标位置记录到start，如果栈不为空，则将栈顶元素取出，此时若栈为空，则更新结果和i - start + 1中的较大值，否则更新结果和i - 栈顶元素中的较大值，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestValidParentheses(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, start = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">(</span><span style="color: #800000;">'</span><span style="color: #000000;">) m.push(i);
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">)</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (m.empty()) start = i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    m.pop();
+                    res </span>= m.empty() ? max(res, i - start + <span style="color: #800080;">1</span>) : max(res, i -<span style="color: #000000;"> m.top());
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种利用动态规划Dynamic Programming的解法，可参见网友<a href="http://bangbingsyb.blogspot.com/2014/11/leetcode-longest-valid-parentheses.html" target="_blank">喜刷刷的博客</a>。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4944875.html">Remove Invalid Parentheses 移除非法括号</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4682458.html">Different Ways to Add Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4444160.html" target="_blank">Generate Parentheses</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424587.html" target="_blank">Valid Parentheses</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

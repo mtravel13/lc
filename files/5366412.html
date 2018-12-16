@@ -1,0 +1,68 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5366412.html">[LeetCode] Department Highest Salary 系里最高薪水</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The <code>Employee</code> table holds all employees. Every employee has an Id, a salary, and there is also a column for the department Id.</p>
+<pre>+----+-------+--------+--------------+
+| Id | Name  | Salary | DepartmentId |
++----+-------+--------+--------------+
+| 1  | Joe   | 70000  | 1            |
+| 2  | Henry | 80000  | 2            |
+| 3  | Sam   | 60000  | 2            |
+| 4  | Max   | 90000  | 1            |
++----+-------+--------+--------------+
+</pre>
+<p>The <code>Department</code> table holds all departments of the company.</p>
+<pre>+----+----------+
+| Id | Name     |
++----+----------+
+| 1  | IT       |
+| 2  | Sales    |
++----+----------+
+</pre>
+<p>Write a SQL query to find employees who have the highest salary in each of the departments. For the above tables, Max has the highest salary in the IT department and Henry has the highest salary in the Sales department.</p>
+<pre>+------------+----------+--------+
+| Department | Employee | Salary |
++------------+----------+--------+
+| IT         | Max      | 90000  |
+| Sales      | Henry    | 80000  |
++------------+----------+--------+
+</pre>
+<p>&nbsp;</p>
+<p>这道题让给了我们两张表，Employee表和Department表，让我们找系里面薪水最高的人的，实际上这题是<a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_2" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348961.html">Second Highest Salary</a><span class="postTitle2">和</span><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_3" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348900.html">Combine Two Tables</a><span class="postTitle2">的结合题，我们既需要联合两表，又要找到最高薪水，那么我们首先让两个表内交起来，然后将结果表需要的列都标明，然后就是要找最高的薪水，我们用Max关键字来实现，参见代码如下：</span></p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> d.Name <span style="color: #0000ff;">AS</span> Department, e1.Name <span style="color: #0000ff;">AS</span> Employee, e1.Salary <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee e1
+</span><span style="color: #808080;">JOIN</span> Department d <span style="color: #0000ff;">ON</span> e1.DepartmentId <span style="color: #808080;">=</span> d.Id <span style="color: #0000ff;">WHERE</span> Salary <span style="color: #808080;">IN</span><span style="color: #000000;"> 
+(</span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span> Employee e2 <span style="color: #0000ff;">WHERE</span> e1.DepartmentId <span style="color: #808080;">=</span> e2.DepartmentId);</pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以不用Join关键字，直接用Where将两表连起来，然后找最高薪水的方法和上面相同：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> d.Name <span style="color: #0000ff;">AS</span> Department, e.Name <span style="color: #0000ff;">AS</span> Employee, e.Salary <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee e, Department d
+</span><span style="color: #0000ff;">WHERE</span> e.DepartmentId <span style="color: #808080;">=</span> d.Id <span style="color: #808080;">AND</span> e.Salary <span style="color: #808080;">=</span> (<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MAX</span>(Salary) <span style="color: #0000ff;">FROM</span> Employee e2 <span style="color: #0000ff;">WHERE</span> e2.DepartmentId <span style="color: #808080;">=</span> d.Id);</pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法没用用到Max关键字，而是用了&gt;=符号，实现的效果跟Max关键字相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> d.Name <span style="color: #0000ff;">AS</span> Department, e.Name <span style="color: #0000ff;">AS</span> Employee, e.Salary <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> Employee e, Department d
+</span><span style="color: #0000ff;">WHERE</span> e.DepartmentId <span style="color: #808080;">=</span> d.Id <span style="color: #808080;">AND</span> e.Salary <span style="color: #808080;">&gt;=</span> <span style="color: #808080;">ALL</span> (<span style="color: #0000ff;">SELECT</span> Salary <span style="color: #0000ff;">FROM</span> Employee e2 <span style="color: #0000ff;">WHERE</span> e2.DepartmentId <span style="color: #808080;">=</span> d.Id);</pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_2" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348961.html">Second Highest Salary</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_3" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5348900.html">Combine Two Tables</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,93 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5759926.html">[LeetCode] Linked List Random Node 链表随机节点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a singly linked list, return a random node's value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p><strong>Follow up:</strong><br />
+What if the linked list is extremely large and its length is unknown to 
+you? Could you solve this efficiently without using extra space?
+</p>
+<p><strong>Example:</strong>
+</p>
+<pre>// Init a singly linked list [1,2,3].
+ListNode head = new ListNode(1);
+head.next = new ListNode(2);
+head.next.next = new ListNode(3);
+Solution solution = new Solution(head);
+
+// getRandom() should return either 1, 2, or 3 randomly. Each element should have equal probability of returning.
+solution.getRandom();
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个链表，让我们随机返回一个节点，那么最直接的方法就是先统计出链表的长度，然后根据长度随机生成一个位置，然后从开头遍历到这个位置即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* @param head The linked list's head. Note that the head is guanranteed to be not null, so it contains at least one node. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    Solution(ListNode</span>*<span style="color: #000000;"> head) {
+        len </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        ListNode </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">this</span>-&gt;head =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+            </span>++<span style="color: #000000;">len;
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+        }
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Returns a random node's value. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> getRandom() {
+        </span><span style="color: #0000ff;">int</span> t = rand() %<span style="color: #000000;"> len;
+        ListNode </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (t) {
+            </span>--<span style="color: #000000;">t;
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span> cur-&gt;<span style="color: #000000;">val;
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> len;
+    ListNode </span>*<span style="color: #000000;">head;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Follow up中说链表可能很长，我们没法提前知道长度，这里用到了著名了<a href="https://zh.wikipedia.org/wiki/%E6%B0%B4%E5%A1%98%E6%8A%BD%E6%A8%A3" target="_blank">水塘抽样Reservoir Sampling</a>的思路，由于限定了head一定存在，所以我们先让返回值res等于head的节点值，然后让cur指向head的下一个节点，定义一个变量i，初始化为2，若cur不为空我们开始循环，我们在[0, i - 1]中取一个随机数，如果取出来0，那么我们更新res为当前的cur的节点值，然后此时i自增一，cur指向其下一个位置，这里其实相当于我们维护了一个大小为1的水塘，然后我们随机数生成为0的话，我们交换水塘中的值和当前遍历到的值，这样可以保证每个数字的概率相等，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* @param head The linked list's head. Note that the head is guanranteed to be not null, so it contains at least one node. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    Solution(ListNode</span>*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">this</span>-&gt;head =<span style="color: #000000;"> head;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Returns a random node's value. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> getRandom() {
+        </span><span style="color: #0000ff;">int</span> res = head-&gt;val, i = <span style="color: #800080;">2</span><span style="color: #000000;">;
+        ListNode </span>*cur = head-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+            </span><span style="color: #0000ff;">int</span> j = rand() %<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">if</span> (j == <span style="color: #800080;">0</span>) res = cur-&gt;<span style="color: #000000;">val;
+            </span>++<span style="color: #000000;">i;
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    ListNode </span>*<span style="color: #000000;">head;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/53812/using-reservoir-sampling-o-1-space-o-n-time-complexity-c" target="_blank">https://discuss.leetcode.com/topic/53812/using-reservoir-sampling-o-1-space-o-n-time-complexity-c</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

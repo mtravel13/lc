@@ -1,0 +1,90 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6026066.html">[LeetCode] Arranging Coins 排列硬币</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You have a total of <em>n</em> coins that you want to form in a staircase shape, where every <em>k</em>-th row must have exactly <em>k</em> coins.</p>
+<p>Given <em>n</em>, find the total number of <strong>full</strong> staircase rows that can be formed.</p>
+<p><em>n</em> is a non-negative integer and fits within the range of a 32-bit signed integer.</p>
+<p><strong>Example 1:</strong></p>
+<pre>n = 5
+
+The coins can form the following rows:
+&curren;
+&curren; &curren;
+&curren; &curren;
+
+Because the 3rd row is incomplete, we return 2.
+</pre>
+<p><strong>Example 2:</strong></p>
+<pre>n = 8
+
+The coins can form the following rows:
+&curren;
+&curren; &curren;
+&curren; &curren; &curren;
+&curren; &curren;
+
+Because the 4th row is incomplete, we return 3.
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们n个硬币，让我们按一定规律排列，第一行放1个，第二行放2个，以此类推，问我们有多少行能放满。通过分析题目中的例子可以得知最后一行只有两种情况，放满和没放满。由于是按等差数列排放的，我们可以快速计算出前i行的硬币总数。我们先来看一种O(n)的方法，非常简单粗暴，就是从第一行开始，一行一行的从n中减去，如果此时剩余的硬币没法满足下一行需要的硬币数了，我们之间返回当前行数即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> arrangeCoins(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> cur = <span style="color: #800080;">1</span>, rem = n - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (rem &gt;= cur + <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span>++<span style="color: #000000;">cur;
+            rem </span>-=<span style="color: #000000;"> cur;
+        }
+        </span><span style="color: #0000ff;">return</span> n == <span style="color: #800080;">0</span> ? <span style="color: #800080;">0</span><span style="color: #000000;"> : cur;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种O(lgn)的方法，用到了二分搜索法，我们搜索前i行之和刚好大于n的临界点，这样我们减一个就是能排满的行数，注意我们计算前i行之和有可能会整型溢出，所以我们需要将变量都定义成长整型，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> arrangeCoins(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n &lt;= <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">long</span> low = <span style="color: #800080;">1</span>, high =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">while</span> (low &lt;<span style="color: #000000;"> high) {
+            </span><span style="color: #0000ff;">long</span> mid = low + (high - low) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (mid * (mid + <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span> &lt;= n) low = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> high =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">return</span> low - <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种数学解法O(1)，充分利用了等差数列的性质，我们建立等式, n = (1 + x) * x / 2, 我们用一元二次方程的求根公式可以得到&nbsp;x = (-1 + sqrt(8 * n + 1)) / 2, 然后取整后就是能填满的行数，一行搞定简直丧心病狂啊：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> arrangeCoins(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">return</span> (<span style="color: #0000ff;">int</span>)((-<span style="color: #800080;">1</span> + sqrt(<span style="color: #800080;">1</span> + <span style="color: #800080;">8</span> * (<span style="color: #0000ff;">long</span>)n)) / <span style="color: #800080;">2</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/65664/my-55ms-c-solution" target="_blank">https://discuss.leetcode.com/topic/65664/my-55ms-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/65575/java-o-1-solution-math-problem" target="_blank">https://discuss.leetcode.com/topic/65575/java-o-1-solution-math-problem</a></p>
+<p><a href="https://discuss.leetcode.com/topic/65631/c-three-solutions-o-n-o-logn-o-1/2" target="_blank">https://discuss.leetcode.com/topic/65631/c-three-solutions-o-n-o-logn-o-1/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

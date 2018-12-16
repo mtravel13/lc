@@ -1,0 +1,44 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4563153.html">[LeetCode] Rectangle Area 矩形面积</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Find the total area covered by two&nbsp;rectilinear&nbsp;rectangles in a2D&nbsp;plane.</p>
+<p>Each rectangle is defined by its bottom left corner and top right corner as shown in the figure.</p>
+<div><img src="https://leetcode.com/static/images/problemset/rectangle_area.png" alt="Rectangle Area" border="0" /></div>
+<div>
+<p>Assume that the total area is never beyond the maximum possible value of&nbsp;int.</p>
+</div>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/mithmatt">@mithmatt</a>&nbsp;for adding this problem, creating the above image and all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题不算一道很难的题，但是我还是花了很久才做出来，刚开始我尝试找出所以有重叠的情况，发现有很多种情况，很麻烦。后来换了一种思路，尝试先找出所有的不相交的情况，只有四种，一个矩形在另一个的上下左右四个位置不重叠，这四种情况下返回两个矩形面积之和。其他所有情况下两个矩形是有交集的，这时候我们只要算出长和宽，即可求出交集区域的大小，然后从两个巨型面积之和中减去交集面积就是最终答案。求交集区域的长和宽也不难，由于交集都是在中间，所以横边的左端点是两个矩形左顶点横坐标的较大值，右端点是两个矩形右顶点的较小值，同理，竖边的下端点是两个矩形下顶点纵坐标的较大值，上端点是两个矩形上顶点纵坐标的较小值。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> computeArea(<span style="color: #0000ff;">int</span> A, <span style="color: #0000ff;">int</span> B, <span style="color: #0000ff;">int</span> C, <span style="color: #0000ff;">int</span> D, <span style="color: #0000ff;">int</span> E, <span style="color: #0000ff;">int</span> F, <span style="color: #0000ff;">int</span> G, <span style="color: #0000ff;">int</span><span style="color: #000000;"> H) {
+        </span><span style="color: #0000ff;">int</span> sum = (C - A) * (D - B) + (H - F) * (G -<span style="color: #000000;"> E);
+        </span><span style="color: #0000ff;">if</span> (E &gt;= C || F &gt;= D || B &gt;= H || A &gt;= G) <span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+        </span><span style="color: #0000ff;">return</span> sum - ((min(G, C) - max(A, E)) * (min(D, H) -<span style="color: #000000;"> max(B, F)));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>当然，这三行还可以丧心病狂地合成一行，那么LeetCode中我遇见的第一次一行解题的方法如下所示：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> computeArea(<span style="color: #0000ff;">int</span> A, <span style="color: #0000ff;">int</span> B, <span style="color: #0000ff;">int</span> C, <span style="color: #0000ff;">int</span> D, <span style="color: #0000ff;">int</span> E, <span style="color: #0000ff;">int</span> F, <span style="color: #0000ff;">int</span> G, <span style="color: #0000ff;">int</span><span style="color: #000000;"> H) {
+        </span><span style="color: #0000ff;">return</span> (C - A) * (D - B) + (H - F) * (G - E) - (max((min(G, C) - max(A, E)), <span style="color: #800080;">0</span>) * max((min(D, H) - max(B, F)), <span style="color: #800080;">0</span><span style="color: #000000;">));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

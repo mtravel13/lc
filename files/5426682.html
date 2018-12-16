@@ -1,0 +1,90 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5426682.html">[LeetCode] Reverse Vowels of a String 翻转字符串中的元音字母</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a function that takes a string as input and reverse only the vowels of a string.</p>
+<p>Example 1:<br />Given s = "hello", return "holle".</p>
+<p>Example 2:<br />Given s = "leetcode", return "leotcede".</p>
+<p>&nbsp;</p>
+<p>这道题让我们翻转字符串中的元音字母，元音字母有五个a,e,i,o,u，需要注意的是大写的也算，所以总共有十个字母。我们写一个isVowel的函数来判断当前字符是否为元音字母，如果两边都是元音字母，那么我们交换，如果左边的不是，向右移动一位，如果右边的不是，则向左移动一位，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseVowels(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right= s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> (isVowel(s[left]) &amp;&amp;<span style="color: #000000;"> isVowel(s[right])) {
+                swap(s[left</span>++], s[right--<span style="color: #000000;">]);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isVowel(s[left])) {
+                </span>--<span style="color: #000000;">right;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span>++<span style="color: #000000;">left;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+    </span><span style="color: #0000ff;">bool</span> isVowel(<span style="color: #0000ff;">char</span><span style="color: #000000;"> c) {
+        </span><span style="color: #0000ff;">return</span> c == <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">I</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">U</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>或者我们也可以用自带函数find_first_of和find_last_of来找出包含给定字符串中任意一个字符的下一个位置进行交换即可：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseVowels(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            left </span>= s.find_first_of(<span style="color: #800000;">"</span><span style="color: #800000;">aeiouAEIOU</span><span style="color: #800000;">"</span><span style="color: #000000;">, left);
+            right </span>= s.find_last_of(<span style="color: #800000;">"</span><span style="color: #800000;">aeiouAEIOU</span><span style="color: #800000;">"</span><span style="color: #000000;">, right);
+            </span><span style="color: #0000ff;">if</span> (left &lt;<span style="color: #000000;"> right) {
+                swap(s[left</span>++], s[right--<span style="color: #000000;">]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以把元音字母都存在一个字符串里，然后每遇到一个字符，就到元音字符串里去找，如果存在就说明当前字符是元音字符，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseVowels(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> t = <span style="color: #800000;">"</span><span style="color: #800000;">aeiouAEIOU</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> (t.find(s[left]) == <span style="color: #0000ff;">string</span>::npos) ++<span style="color: #000000;">left;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (t.find(s[right]) == <span style="color: #0000ff;">string</span>::npos) --<span style="color: #000000;">right;
+            </span><span style="color: #0000ff;">else</span> swap(s[left++], s[right--<span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5420836.html">Reverse String</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5186294.html" target="_blank">Reverse Words in a String II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/99048/easy-to-understand-c-solution" target="_blank">https://leetcode.com/discuss/99048/easy-to-understand-c-solution</a></p>
+<p><a href="https://leetcode.com/discuss/99047/super-clean-solution-using-find_first_of-and-find_last_of" target="_blank">https://leetcode.com/discuss/99047/super-clean-solution-using-find_first_of-and-find_last_of</a></p>
+<p><a href="https://leetcode.com/discuss/99062/java-two-pointers-solution-easy-understand-finish-interview" target="_blank">https://leetcode.com/discuss/99062/java-two-pointers-solution-easy-understand-finish-interview</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

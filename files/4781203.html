@@ -1,0 +1,32 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4781203.html">[LeetCode] H-Index 求H指数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of citations (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.</p>
+<p>According to the <a href="https://en.wikipedia.org/wiki/H-index" target="_blank">definition of h-index on Wikipedia</a>: "A scientist has index <em>h</em> if <em>h</em> of his/her <em>N</em> papers have <strong>at least</strong> <em>h</em> citations each, and the other <em>N &minus; h</em> papers have <strong>no more than</strong> <em>h</em> citations each."</p>
+<p>For example, given <code>citations = [3, 0, 6, 1, 5]</code>, which means the researcher has <code>5</code> papers in total and each of them had received <code>3, 0, 6, 1, 5</code> citations respectively. Since the researcher has <code>3</code> papers with <strong>at least</strong> <code>3</code> citations each and the remaining two with <strong>no more than</strong> <code>3</code> citations each, his h-index is <code>3</code>.</p>
+<p><strong>Note</strong>: If there are several possible values for <code>h</code>, the maximum one is taken as the h-index.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求<a href="https://zh.wikipedia.org/wiki/H%E6%8C%87%E6%95%B0" target="_blank">H指数</a>，这个质数是用来衡量研究人员的学术水平的质数，定义为一个人的学术文章有n篇分别被引用了n次，那么H指数就是n。而且wiki上直接给出了算法，可以按照如下方法确定某人的H指数：1、将其发表的所有SCI论文按被引次数从高到低排序；2、从前往后查找排序后的列表，直到某篇论文的序号大于该论文被引次数。所得序号减一即为H指数。我也就没多想，直接按照上面的方法写出了代码：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> hIndex(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> citations) {
+        sort(citations.begin(), citations.end(), greater</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; citations.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i &gt;= citations[i]) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> citations.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,79 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4030114.html">[LeetCode] Valid Palindrome 验证回文字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.</p>
+<p> For example,<br />
+<code>"A man, a plan, a canal: Panama"</code> is a palindrome.<br />
+<code>"race a car"</code> is <em>not</em> a palindrome.
+</p>
+<p>
+<strong>Note:</strong><br />
+Have you consider that the string might be empty? This is a good question to ask during an interview.</p>
+<p>
+For the purpose of this problem, we define empty string as valid palindrome.
+</p>
+<p>&nbsp;</p>
+<p>验证回文字符串是比较常见的问题，所谓回文，就是一个正读和反读都一样的字符串，比如&ldquo;level&rdquo;或者&ldquo;noon&rdquo;等等就是回文串。但是这里，加入了空格和非字母数字的字符，增加了些难度，但其实原理还是很简单：只需要建立两个指针，left和right, 分别从字符的开头和结尾处开始遍历整个字符串，如果遇到非字母数字的字符就跳过，继续往下找，直到找到下一个字母数字或者结束遍历，如果遇到大写字母，就将其转为小写。等左右指针都找到字母数字时，比较这两个字符，若相等，则继续比较下面两个分别找到的字母数字，若不相等，直接返回false.&nbsp;</p>
+<p>时间复杂度为O(n), 代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;"> ;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> (!isAlphaNum(s[left])) ++<span style="color: #000000;">left;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!isAlphaNum(s[right])) --<span style="color: #000000;">right;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> ((s[left] + <span style="color: #800080;">32</span> - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>) %<span style="color: #800080;">32</span> != (s[right] + <span style="color: #800080;">32</span> - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>) % <span style="color: #800080;">32</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span>++left; --<span style="color: #000000;">right;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">bool</span> isAlphaNum(<span style="color: #0000ff;">char</span> &amp;<span style="color: #000000;">ch) {
+        </span><span style="color: #0000ff;">if</span> (ch &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span> &amp;&amp; ch &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (ch &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> &amp;&amp; ch &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (ch &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; ch &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用系统自带的判断是否是数母字符的判断函数isalnum，参见代码如下；</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;"> ;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> (!isalnum(s[left])) ++<span style="color: #000000;">left;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!isalnum(s[right])) --<span style="color: #000000;">right;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> ((s[left] + <span style="color: #800080;">32</span> - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>) %<span style="color: #800080;">32</span> != (s[right] + <span style="color: #800080;">32</span> - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>) % <span style="color: #800080;">32</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span>++left; --<span style="color: #000000;">right;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>对于该问题的扩展，还有利用Manacher算法来求解最长回文字符串问题，参见我的另一篇博文<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4475985.html">Manacher's Algorithm 马拉车算法</a>。</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/5581/here-s-a-clean-c-solution/2" target="_blank">https://discuss.leetcode.com/topic/5581/here-s-a-clean-c-solution/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/25405/my-three-line-java-solution" target="_blank">https://discuss.leetcode.com/topic/25405/my-three-line-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

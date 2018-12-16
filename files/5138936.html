@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5138936.html">[LeetCode] Odd Even Linked List 奇偶链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a singly linked list, group all odd nodes together followed by the even nodes. Please note here we are talking about the node number and not the value in the nodes.</p>
+<p>You should try to do it in place. The program should run in O(1) space complexity and O(nodes) time complexity.</p>
+<p>&nbsp;</p>
+<p>Example:<br />Given&nbsp;<code>1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</code>,<br />return&nbsp;<code>1-&gt;3-&gt;5-&gt;2-&gt;4-&gt;NULL</code>.</p>
+<p>Note:<br />The relative order inside both the even and odd groups should remain as it was in the input.&nbsp;<br />The first node is considered odd, the second node even and so on ...</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/aadarshjajodia">@aadarshjajodia</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个链表，让我们分开奇偶节点，所有奇节点在前，偶节点在后。我们可以使用两个指针来做，pre指向奇节点，cur指向偶节点，然后把偶节点cur后面的那个奇节点提前到pre的后面，然后pre和cur各自前进一步，此时cur又指向偶节点，pre指向当前奇节点的末尾，以此类推直至把所有的偶节点都提前了即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* oddEvenList(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*pre = head, *cur = head-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">while</span> (cur &amp;&amp; cur-&gt;<span style="color: #000000;">next) {
+            ListNode </span>*tmp = pre-&gt;<span style="color: #000000;">next;
+            pre</span>-&gt;next = cur-&gt;<span style="color: #000000;">next;
+            cur</span>-&gt;next = cur-&gt;next-&gt;<span style="color: #000000;">next;
+            pre</span>-&gt;next-&gt;next =<span style="color: #000000;"> tmp;
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+            pre </span>= pre-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种解法，用两个奇偶指针分别指向奇偶节点的起始位置，另外需要一个单独的指针even_head来保存偶节点的起点位置，然后把奇节点的指向偶节点的下一个(一定是奇节点)，此奇节点后移一步，再把偶节点指向下一个奇节点的下一个(一定是偶节点)，此偶节点后移一步，以此类推直至末尾，此时把分开的偶节点的链表连在奇节点的链表后即可，参见代码如下；</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* oddEvenList(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*odd = head, *even = head-&gt;next, *even_head =<span style="color: #000000;"> even;
+        </span><span style="color: #0000ff;">while</span> (even &amp;&amp; even-&gt;<span style="color: #000000;">next) {
+            odd </span>= odd-&gt;next = even-&gt;<span style="color: #000000;">next;
+            even </span>= even-&gt;next = odd-&gt;<span style="color: #000000;">next;
+        }
+        odd</span>-&gt;next =<span style="color: #000000;"> even_head;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

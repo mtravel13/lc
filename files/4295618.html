@@ -1,0 +1,56 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4295618.html">[LeetCode]  Convert Sorted List to Binary Search Tree 将有序链表转为二叉搜索树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.</p>
+<p>&nbsp;</p>
+<p>这道题是要求把有序链表转为二叉搜索树，和之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4295245.html">Convert Sorted Array to Binary Search Tree 将有序数组转为二叉搜索树</a>思路完全一样，只不过是操作的数据类型有所差别，一个是数组，一个是链表。数组方便就方便在可以通过index直接访问任意一个元素，而链表不行。由于二分查找法每次需要找到中点，而链表的查找中间点可以通过快慢指针来操作，可参见之前的两篇博客<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_20" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4254860.html">Reorder List 链表重排序</a>和<a id="link_post_title" class="link-post-title" href="http://www.cnblogs.com/grandyang/p/4137302.html">Linked List Cycle II 单链表中的环之二</a>有关快慢指针的应用。找到中点后，要以中点的值建立一个数的根节点，然后需要把原链表断开，分为前后两个链表，都不能包含原中节点，然后再分别对这两个链表递归调用原函数，分别连上左右子节点即可。代码如下：<br /><br /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    TreeNode </span>*sortedListToBST(ListNode *<span style="color: #000000;">head) {
+        </span><span style="color: #0000ff;">if</span> (!head) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">if</span> (!head-&gt;next) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> TreeNode(head-&gt;<span style="color: #000000;">val);
+        ListNode </span>*slow =<span style="color: #000000;"> head;
+        ListNode </span>*fast =<span style="color: #000000;"> head;
+        ListNode </span>*last =<span style="color: #000000;"> slow;
+        </span><span style="color: #0000ff;">while</span> (fast-&gt;next &amp;&amp; fast-&gt;next-&gt;<span style="color: #000000;">next) {
+            last </span>=<span style="color: #000000;"> slow;
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;next-&gt;<span style="color: #000000;">next;
+        }
+        fast </span>= slow-&gt;<span style="color: #000000;">next;
+        last</span>-&gt;next =<span style="color: #000000;"> NULL;
+        TreeNode </span>*cur = <span style="color: #0000ff;">new</span> TreeNode(slow-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">if</span> (head != slow) cur-&gt;left =<span style="color: #000000;"> sortedListToBST(head);
+        cur</span>-&gt;right =<span style="color: #000000;"> sortedListToBST(fast);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cur;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

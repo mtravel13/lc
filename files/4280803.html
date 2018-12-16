@@ -1,0 +1,54 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4280803.html">[LeetCode] Best Time to Buy and Sell Stock II  买股票的最佳时间之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Say you have an array for which the&nbsp;<em>i</em>th&nbsp;element is the price of a given stock on day&nbsp;<em>i</em>.</p>
+<p>Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times). However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).</p>
+<p>&nbsp;</p>
+<p>这道跟之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4280131.html">Best Time to Buy and Sell Stock 买卖股票的最佳时间</a>很类似，但都比较容易解答。这道题由于可以无限次买入和卖出。我们都知道炒股想挣钱当然是低价买入高价抛出，那么这里我们只需要从第二天开始，如果当前价格比之前价格高，则把差值加入利润中，因为我们可以昨天买入，今日卖出，若明日价更高的话，还可以今日买入，明日再抛出。以此类推，遍历完整个数组后即可求得最大利润。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxProfit(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> prices) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> prices.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (prices[i] &lt; prices[i + <span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                res </span>+= prices[i + <span style="color: #800080;">1</span>] -<span style="color: #000000;"> prices[i];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> maxProfit(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] prices) {
+        </span><span style="color: #0000ff;">int</span> res = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; prices.length - 1; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (prices[i] &lt; prices[i + 1<span style="color: #000000;">]) {
+                res </span>+= prices[i + 1] -<span style="color: #000000;"> prices[i];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4997417.html">Best Time to Buy and Sell Stock with Cooldown</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4295761.html" target="_blank">Best Time to Buy and Sell Stock IV</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4281975.html" target="_blank">Best Time to Buy and Sell Stock III</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4280131.html" target="_blank">Best Time to Buy and Sell Stock</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6476983.html">[LeetCode] Relative Ranks 相对排名</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given scores of&nbsp;N&nbsp;athletes, find their relative ranks and the people with the top three highest scores, who will be awarded medals: "Gold Medal", "Silver Medal" and "Bronze Medal".</p>
+<p>Example 1:</p>
+<pre>Input: [5, 4, 3, 2, 1]
+Output: ["Gold Medal", "Silver Medal", "Bronze Medal", "4", "5"]
+Explanation: The first three athletes got the top three highest scores, so they got "Gold Medal", "Silver Medal" and "Bronze Medal". <br />For the left two athletes, you just need to output their relative ranks according to their scores.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>N is a positive integer and won't exceed 10,000.</li>
+<li>All the scores of athletes are guaranteed to be unique.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一组分数，让我们求相对排名，前三名分别是金银铜牌，后面的就是名次数，不是一道难题，我们可以利用堆来排序，建立一个优先队列，把分数和其坐标位置放入队列中，会自动按其分数高低排序，然后我们从顶端开始一个一个取出数据，由于保存了其在原数组的位置，我们可以直接将其存到结果res中正确的位置，用一个变量cnt来记录名词，前三名给奖牌，后面就是名次数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findRelativeRanks(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; res(n, <span style="color: #800000;">""</span><span style="color: #000000;">);
+        priority_queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            q.push({nums[i], i});
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> idx =<span style="color: #000000;"> q.top().second; q.pop();
+            </span><span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">1</span>) res[idx] = <span style="color: #800000;">"</span><span style="color: #800000;">Gold Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">2</span>) res[idx] = <span style="color: #800000;">"</span><span style="color: #800000;">Silver Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">3</span>) res[idx] = <span style="color: #800000;">"</span><span style="color: #800000;">Bronze Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> res[idx] =<span style="color: #000000;"> to_string(cnt);
+            </span>++<span style="color: #000000;">cnt; 
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法思路和上面一样，不过数据结构用的不同，这里利用map的自动排序的功能，不过map是升序排列的，所以我们遍历的时候就要从最后面开始遍历，最后一个是金牌，然后往前一次是银牌，铜牌，名次数等，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findRelativeRanks(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; res(n, <span style="color: #800000;">""</span><span style="color: #000000;">);
+        map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            m[nums[i]] </span>=<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">for</span> (auto it = m.rbegin(); it != m.rend(); ++<span style="color: #000000;">it) {
+            </span><span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">1</span>) res[it-&gt;second] = <span style="color: #800000;">"</span><span style="color: #800000;">Gold Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">2</span>) res[it-&gt;second] = <span style="color: #800000;">"</span><span style="color: #800000;">Silver Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">3</span>) res[it-&gt;second] = <span style="color: #800000;">"</span><span style="color: #800000;">Bronze Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> res[it-&gt;second] =<span style="color: #000000;"> to_string(cnt);
+            </span>++<span style="color: #000000;">cnt;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法没用什么炫的数据结构，就是数组，建立一个坐标数组，不过排序的时候比较的不是坐标，而是该坐标位置上对应的数字，后面的处理方法和之前的并没有什么不同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findRelativeRanks(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> idx(n);
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; res(n, <span style="color: #800000;">""</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++i) idx[i] =<span style="color: #000000;"> i;
+        sort(idx.begin(), idx.end(), [</span>&amp;](<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span> b){<span style="color: #0000ff;">return</span> nums[a] &gt;<span style="color: #000000;"> nums[b];});
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span>) res[idx[i]] = <span style="color: #800000;">"</span><span style="color: #800000;">Gold Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">1</span>) res[idx[i]] = <span style="color: #800000;">"</span><span style="color: #800000;">Silver Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">2</span>) res[idx[i]] = <span style="color: #800000;">"</span><span style="color: #800000;">Bronze Medal</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> res[idx[i]] = to_string(i + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/77912/c-easy-to-understand" target="_blank">https://discuss.leetcode.com/topic/77912/c-easy-to-understand</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77876/easy-java-solution-sorting" target="_blank">https://discuss.leetcode.com/topic/77876/easy-java-solution-sorting</a></p>
+<p><a href="https://discuss.leetcode.com/topic/78244/simple-c-solution-using-a-map" target="_blank">https://discuss.leetcode.com/topic/78244/simple-c-solution-using-a-map</a></p>
+<p><a href="https://discuss.leetcode.com/topic/77869/simple-sorting-o-n-log-n-solution" target="_blank">https://discuss.leetcode.com/topic/77869/simple-sorting-o-n-log-n-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

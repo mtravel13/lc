@@ -1,0 +1,74 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6417826.html">[LeetCode] Find Largest Value in Each Tree Row 找树每行最大的结点值</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You need to find the largest value in each row of a binary tree.</p>
+<p>Example:</p>
+<pre>Input: 
+
+          1
+         / \
+        3   2
+       / \   \  
+      5   3   9 
+
+Output: [1, 3, 9]</pre>
+<p>&nbsp;</p>
+<p>这道题让我们找二叉树每行的最大的结点值，那么实际上最直接的方法就是用层序遍历，然后在每一层中找到最大值，加入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; largestValues(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        queue</span>&lt;TreeNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> n = q.size(), mx =<span style="color: #000000;"> INT_MIN;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                TreeNode </span>*t =<span style="color: #000000;"> q.front(); q.pop();
+                mx </span>= max(mx, t-&gt;<span style="color: #000000;">val);
+                </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push(t-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push(t-&gt;<span style="color: #000000;">right);
+            }
+            res.push_back(mx);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>如果我们想用迭代的方法来解，可以用先序遍历，这样的话就需要维护一个深度变量depth，来记录当前结点的深度，如果当前深度大于结果res的长度，说明这个新一层，我们将当前结点值加入结果res中，如果不大于res的长度的话，我们用当前结点值和结果res中对应深度的那个结点值相比较，取较大值赋给结果res中的对应深度位置，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; largestValues(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        helper(root, </span><span style="color: #800080;">1</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* root, <span style="color: #0000ff;">int</span> depth, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (depth &gt; res.size()) res.push_back(root-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">else</span> res[depth - <span style="color: #800080;">1</span>] = max(res[depth - <span style="color: #800080;">1</span>], root-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left) helper(root-&gt;left, depth + <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">if</span> (root-&gt;right) helper(root-&gt;right, depth + <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/79241/simple-and-easy-understand-c-dfs-solution" target="_blank">https://discuss.leetcode.com/topic/79241/simple-and-easy-understand-c-dfs-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

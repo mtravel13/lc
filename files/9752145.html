@@ -1,0 +1,113 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9752145.html">[LeetCode] Random Point in Non-overlapping Rectangles 非重叠矩形中的随机点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of&nbsp;non-overlapping&nbsp;axis-aligned rectangles&nbsp;<code>rects</code>, write a function&nbsp;<code>pick</code>&nbsp;which randomly and uniformily picks an&nbsp;integer point&nbsp;in the space&nbsp;covered by the rectangles.</p>
+<p>Note:</p>
+<ol>
+<li>An&nbsp;integer point&nbsp;is a point that has integer coordinates.&nbsp;</li>
+<li>A point&nbsp;on the perimeter&nbsp;of a rectangle is&nbsp;included&nbsp;in the space covered by the rectangles.&nbsp;</li>
+<li><code>i</code>th rectangle =&nbsp;<code>rects[i]</code>&nbsp;=&nbsp;<code>[x1,y1,x2,y2]</code>, where&nbsp;<code>[x1, y1]</code>&nbsp;are the integer coordinates of the bottom-left corner, and&nbsp;<code>[x2, y2]</code>&nbsp;are the integer coordinates of the top-right corner.</li>
+<li>length and width of each rectangle does not exceed&nbsp;<code>2000</code>.</li>
+<li><code>1 &lt;= rects.length&nbsp;&lt;= 100</code></li>
+<li><code>pick</code>&nbsp;return a point as an array of integer coordinates&nbsp;<code>[p_x, p_y]</code></li>
+<li><code>pick</code>&nbsp;is called at most&nbsp;<code>10000</code>&nbsp;times.</li>
+</ol>
+<div>
+<p>Example 1:</p>
+<pre>Input: 
+<span id="example-input-1-1">["Solution","pick","pick","pick"]
+<span id="example-input-1-2">[[[[1,1,5,5]]],[],[],[]]
+Output: 
+<span id="example-output-1">[null,[4,1],[4,1],[3,3]]
+</span></span></span></pre>
+<div>
+<p>Example 2:</p>
+<pre>Input: 
+<span id="example-input-2-1">["Solution","pick","pick","pick","pick","pick"]
+<span id="example-input-2-2">[[[[-2,-2,-1,-1],[1,0,3,0]]],[],[],[],[],[]]
+Output: 
+<span id="example-output-2">[null,[-1,-2],[2,0],[-2,-1],[3,0],[-2,-2]]</span></span></span></pre>
+</div>
+<div>
+<p>Explanation of Input Syntax:</p>
+<p>The input is two lists:&nbsp;the subroutines called&nbsp;and their&nbsp;arguments.&nbsp;<code>Solution</code>'s&nbsp;constructor has one argument, the array of rectangles&nbsp;<code>rects</code>.&nbsp;<code>pick</code>&nbsp;has no arguments.&nbsp;Arguments&nbsp;are&nbsp;always wrapped with a list, even if there aren't any.</p>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>这道题给了我们一些非重叠的矩形，让我们返回一个这些矩形中的一个随机的点。那么博主的第一直觉就是首先要在这些矩形中随机挑出来一个，然后在这个随机的矩形中再随机生成一个点，通过随机生成一个长和宽即可。博主最开始想到的方法是用rand随机生成一个 [0, n) 范围内的数字，n为输入矩形的个数，这样就得到了一个随机的矩形。但是这种方法貌似行不通，会跪在一个很长的输入测试数据。这使得博主比较困惑了，没有想出原因是为何，有哪位看官大神们知道的，麻烦留言告知博主哈！哈，已经知道了，参见评论区二楼留言～ 论坛上的解法有一种是用<a href="https://zh.wikipedia.org/wiki/%E6%B0%B4%E5%A1%98%E6%8A%BD%E6%A8%A3" target="_blank">水塘抽样Reservoir Sampling</a>的方法的，LeetCode之前有过几道需要用这种方法的题目<a id="link_post_title" class="link-post-title" href="https://www.cnblogs.com/grandyang/p/5875509.html">Random Pick Index</a>，<a href="http://www.cnblogs.com/grandyang/p/5783392.html">Shuffle an Array</a>和<a href="http://www.cnblogs.com/grandyang/p/5759926.html">Linked List Random Node</a>。这里我们使用其来随机出一个矩形，做法是遍历所有的矩形，用变量sumArea来计算当前遍历过的所有矩形面积之和，然后变量area是当前遍历的矩形的面积，然后我们在当前所有矩形面积之和内随机生成一个值，如果这个值小于area，那么选择当前的矩阵为随机矩形。这里相当于一个大小为area的水塘，在这个值之内的话，就更换selected。这个方法是没啥问题，但是博主还是没想通为啥不能直接随机生成矩形的index。当我们拿到随机矩形后，之后就随机出宽和高返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Solution(vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> rects) {
+        _rects </span>=<span style="color: #000000;"> rects;
+    }
+    
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> pick() {
+        </span><span style="color: #0000ff;">int</span> sumArea = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> selected;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto rect : _rects) {
+            </span><span style="color: #0000ff;">int</span> area = (rect[<span style="color: #800080;">2</span>] - rect[<span style="color: #800080;">0</span>] + <span style="color: #800080;">1</span>) * (rect[<span style="color: #800080;">3</span>] - rect[<span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            sumArea </span>+=<span style="color: #000000;"> area;
+            </span><span style="color: #0000ff;">if</span> (rand() % sumArea &lt; area) selected =<span style="color: #000000;"> rect;
+        }
+        </span><span style="color: #0000ff;">int</span> x = rand() % (selected[<span style="color: #800080;">2</span>] - selected[<span style="color: #800080;">0</span>] + <span style="color: #800080;">1</span>) + selected[<span style="color: #800080;">0</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">int</span> y = rand() % (selected[<span style="color: #800080;">3</span>] - selected[<span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span>) + selected[<span style="color: #800080;">1</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {x, y};
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> _rects;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题在论坛上的主流解法其实是这个，我们用TreeMap来建立当前遍历过的矩形面积之和跟该矩形位置之间的映射。然后当我们求出所有的矩形面积之和后，我们随机生成一个值，然后在TreeMap中找到第一个大于这个值的矩形，这里博主还是有疑问，为啥不能直接随机矩形的位置，而是非要跟面积扯上关系。之后的步骤就跟上面的没啥区别了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Solution(vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> rects) {
+        _rects </span>=<span style="color: #000000;"> rects;
+        _totalArea </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto rect : rects) {
+            _totalArea </span>+= (rect[<span style="color: #800080;">2</span>] - rect[<span style="color: #800080;">0</span>] + <span style="color: #800080;">1</span>) * (rect[<span style="color: #800080;">3</span>] - rect[<span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            _areaToIdx.insert({_totalArea, _areaToIdx.size()});
+        }
+    }
+    
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> pick() {
+        </span><span style="color: #0000ff;">int</span> val = rand() %<span style="color: #000000;"> _totalArea;
+        </span><span style="color: #0000ff;">int</span> idx = _areaToIdx.upper_bound(val)-&gt;<span style="color: #000000;">second;
+        </span><span style="color: #0000ff;">int</span> width = _rects[idx][<span style="color: #800080;">2</span>] - _rects[idx][<span style="color: #800080;">0</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> height = _rects[idx][<span style="color: #800080;">3</span>] - _rects[idx][<span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> {rand() % width + _rects[idx][<span style="color: #800080;">0</span>], rand() % height + _rects[idx][<span style="color: #800080;">1</span><span style="color: #000000;">]};
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> _rects;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> _totalArea;
+    map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> _areaToIdx;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="link_post_title" class="link-post-title" href="https://www.cnblogs.com/grandyang/p/9784690.html">Random Pick with Weight</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9741220.html">Generate Random Point in a Circle</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/" target="_blank">https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/</a></p>
+<p><a href="https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/discuss/155005/C%2B%2B-single-rand()-call" target="_blank">https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/discuss/155005/C%2B%2B-single-rand()-call</a></p>
+<p><a href="https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/discuss/169185/Short-C%2B%2B-solution-with-upper_bound" target="_blank">https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/discuss/169185/Short-C%2B%2B-solution-with-upper_bound</a></p>
+<p><a href="https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/discuss/170503/C%2B%2B-solution-using-reservoir-sampling-with-explanation-concise-and-easy-to-understand" target="_blank">https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/discuss/170503/C%2B%2B-solution-using-reservoir-sampling-with-explanation-concise-and-easy-to-understand</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

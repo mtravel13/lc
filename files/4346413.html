@@ -1,0 +1,79 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4346413.html">[LeetCode] Sqrt(x) 求平方根</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement&nbsp;<code>int sqrt(int x)</code>.</p>
+<p>Compute and return the square root of&nbsp;<em>x</em>.</p>
+<p>&nbsp;</p>
+<p>这道题要求我们求平方根，我们能想到的方法就是算一个候选值的平方，然后和x比较大小，为了缩短查找时间，我们采用二分搜索法来找平方根，这里属于博主之前总结的<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_1" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/6854825.html">LeetCode Binary Search Summary 二分搜索法小结</a>中的第三类的变形，找最后一个不大于目标值的数，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> mySqrt(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #0000ff;">if</span> (x &lt;= <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right =<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (x / mid &gt;= mid) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">return</span> right - <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有另一种解法，是利用<a href="http://zh.wikipedia.org/wiki/%E7%89%9B%E9%A1%BF%E6%B3%95" target="_blank">牛顿迭代法</a>，记得高数中好像讲到过这个方法，是用逼近法求方程根的神器，在这里也可以借用一下，可参见网友<a href="http://www.cnblogs.com/AnnieKim/archive/2013/04/18/3028607.html" target="_blank">Annie Kim's Blog的博客</a>，因为要求x<sup>2</sup>&nbsp;= n的解，令f(x)=x<sup>2</sup>-n，相当于求解f(x)=0的解，可以求出递推式如下：</p>
+<p>x<sub>i+1</sub>=x<sub>i</sub>&nbsp;- (x<sub>i<sup>2&nbsp;</sup></sub>- n) / (2x<sub>i</sub>) = x<sub>i</sub>&nbsp;- x<sub>i</sub>&nbsp;/ 2 + n / (2x<sub>i</sub>) = x<sub>i</sub>&nbsp;/ 2 + n / 2x<sub>i</sub>&nbsp;= (x<sub>i</sub>&nbsp;+ n/x<sub>i</sub>) / 2</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> mySqrt(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #0000ff;">if</span> (x == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">double</span> res = <span style="color: #800080;">1</span>, pre = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (abs(res - pre) &gt; 1e-<span style="color: #800080;">6</span><span style="color: #000000;">) {
+            pre </span>=<span style="color: #000000;"> res;
+            res </span>= (res + x / res) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">(res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>也是牛顿迭代法，写法更加简洁一些，注意为了防止越界，声明为长整型，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> mySqrt(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #0000ff;">long</span> res =<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">while</span> (res * res &gt;<span style="color: #000000;"> x) {
+            res </span>= (res + x / res) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4383775.html" target="_blank">Pow(x, n)</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5619296.html">Valid Perfect Square</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/sqrtx/description/" target="_blank">https://leetcode.com/problems/sqrtx/description/</a></p>
+<p><a href="https://leetcode.com/problems/sqrtx/discuss/25130/My-clean-C++-code-8ms" target="_blank">https://leetcode.com/problems/sqrtx/discuss/25130/My-clean-C++-code-8ms</a></p>
+<p><a href="https://leetcode.com/problems/sqrtx/discuss/25047/A-Binary-Search-Solution" target="_blank">https://leetcode.com/problems/sqrtx/discuss/25047/A-Binary-Search-Solution</a></p>
+<p><a href="https://leetcode.com/problems/sqrtx/discuss/25057/3-4-short-lines-Integer-Newton-Every-Language" target="_blank">https://leetcode.com/problems/sqrtx/discuss/25057/3-4-short-lines-Integer-Newton-Every-Language</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

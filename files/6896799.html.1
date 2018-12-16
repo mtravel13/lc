@@ -1,0 +1,66 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6896799.html">[LeetCode] Longest Harmonious Subsequence 最长和谐子序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>We define a harmonious array is an array where the difference between its maximum value and its minimum value is&nbsp;exactly&nbsp;1.</p>
+<p>Now, given an integer array, you need to find the length of its longest harmonious subsequence among all its possible&nbsp;<a href="https://en.wikipedia.org/wiki/Subsequence">subsequences</a>.</p>
+<p>Example 1:</p>
+<pre>Input: [1,3,2,2,5,2,3,7]
+Output: 5
+Explanation: The longest harmonious subsequence is [3,2,2,2,3].
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;The length of the input array will not exceed 20,000.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，让我们找出最长的和谐子序列，关于和谐子序列就是序列中数组的最大最小差值均为1。由于这里只是让我们求长度，并不需要返回具体的子序列。所以我们可以对数组进行排序，那么实际上我们只要找出来相差为1的两个数的总共出现个数就是一个和谐子序列的长度了。明白了这一点，我们就可以建立一个数字和其出现次数之间的映射，利用map的自动排序的特性，那么我们遍历map的时候就是从小往大开始遍历，我们从第二个映射对开始遍历，每次跟其前面的映射对比较，如果二者的数字刚好差1，那么就把二个数字的出现的次数相加并更新结果res即可，参见代码如下：</p>
+<p><br class="Apple-interchange-newline" /><br class="Apple-interchange-newline" />解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLHS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> num : nums) ++<span style="color: #000000;">m[num];
+        </span><span style="color: #0000ff;">for</span> (auto it = next(m.begin()); it != m.end(); ++<span style="color: #000000;">it) {
+            auto pre </span>=<span style="color: #000000;"> prev(it);
+            </span><span style="color: #0000ff;">if</span> (it-&gt;first == pre-&gt;first + <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                res </span>= max(res, it-&gt;second + pre-&gt;<span style="color: #000000;">second);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其实我们并不用向上面那种解法那样用next和prev来移动迭代器，我们遍历每个数字的时候，只需在map中查找该数字加1是否存在，存在就更新结果res，这样更简单一些，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLHS(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> num : nums) ++<span style="color: #000000;">m[num];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            </span><span style="color: #0000ff;">if</span> (m.count(a.first + <span style="color: #800080;">1</span><span style="color: #000000;">)) {
+                res </span>= max(res, m[a.first] + m[a.first + <span style="color: #800080;">1</span><span style="color: #000000;">]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/89990/simple-java-hashmap-solution" target="_blank">https://discuss.leetcode.com/topic/89990/simple-java-hashmap-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

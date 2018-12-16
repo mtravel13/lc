@@ -1,0 +1,99 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/10018366.html">Solve Error: node postinstall  sh: node: command not found</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>When install the yeoman using the following command:</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span> -g yo</pre>
+</div>
+<p>&nbsp;</p>
+<p>You might have the following error:</p>
+<div class="cnblogs_code">
+<pre>npm WARN deprecated cross-spawn-async@<span style="color: #800080;">2.2</span>.<span style="color: #800080;">5</span>: cross-<span style="color: #000000;">spawn no longer requires a build toolchain, use it instead
+</span>/root/.nvm/versions/node/v9.<span style="color: #800080;">3.0</span>/bin/yo -&gt; /root/.nvm/versions/node/v9.<span style="color: #800080;">3.0</span>/lib/node_modules/yo/lib/<span style="color: #000000;">cli.js
+</span>/root/.nvm/versions/node/v9.<span style="color: #800080;">3.0</span>/bin/yo-complete -&gt; /root/.nvm/versions/node/v9.<span style="color: #800080;">3.0</span>/lib/node_modules/yo/lib/completion/<span style="color: #000000;">index.js
+
+</span>&gt; spawn-<span style="color: #0000ff;">sync</span>@<span style="color: #800080;">1.0</span>.<span style="color: #800080;">15</span> postinstall /root/.nvm/versions/node/v9.<span style="color: #800080;">3.0</span>/lib/node_modules/yo/node_modules/spawn-<span style="color: #0000ff;">sync</span>
+&gt;<span style="color: #000000;"> node postinstall
+
+</span><span style="color: #ff0000;">sh: node: command not found
+npm ERR! file sh
+npm ERR! code ELIFECYCLE
+npm ERR! errno ENOENT
+npm ERR! syscall spawn
+npm ERR! spawn-sync@1.0.15 postinstall: `node postinstall`
+npm ERR! spawn ENOENT
+npm ERR!
+npm ERR! Failed at the spawn-sync@1.0.15 postinstall script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR! /root/.npm/_logs/2018-11-25T16_49_27_843Z-debug.log</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Try the following commands instead:</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span> -g try-thread-<span style="color: #0000ff;">sleep</span><span style="color: #000000;">
+npm </span><span style="color: #0000ff;">install</span> -g yo --ignore-scripts spawn-<span style="color: #0000ff;">sync</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Now try to type 'yo' to see if yeoman installed correctly, if you happened to have following error:</p>
+<div class="cnblogs_code">
+<pre>/root/.nvm/versions/node/v9.<span style="color: #800080;">3.0</span>/lib/node_modules/yo/node_modules/<span style="color: #0000ff;">write</span>-<span style="color: #0000ff;">file</span>-atomic/index.js:<span style="color: #800080;">197</span><span style="color: #000000;">
+throw err
+</span>^<span style="color: #ff0000;">
+
+Error: EACCES: permission denied, open '/root/.config/insight-nodejs/insight-yo.json.3393582327'
+at Object.fs.openSync (fs.js:663:18)
+at Function.writeFileSync [as sync] (/root/.nvm/versions/node/v9.3.0/lib/node_modules/yo/node_modules/write-file-atomic/index.js:180:17)
+at Conf.set store [as store] (/root/.nvm/versions/node/v9.3.0/lib/node_modules/yo/node_modules/conf/index.js:142:19)
+at Conf.set (/root/.nvm/versions/node/v9.3.0/lib/node_modules/yo/node_modules/conf/index.js:64:14)
+at Insight.set optOut [as optOut] (/root/.nvm/versions/node/v9.3.0/lib/node_modules/yo/node_modules/insight/lib/index.js:56:15)
+at Object.&lt;anonymous&gt; (/root/.nvm/versions/node/v9.3.0/lib/node_modules/yo/lib/cli.js:198:18)
+at Module._compile (module.js:660:30)
+at Object.Module._extensions..js (module.js:671:10)
+at Module.load (module.js:573:32)
+at tryModuleLoad (module.js:513:12)</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Try the following command to fix:</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">chmod</span> g+rwx /root/.config/insight-nodejs/</pre>
+</div>
+<p>&nbsp;</p>
+<p>If everything works fine, after type 'yo', you should see the following output:</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">❯ yo
+</span>? ==========================================================================<span style="color: #000000;">
+We</span><span style="color: #800000;">'</span><span style="color: #800000;">re constantly looking for ways to make yo better!</span>
+May we anonymously report usage statistics to improve the tool over <span style="color: #0000ff;">time</span>?<span style="color: #000000;">
+More </span><span style="color: #0000ff;">info</span>: https:<span style="color: #008000;">//</span><span style="color: #008000;">github.com/yeoman/insight &amp; </span><span style="color: #008000; text-decoration: underline;">http://yeoman.io</span>
+==========================================================================<span style="color: #000000;"> Yes
+</span>? <span style="color: #800000;">'</span><span style="color: #800000;">Allo Grandyang! What would you like to do? Install a generator</span>
+? Search npm <span style="color: #0000ff;">for</span><span style="color: #000000;"> generators: Express
+</span>? Here<span style="color: #800000;">'</span><span style="color: #800000;">s what I found. Official generator &rarr; ෴</span>
+  Install one?<span style="color: #000000;"> Return home
+</span>? <span style="color: #800000;">'</span><span style="color: #800000;">Allo Grandyang! What would you like to do? Get me out of here!</span>
+<span style="color: #000000;">
+     _</span>-----<span style="color: #000000;">_     ╭───────────────────────╮
+    </span>|       |    │      Bye from us!<span style="color: #000000;">     │
+    </span>|--(o)--|<span style="color: #000000;">    │       Chat soon.      │
+   `</span>---------<span style="color: #000000;">&acute;   │      Yeoman team      │
+    ( _&acute;U`_ )    │    http:</span><span style="color: #008000;">//</span><span style="color: #008000;">yeoman.io   │</span>
+    /___A___\   /<span style="color: #000000;">╰───────────────────────╯
+     </span>|  ~  |<span style="color: #000000;">
+   __</span><span style="color: #800000;">'</span><span style="color: #800000;">.___.</span><span style="color: #800000;">'</span><span style="color: #000000;">__
+ &acute;   `  </span>|&deg; &acute; Y `</pre>
+</div>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,97 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5467118.html">[LeetCode] Design Tic-Tac-Toe 设计井字棋游戏</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design a Tic-tac-toe game that is played between two players on a n x n grid.</p>
+<p>You may assume the following rules:</p>
+<p>A move is guaranteed to be valid and is placed on an empty block.<br />Once a winning condition is reached, no more moves is allowed.<br />A player who succeeds in placing n of their marks in a horizontal, vertical, or diagonal row wins the game.<br />Example:<br />Given n = 3, assume that player 1 is "X" and player 2 is "O" in the board.</p>
+<p>TicTacToe toe = new TicTacToe(3);</p>
+<p>toe.move(0, 0, 1); -&gt; Returns 0 (no one wins)<br />|X| | |<br />| | | |    // Player 1 makes a move at (0, 0).<br />| | | |</p>
+<p>toe.move(0, 2, 2); -&gt; Returns 0 (no one wins)<br />|X| |O|<br />| | | |    // Player 2 makes a move at (0, 2).<br />| | | |</p>
+<p>toe.move(2, 2, 1); -&gt; Returns 0 (no one wins)<br />|X| |O|<br />| | | |    // Player 1 makes a move at (2, 2).<br />| | |X|</p>
+<p>toe.move(1, 1, 2); -&gt; Returns 0 (no one wins)<br />|X| |O|<br />| |O| |    // Player 2 makes a move at (1, 1).<br />| | |X|</p>
+<p>toe.move(2, 0, 1); -&gt; Returns 0 (no one wins)<br />|X| |O|<br />| |O| |    // Player 1 makes a move at (2, 0).<br />|X| |X|</p>
+<p>toe.move(1, 0, 2); -&gt; Returns 0 (no one wins)<br />|X| |O|<br />|O|O| |    // Player 2 makes a move at (1, 0).<br />|X| |X|</p>
+<p>toe.move(2, 1, 1); -&gt; Returns 1 (player 1 wins)<br />|X| |O|<br />|O|O| |    // Player 1 makes a move at (2, 1).<br />|X|X|X|<br />Follow up:<br />Could you do better than O(n2) per move() operation?</p>
+<p>Hint:</p>
+<p>Could you trade extra space such that move() operation can be done in O(1)?<br />You need two arrays: int rows[n], int cols[n], plus two variables: diagonal, anti_diagonal. </p>
+<p>&nbsp;</p>
+<p>CareerCup上的原题，请参见我之前的博客<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_17" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/5407377.html">17.2 Tic Tac Toe</a><span class="entrylistItemTitle">。我们首先来O(n<sup>2</sup>)的解法，这种方法的思路很straightforward，就是建立一个nxn大小的board，其中0表示该位置没有棋子，1表示玩家1放的子，2表示玩家2。那么棋盘上每增加一个子，我们都扫描当前行列，对角线，和逆对角线，看看是否有三子相连的情况，有的话则返回对应的玩家，没有则返回0，参见代码如下：</span> </p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> TicTacToe {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    TicTacToe(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        board.resize(n, vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));   
+    }
+
+    </span><span style="color: #0000ff;">int</span> move(<span style="color: #0000ff;">int</span> row, <span style="color: #0000ff;">int</span> col, <span style="color: #0000ff;">int</span><span style="color: #000000;"> player) {
+        board[row][col] </span>=<span style="color: #000000;"> player;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> board.size();
+        </span><span style="color: #0000ff;">for</span> (j = <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">if</span> (board[row][j] != board[row][j - <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (j == n) <span style="color: #0000ff;">return</span><span style="color: #000000;"> player;
+        </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (board[i][col] != board[i - <span style="color: #800080;">1</span>][col]) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (i == n) <span style="color: #0000ff;">return</span><span style="color: #000000;"> player;
+        </span><span style="color: #0000ff;">if</span> (row ==<span style="color: #000000;"> col) {
+            </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (board[i][i] != board[i - <span style="color: #800080;">1</span>][i - <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (i == n) <span style="color: #0000ff;">return</span><span style="color: #000000;"> player;
+        }
+        </span><span style="color: #0000ff;">if</span> (row + col == n - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (board[n - i - <span style="color: #800080;">1</span>][i] != board[n - i][i - <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (i == n) <span style="color: #0000ff;">return</span><span style="color: #000000;"> player;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> board;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Follow up中让我们用更高效的方法，那么根据提示中的，我们建立一个大小为n的一维数组rows和cols，还有变量对角线diag和逆对角线rev_diag，这种方法的思路是，如果玩家1在第一行某一列放了一个子，那么rows[0]自增1，如果玩家2在第一行某一列放了一个子，则rows[0]自减1，那么只有当rows[0]等于n或者-n的时候，表示第一行的子都是一个玩家放的，则游戏结束返回该玩家即可，其他各行各列，对角线和逆对角线都是这种思路，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> TicTacToe {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    TicTacToe(</span><span style="color: #0000ff;">int</span> n): rows(n), cols(n), N(n), diag(<span style="color: #800080;">0</span>), rev_diag(<span style="color: #800080;">0</span><span style="color: #000000;">) {}
+
+    </span><span style="color: #0000ff;">int</span> move(<span style="color: #0000ff;">int</span> row, <span style="color: #0000ff;">int</span> col, <span style="color: #0000ff;">int</span><span style="color: #000000;"> player) {
+        </span><span style="color: #0000ff;">int</span> add = player == <span style="color: #800080;">1</span> ? <span style="color: #800080;">1</span> : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        rows[row] </span>+=<span style="color: #000000;"> add; 
+        cols[col] </span>+=<span style="color: #000000;"> add;
+        diag </span>+= (row == col ? add : <span style="color: #800080;">0</span><span style="color: #000000;">);
+        rev_diag </span>+= (row == N - col - <span style="color: #800080;">1</span> ? add : <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> (abs(rows[row]) == N || abs(cols[col]) == N || abs(diag) == N || abs(rev_diag) == N) ? player : <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> rows, cols;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> diag, rev_diag, N;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/101359/very-concise-and-readable-c-solution" target="_blank">https://leetcode.com/discuss/101359/very-concise-and-readable-c-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/44548/java-o-1-solution-easy-to-understand" target="_blank">https://discuss.leetcode.com/topic/44548/java-o-1-solution-easy-to-understand</a></p>
+<p><a href="https://discuss.leetcode.com/topic/44605/c-time-o-1-space-o-n-short-simple-solution" target="_blank">https://discuss.leetcode.com/topic/44605/c-time-o-1-space-o-n-short-simple-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

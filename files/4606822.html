@@ -1,0 +1,53 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4606822.html">[LeetCode] Majority Element II 求众数之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an integer array of size <em>n</em>, find all elements that appear more than <code>&lfloor; n/3 &rfloor;</code> times. The algorithm should run in linear time and in O(1) space.</p>
+<p><strong>Hint:</strong></p>
+<ol id="hints">
+<li class="hint animated fadeInLeft" style="display: list-item;">How many majority elements could it possibly have?</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">Do you have a better hint? <a href="mailto:admin@leetcode.com?subject=Hints%20for%20Majority%20Element%20II" target="_blank">Suggest it</a>!</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求出现次数大于n/3的众数，而且限定了时间和空间复杂度，那么就不能排序，也不能使用哈希表，这么苛刻的限制条件只有一种方法能解了，那就是摩尔投票法 Moore Voting，这种方法在之前那道题<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4233501.html">Majority Element 求众数</a>中也使用了。题目中给了一条很重要的提示，让我们先考虑可能会有多少个众数，经过举了很多例子分析得出，任意一个数组出现次数大于n/3的众数最多有两个，具体的证明我就不会了，我也不是数学专业的。那么有了这个信息，我们使用投票法的核心是找出两个候选众数进行投票，需要两遍遍历，第一遍历找出两个候选众数，第二遍遍历重新投票验证这两个候选众数是否为众数即可，选候选众数方法和前面那篇<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4233501.html">Majority Element 求众数</a>一样，由于之前那题题目中限定了一定会有众数存在，故而省略了验证候选众数的步骤，这道题却没有这种限定，即满足要求的众数可能不存在，所以要有验证。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; majorityElement(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> m = <span style="color: #800080;">0</span>, n = <span style="color: #800080;">0</span>, cm = <span style="color: #800080;">0</span>, cn = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : nums) {
+            </span><span style="color: #0000ff;">if</span> (a == m) ++<span style="color: #000000;">cm;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (a ==n) ++<span style="color: #000000;">cn;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cm == <span style="color: #800080;">0</span>) m = a, cm = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cn == <span style="color: #800080;">0</span>) n = a, cn = <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> --cm, --<span style="color: #000000;">cn;
+        }
+        cm </span>= cn = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : nums) {
+            </span><span style="color: #0000ff;">if</span> (a == m) ++<span style="color: #000000;">cm;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (a == n) ++<span style="color: #000000;">cn;
+        }
+        </span><span style="color: #0000ff;">if</span> (cm &gt; nums.size() / <span style="color: #800080;">3</span><span style="color: #000000;">) res.push_back(m);
+        </span><span style="color: #0000ff;">if</span> (cn &gt; nums.size() / <span style="color: #800080;">3</span><span style="color: #000000;">) res.push_back(n);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4233501.html" target="_blank">Majority Element</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/42806/boyer-moore-majority-vote-algorithm-generalization" target="_blank">https://leetcode.com/discuss/42806/boyer-moore-majority-vote-algorithm-generalization</a></p>
+<p><a href="https://leetcode.com/discuss/42771/java-o-n-time-o-1-space-simplified-solution" target="_blank">https://leetcode.com/discuss/42771/java-o-n-time-o-1-space-simplified-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

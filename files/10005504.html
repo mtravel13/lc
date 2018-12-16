@@ -1,0 +1,231 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/10005504.html">[LeetCode] Design Linked List 设计链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Design your&nbsp;implementation of the linked list. You can choose to use the singly linked list or the doubly linked list. A node in a singly&nbsp;linked list should have two attributes:&nbsp;<code>val</code>&nbsp;and&nbsp;<code>next</code>.&nbsp;<code>val</code>&nbsp;is the value of the current node, and&nbsp;<code>next</code>&nbsp;is&nbsp;a&nbsp;pointer/reference to the next node. If you want to use the doubly linked list,&nbsp;you will need&nbsp;one more attribute&nbsp;<code>prev</code>&nbsp;to indicate the previous node in the linked list. Assume all nodes in the linked list are 0-indexed.</p>
+<p>Implement these functions in your linked list class:</p>
+<ul>
+<li>get(index) : Get the value of&nbsp;the&nbsp;<code>index</code>-th&nbsp;node in the linked list. If the index is invalid, return&nbsp;<code>-1</code>.</li>
+<li>addAtHead(val) : Add a node of value&nbsp;<code>val</code>&nbsp;before the first element of the linked list. After the insertion, the new node will be the first node of the linked list.</li>
+<li>addAtTail(val) : Append a node of value&nbsp;<code>val</code>&nbsp;to the last element of the linked list.</li>
+<li>addAtIndex(index, val) : Add a node of value&nbsp;<code>val</code>&nbsp;before the&nbsp;<code>index</code>-th&nbsp;node in the linked list.&nbsp;If&nbsp;<code>index</code>&nbsp;equals&nbsp;to the length of&nbsp;linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted.</li>
+<li>deleteAtIndex(index) : Delete&nbsp;the&nbsp;<code>index</code>-th&nbsp;node in the linked list, if the index is valid.</li>
+</ul>
+<p>Example:</p>
+<pre>MyLinkedList linkedList = new MyLinkedList();
+linkedList.addAtHead(1);
+linkedList.addAtTail(3);
+linkedList.addAtIndex(1, 2);  // linked list becomes 1-&gt;2-&gt;3
+linkedList.get(1);            // returns 2
+linkedList.deleteAtIndex(1);  // now the linked list is 1-&gt;3
+linkedList.get(1);&nbsp;&nbsp;&nbsp;         // returns 3
+</pre>
+<p>Note:</p>
+<ul>
+<li>All values will be in the range of&nbsp;<code>[1, 1000]</code>.</li>
+<li>The number of operations will be in the range of&nbsp;<code>[1, 1000]</code>.</li>
+<li>Please do not use the built-in LinkedList library.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题让我们实现一个链表的数据结构，说我们不能使用现成的链表数据结构，需要自己定义结点，说是可以实现双向或者单向的链表。既然有的选，那肯定选简单的单项链表了。首先就是要先自己定义一个结点的数据结构了，好在LeetCode中有很多很多的链表有关的题目，随便打开一个，并且参考一下结点的定义即可。然后看需要实现的哪些函数，分别是根据坐标取结点，分别在链表开头和末尾加结点，根据坐标位置加结点，根据坐标位置删除结点。既然是结点组成的链表，那么肯定不能向数组那样可以根据坐标直接访问元素。那么我们肯定至少要知道表头的位置。同时，在根据链表取结点函数说明了给定的位置可能是非法的，那么我们也要知道链表中所有元素的个数，这样可以快速的判定给定的位置是否合法。</p>
+<p>好，下面来看每个函数如何实现。首先来看根据坐标取结点函数，先判定index是否合法，然后从表头向后移动index个位置，找到要返回的结点即可。对于增加表头函数就比较简单了，新建一个头结点，next连上head，然后head重新指向这个新结点，同时size自增1。同样，对于增加表尾结点函数，首先遍历到表尾，然后在之后连上一个新建的结点，同时size自增1。下面是根据位置来加结点，那么肯定还是先来判定index是否合法，然后再处理一个corner case，就是当index为0的时候，直接调用前面的表头加结点函数即可。然后就是往后遍历index-1个结点，这里为啥要减1呢，因为要加入结点的话，必须要知道加入位置前面一个结点才行，链表加入结点的问题之前的题目中做过很多，这里就不说细节了，最后size还是要自增1。根据位置删除结点也是大同小异，没有太大的难度，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyLinkedList {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MyLinkedList() {
+        head </span>=<span style="color: #000000;"> NULL;
+        size </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get the value of the index-th node in the linked list. If the index is invalid, return -1. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span> <span style="color: #0000ff;">get</span>(<span style="color: #0000ff;">int</span><span style="color: #000000;"> index) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt;= size) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        Node </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; index; ++i) cur = cur-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">return</span> cur-&gt;<span style="color: #000000;">val;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtHead(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        Node </span>*t = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node(val, head);
+        head </span>=<span style="color: #000000;"> t;
+        </span>++<span style="color: #000000;">size;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Append a node of value val to the last element of the linked list. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtTail(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        Node </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (cur-&gt;next) cur = cur-&gt;<span style="color: #000000;">next;
+        cur</span>-&gt;next = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node(val, NULL);
+        </span>++<span style="color: #000000;">size;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtIndex(<span style="color: #0000ff;">int</span> index, <span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt; size) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (index == <span style="color: #800080;">0</span>) {addAtHead(val); <span style="color: #0000ff;">return</span><span style="color: #000000;">;}</span><span style="color: #000000;">
+        Node </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; index - <span style="color: #800080;">1</span>; ++i) cur = cur-&gt;<span style="color: #000000;">next;
+        Node </span>*t = <span style="color: #0000ff;">new</span> Node(val, cur-&gt;<span style="color: #000000;">next);
+        cur</span>-&gt;next =<span style="color: #000000;"> t;
+        </span>++<span style="color: #000000;">size;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Delete the index-th node in the linked list, if the index is valid. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> deleteAtIndex(<span style="color: #0000ff;">int</span><span style="color: #000000;"> index) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt;= size) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (index == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            head </span>= head-&gt;<span style="color: #000000;">next;
+            </span>--<span style="color: #000000;">size;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        Node </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; index - <span style="color: #800080;">1</span>; ++i) cur = cur-&gt;<span style="color: #000000;">next;
+        cur</span>-&gt;next = cur-&gt;next-&gt;<span style="color: #000000;">next;
+        </span>--<span style="color: #000000;">size;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Node {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val;
+        Node </span>*<span style="color: #000000;">next;
+        Node(</span><span style="color: #0000ff;">int</span> x, Node*<span style="color: #000000;"> n): val(x), next(n) {}
+    };
+    Node </span>*head, *<span style="color: #000000;">tail;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对上面的解法做一丢丢的优化，主要在末尾添加结点函数addAtTail()上，如果要大量调用这个方法的话，每次都要遍历到链表末尾，很不高效。于是我们可以同时记录表头和表尾的位置，这样我们就可以直接访问末尾结点了，缺点是在其他一些地方如果末尾元素改变了，要更新tail指针，否则就会出错，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyLinkedList {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MyLinkedList() {
+        head </span>= NULL; tail =<span style="color: #000000;"> NULL;
+        size </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get the value of the index-th node in the linked list. If the index is invalid, return -1. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span> <span style="color: #0000ff;">get</span>(<span style="color: #0000ff;">int</span><span style="color: #000000;"> index) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt;= size) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        Node </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; index; ++i) cur = cur-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">return</span> cur-&gt;<span style="color: #000000;">val;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtHead(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        Node </span>*t = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node(val, head);
+        head </span>=<span style="color: #000000;"> t;
+        </span><span style="color: #0000ff;">if</span> (size == <span style="color: #800080;">0</span>) tail =<span style="color: #000000;"> t;
+        </span>++<span style="color: #000000;">size;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Append a node of value val to the last element of the linked list. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtTail(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        Node </span>*t = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node(val, NULL);
+        </span><span style="color: #0000ff;">if</span> (size == <span style="color: #800080;">0</span>) {tail = t; head =<span style="color: #000000;"> t;}
+        tail</span>-&gt;next =<span style="color: #000000;"> t;
+        tail </span>=<span style="color: #000000;"> t;
+        </span>++<span style="color: #000000;">size;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtIndex(<span style="color: #0000ff;">int</span> index, <span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt; size) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (index == <span style="color: #800080;">0</span>) {addAtHead(val); <span style="color: #0000ff;">return</span><span style="color: #000000;">;}
+        </span><span style="color: #0000ff;">if</span> (index == size) {addAtTail(val); <span style="color: #0000ff;">return</span><span style="color: #000000;">;}
+        Node </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; index - <span style="color: #800080;">1</span>; ++i) cur = cur-&gt;<span style="color: #000000;">next;
+        Node </span>*t = <span style="color: #0000ff;">new</span> Node(val, cur-&gt;<span style="color: #000000;">next);
+        cur</span>-&gt;next =<span style="color: #000000;"> t;
+        </span>++<span style="color: #000000;">size;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Delete the index-th node in the linked list, if the index is valid. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> deleteAtIndex(<span style="color: #0000ff;">int</span><span style="color: #000000;"> index) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt;= size) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (index == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            head </span>= head-&gt;<span style="color: #000000;">next;
+            </span>--<span style="color: #000000;">size;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        Node </span>*cur =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; index - <span style="color: #800080;">1</span>; ++i) cur = cur-&gt;<span style="color: #000000;">next;
+        cur</span>-&gt;next = cur-&gt;next-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">if</span> (index == size - <span style="color: #800080;">1</span>) tail =<span style="color: #000000;"> cur;
+        </span>--<span style="color: #000000;">size;
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Node {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val;
+        Node </span>*<span style="color: #000000;">next;
+        Node(</span><span style="color: #0000ff;">int</span> x, Node*<span style="color: #000000;"> n): val(x), next(n) {}
+    };
+    Node </span>*head, *<span style="color: #000000;">tail;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最后来看一种很简洁的方法，用到了内置的双向队列deque这个数据结构，很难说这样算不算cheating，但是巨简洁，大爱之～ 参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyLinkedList {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Initialize your data structure here. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    MyLinkedList() {}
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Get the value of the index-th node in the linked list. If the index is invalid, return -1. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span> <span style="color: #0000ff;">get</span>(<span style="color: #0000ff;">int</span><span style="color: #000000;"> index) {
+        </span><span style="color: #0000ff;">return</span> (index &gt;= <span style="color: #800080;">0</span> &amp;&amp; index &lt; data.size()) ? data[index] : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtHead(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        data.push_front(val);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Append a node of value val to the last element of the linked list. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtTail(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        data.push_back(val);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> addAtIndex(<span style="color: #0000ff;">int</span> index, <span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt; data.size()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        data.insert(data.begin() </span>+<span style="color: #000000;"> index, val);
+    }
+    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">* Delete the index-th node in the linked list, if the index is valid. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span> deleteAtIndex(<span style="color: #0000ff;">int</span><span style="color: #000000;"> index) {
+        </span><span style="color: #0000ff;">if</span> (index &lt; <span style="color: #800080;">0</span> || index &gt;= data.size()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        data.erase(data.begin() </span>+<span style="color: #000000;"> index);
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    deque</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> data;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/design-linked-list/" target="_blank">https://leetcode.com/problems/design-linked-list/</a></p>
+<p><a href="https://leetcode.com/problems/design-linked-list/discuss/154116/C%2B%2B-deque" target="_blank">https://leetcode.com/problems/design-linked-list/discuss/154116/C%2B%2B-deque</a></p>
+<p><a href="https://leetcode.com/problems/design-linked-list/discuss/145380/C%2B%2B-SOLUTION-24ms" target="_blank">https://leetcode.com/problems/design-linked-list/discuss/145380/C%2B%2B-SOLUTION-24ms</a></p>
+<p><a href="https://leetcode.com/problems/design-linked-list/discuss/150999/C%2B%2B-simple-solution-beats-97.27!" target="_blank">https://leetcode.com/problems/design-linked-list/discuss/150999/C%2B%2B-simple-solution-beats-97.27!</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

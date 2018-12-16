@@ -1,0 +1,103 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6018581.html">[LeetCode] Find Right Interval 找右区间</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a set of intervals, for each of the interval i, check if there exists an interval j whose start point is bigger than or equal to the end point of the interval i, which can be called that j is on the "right" of i.</p>
+<p>For any interval i, you need to store the minimum interval j's index, which means that the interval j has the minimum start point to build the "right" relationship for interval i. If the interval j doesn't exist, store -1 for the interval i. Finally, you need output the stored value of each interval as an array.</p>
+<p>Note:</p>
+<ol>
+<li>You may assume the interval's end point is always bigger than its start point.</li>
+<li>You may assume none of these intervals have the same start point.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: [ [1,2] ]
+
+Output: [-1]
+
+Explanation: There is only one interval in the collection, so it outputs -1.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [ [3,4], [2,3], [1,2] ]
+
+Output: [-1, 0, 1]
+
+Explanation: There is no satisfied "right" interval for [3,4].
+For [2,3], the interval [3,4] has minimum-"right" start point;
+For [1,2], the interval [2,3] has minimum-"right" start point.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: [ [1,4], [2,3], [3,4] ]
+
+Output: [-1, 2, -1]
+
+Explanation: There is no satisfied "right" interval for [1,4] and [3,4].
+For [2,3], the interval [3,4] has minimum-"right" start point.</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一堆区间，让我们找每个区间的最近右区间，要保证右区间的start要大于等于当前区间的end，由于区间的顺序不能变，所以我们不能给区间排序，我们需要建立区间的start和该区间位置之间的映射，由于题目中限定了每个区间的start都不同，所以不用担心一对多的情况出现。然后我们把所有的区间的start都放到一个数组中，并对这个数组进行降序排序，那么start值大的就在数组前面。然后我们遍历区间集合，对于每个区间，我们在数组中找第一个小于当前区间的end值的位置，如果数组中第一个数就小于当前区间的end，那么说明该区间不存在右区间，结果res中加入-1；如果找到了第一个小于当前区间end的位置，那么往前推一个就是第一个大于等于当前区间end的start，我们在哈希表中找到该区间的坐标加入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findRightInterval(vector&lt;Interval&gt;&amp;<span style="color: #000000;"> intervals) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res, v;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; intervals.size(); ++<span style="color: #000000;">i) {
+            m[intervals[i].start] </span>=<span style="color: #000000;"> i;
+            v.push_back(intervals[i].start);
+        }
+        sort(v.begin(), v.end(), greater</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : intervals) {
+            </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (; i &lt; v.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (v[i] &lt; a.end) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            res.push_back((i </span>&gt; <span style="color: #800080;">0</span>) ? m[v[i - <span style="color: #800080;">1</span>]] : -<span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的解法可以进一步化简，我们可以利用STL的lower_bound函数来找第一个不小于目标值的位置，这样也可以达到我们的目标，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findRightInterval(vector&lt;Interval&gt;&amp;<span style="color: #000000;"> intervals) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; intervals.size(); ++<span style="color: #000000;">i) {
+            m[intervals[i].start] </span>=<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : intervals) {
+            auto it </span>=<span style="color: #000000;"> m.lower_bound(a.end);
+            </span><span style="color: #0000ff;">if</span> (it == m.end()) res.push_back(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span> res.push_back(it-&gt;<span style="color: #000000;">second);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/6017505.html">Non-overlapping Intervals</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5548284.html">Data Stream as Disjoint Intervals</a>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4367569.html" target="_blank">Insert Interval</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4370601.html" target="_blank">Merge Intervals</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/65602/c-map-solution" target="_blank">https://discuss.leetcode.com/topic/65602/c-map-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

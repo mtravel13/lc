@@ -1,0 +1,122 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5806493.html">[LeetCode] Longest Absolute File Path 最长的绝对文件路径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Suppose we abstract our file system by a string in the following manner:</p>
+<p>The string&nbsp;<code>"dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext"</code>&nbsp;represents:</p>
+<pre>dir
+    subdir1
+    subdir2
+        file.ext
+</pre>
+<p>The directory&nbsp;<code>dir</code>&nbsp;contains an empty sub-directory&nbsp;<code>subdir1</code>&nbsp;and a sub-directory&nbsp;<code>subdir2</code>&nbsp;containing a file&nbsp;<code>file.ext</code>.</p>
+<p>The string&nbsp;<code>"dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext"</code>&nbsp;represents:</p>
+<pre>dir
+    subdir1
+        file1.ext
+        subsubdir1
+    subdir2
+        subsubdir2
+            file2.ext
+</pre>
+<p>The directory&nbsp;<code>dir</code>&nbsp;contains two sub-directories&nbsp;<code>subdir1</code>&nbsp;and&nbsp;<code>subdir2</code>.&nbsp;<code>subdir1</code>&nbsp;contains a file&nbsp;<code>file1.ext</code>&nbsp;and an empty second-level sub-directory<code>subsubdir1</code>.&nbsp;<code>subdir2</code>&nbsp;contains a second-level sub-directory&nbsp;<code>subsubdir2</code>&nbsp;containing a file&nbsp;<code>file2.ext</code>.</p>
+<p>We are interested in finding the longest (number of characters) absolute path to a file within our file system. For example, in the second example above, the longest absolute path is&nbsp;<code>"dir/subdir2/subsubdir2/file2.ext"</code>, and its length is&nbsp;<code>32</code>&nbsp;(not including the double quotes).</p>
+<p>Given a string representing the file system in the above format, return the length of the longest absolute path to file in the abstracted file system. If there is no file in the system, return&nbsp;<code>0</code>.</p>
+<p>Note:</p>
+<ul>
+<li>The name of a file contains at least a&nbsp;<code>.</code>&nbsp;and an extension.</li>
+<li>The name of a directory or sub-directory will not contain a&nbsp;<code>.</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Time complexity required:&nbsp;<code>O(n)</code>&nbsp;where&nbsp;<code>n</code>&nbsp;is the size of the input string.</p>
+<p>Notice that&nbsp;<code>a/aa/aaa/file1.txt</code>&nbsp;is not the longest file path, if there is another path&nbsp;<code>aaaaaaaaaaaaaaaaaaaaa/sth.png</code>.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个字符串，里面包含\n和\t这种表示回车和空格的特殊字符，让我们找到某一个最长的绝对文件路径，要注意的是，最长绝对文件路径不一定是要最深的路径，我们可以用哈希表来建立深度和当前深度的绝对路径长度之间的映射，那么当前深度下的文件的绝对路径就是文件名长度加上哈希表中当前深度对应的长度，我们的思路是遍历整个字符串，遇到\n或者\t就停下来，然后我们判断，如果遇到的是回车，我们把这段文件名提取出来，如果里面包含'.'，说明是文件，我们更新res长度，如果不包含点，说明是文件夹，我们深度level自增1，然后建立当前深度和总长度之间的映射，然后我们将深度level重置为0。之前如果遇到的是空格\t，那么我们深度加一，通过累加\t的个数，我们可以得知当前文件或文件夹的深度，然后做对应的处理，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthLongestPath(<span style="color: #0000ff;">string</span><span style="color: #000000;"> input) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n = input.size(), level = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; m {{<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> start =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; input[i] != <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span> &amp;&amp; input[i] != <span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">if</span> (i &gt;= n || input[i] == <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">string</span> t = input.substr(start, i -<span style="color: #000000;"> start);
+                </span><span style="color: #0000ff;">if</span> (t.find(<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>) != <span style="color: #0000ff;">string</span><span style="color: #000000;">::npos) {
+                    res </span>= max(res, m[level] + (<span style="color: #0000ff;">int</span><span style="color: #000000;">)t.size());
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span>++<span style="color: #000000;">level;
+                    m[level] </span>= m[level - <span style="color: #800080;">1</span>] + (<span style="color: #0000ff;">int</span>)t.size() + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                }
+                level </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span>++<span style="color: #000000;">level;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法用到了字符串流机制，通过getline函数可以一行一行的获取数据，实际上相当于根据回车符\n把每段分割开了，然后对于每一行，我们找最后一个空格符\t的位置，然后可以得到文件或文件夹的名字，然后我们判断其是文件还是文件夹，如果是文件就更新res，如果是文件夹就更新哈希表的映射，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> lengthLongestPath(<span style="color: #0000ff;">string</span><span style="color: #000000;"> input) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        istringstream ss(input);
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; m{{<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">string</span> line = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (getline(ss, line)) {
+            </span><span style="color: #0000ff;">int</span> level = line.find_last_of(<span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span>) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> line.substr(level).size();
+            </span><span style="color: #0000ff;">if</span> (line.find(<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>) != <span style="color: #0000ff;">string</span><span style="color: #000000;">::npos) {
+                res </span>= max(res, m[level] +<span style="color: #000000;"> len);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                m[level </span>+ <span style="color: #800080;">1</span>] = m[level] + len + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> lengthLongestPath(String input) {
+        </span><span style="color: #0000ff;">int</span> res = 0<span style="color: #000000;">;
+        Map</span>&lt;Integer, Integer&gt; m = <span style="color: #0000ff;">new</span> HashMap&lt;&gt;<span style="color: #000000;">();
+        m.put(</span>0, 0<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (String s : input.split("\n"<span style="color: #000000;">)) {
+            </span><span style="color: #0000ff;">int</span> level = s.lastIndexOf("\t") + 1<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> s.substring(level).length();
+            </span><span style="color: #0000ff;">if</span> (s.contains("."<span style="color: #000000;">)) {
+                res </span>= Math.max(res, m.get(level) +<span style="color: #000000;"> len);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                m.put(level </span>+ 1, m.get(level) + len + 1<span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/55108/c-o-n-solution-with-hashmap" target="_blank">https://discuss.leetcode.com/topic/55108/c-o-n-solution-with-hashmap</a></p>
+<p><a href="https://discuss.leetcode.com/topic/55135/c-o-n-easy-and-straightforward-only-use-vector" target="_blank">https://discuss.leetcode.com/topic/55135/c-o-n-easy-and-straightforward-only-use-vector</a></p>
+<p><a href="https://discuss.leetcode.com/topic/55561/two-different-solutions-in-java-using-stack-and-hashmap" target="_blank">https://discuss.leetcode.com/topic/55561/two-different-solutions-in-java-using-stack-and-hashmap</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

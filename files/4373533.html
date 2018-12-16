@@ -1,0 +1,71 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4373533.html">[LeetCode] Jump Game II 跳跃游戏之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of non-negative integers, you are initially positioned at the first index of the array.</p>
+<p>Each element in the array represents your maximum jump length at that position.</p>
+<p>Your goal is to reach the last index in the minimum number of jumps.</p>
+<p> For example:<br />
+Given array A = <code>[2,3,1,1,4]</code>
+</p>
+<p>
+The minimum number of jumps to reach the last index is <code>2</code>. (Jump <code>1</code> step from index 0 to 1, then <code>3</code> steps to the last index.)
+</p>
+<p>&nbsp;</p>
+<p>这题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4371526.html">Jump Game 跳跃游戏</a> 的延伸，那题是问能不能到达最后一个数字，而此题只让我们求到达最后一个位置的最少跳跃数，貌似是默认一定能到达最后位置的? 此题的核心方法是利用贪婪算法Greedy的思想来解，想想为什么呢？ 为了较快的跳到末尾，我们想知道每一步能跳的范围，这里贪婪并不是要在能跳的范围中选跳力最远的那个位置，因为这样选下来不一定是最优解，这么一说感觉又有点不像贪婪算法了。我们这里贪的是一个能到达的最远范围，我们遍历当前跳跃能到的所有位置，然后根据该位置上的跳力来预测下一步能跳到的最远距离，贪出一个最远的范围，一旦当这个范围到达末尾时，当前所用的步数一定是最小步数。我们需要两个变量cur和pre分别来保存当前的能到达的最远位置和之前能到达的最远位置，只要cur未达到最后一个位置则循环继续，pre先赋值为cur的值，表示上一次循环后能到达的最远位置，如果当前位置i小于等于pre，说明还是在上一跳能到达的范围内，我们根据当前位置加跳力来更新cur，更新cur的方法是比较当前的cur和i + A[i]之中的较大值，如果题目中未说明是否能到达末尾，我们还可以判断此时pre和cur是否相等，如果相等说明cur没有更新，即无法到达末尾位置，返回-1，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> jump(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n = nums.size(), i = <span style="color: #800080;">0</span>, cur = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (cur &lt; n - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span>++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">int</span> pre =<span style="color: #000000;"> cur;
+            </span><span style="color: #0000ff;">for</span> (; i &lt;= pre; ++<span style="color: #000000;">i) {
+                cur </span>= max(cur, i +<span style="color: #000000;"> nums[i]);
+            }
+            </span><span style="color: #0000ff;">if</span> (pre == cur) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> May not need this</span>
+<span style="color: #000000;">        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还有一种写法，跟上面那解法略有不同，但是本质的思想还是一样的，关于此解法的详细分析可参见网友<a href="http://www.cnblogs.com/lichen782/p/leetcode_Jump_Game_II.html" target="_blank">实验室小纸贴校外版的博客</a>，这里cur是当前能到达的最远位置，last是上一步能到达的最远位置，我们遍历数组，首先用i + nums[i]更新cur，这个在上面解法中讲过了，然后判断如果当前位置到达了last，即上一步能到达的最远位置，说明需要再跳一次了，我们将last赋值为cur，并且步数res自增1，这里我们小优化一下，判断如果cur到达末尾了，直接break掉即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> jump(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n = nums.size(), last = <span style="color: #800080;">0</span>, cur = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            cur </span>= max(cur, i +<span style="color: #000000;"> nums[i]);
+            </span><span style="color: #0000ff;">if</span> (i ==<span style="color: #000000;"> last) {
+                last </span>=<span style="color: #000000;"> cur;
+                </span>++<span style="color: #000000;">res;
+                </span><span style="color: #0000ff;">if</span> (cur &gt;= n - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4371526.html" target="_blank">Jump Game</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/jump-game-ii/discuss/18028/O(n)-BFS-solution" target="_blank">https://leetcode.com/problems/jump-game-ii/discuss/18028/O(n)-BFS-solution</a></p>
+<p><a href="https://leetcode.com/problems/jump-game-ii/discuss/18023/Single-loop-simple-java-solution" target="_blank">https://leetcode.com/problems/jump-game-ii/discuss/18023/Single-loop-simple-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

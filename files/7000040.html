@@ -1,0 +1,108 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7000040.html">[LeetCode] Construct String from Binary Tree 根据二叉树创建字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="col-md-12">
+<div class="question-content">
+<p>You need to construct a string consists of parenthesis and integers from a binary tree with the preorder traversing way.</p>
+<p>The null node needs to be represented by empty parenthesis pair "()". And you need to omit all the empty parenthesis pairs that don't affect the one-to-one mapping relationship between the string and the original binary tree.</p>
+<p>Example 1:</p>
+<pre>Input: Binary tree: [1,2,3,4]
+       1
+     /   \
+    2     3
+   /    
+  4     
+
+Output: "1(2(4))(3)"
+<br />Explanation: Originallay it needs to be "1(2(4)())(3()())", <br />but you need to omit all the unnecessary empty parenthesis pairs. <br />And it will be "1(2(4))(3)".
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: Binary tree: [1,2,3,null,4]
+       1
+     /   \
+    2     3
+     \  
+      4 
+
+Output: "1(2()(4))(3)"
+<br />Explanation: Almost the same as the first example, <br />except we can't omit the first parenthesis pair to break the one-to-one mapping relationship between the input and the output.
+</pre>
+<p>&nbsp;</p>
+<p>这道题给我们了一个二叉树，让我们创建对应的字符串，之前有一道正好反过来的题<a href="http://www.cnblogs.com/grandyang/p/6793904.html" target="_blank">Construct Binary Tree from String</a>。对于二叉树的处理，递归肯定是王道啊。想想如何来实现递归函数，我们观察到题目中的例子，发现如果左子结点为空，右子结点不为空时，需要在父结点后加上个空括号，而右子结点如果不存在，或者左右子结点都不存在就不需要这么做。那我们在递归函数中，如果当前结点不存在，直接返回，然后要在当前结点值前面加上左括号，然后判断，如果左子结点不存在，而右子结点存在的话，要在结果res后加上个空括号，然后分别对左右子结点调用递归函数，调用完之后要加上右括号，形成封闭的括号。由于最外面一层的括号不需要，所以我们再返回最终结果之前要去掉首尾的括号，参见代码如下：</p>
+<p>&nbsp;</p>
+</div>
+</div>
+<div id="interviewed-div" class="col-md-12">解法一：</div>
+<div class="col-md-12">
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> tree2str(TreeNode*<span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (!t) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        helper(t, res);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">string</span>(res.begin() + <span style="color: #800080;">1</span>, res.end() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* t, <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!t) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + to_string(t-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">if</span> (!t-&gt;left &amp;&amp; t-&gt;right) res += <span style="color: #800000;">"</span><span style="color: #800000;">()</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        helper(t</span>-&gt;<span style="color: #000000;">left, res);
+        helper(t</span>-&gt;<span style="color: #000000;">right, res);
+        res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看一种不用额外函数的递归写法，这种做法是一开始调用递归函数求出左右子结点的返回字符串，如果左右结果串均为空，则直接返回当前结点值；如果左子结果串为空，那么返回当前结果res，加上一个空括号，再加上放在括号中的右子结果串；如果右子结果串为空，那么发返回当前结果res，加上放在括号中的左子结果串；如果左右子结果串都存在，那么返回当前结果，加上分别放在括号中的左右子结果串，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> tree2str(TreeNode*<span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (!t) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = to_string(t-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">string</span> left = tree2str(t-&gt;left), right = tree2str(t-&gt;<span style="color: #000000;">right);
+        </span><span style="color: #0000ff;">if</span> (left == <span style="color: #800000;">""</span> &amp;&amp; right == <span style="color: #800000;">""</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">if</span> (left == <span style="color: #800000;">""</span>) <span style="color: #0000ff;">return</span> res + <span style="color: #800000;">"</span><span style="color: #800000;">()</span><span style="color: #800000;">"</span> + <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + right + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (right == <span style="color: #800000;">""</span>) <span style="color: #0000ff;">return</span> res + <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + left + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> res + <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + left + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span> + <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + right + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法更加简洁，由热心网友<a id="a_comment_author_3831971" href="http://home.cnblogs.com/u/1090659/" target="_blank">edyyy</a>提供，思路和上面解法相同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> tree2str(TreeNode*<span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (!t) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = to_string(t-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">if</span> (!t-&gt;left &amp;&amp; !t-&gt;right) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + tree2str(t-&gt;left) + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (t-&gt;right) res += <span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span> + tree2str(t-&gt;right) + <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6793904.html" target="_blank">Construct Binary Tree from String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/91308/java-solution-tree-traversal" target="_blank">https://discuss.leetcode.com/topic/91308/java-solution-tree-traversal</a></p>
+</div>
+<div class="col-md-12">&nbsp;</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

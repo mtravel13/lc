@@ -1,0 +1,95 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6405128.html">[LeetCode] Find Bottom Left Tree Value 寻找最左下树结点的值</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, find the leftmost value in the last row of the tree.</p>
+<p>Example 1:</p>
+<pre>Input:
+
+    2
+   / \
+  1   3
+
+Output:
+1
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:&nbsp;</p>
+<pre>Input:
+
+        1
+       / \
+      2   3
+     /   / \
+    4   5   6
+       /
+      7
+
+Output:
+7
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;You may assume the tree (i.e., the given root node) is not&nbsp;NULL.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求二叉树的最左下树结点的值，也就是最后一行左数第一个值，那么我首先想的是用先序遍历来做，我们维护一个最大深度和该深度的结点值，由于先序遍历遍历的顺序是根-左-右，所以每一行最左边的结点肯定最先遍历到，那么由于是新一行，那么当前深度肯定比之前的最大深度大，所以我们可以更新最大深度为当前深度，结点值res为当前结点值，这样在遍历到该行其他结点时就不会更新结果res了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findBottomLeftValue(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> max_depth = <span style="color: #800080;">1</span>, res = root-&gt;<span style="color: #000000;">val;
+        helper(root, </span><span style="color: #800080;">1</span><span style="color: #000000;">, max_depth, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span> depth, <span style="color: #0000ff;">int</span>&amp; max_depth, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (depth &gt;<span style="color: #000000;"> max_depth) {
+            max_depth </span>=<span style="color: #000000;"> depth;
+            res </span>= node-&gt;<span style="color: #000000;">val;
+        }
+        helper(node</span>-&gt;left, depth + <span style="color: #800080;">1</span><span style="color: #000000;">, max_depth, res);
+        helper(node</span>-&gt;right, depth + <span style="color: #800080;">1</span><span style="color: #000000;">, max_depth, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>其实这道题用层序遍历更直接一些，因为层序遍历时遍历完当前行所有结点之后才去下一行，那么我们再遍历每行第一个结点时更新结果res即可，根本不用维护最大深度了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findBottomLeftValue(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        queue</span>&lt;TreeNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                TreeNode </span>*t =<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span>) res = t-&gt;<span style="color: #000000;">val;
+                </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push(t-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push(t-&gt;<span style="color: #000000;">right);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<div><a href="https://discuss.leetcode.com/topic/78954/verbose-java-solution-binary-tree-level-order-traversal" target="_blank">https://discuss.leetcode.com/topic/78954/verbose-java-solution-binary-tree-level-order-traversal</a></div>
+<p>&nbsp;</p>
+<div id="cnblogs_post_body">
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>

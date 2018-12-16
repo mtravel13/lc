@@ -1,0 +1,61 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5177285.html">[LeetCode] Wiggle Sort 摆动排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an unsorted array nums, reorder it in-place such that nums[0] &lt;= nums[1] &gt;= nums[2] &lt;= nums[3]....</p>
+<p>For example, given nums = [3, 5, 2, 1, 6, 4], one possible answer is [1, 6, 2, 5, 3, 4].</p>
+<p>&nbsp;</p>
+<p>这道题让我们求摆动排序，跟<a href="http://www.cnblogs.com/grandyang/p/5139057.html">Wiggle Sort II</a>相比起来，这道题的条件宽松很多，只因为多了一个等号。由于等号的存在，当数组中有重复数字存在的情况时，也很容易满足题目的要求。这道题我们先来看一种时间复杂度为O(nlgn)的方法，思路是先给数组排个序，然后我们只要每次把第三个数和第二个数调换个位置，第五个数和第四个数调换个位置，以此类推直至数组末尾，这样我们就能完成摆动排序了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Time Complexity O(nlgn)</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> wiggleSort(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">nums) {
+        sort(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">if</span> (nums.size() &lt;= <span style="color: #800080;">2</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt; nums.size(); i += <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            swap(nums[i], nums[i </span>- <span style="color: #800080;">1</span><span style="color: #000000;">]);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题还有一种O(n)的解法，根据题目要求的nums[0] &lt;= nums[1] &gt;= nums[2] &lt;= nums[3]....，我们可以总结出如下规律：</p>
+<p>当i为奇数时，nums[i] &gt;= nums[i - 1]</p>
+<p>当i为偶数时，nums[i] &lt;= nums[i - 1]</p>
+<p>那么我们只要对每个数字，根据其奇偶性，跟其对应的条件比较，如果不符合就和前面的数交换位置即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Time Complexity O(n)</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> wiggleSort(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.size() &lt;= <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> ((i % <span style="color: #800080;">2</span> == <span style="color: #800080;">1</span> &amp;&amp; nums[i] &lt; nums[i - <span style="color: #800080;">1</span>]) || (i % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span> &amp;&amp; nums[i] &gt; nums[i - <span style="color: #800080;">1</span><span style="color: #000000;">])) {
+                swap(nums[i], nums[i </span>- <span style="color: #800080;">1</span><span style="color: #000000;">]);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5139057.html">Wiggle Sort II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://segmentfault.com/a/1190000003783283" target="_blank">https://segmentfault.com/a/1190000003783283</a></p>
+<p><a href="http://www.cnblogs.com/jcliBlogger/p/4797531.html" target="_blank">http://www.cnblogs.com/jcliBlogger/p/4797531.html</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

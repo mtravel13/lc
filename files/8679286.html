@@ -1,0 +1,209 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8679286.html">[LeetCode] Largest Plus Sign 最大的加型符号</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<div>
+<p>In a 2D&nbsp;<code>grid</code>&nbsp;from (0, 0) to (N-1, N-1), every cell contains a&nbsp;<code>1</code>, except those cells in the given list&nbsp;<code>mines</code>&nbsp;which are&nbsp;<code>0</code>. What is the largest axis-aligned plus sign of&nbsp;<code>1</code>s contained in the grid? Return the order of the plus sign. If there is none, return 0.</p>
+<p>An "<em>axis-aligned plus sign of&nbsp;<code>1</code>s</em>&nbsp;of order&nbsp;k" has some center&nbsp;<code>grid[x][y] = 1</code>&nbsp;along with 4 arms of length&nbsp;<code>k-1</code>going up, down, left, and right, and made of&nbsp;<code>1</code>s. This is demonstrated in the diagrams below. Note that there could be&nbsp;<code>0</code>s or&nbsp;<code>1</code>s beyond the arms of the plus sign, only the relevant area of the plus sign is checked for 1s.</p>
+<p>&nbsp;</p>
+<p>Examples of Axis-Aligned Plus Signs of Order k:</p>
+<pre>Order 1:
+000
+010
+000
+
+Order 2:
+00000
+00100
+01110
+00100
+00000
+
+Order 3:
+0000000
+0001000
+0001000
+0111110
+0001000
+0001000
+0000000
+</pre>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: N = 5, mines = [[4, 2]]
+Output: 2
+Explanation:
+11111
+11111
+11111
+11111
+11011
+In the above grid, the largest plus sign can only be order 2.  One of them is marked in bold.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: N = 2, mines = []
+Output: 1
+Explanation:
+There is no plus sign of order 2, but there is of order 1.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: N = 1, mines = [[0, 0]]
+Output: 0
+Explanation:
+There is no plus sign, so return 0.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li><code>N</code>&nbsp;will be an integer in the range&nbsp;<code>[1, 500]</code>.</li>
+<li><code>mines</code>&nbsp;will have length at most&nbsp;<code>5000</code>.</li>
+<li><code>mines[i]</code>&nbsp;will be length 2 and consist of integers in the range&nbsp;<code>[0, N-1]</code>.</li>
+<li><em>(Additionally, programs submitted in C, C++, or C# will be judged with a slightly smaller time limit.)</em></li>
+</ol>
+<p>&nbsp;</p>
+</div>
+</div>
+<p>这道题给了我们一个数字N，表示一个NxN的二位数字，初始化均为1，又给了一个mines数组，里面是一些坐标，表示数组中这些位置都为0，然后让我们找最大的加型符号。所谓的加型符号是有数字1组成的一个十字型的加号，题目中也给出了长度分别为1，2，3的加型符号的样子。好，理解了题意以后，我们来想想该如何破题。首先，最简单的就是考虑暴力搜索啦，以每个1为中心，向四个方向分别去找，只要任何一个方向遇到了0就停止，然后更新结果res。令博主感到惊讶的是，此题的OJ居然允许Brute Force的解法通过，还是比较大度的，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> orderOfLargestPlusSign(<span style="color: #0000ff;">int</span> N, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> mines) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; mat(N, vector&lt;<span style="color: #0000ff;">int</span>&gt;(N, <span style="color: #800080;">1</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (auto mine : mines) mat[mine[<span style="color: #800080;">0</span>]][mine[<span style="color: #800080;">1</span>]] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; N; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; N; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (canExpand(mat, N, i, j, k)) ++<span style="color: #000000;">k;
+                res </span>=<span style="color: #000000;"> max(res, k);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">bool</span> canExpand(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; mat, <span style="color: #0000ff;">int</span> N, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> y, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (x - k &lt; <span style="color: #800080;">0</span> || y - k &lt; <span style="color: #800080;">0</span> || x + k &gt;= N || y + k &gt;= N) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> mat[x - k][y] &amp;&amp; mat[x][y + k] &amp;&amp; mat[x + k][y] &amp;&amp; mat[x][y -<span style="color: #000000;"> k];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>如果我们只想出暴力搜索的解法，就不再管这道题了的话，那在面试的时候就比较悬了。毕竟立方级的时间复杂度实在是太高了，我们必须要进行优化。暴力搜索的时间复杂度之所以高的原因是因为对于每一个1都要遍历其上下左右四个方向，有大量的重复计算，我们为了提高效率，可以对于每一个点，都计算好其上下左右连续1的个数。博主最先用的方法是建立四个方向的dp数组，dp[i][j]表示 (i, j) 位置上该特定方向连续1的个数，那么就需要4个二维dp数组，举个栗子，比如：</p>
+<p>原数组：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>
+<span style="color: #800080;">1</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">1</span></pre>
+</div>
+<p>那么我们建立left数组是当前及其左边连续1的个数，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>
+<span style="color: #800080;">1</span>  <span style="color: #800080;">2</span>  <span style="color: #800080;">3</span>  <span style="color: #800080;">4</span>
+<span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">2</span></pre>
+</div>
+<p>right数组是当前及其右边连续1的个数，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>
+<span style="color: #800080;">4</span>  <span style="color: #800080;">3</span>  <span style="color: #800080;">2</span>  <span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">2</span>  <span style="color: #800080;">1</span></pre>
+</div>
+<p>up数组是当前及其上边连续1的个数，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>
+<span style="color: #800080;">2</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">2</span>  <span style="color: #800080;">1</span>
+<span style="color: #800080;">3</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">3</span>  <span style="color: #800080;">2</span></pre>
+</div>
+<p>down数组是当前及其下边连续1的个数，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">3</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">3</span>  <span style="color: #800080;">0</span>
+<span style="color: #800080;">2</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">2</span>  <span style="color: #800080;">2</span>
+<span style="color: #800080;">1</span>  <span style="color: #800080;">0</span>  <span style="color: #800080;">1</span>  <span style="color: #800080;">1</span></pre>
+</div>
+<p>我们需要做的是在这四个dp数组中的相同位置的四个值中取最小的一个，然后在所有的这些去除的最小值中选最大一个返回即可。为了节省空间，我们不用四个二维dp数组，而只用一个就可以了，因为对于每一个特定位置，我们只需要保留较小值，所以在更新的时候，只需要跟原来值相比取较小值即可。在计算down数组的时候，我们就可以直接更新结果res了，因为四个值都已经计算过了，我们就不用再重新在外面开for循环了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> orderOfLargestPlusSign(<span style="color: #0000ff;">int</span> N, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> mines) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(N, vector&lt;<span style="color: #0000ff;">int</span>&gt;(N, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (auto mine : mines) s.insert(mine[<span style="color: #800080;">0</span>] * N + mine[<span style="color: #800080;">1</span><span style="color: #000000;">]);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; N; ++<span style="color: #000000;">j) {
+            cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; N; ++i) { <span style="color: #008000;">//</span><span style="color: #008000;"> up</span>
+                cnt = s.count(i * N + j) ? <span style="color: #800080;">0</span> : cnt + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                dp[i][j] </span>=<span style="color: #000000;"> cnt;
+            }
+            cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = N - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --i) { <span style="color: #008000;">//</span><span style="color: #008000;"> down</span>
+                cnt = s.count(i * N + j) ? <span style="color: #800080;">0</span> : cnt + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                dp[i][j] </span>=<span style="color: #000000;"> min(dp[i][j], cnt);
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; N; ++<span style="color: #000000;">i) {
+            cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; N; ++j) { <span style="color: #008000;">//</span><span style="color: #008000;"> left</span>
+                cnt = s.count(i * N + j) ? <span style="color: #800080;">0</span> : cnt + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                dp[i][j] </span>=<span style="color: #000000;"> min(dp[i][j], cnt);
+            }
+            cnt </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = N - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; --j) { <span style="color: #008000;">//</span><span style="color: #008000;"> right</span>
+                cnt = s.count(i * N + j) ? <span style="color: #800080;">0</span> : cnt + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                dp[i][j] </span>=<span style="color: #000000;"> min(dp[i][j], cnt);
+                res </span>=<span style="color: #000000;"> max(res, dp[i][j]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以进一步的压缩代码，使其更加简洁，我们发现其实只要分别用四个变量l，r，u，d来表示四个方向连续1的个数，既可以将for循环糅合在一起。注意里面内嵌的for循环其实是两个for循环，由j和k分别控制，那么只要弄清i，j，k坐标的位置，就可以同时更新四个方向的dp值了，最后dp数组更新好了之后，我们再秀一波，只用一个for循环来遍历二维数组，其实就是把二维坐标压缩成了一个数字，再解压缩，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> orderOfLargestPlusSign(<span style="color: #0000ff;">int</span> N, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> mines) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(N, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">(N, N));
+        </span><span style="color: #0000ff;">for</span> (auto mine : mines) dp[mine[<span style="color: #800080;">0</span>]][mine[<span style="color: #800080;">1</span>]] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; N; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> l = <span style="color: #800080;">0</span>, r = <span style="color: #800080;">0</span>, u = <span style="color: #800080;">0</span>, d = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>, k = N - <span style="color: #800080;">1</span>; j &lt; N; ++j, --<span style="color: #000000;">k) {
+                dp[i][j] </span>= min(dp[i][j], l = (dp[i][j] ? l + <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">));
+                dp[j][i] </span>= min(dp[j][i], u = (dp[j][i] ? u + <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">));
+                dp[i][k] </span>= min(dp[i][k], r = (dp[i][k] ? r + <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">));
+                dp[k][i] </span>= min(dp[k][i], d = (dp[k][i] ? d + <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">));
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; N * N; ++k) res = max(res, dp[k / N][k %<span style="color: #000000;"> N]);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p>Cheapest Flights Within K Stops</p>
+<p>Minimum Swaps To Make Sequences Increasing</p>
+<p>Soup Servings</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/largest-plus-sign/solution/">https://leetcode.com/problems/largest-plus-sign/solution/</a></p>
+<p><a href="https://leetcode.com/problems/largest-plus-sign/discuss/113314/JavaC++Python-O(N2)-solution-using-only-one-grid-matrix">https://leetcode.com/problems/largest-plus-sign/discuss/113314/JavaC++Python-O(N2)-solution-using-only-one-grid-matrix</a></p>
+<p><a href="https://leetcode.com/problems/largest-plus-sign/discuss/113350/C++-simple-brute-force-easy-to-understand-with-detailed-explanation">https://leetcode.com/problems/largest-plus-sign/discuss/113350/C++-simple-brute-force-easy-to-understand-with-detailed-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

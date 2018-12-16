@@ -1,0 +1,146 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6216480.html">[LeetCode] Add Two Numbers II 两个数字相加之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given two linked lists representing two non-negative numbers. The most significant digit comes first and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.</p>
+<p>You may assume the two numbers do not contain any leading zero, except the number 0 itself.</p>
+<p>Follow up:<br />What if you cannot modify the input lists? In other words, reversing the lists is not allowed.</p>
+<p>Example:</p>
+<pre>Input: (7 -&gt; 2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
+Output: 7 -&gt; 8 -&gt; 0 -&gt; 7</pre>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/4129891.html" target="_blank">Add Two Numbers</a>的拓展，我们可以看到这道题的最高位在链表首位置，如果我们给链表翻转一下的话就跟之前的题目一样了，这里我们来看一些不修改链表顺序的方法。由于加法需要从最低位开始运算，而最低位在链表末尾，链表只能从前往后遍历，没法取到前面的元素，那怎么办呢？我们可以利用栈来保存所有的元素，然后利用栈的后进先出的特点就可以从后往前取数字了，我们首先遍历两个链表，将所有数字分别压入两个栈s1和s2中，我们建立一个值为0的res节点，然后开始循环，如果栈不为空，则将栈顶数字加入sum中，然后将res节点值赋为sum%10，然后新建一个进位节点head，赋值为sum/10，如果没有进位，那么就是0，然后我们head后面连上res，将res指向head，这样循环退出后，我们只要看res的值是否为0，为0返回res-&gt;next，不为0则返回res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* addTwoNumbers(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s1, s2;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (l1) {
+            s1.push(l1</span>-&gt;<span style="color: #000000;">val);
+            l1 </span>= l1-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (l2) {
+            s2.push(l2</span>-&gt;<span style="color: #000000;">val);
+            l2 </span>= l2-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        ListNode </span>*res = <span style="color: #0000ff;">new</span> ListNode(<span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">while</span> (!s1.empty() || !<span style="color: #000000;">s2.empty()) {
+            </span><span style="color: #0000ff;">if</span> (!s1.empty()) {sum +=<span style="color: #000000;"> s1.top(); s1.pop();}
+            </span><span style="color: #0000ff;">if</span> (!s2.empty()) {sum +=<span style="color: #000000;"> s2.top(); s2.pop();}
+            res</span>-&gt;val = sum % <span style="color: #800080;">10</span><span style="color: #000000;">;
+            ListNode </span>*head = <span style="color: #0000ff;">new</span> ListNode(sum / <span style="color: #800080;">10</span><span style="color: #000000;">);
+            head</span>-&gt;next =<span style="color: #000000;"> res;
+            res </span>=<span style="color: #000000;"> head;
+            sum </span>/= <span style="color: #800080;">10</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> res-&gt;val == <span style="color: #800080;">0</span> ? res-&gt;<span style="color: #000000;">next : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法使用递归来实现的，我们知道递归其实也是用栈来保存每一个状态，那么也就可以实现从后往前取数字，我们首先统计出两个链表长度，然后根据长度来调用递归函数，需要传一个参数差值，递归函数参数中的l1链表长度长于l2，在递归函数中，我们建立一个节点res，如果差值不为0，节点值为l1的值，如果为0，那么就是l1和l2的和，然后在根据差值分别调用递归函数求出节点post，然后要处理进位，如果post的值大于9，那么对10取余，且res的值自增1，然后把pos连到res后面，返回res，最后回到原函数中，我们仍要处理进位情况，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* addTwoNumbers(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        </span><span style="color: #0000ff;">int</span> n1 = getLength(l1), n2 =<span style="color: #000000;"> getLength(l2);
+        ListNode </span>*head = <span style="color: #0000ff;">new</span> ListNode(<span style="color: #800080;">1</span><span style="color: #000000;">);
+        head</span>-&gt;next = (n1 &gt; n2) ? helper(l1, l2, n1 - n2) : helper(l2, l1, n2 -<span style="color: #000000;"> n1);
+        </span><span style="color: #0000ff;">if</span> (head-&gt;next-&gt;val &gt; <span style="color: #800080;">9</span><span style="color: #000000;">) {
+            head</span>-&gt;next-&gt;val %= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        }
+        </span><span style="color: #0000ff;">return</span> head-&gt;<span style="color: #000000;">next;
+    }
+    </span><span style="color: #0000ff;">int</span> getLength(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (head) {
+            </span>++<span style="color: #000000;">cnt;
+            head </span>= head-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+    }
+    ListNode</span>* helper(ListNode* l1, ListNode* l2, <span style="color: #0000ff;">int</span><span style="color: #000000;"> diff) {
+        </span><span style="color: #0000ff;">if</span> (!l1) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        ListNode </span>*res = (diff == <span style="color: #800080;">0</span>) ? <span style="color: #0000ff;">new</span> ListNode(l1-&gt;val + l2-&gt;val) : <span style="color: #0000ff;">new</span> ListNode(l1-&gt;<span style="color: #000000;">val);
+        ListNode </span>*post = (diff == <span style="color: #800080;">0</span>) ? helper(l1-&gt;next, l2-&gt;next, <span style="color: #800080;">0</span>) : helper(l1-&gt;next, l2, diff - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (post &amp;&amp; post-&gt;val &gt; <span style="color: #800080;">9</span><span style="color: #000000;">) {
+            post</span>-&gt;val %= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            </span>++res-&gt;<span style="color: #000000;">val;
+        }
+        res</span>-&gt;next =<span style="color: #000000;"> post;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法借鉴了<a href="http://www.cnblogs.com/grandyang/p/5626389.html">Plus One Linked List</a>中的解法三，在处理加1问题时，我们需要找出右起第一个不等于9的位置，然后此位置值自增1，之后的全部赋为0。这里我们同样要先算出两个链表的长度，我们把其中较长的放在l1，然后我们算出两个链表长度差diff。如果diff大于0，我们用l1的值新建节点，并连在cur节点后(cur节点初始化时指向dummy节点)。并且如果l1的值不等于9，那么right节点也指向这个新建的节点，然后cur和l1都分别后移一位，diff自减1。当diff为0后，我们循环遍历，将此时l1和l2的值加起来放入变量val中，如果val大于9，那么val对10取余，right节点自增1，将right后面节点全赋值为0。在cur节点后新建节点，节点值为更新后的val，如果val的值不等于9，那么right节点也指向这个新建的节点，然后cur，l1和l2都分别后移一位。最后我们看dummy节点值若为1，返回dummy节点，如果是0，则返回dummy的下一个节点。</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* addTwoNumbers(ListNode* l1, ListNode*<span style="color: #000000;"> l2) {
+        </span><span style="color: #0000ff;">int</span> n1 = getLength(l1), n2 = getLength(l2), diff = abs(n1 -<span style="color: #000000;"> n2);
+        </span><span style="color: #0000ff;">if</span> (n1 &lt;<span style="color: #000000;"> n2) swap(l1, l2);
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(<span style="color: #800080;">0</span>), *cur = dummy, *right =<span style="color: #000000;"> cur;
+        </span><span style="color: #0000ff;">while</span> (diff &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            cur</span>-&gt;next = <span style="color: #0000ff;">new</span> ListNode(l1-&gt;<span style="color: #000000;">val);
+            </span><span style="color: #0000ff;">if</span> (l1-&gt;val != <span style="color: #800080;">9</span>) right = cur-&gt;<span style="color: #000000;">next;
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+            l1 </span>= l1-&gt;<span style="color: #000000;">next;
+            </span>--<span style="color: #000000;">diff;
+        }
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (l1) {
+            </span><span style="color: #0000ff;">int</span> val = l1-&gt;val + l2-&gt;<span style="color: #000000;">val;
+            </span><span style="color: #0000ff;">if</span> (val &gt; <span style="color: #800080;">9</span><span style="color: #000000;">) {
+                val </span>%= <span style="color: #800080;">10</span><span style="color: #000000;">;
+                </span>++right-&gt;<span style="color: #000000;">val;
+                </span><span style="color: #0000ff;">while</span> (right-&gt;<span style="color: #000000;">next) {
+                    right</span>-&gt;next-&gt;val = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    right </span>= right-&gt;<span style="color: #000000;">next;
+                }
+                right </span>=<span style="color: #000000;"> cur;
+            }
+            cur</span>-&gt;next = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ListNode(val);
+            </span><span style="color: #0000ff;">if</span> (val != <span style="color: #800080;">9</span>) right = cur-&gt;<span style="color: #000000;">next;
+            cur </span>= cur-&gt;<span style="color: #000000;">next;
+            l1 </span>= l1-&gt;<span style="color: #000000;">next;
+            l2 </span>= l2-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span> (dummy-&gt;val == <span style="color: #800080;">1</span>) ? dummy : dummy-&gt;<span style="color: #000000;">next;
+    }
+    </span><span style="color: #0000ff;">int</span> getLength(ListNode*<span style="color: #000000;"> head) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (head) {
+            </span>++<span style="color: #000000;">cnt;
+            head </span>= head-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4129891.html" target="_blank">Add Two Numbers</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5626389.html">Plus One Linked List</a>&nbsp;</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/67076/ac-follow-up-java" target="_blank">https://discuss.leetcode.com/topic/67076/ac-follow-up-java</a></p>
+<p><a href="https://discuss.leetcode.com/topic/65279/easy-o-n-java-solution-using-stack" target="_blank">https://discuss.leetcode.com/topic/65279/easy-o-n-java-solution-using-stack</a></p>
+<p><a href="https://discuss.leetcode.com/topic/65306/java-o-n-recursive-solution-by-counting-the-difference-of-length/2" target="_blank">https://discuss.leetcode.com/topic/65306/java-o-n-recursive-solution-by-counting-the-difference-of-length/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/66699/java-iterative-o-1-space-lastnot9-solution-changed-from-plus-one-linked-list" target="_blank">https://discuss.leetcode.com/topic/66699/java-iterative-o-1-space-lastnot9-solution-changed-from-plus-one-linked-list</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

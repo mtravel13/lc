@@ -1,0 +1,122 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8424780.html">[LeetCode] Contain Virus 包含病毒</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A virus is spreading rapidly, and your task is to quarantine the infected area by installing walls.</p>
+<p>The world is modeled as a 2-D array of cells, where&nbsp;<code>0</code>&nbsp;represents uninfected cells, and&nbsp;<code>1</code>&nbsp;represents cells contaminated with the virus. A wall (and only one wall) can be installed&nbsp;between any two 4-directionally adjacent cells, on the shared boundary.</p>
+<p>Every night, the virus spreads to all neighboring cells in all four directions unless blocked by a wall. Resources are limited. Each day, you can install walls around only one region -- the affected area (continuous block of infected cells) that threatens the most uninfected cells the following night. There will never be a tie.</p>
+<p>Can you save the day? If so, what is the number of walls required? If not, and the world becomes fully infected, return the number of walls used.</p>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: grid = 
+[[0,1,0,0,0,0,0,1],
+ [0,1,0,0,0,0,0,1],
+ [0,0,0,0,0,0,0,1],
+ [0,0,0,0,0,0,0,0]]
+Output: 10
+Explanation:
+There are 2 contaminated regions.
+On the first day, add 5 walls to quarantine the viral region on the left. The board after the virus spreads is:
+
+[[0,1,0,0,0,0,1,1],
+ [0,1,0,0,0,0,1,1],
+ [0,0,0,0,0,0,1,1],
+ [0,0,0,0,0,0,0,1]]
+
+On the second day, add 5 walls to quarantine the viral region on the right. The virus is fully contained.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: grid = 
+[[1,1,1],
+ [1,0,1],
+ [1,1,1]]
+Output: 4
+Explanation: Even though there is only one cell saved, there are 4 walls built.
+Notice that walls are only built on the shared boundary of two different cells.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: grid = 
+[[1,1,1,0,0,0,0,0,0],
+ [1,0,1,0,1,1,1,1,1],
+ [1,1,1,0,0,0,0,0,0]]
+Output: 13
+Explanation: The region on the left only builds two new walls.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The number of rows and columns of&nbsp;<code>grid</code>&nbsp;will each be in the range&nbsp;<code>[1, 50]</code>.</li>
+<li>Each&nbsp;<code>grid[i][j]</code>&nbsp;will be either&nbsp;<code>0</code>&nbsp;or&nbsp;<code>1</code>.</li>
+<li>Throughout the described process, there is always a contiguous viral region that will infect&nbsp;strictly moreuncontaminated squares in the next round.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们一个由0和1组成的二维数组，其中0表示健康细胞，而1表示病毒细胞，多个相邻的1组成了病毒细胞群，每天都会向周围扩散一圈，除非我们在其跟健康细胞之间建立隔离墙，这样其才会不会扩散。我们每天只能给一个病毒细胞群来建立隔离墙，其他的细胞群会进行扩散。问最终我们需要多少个隔离墙。这道题真的挺难，博主研究了好久才弄明白题目的意思。首先要明白一点，病毒细胞只会向上下左右四个方向相邻的健康细胞扩散。需要注意的一点是，需要的隔离墙的数量可能大于周围相邻的健康细胞，最明显的就是例子2中，只有一个健康细胞，但是需要四个隔离墙才能保护这个健康细胞不被感染。还有就是，我们需要隔离某个病毒细胞群的判定依据是其能感染的健康细胞的数量，而不是需要建的墙的数量或者病毒细胞的个数，这点很重要，博主之前没有注意这一点，导致fail了一个test case。所以我们要做的就是要求出每个病毒细胞群能感染的健康细胞的数量，其周围能建墙的地方，以及每个病毒细胞的位置。我们再其中选择能感染最多健康细胞的病毒细胞群进行建墙，建完墙后，我们将该群中的所有病毒细胞标记为-1，跟其他细胞区分出来。对于其他所有的病毒细胞群，将其周围能建墙的地方(即健康细胞)都标记为1，表示其现在已经被感染成了病毒细胞。然后再进行新的一轮循环检测，直到无法找出新的病毒细胞为止。</p>
+<p>我们先找值为1的点，找到后，以其作为起点，进行BFS遍历，将和其相连的所有为1的点都找出来，在BFS遍历的过程中，如果我们检测到周围位置值为0，将其加入walls数组，表示这里可以建隔离墙，如果检测到周围位置为1，将其加入virus数组，表示这里是病毒细胞，注意起始位置也要提前加入virus数组。我们这里为了节省维度，将二维的坐标都encode成了一个int数字。BFS遍历结束后，我们根据walls数组来算出能感染的健康细胞的个数，因为我们前面提到过建隔离墙的位置可能大于健康细胞的个数，所以我们只要去除wall数组的重复项即可，利用HashSet的去重复项原理，然后将剩下的个数放入cells数组中。把cells，walls，和virus数组放入一个vector中，表示一个病毒细胞群的信息，再放入一个大数组all中，这样我们收集了所有病毒细胞群的信息后，可以根据可感染的健康细胞个数由多到少来排序，这样我们就把第一个病毒细胞群中所有virus数组的位置值变为-1，并且把可感染的健康细胞个数累加到结果res中。然后把后面所有的病毒细胞群中walls的位置值都变为1即可。当all数组为空时，跳出循环，表示没有检测到病毒细胞群或者全部都被感染了，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> containVirus(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, m = grid.size(), n = grid[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> visited;
+            vector</span>&lt;vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&gt;<span style="color: #000000;"> all;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">if</span> (grid[i][j] == <span style="color: #800080;">1</span> &amp;&amp; !visited.count(i * n +<span style="color: #000000;"> j)) {
+                        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt; q{{i * n +<span style="color: #000000;"> j}};
+                        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; virus{i * n +<span style="color: #000000;"> j};
+                        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> walls;
+                        visited.insert(i </span>* n +<span style="color: #000000;"> j);
+                        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+                            auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+                            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                                </span><span style="color: #0000ff;">int</span> x = (t / n) + dir[<span style="color: #800080;">0</span>], y = (t % n) + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                                </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n || visited.count(x * n + y)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                                </span><span style="color: #0000ff;">if</span> (grid[x][y] == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (grid[x][y] == <span style="color: #800080;">0</span>) walls.push_back(x * n +<span style="color: #000000;"> y);
+                                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (grid[x][y] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                                    visited.insert(x </span>* n +<span style="color: #000000;"> y);
+                                    virus.push_back(x </span>* n +<span style="color: #000000;"> y);
+                                    q.push(x </span>* n +<span style="color: #000000;"> y);
+                                }
+                            }
+                        }
+                        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s(walls.begin(), walls.end());
+                        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; cells{(<span style="color: #0000ff;">int</span><span style="color: #000000;">)s.size()};
+                        all.push_back({cells ,walls, virus});
+                    }
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (all.empty()) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            sort(all.begin(), all.end(), [](vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;a, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;b) {<span style="color: #0000ff;">return</span> a[<span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] &gt; b[<span style="color: #800080;">0</span>][<span style="color: #800080;">0</span><span style="color: #000000;">];});
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; all.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; virus = all[<span style="color: #800080;">0</span>][<span style="color: #800080;">2</span><span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> idx : virus) grid[idx / n][idx % n] = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+                    res </span>+= all[<span style="color: #800080;">0</span>][<span style="color: #800080;">1</span><span style="color: #000000;">].size();
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; wall = all[i][<span style="color: #800080;">1</span><span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> idx : wall) grid[idx / n][idx % n] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/114208/c-dfs-12ms" target="_blank">https://discuss.leetcode.com/topic/114208/c-dfs-12ms</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

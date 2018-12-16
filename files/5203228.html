@@ -1,0 +1,122 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5203228.html">[LeetCode] Strobogrammatic Number III 对称数之三</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).</p>
+<p>Write a function to count the total strobogrammatic numbers that exist in the range of low &lt;= num &lt;= high.</p>
+<p>For example,<br />Given low = "50", high = "100", return 3. Because 69, 88, and 96 are three strobogrammatic numbers.</p>
+<p>Note:<br />Because the range might be a large number, the&nbsp;<em>low</em>&nbsp;and&nbsp;<em>high</em>&nbsp;numbers are represented as string.</p>
+<p>&nbsp;</p>
+<div>
+<div id="tags" class="btn btn-xs btn-warning">Show Tags</div>
+
+
+</div>
+<div>
+<div id="similar" class="btn btn-xs btn-warning">Show Similar Problems</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+<div id="interviewed_div">&nbsp;</div>
+<p>这道题是之前那两道<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5200919.html">Strobogrammatic Number II</a>和<a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5196960.html">Strobogrammatic Number</a>的拓展，又增加了难度，让我们找到给定范围内的对称数的个数，我们当然不能一个一个的判断是不是对称数，我们也不能直接每个长度调用第二道中的方法，保存所有的对称数，然后再统计个数，这样OJ会提示内存超过允许的范围，所以我们的解法是基于第二道的基础上，不保存所有的结果，而是在递归中直接计数，根据之前的分析，需要初始化n=0和n=1的情况，然后在其基础上进行递归，递归的长度len从low到high之间遍历，然后我们看当前单词长度有没有达到len，如果达到了，我们首先要去掉开头是0的多位数，然后去掉长度和low相同但小于low的数，和长度和high相同但大于high的数，然后结果自增1，然后分别给当前单词左右加上那五对对称数，继续递归调用，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> strobogrammaticInRange(<span style="color: #0000ff;">string</span> low, <span style="color: #0000ff;">string</span><span style="color: #000000;"> high) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = low.size(); i &lt;= high.size(); ++<span style="color: #000000;">i) {
+            find(low, high, </span><span style="color: #800000;">""</span><span style="color: #000000;">, i, res);
+            find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;">, i, res);
+            find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">, i, res);
+            find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span><span style="color: #000000;">, i, res);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> find(<span style="color: #0000ff;">string</span> low, <span style="color: #0000ff;">string</span> high, <span style="color: #0000ff;">string</span> path, <span style="color: #0000ff;">int</span> len, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (path.size() &gt;=<span style="color: #000000;"> len) {
+            </span><span style="color: #0000ff;">if</span> (path.size() != len || (len != <span style="color: #800080;">1</span> &amp;&amp; path[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>)) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> ((len == low.size() &amp;&amp; path.compare(low) &lt; <span style="color: #800080;">0</span>) || (len == high.size() &amp;&amp; path.compare(high) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">)) {
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            }
+            </span>++<span style="color: #000000;">res;
+        }
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span> + path + <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;">, len, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span> + path + <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">, len, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span> + path + <span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span><span style="color: #000000;">, len, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span> + path + <span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span><span style="color: #000000;">, len, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span> + path + <span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span><span style="color: #000000;">, len, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上述代码可以稍微优化一下，得到如下的代码：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> strobogrammaticInRange(<span style="color: #0000ff;">string</span> low, <span style="color: #0000ff;">string</span><span style="color: #000000;"> high) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        find(low, high, </span><span style="color: #800000;">""</span><span style="color: #000000;">, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> find(<span style="color: #0000ff;">string</span> low, <span style="color: #0000ff;">string</span> high, <span style="color: #0000ff;">string</span> w, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (w.size() &gt;= low.size() &amp;&amp; w.size() &lt;=<span style="color: #000000;"> high.size()) {
+            </span><span style="color: #0000ff;">if</span> ((w.size() == low.size() &amp;&amp; w.compare(low) &lt; <span style="color: #800080;">0</span>) || (w.size() == high.size() &amp;&amp; w.compare(high) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">)) {
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (!(w.size() &gt; <span style="color: #800080;">1</span> &amp;&amp; w[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>)) ++<span style="color: #000000;">res;
+        }
+        </span><span style="color: #0000ff;">if</span> (w.size() + <span style="color: #800080;">2</span> &gt; high.size()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span> + w + <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span> + w + <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span> + w + <span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span> + w + <span style="color: #800000;">"</span><span style="color: #800000;">8</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        find(low, high, </span><span style="color: #800000;">"</span><span style="color: #800000;">9</span><span style="color: #800000;">"</span> + w + <span style="color: #800000;">"</span><span style="color: #800000;">6</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5200919.html">Strobogrammatic Number II</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl02_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5196960.html">Strobogrammatic Number</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/73721/easiest-20ms-94%25-java-solution" target="_blank">https://leetcode.com/discuss/73721/easiest-20ms-94%25-java-solution</a></p>
+<p><a href="https://leetcode.com/discuss/59824/my-java-solution-easy-to-understand" target="_blank">https://leetcode.com/discuss/59824/my-java-solution-easy-to-understand</a></p>
+<p><a href="https://leetcode.com/discuss/55468/clear-java-ac-solution-using-strobogrammatic-number-method" target="_blank">https://leetcode.com/discuss/55468/clear-java-ac-solution-using-strobogrammatic-number-method</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,79 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6188893.html">[LeetCode] Ones and Zeroes 一和零</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>In the computer world, use restricted resource you have to generate maximum benefit is what we always want to pursue.</p>
+<p>For now, suppose you are a dominator of&nbsp;m&nbsp;<code>0s</code>&nbsp;and&nbsp;n&nbsp;<code>1s</code>&nbsp;respectively. On the other hand, there is an array with strings consisting of only&nbsp;<code>0s</code>&nbsp;and&nbsp;<code>1s</code>.</p>
+<p>Now your task is to find the maximum number of strings that you can form with given&nbsp;m&nbsp;<code>0s</code>&nbsp;and&nbsp;n&nbsp;<code>1s</code>. Each&nbsp;<code>0</code>&nbsp;and&nbsp;<code>1</code>&nbsp;can be used at most&nbsp;once.</p>
+<p>Note:</p>
+<ol>
+<li>The given numbers of&nbsp;<code>0s</code>&nbsp;and&nbsp;<code>1s</code>&nbsp;will both not exceed&nbsp;<code>100</code></li>
+<li>The size of given string array won't exceed&nbsp;<code>600</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: Array = {"10", "0001", "111001", "1", "0"}, m = 5, n = 3
+Output: 4
+
+Explanation: This are totally 4 strings can be formed by the using of 5 0s and 3 1s, which are &ldquo;10,&rdquo;0001&rdquo;,&rdquo;1&rdquo;,&rdquo;0&rdquo;
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: Array = {"10", "0", "1"}, m = 1, n = 1
+Output: 2
+
+Explanation: You could form "10", but then you'd have nothing left. Better form "0" and "1".
+</pre>
+<p>&nbsp;</p>
+<p>这道题是一道典型的应用DP来解的题，如果我们看到这种求总数，而不是列出所有情况的题，十有八九都是用DP来解，重中之重就是在于找出递推式。如果你第一反应没有想到用DP来做，想得是用贪心算法来做，比如先给字符串数组排个序，让长度小的字符串在前面，然后遍历每个字符串，遇到0或者1就将对应的m和n的值减小，这种方法在有的时候是不对的，比如对于{"11", "01", "10"}，m=2，n=2这个例子，我们将遍历完&ldquo;11&rdquo;的时候，把1用完了，那么对于后面两个字符串就没法处理了，而其实正确的答案是应该组成后面两个字符串才对。所以我们需要建立一个二维的DP数组，其中dp[i][j]表示有i个0和j个1时能组成的最多字符串的个数，而对于当前遍历到的字符串，我们统计出其中0和1的个数为zeros和ones，然后dp[i - zeros][j - ones]表示当前的i和j减去zeros和ones之前能拼成字符串的个数，那么加上当前的zeros和ones就是当前dp[i][j]可以达到的个数，我们跟其原有数值对比取较大值即可，所以递推式如下：</p>
+<p>dp[i][j] = max(dp[i][j], dp[i - zeros][j - ones] + 1);</p>
+<div>
+<div id="company_tags" class="btn btn-xs btn-warning">有了递推式，我们就可以很容易的写出代码如下：</div>
+<div class="btn btn-xs btn-warning">&nbsp;</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="interviewed-div">
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findMaxForm(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; strs, <span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(m + <span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> str : strs) {
+            </span><span style="color: #0000ff;">int</span> zeros = <span style="color: #800080;">0</span>, ones = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : str) (c == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) ? ++zeros : ++<span style="color: #000000;">ones;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = m; i &gt;= zeros; --<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = n; j &gt;= ones; --<span style="color: #000000;">j) {
+                    dp[i][j] </span>= max(dp[i][j], dp[i - zeros][j - ones] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[m][n];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5138186.html">Coin Change</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/71438/c-dp-solution-with-comments" target="_blank">https://discuss.leetcode.com/topic/71438/c-dp-solution-with-comments</a></p>
+<p><a href="https://discuss.leetcode.com/topic/71417/java-iterative-dp-solution-o-mn-space" target="_blank">https://discuss.leetcode.com/topic/71417/java-iterative-dp-solution-o-mn-space</a></p>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

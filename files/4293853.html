@@ -1,0 +1,173 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4293853.html">[LeetCode] Flatten Binary Tree to Linked List 将二叉树展开成链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, flatten it to a linked list in-place.</p>
+<p>For example,<br />Given</p>
+<pre>         1
+        / \
+       2   5
+      / \   \
+     3   4   6
+</pre>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px; line-height: 1.5;">The flattened tree should look like:<br /></span></p>
+<pre>   1
+    \
+     2
+      \
+       3
+        \
+         4
+          \
+           5
+            \
+             6
+</pre>
+<p class="showspoilers"><a href="https://oj.leetcode.com/problems/flatten-binary-tree-to-linked-list/">click to show hints.</a></p>
+<div class="spoilers">Hints:
+<p>If you notice carefully in the flattened tree, each node's right child points to the next node of a pre-order trave</p>
+<p>&nbsp;</p>
+</div>
+<p><span style="font-size: 14px; line-height: 1.5;">这道题要求把二叉树展开成链表，根据展开后形成的链表的顺序分析出是使用先序遍历，那么只要是数的遍历就有递归和非递归的两种方法来求解，这里我们也用两种方法来求解。首先来看递归版本的，思路是先利用DFS的思路找到最左子节点，然后回到其父节点，把其父节点和右子节点断开，将原左子结点连上父节点的右子节点上，然后再把原右子节点连到新右子节点的右子节点上，然后再回到上一父节点做相同操作。代码如下：</span></p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Recursion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> flatten(TreeNode *<span style="color: #000000;">root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;left) flatten(root-&gt;<span style="color: #000000;">left);
+        </span><span style="color: #0000ff;">if</span> (root-&gt;right) flatten(root-&gt;<span style="color: #000000;">right);
+        TreeNode </span>*tmp = root-&gt;<span style="color: #000000;">right;
+        root</span>-&gt;right = root-&gt;<span style="color: #000000;">left;
+        root</span>-&gt;left =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">while</span> (root-&gt;right) root = root-&gt;<span style="color: #000000;">right;
+        root</span>-&gt;right =<span style="color: #000000;"> tmp;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例如，对于下面的二叉树，上述算法的变换的过程如下：</p>
+<div class="cnblogs_code">
+<pre>     <span style="color: #800080;">1</span>
+    /<span style="color: #000000;"> \
+   </span><span style="color: #800080;">2</span>   <span style="color: #800080;">5</span>
+  /<span style="color: #000000;"> \   \
+ </span><span style="color: #800080;">3</span>   <span style="color: #800080;">4</span>   <span style="color: #800080;">6</span>
+
+     <span style="color: #800080;">1</span>
+    /<span style="color: #000000;"> \
+   </span><span style="color: #800080;">2</span>   <span style="color: #800080;">5</span><span style="color: #000000;">
+    \   \
+     </span><span style="color: #ff0000;">3 </span>  <span style="color: #800080;">6</span><span style="color: #000000;"><span style="color: #ff0000;">
+      \</span>    
+       </span><span style="color: #ff0000;">4</span>
+
+   <span style="color: #800080;">1</span><span style="color: #000000;">
+    \
+     </span><span style="color: #ff0000;">2
+      \
+       3
+        \
+         4</span><span style="color: #000000;">
+          \
+           </span><span style="color: #800080;">5</span><span style="color: #000000;">
+            \
+             </span><span style="color: #800080;">6</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们再来看非迭代版本的实现，这个方法是从根节点开始出发，先检测其左子结点是否存在，如存在则将根节点和其右子节点断开，将左子结点及其后面所有结构一起连到原右子节点的位置，把原右子节点连到元左子结点最后面的右子节点之后。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Non-recursion</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> flatten(TreeNode *<span style="color: #000000;">root) {
+        TreeNode </span>*cur =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (cur) {
+            </span><span style="color: #0000ff;">if</span> (cur-&gt;<span style="color: #000000;">left) {
+                TreeNode </span>*p = cur-&gt;<span style="color: #000000;">left;
+                </span><span style="color: #0000ff;">while</span> (p-&gt;right) p = p-&gt;<span style="color: #000000;">right;
+                p</span>-&gt;right = cur-&gt;<span style="color: #000000;">right;
+                cur</span>-&gt;right = cur-&gt;<span style="color: #000000;">left;
+                cur</span>-&gt;left =<span style="color: #000000;"> NULL;
+            }
+            cur </span>= cur-&gt;<span style="color: #000000;">right;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例如，对于下面的二叉树，上述算法的变换的过程如下：</p>
+<div class="cnblogs_code">
+<pre>     <span style="color: #800080;">1</span>
+    /<span style="color: #000000;"> \
+   </span><span style="color: #800080;">2</span>   <span style="color: #800080;">5</span>
+  /<span style="color: #000000;"> \   \
+ </span><span style="color: #800080;">3</span>   <span style="color: #800080;">4</span>   <span style="color: #800080;">6</span>
+
+   <span style="color: #800080;">1</span><span style="color: #000000;">
+    \
+     </span><span style="color: #ff0000;">2
+    / \
+   3   4</span><span style="color: #000000;">
+        \
+         </span><span style="color: #800080;">5</span><span style="color: #000000;">
+          \
+           </span><span style="color: #800080;">6</span>
+           
+   <span style="color: #800080;">1</span><span style="color: #000000;">
+    \
+     </span><span style="color: #800080;">2</span><span style="color: #000000;">
+      \
+       </span><span style="color: #ff0000;">3</span><span style="color: #000000;">
+        \
+         </span><span style="color: #800080;">4</span><span style="color: #000000;">
+          \
+           </span><span style="color: #800080;">5</span><span style="color: #000000;">
+            \
+             </span><span style="color: #800080;">6</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>前序迭代解法如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> flatten(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        stack</span>&lt;TreeNode*&gt;<span style="color: #000000;"> s;
+        s.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s.empty()) {
+            TreeNode </span>*t =<span style="color: #000000;"> s.top(); s.pop();
+            </span><span style="color: #0000ff;">if</span> (t-&gt;<span style="color: #000000;">left) {
+                TreeNode </span>*r = t-&gt;<span style="color: #000000;">left;
+                </span><span style="color: #0000ff;">while</span> (r-&gt;right) r = r-&gt;<span style="color: #000000;">right;
+                r</span>-&gt;right = t-&gt;<span style="color: #000000;">right;
+                t</span>-&gt;right = t-&gt;<span style="color: #000000;">left;
+                t</span>-&gt;left =<span style="color: #000000;"> NULL;
+            }
+            </span><span style="color: #0000ff;">if</span> (t-&gt;right) s.push(t-&gt;<span style="color: #000000;">right);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>此题还可以延伸到用中序，后序，层序的遍历顺序来展开原二叉树，分别又有其对应的递归和非递归的方法，有兴趣的童鞋可以自行实现。</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/19087/my-recursive-solution-is-easy-and-clean" target="_blank">https://discuss.leetcode.com/topic/19087/my-recursive-solution-is-easy-and-clean</a></p>
+<p><a href="https://discuss.leetcode.com/topic/11444/my-short-post-order-traversal-java-solution-for-share" target="_blank">https://discuss.leetcode.com/topic/11444/my-short-post-order-traversal-java-solution-for-share</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

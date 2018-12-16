@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4452252.html">[LeetCode] Remove Linked List Elements 移除链表元素</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Remove all elements from a linked list of integers that have value <strong><em>val</em></strong>.</p>
+<p> <strong>Example</strong><br />
+<em><strong>Given:</strong></em> 1 --&gt; 2 --&gt; 6 --&gt; 3 --&gt; 4 --&gt; 5 --&gt; 6,  <strong><em>val</em></strong> = 6<br />
+<em><strong>Return:</strong></em> 1 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 5
+</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/mithmatt">@mithmatt</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道移除链表元素是链表的基本操作之一，没有太大的难度，就是考察了基本的链表遍历和设置指针的知识点，我们只需定义几个辅助指针，然后遍历原链表，遇到与给定值相同的元素，将该元素的前后连个节点连接起来，然后删除该元素即可，要注意的是还是需要在链表开头加上一个dummy node，具体实现参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* removeElements(ListNode* head, <span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span>), *pre =<span style="color: #000000;"> dummy;
+        dummy</span>-&gt;next =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (pre-&gt;<span style="color: #000000;">next) {
+            </span><span style="color: #0000ff;">if</span> (pre-&gt;next-&gt;val ==<span style="color: #000000;"> val) {
+                ListNode </span>*t = pre-&gt;<span style="color: #000000;">next;
+                pre</span>-&gt;next = t-&gt;<span style="color: #000000;">next;
+                t</span>-&gt;next =<span style="color: #000000;"> NULL;
+                </span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> t;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                pre </span>= pre-&gt;<span style="color: #000000;">next;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以用递归来解，写法很简洁，通过递归调用到链表末尾，然后回来，需要要删的元素，将链表next指针指向下一个元素即可：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode</span>* removeElements(ListNode* head, <span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (!head) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        head</span>-&gt;next = removeElements(head-&gt;<span style="color: #000000;">next, val);
+        </span><span style="color: #0000ff;">return</span> head-&gt;val == val ? head-&gt;<span style="color: #000000;">next : head;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/12580/3-line-recursive-solution" target="_blank">https://discuss.leetcode.com/topic/12580/3-line-recursive-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

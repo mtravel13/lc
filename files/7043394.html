@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7043394.html">[LeetCode] Add Bold Tag in String 字符串中增添加粗标签</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string&nbsp;s&nbsp;and a list of strings&nbsp;dict, you need to add a closed pair of bold tag&nbsp;<code>&lt;b&gt;</code>&nbsp;and&nbsp;<code>&lt;/b&gt;</code>&nbsp;to wrap the substrings in s that exist in dict. If two such substrings overlap, you need to wrap them together by only one pair of closed bold tag. Also, if two substrings wrapped by bold tags are consecutive, you need to combine them.</p>
+<p>Example 1:</p>
+<pre>Input: 
+s = "abcxyz123"
+dict = ["abc","123"]
+Output:
+"&lt;b&gt;abc&lt;/b&gt;xyz&lt;b&gt;123&lt;/b&gt;"
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: 
+s = "aaabbcc"
+dict = ["aaa","aab","bc"]
+Output:
+"&lt;b&gt;aaabbc&lt;/b&gt;c"
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The given dict won't contain duplicates, and its length won't exceed 100.</li>
+<li>All the strings in input have length in range [1, 1000].</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给我们了一个字符串，还有一个字典，让我们把字符串中在字典中的单词加粗，注意如果两个单词有交集或者相接，就放到同一个加粗标签中。博主刚开始的想法是，既然需要匹配字符串，那么就上KMP大法，然后得到每个单词在字符串匹配的区间位置，然后再合并区间，再在合并后的区间两头加标签。但是一看题目难度，Medium，中等难度的题不至于要祭出KMP大法吧，于是去网上扫了一眼众神们的解法，发现大多都是暴力匹配啊，既然OJ能过去，那么就一起暴力吧。这题参考的是高神<a href="https://discuss.leetcode.com/user/shawngao" data-username="shawngao" data-uid="15398">shawngao</a>的解法，高神可是集了一千五百多个赞的男人，叼到飞起！思路是建一个和字符串s等长的bold布尔型数组，表示如果该字符在单词里面就为true，那么最后我们就可以根据bold数组的真假值来添加标签了。我们遍历字符串s中的每一个字符，把遍历到的每一个字符当作起始位置，我们都匹配一遍字典中的所有单词，如果能匹配上，我们就用i + len来更新end，len是当前单词的长度，end表示字典中的单词在字符串s中结束的位置，那么如果i小于end，bold[i]就要赋值为true了。最后我们更新完bold数组了，就再遍历一遍字符串s，如果bold[i]为false，直接将s[i]加入结果res中；如果bold[i]为true，那么我们用while循环来找出所有连续为true的个数，然后在左右两端加上标签，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> addBoldTag(<span style="color: #0000ff;">string</span> s, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> dict) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n = s.size(), end = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; bold(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : dict) {
+                </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> word.size();
+                </span><span style="color: #0000ff;">if</span> (i + len &lt;= n &amp;&amp; s.substr(i, len) ==<span style="color: #000000;"> word) {
+                    end </span>= max(end, i +<span style="color: #000000;"> len);
+                }
+            }
+            bold[i] </span>= end &gt;<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">bold[i]) {
+                res.push_back(s[i]);
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">int</span> j =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">while</span> (j &lt; n &amp;&amp; bold[j]) ++<span style="color: #000000;">j;
+            res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">&lt;b&gt;</span><span style="color: #800000;">"</span> + s.substr(i, j - i) + <span style="color: #800000;">"</span><span style="color: #800000;">&lt;/b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            i </span>= j - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这道题跟之后的那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8531642.html">Bold Words in String</a>是一模一样的题，那么解法当然是可以互通的了，这里我们把那道题中解法二也贴过来吧，由于解法一和解法二实在是太相似了，就贴一个吧，具体讲解可以参见<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8531642.html">Bold Words in String</a>这篇帖子，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> addBoldTag(<span style="color: #0000ff;">string</span> s, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> dict) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> s.size();
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> bold;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : dict) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> word.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= n - len; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (s[i] == word[<span style="color: #800080;">0</span>] &amp;&amp; s.substr(i, len) ==<span style="color: #000000;"> word) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; i + len; ++<span style="color: #000000;">j) bold.insert(j);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (bold.count(i) &amp;&amp; !bold.count(i - <span style="color: #800080;">1</span>)) res += <span style="color: #800000;">"</span><span style="color: #800000;">&lt;b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            res </span>+=<span style="color: #000000;"> s[i];
+            </span><span style="color: #0000ff;">if</span> (bold.count(i) &amp;&amp; !bold.count(i + <span style="color: #800080;">1</span>)) res += <span style="color: #800000;">"</span><span style="color: #800000;">&lt;/b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl04_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/7016476.html">Tag Validator</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4370601.html" target="_blank">Merge Intervals</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/8531642.html">Bold Words in String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/92112/java-solution-boolean-array" target="_blank">https://discuss.leetcode.com/topic/92112/java-solution-boolean-array</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

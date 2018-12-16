@@ -1,0 +1,100 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6533276.html">[LeetCode] Beautiful Arrangement 优美排列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Suppose you have&nbsp;N&nbsp;integers from 1 to N. We define a beautiful arrangement as an array that is constructed by these&nbsp;N&nbsp;numbers successfully if one of the following is true for the ith&nbsp;position (1 &le; i &le; N) in this array:</p>
+<ol>
+<li>The number at the ith&nbsp;position is divisible by&nbsp;i.</li>
+<li>i&nbsp;is divisible by the number at the ith&nbsp;position.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Now given N, how many beautiful arrangements can you construct?</p>
+<p>Example 1:</p>
+<pre>Input: 2
+Output: 2
+Explanation: 
+<br />The first beautiful arrangement is [1, 2]:
+<br />Number at the 1st position (i=1) is 1, and 1 is divisible by i (i=1).
+<br />Number at the 2nd position (i=2) is 2, and 2 is divisible by i (i=2).
+<br />The second beautiful arrangement is [2, 1]:
+<br />Number at the 1st position (i=1) is 2, and 2 is divisible by i (i=1).
+<br />Number at the 2nd position (i=2) is 1, and i (i=2) is divisible by 1.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>N&nbsp;is a positive integer and will not exceed 15.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了我们1到N，总共N个正数，然后定义了一种优美排列方式，对于该排列中的所有数，如果数字可以整除下标，或者下标可以整除数字，那么我们就是优美排列，让我们求出所有优美排列的个数。那么对于求种类个数，或者是求所有情况，这种问题通常要用递归来做，递归简直是暴力的不能再暴力的方法了。而递归方法等难点在于写递归函数，如何确定终止条件，还有for循环中变量的起始位置如何确定。那么这里我们需要一个visited数组来记录数字是否已经访问过，因为优美排列中不能有重复数字。我们用变量pos来标记已经生成的数字的个数，如果大于N了，说明已经找到了一组排列，结果res自增1。在for循环中，i应该从1开始，因为我们遍历1到N中的所有数字，如果该数字未被使用过，且满足和坐标之间的整除关系，那么我们标记该数字已被访问过，再调用下一个位置的递归函数，之后不要忘记了恢复初始状态，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countArrangement(<span style="color: #0000ff;">int</span><span style="color: #000000;"> N) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; visited(N + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        helper(N, visited, </span><span style="color: #800080;">1</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> N, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; visited, <span style="color: #0000ff;">int</span> pos, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (pos &gt;<span style="color: #000000;"> N) {
+            </span>++<span style="color: #000000;">res; 
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= N; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (visited[i] == <span style="color: #800080;">0</span> &amp;&amp; (i % pos == <span style="color: #800080;">0</span> || pos % i == <span style="color: #800080;">0</span><span style="color: #000000;">)) {
+                visited[i] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                helper(N, visited, pos </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+                visited[i] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的解法在N=4时产生的优美序列如下：</p>
+<p>1 2 3 4 <br />1 4 3 2 <br />2 1 3 4 <br />2 4 3 1 <br />3 2 1 4 <br />3 4 1 2 <br />4 1 3 2 <br />4 2 3 1 </p>
+<p>&nbsp;</p>
+<p>通过看上面的分析，是不是觉得这道题的本质其实是求全排列，然后在所有全排列中筛选出符合题意的排列。那么求全排列的另一种经典解法就是交换数组中任意两个数字的位置，来形成新的排列，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countArrangement(<span style="color: #0000ff;">int</span><span style="color: #000000;"> N) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> nums(N);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; N; ++i) nums[i] = i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> helper(N, nums);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">int</span> n, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (n &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (n % nums[i] == <span style="color: #800080;">0</span> || nums[i] % n == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                swap(nums[i], nums[n </span>- <span style="color: #800080;">1</span><span style="color: #000000;">]);
+                res </span>+= helper(n - <span style="color: #800080;">1</span><span style="color: #000000;">, nums);
+                swap(nums[i], nums[n </span>- <span style="color: #800080;">1</span><span style="color: #000000;">]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的解法在N=4时产生的优美序列如下：</p>
+<p>2 4 3 1 <br />4 2 3 1 <br />3 4 1 2 <br />4 1 3 2 <br />1 4 3 2 <br />3 2 1 4 <br />2 1 3 4 <br />1 2 3 4 </p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/79916/java-solution-backtracking" target="_blank">https://discuss.leetcode.com/topic/79916/java-solution-backtracking</a></p>
+<p><a href="https://discuss.leetcode.com/topic/79921/my-c-elegant-solution-with-back-tracking" target="_blank">https://discuss.leetcode.com/topic/79921/my-c-elegant-solution-with-back-tracking</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

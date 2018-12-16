@@ -1,0 +1,98 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4362675.html">[LeetCode] Spiral Matrix 螺旋矩阵</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a matrix of&nbsp;<em>m</em>&nbsp;x&nbsp;<em>n</em>&nbsp;elements (<em>m</em>&nbsp;rows,&nbsp;<em>n</em>columns), return all elements of the matrix in spiral order.</p>
+<p>Example 1:</p>
+<pre>Input:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+Output: [1,2,3,6,9,8,7,4,5]
+</pre>
+<p>Example 2:</p>
+<pre>Input:
+[
+  [1, 2, 3, 4],
+  [5, 6, 7, 8],
+  [9,10,11,12]
+]
+Output: [1,2,3,4,8,12,11,10,9,5,6,7]</pre>
+<p>&nbsp;</p>
+<p>这道题让我们将一个矩阵按照螺旋顺序打印出来，我们只能一条边一条边的打印，首先我们要从给定的mxn的矩阵中算出按螺旋顺序有几个环，注意最终间的环可以是一个数字，也可以是一行或者一列。环数的计算公式是 min(m, n) / 2，知道了环数，我们可以对每个环的边按顺序打印，比如对于题目中给的那个例子，个边生成的顺序是(用颜色标记了数字) Red -&gt; Green -&gt; Blue -&gt; Yellow -&gt; Black&nbsp;</p>
+<p><span style="color: #ff0000;">1　2　3</span></p>
+<p><span style="color: #ff9900;">4</span>　5　<span style="color: #008000;">6</span></p>
+<p><span style="color: #0000ff;">7　8</span>　<span style="color: #008000;">9</span></p>
+<p>&nbsp;</p>
+<p>我们定义p，q为当前环的高度和宽度，当p或者q为1时，表示最后一个环只有一行或者一列，可以跳出循环。此题的难点在于下标的转换，如何正确的转换下标是解此题的关键，我们可以对照着上面的3x3的例子来完成下标的填写，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; spiralOrder(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> c = m &gt; n ? (n + <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span> : (m + <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> p = m, q =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; c; ++i, p -= <span style="color: #800080;">2</span>, q -= <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> col = i; col &lt; i + q; ++<span style="color: #000000;">col) 
+                res.push_back(matrix[i][col]);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> row = i + <span style="color: #800080;">1</span>; row &lt; i + p; ++<span style="color: #000000;">row)
+                res.push_back(matrix[row][i </span>+ q - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+            </span><span style="color: #0000ff;">if</span> (p == <span style="color: #800080;">1</span> || q == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> col = i + q - <span style="color: #800080;">2</span>; col &gt;= i; --<span style="color: #000000;">col)
+                res.push_back(matrix[i </span>+ p - <span style="color: #800080;">1</span><span style="color: #000000;">][col]);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> row = i + p - <span style="color: #800080;">2</span>; row &gt; i; --<span style="color: #000000;">row) 
+                res.push_back(matrix[row][i]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>如果觉得上面解法中的下标的转换比较难弄的话，我们可以使用下面这种坐标稍稍简洁一些的方法。对于这种螺旋遍历的方法，重要的是要确定上下左右四条边的位置，那么初始化的时候，上边up就是0，下边down就是m-1，左边left是0，右边right是n-1。然后我们进行while循环，先遍历上边，将所有元素加入结果res，然后上边下移一位，如果此时上边大于下边，说明此时已经遍历完成了，直接break。同理对于下边，左边，右边，依次进行相对应的操作，这样就会使得坐标很有规律，并且不易出错，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; spiralOrder(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> up = <span style="color: #800080;">0</span>, down = m - <span style="color: #800080;">1</span>, left = <span style="color: #800080;">0</span>, right = n - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = left; j &lt;= right; ++<span style="color: #000000;">j) res.push_back(matrix[up][j]);
+            </span><span style="color: #0000ff;">if</span> (++up &gt; down) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = up; i &lt;= down; ++<span style="color: #000000;">i) res.push_back(matrix[i][right]);
+            </span><span style="color: #0000ff;">if</span> (--right &lt; left) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = right; j &gt;= left; --<span style="color: #000000;">j) res.push_back(matrix[down][j]);
+            </span><span style="color: #0000ff;">if</span> (--down &lt; up) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = down; i &gt;= up; --<span style="color: #000000;">i) res.push_back(matrix[i][left]);
+            </span><span style="color: #0000ff;">if</span> (++left &gt; right) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4362813.html" target="_blank">Spiral Matrix II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/spiral-matrix/" target="_blank">https://leetcode.com/problems/spiral-matrix/</a></p>
+<p><a href="https://leetcode.com/problems/spiral-matrix/discuss/20719/0ms-Clear-C%2B%2B-Solution" target="_blank">https://leetcode.com/problems/spiral-matrix/discuss/20719/0ms-Clear-C%2B%2B-Solution</a></p>
+<p><a href="https://leetcode.com/problems/spiral-matrix/discuss/20599/Super-Simple-and-Easy-to-Understand-Solution" target="_blank">https://leetcode.com/problems/spiral-matrix/discuss/20599/Super-Simple-and-Easy-to-Understand-Solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

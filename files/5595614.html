@@ -1,0 +1,78 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5595614.html">[LeetCode] Sort Transformed Array 变换数组排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a <strong>sorted</strong> array of integers <em>nums</em> and integer values <em>a</em>, <em>b</em> and <em>c</em>. Apply a function of the form f(<em>x</em>) = <em>ax</em><sup>2</sup> + <em>bx</em> + <em>c</em> to each element <em>x</em> in the array.</p>
+<p>The returned array must be in <strong>sorted order</strong>.</p>
+<p>Expected time complexity: <strong>O(<em>n</em>)</strong></p>
+<p><strong>Example:</strong><br />
+</p>
+<pre>nums = [-4, -2, 2, 4], a = 1, b = 3, c = 5,
+
+Result: [3, 9, 15, 33]
+
+nums = [-4, -2, 2, 4], a = -1, b = 3, c = 5
+
+Result: [-23, -5, 1, 7]
+</pre>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://discuss.leetcode.com/user/elmirap">@elmirap</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，又给了我们一个抛物线的三个系数，让我们求带入抛物线方程后求出的数组成的有序数组。那么我们首先来看O(nlgn)的解法，这个解法没啥可说的，就是每个算出来再排序，这里我们用了最小堆来帮助我们排序，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; sortTransformedArray(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span> b, <span style="color: #0000ff;">int</span><span style="color: #000000;"> c) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        priority_queue</span>&lt;<span style="color: #0000ff;">int</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;, greater&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto d : nums) {
+            q.push(a </span>* d * d + b * d +<span style="color: #000000;"> c);
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            res.push_back(q.top()); q.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}; </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但是题目中的要求让我们在O(n)中实现，那么我们只能另辟蹊径。其实这道题用到了大量的高中所学的关于抛物线的数学知识，我们知道，对于一个方程f(x) = ax<sup>2</sup> + bx + c 来说，如果a&gt;0，则抛物线开口朝上，那么两端的值比中间的大，而如果a&lt;0，则抛物线开口朝下，则两端的值比中间的小。而当a=0时，则为直线方法，是单调递增或递减的。那么我们可以利用这个性质来解题，题目中说明了给定数组nums是有序的，如果不是有序的，我想很难有O(n)的解法。正因为输入数组是有序的，我们可以根据a来分情况讨论：</p>
+<p>当a&gt;0，说明两端的值比中间的值大，那么此时我们从结果res后往前填数，用两个指针分别指向nums数组的开头和结尾，指向的两个数就是抛物线两端的数，将它们之中较大的数先存入res的末尾，然后指针向中间移，重复比较过程，直到把res都填满。</p>
+<p>当a&lt;0，说明两端的值比中间的小，那么我们从res的前面往后填，用两个指针分别指向nums数组的开头和结尾，指向的两个数就是抛物线两端的数，将它们之中较小的数先存入res的开头，然后指针向中间移，重复比较过程，直到把res都填满。</p>
+<p>当a=0，函数是单调递增或递减的，那么从前往后填和从后往前填都可以，我们可以将这种情况和a&gt;0合并。</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; sortTransformedArray(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span> b, <span style="color: #0000ff;">int</span><span style="color: #000000;"> c) {
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), i = <span style="color: #800080;">0</span>, j = n - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res(n);
+        </span><span style="color: #0000ff;">int</span> idx = a &gt;= <span style="color: #800080;">0</span> ? n - <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt;=<span style="color: #000000;"> j) {
+            </span><span style="color: #0000ff;">if</span> (a &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                res[idx</span>--] = cal(nums[i], a, b, c) &gt;= cal(nums[j], a, b, c) ? cal(nums[i++], a, b, c) : cal(nums[j--<span style="color: #000000;">], a, b, c);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                res[idx</span>++] = cal(nums[i], a, b, c) &gt;= cal(nums[j], a, b, c) ? cal(nums[j--], a, b, c) : cal(nums[i++<span style="color: #000000;">], a, b, c);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> cal(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span> b, <span style="color: #0000ff;">int</span><span style="color: #000000;"> c) {
+        </span><span style="color: #0000ff;">return</span> a * x * x + b * x +<span style="color: #000000;"> c;
+    }
+}; </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/108831/java-o-n-incredibly-short-yet-easy-to-understand-ac-solution" target="_blank">https://leetcode.com/discuss/108831/java-o-n-incredibly-short-yet-easy-to-understand-ac-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

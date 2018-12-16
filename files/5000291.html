@@ -1,0 +1,124 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5000291.html">[LeetCode] Minimum Height Trees 最小高度树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>For a undirected graph with tree characteristics, we can choose any node as the root. The result graph is then a rooted tree. Among all possible rooted trees, those with minimum height are called minimum height trees (MHTs). Given such a graph, write a function to find all the MHTs and return a list of their root labels.</p>
+<p>Format<br />The graph contains&nbsp;<code>n</code>&nbsp;nodes which are labeled from&nbsp;<code>0</code>&nbsp;to&nbsp;<code>n - 1</code>. You will be given the number&nbsp;<code>n</code>&nbsp;and a list of undirected&nbsp;<code>edges</code>&nbsp;(each edge is a pair of labels).</p>
+<p>You can assume that no duplicate edges will appear in&nbsp;<code>edges</code>. Since all edges are undirected,&nbsp;<code>[0, 1]</code>&nbsp;is the same as&nbsp;<code>[1, 0]</code>&nbsp;and thus will not appear together in&nbsp;<code>edges</code>.</p>
+<p>Example 1:</p>
+<p>Given&nbsp;<code>n = 4</code>,&nbsp;<code>edges = [[1, 0], [1, 2], [1, 3]]</code></p>
+<pre>        0
+        |
+        1
+       / \
+      2   3
+</pre>
+<p>return&nbsp;<code>[1]</code></p>
+<p>Example 2:</p>
+<p>Given&nbsp;<code>n = 6</code>,&nbsp;<code>edges = [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]</code></p>
+<pre>     0  1  2
+      \ | /
+        3
+        |
+        4
+        |
+        5
+</pre>
+<p>return&nbsp;<code>[3, 4]</code></p>
+<p>Hint:</p>
+<ol id="hints">
+<li class="hint animated fadeInLeft">How many MHTs can a graph have at most?</li>
+</ol>
+<p>Note:</p>
+<p>(1) According to the&nbsp;<a href="https://en.wikipedia.org/wiki/Tree_(graph_theory)" target="_blank">definition of tree on Wikipedia</a>: &ldquo;a tree is an undirected graph in which any two vertices are connected by&nbsp;<em>exactly</em>&nbsp;one path. In other words, any connected graph without simple cycles is a tree.&rdquo;</p>
+<p>(2) The height of a rooted tree is the number of edges on the longest downward path between the root and a leaf.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/peisi">@peisi</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p><span style="color: red;">Update (2015-11-25):</span><br />The function signature had been updated to return&nbsp;<code>List&lt;Integer&gt;</code>&nbsp;instead of&nbsp;<code>integer[]</code>. Please click the reload button above the code editor to reload the newest default code definition.</p>
+<p>&nbsp;</p>
+<p>这道题虽然是树的题目，但是跟其最接近的题目是<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4484571.html">Course Schedule 课程清单</a>和<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_76" class="entrylistItemTitle" href="http://www.cnblogs.com/grandyang/p/4504793.html">Course Schedule II 课程清单之二</a>。由于LeetCode中的树的题目主要都是针对于二叉树的，而这道题虽说是树但其实本质是想考察图的知识，这道题刚开始在拿到的时候，我最先想到的解法是遍历的点，以每个点都当做根节点，算出高度，然后找出最小的，但是一时半会又写不出程序来，于是上网看看大家的解法，发现大家推崇的方法是一个类似剥洋葱的方法，就是一层一层的褪去叶节点，最后剩下的一个或两个节点就是我们要求的最小高度树的根节点，这种思路非常的巧妙，而且实现起来也不难，跟之前那到课程清单的题一样，我们需要建立一个图g，是一个二维数组，其中g[i]是一个一维数组，保存了i节点可以到达的所有节点。我们开始将所有只有一个连接边的节点(叶节点)都存入到一个队列queue中，然后我们遍历每一个叶节点，通过图来找到和其相连的节点，并且在其相连节点的集合中将该叶节点删去，如果删完后此节点也也变成一个叶节点了，加入队列中，再下一轮删除。那么我们删到什么时候呢，当节点数小于等于2时候停止，此时剩下的一个或两个节点就是我们要求的最小高度树的根节点啦，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findMinHeightTrees(<span style="color: #0000ff;">int</span> n, vector&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt; &gt;&amp;<span style="color: #000000;"> edges) {
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> {<span style="color: #800080;">0</span><span style="color: #000000;">};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;unordered_set&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> adj(n);
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto edge : edges) {
+            adj[edge.first].insert(edge.second);
+            adj[edge.second].insert(edge.first);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (adj[i].size() == <span style="color: #800080;">1</span><span style="color: #000000;">) q.push(i);
+        }
+        </span><span style="color: #0000ff;">while</span> (n &gt; <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> q.size();
+            n </span>-=<span style="color: #000000;"> size;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; size; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : adj[t]) {
+                    adj[a].erase(t);
+                    </span><span style="color: #0000ff;">if</span> (adj[a].size() == <span style="color: #800080;">1</span><span style="color: #000000;">) q.push(a);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            res.push_back(q.front()); q.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> List&lt;Integer&gt; findMinHeightTrees(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;">[][] edges) {
+        </span><span style="color: #0000ff;">if</span> (n == 1) <span style="color: #0000ff;">return</span> Collections.singletonList(0<span style="color: #000000;">);
+        List</span>&lt;Integer&gt; leaves = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        List</span>&lt;Set&lt;Integer&gt;&gt; adj = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">(n);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; n; ++i) adj.add(<span style="color: #0000ff;">new</span> HashSet&lt;&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;">[] edge : edges) {
+            adj.get(edge[</span>0]).add(edge[1<span style="color: #000000;">]);
+            adj.get(edge[</span>1]).add(edge[0<span style="color: #000000;">]);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (adj.get(i).size() == 1<span style="color: #000000;">) leaves.add(i);
+        }
+        </span><span style="color: #0000ff;">while</span> (n &gt; 2<span style="color: #000000;">) {
+            n </span>-=<span style="color: #000000;"> leaves.size();
+            List</span>&lt;Integer&gt; newLeaves = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> i : leaves) {
+                </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> adj.get(i).iterator().next();
+                adj.get(t).remove(i);
+                </span><span style="color: #0000ff;">if</span> (adj.get(t).size() == 1<span style="color: #000000;">) newLeaves.add(t);
+            }
+            leaves </span>=<span style="color: #000000;"> newLeaves;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> leaves;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>此题还有递归的解法(未完待续...)</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4504793.html" target="_blank">Course Schedule II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4484571.html" target="_blank">Course Schedule</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4267628.html" target="_blank">Clone Graph</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/30572/share-some-thoughts/2" target="_blank">https://discuss.leetcode.com/topic/30572/share-some-thoughts/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/67543/java-o-n-solution-with-explanation-dfs-twice-beat-95" target="_blank">https://discuss.leetcode.com/topic/67543/java-o-n-solution-with-explanation-dfs-twice-beat-95</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

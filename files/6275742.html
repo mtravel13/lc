@@ -1,0 +1,89 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6275742.html">[LeetCode] Number Complement 补数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a positive integer, output its complement number. The complement strategy is to flip the bits of its binary representation.</p>
+<p>Note:</p>
+<ol>
+<li>The given integer is guaranteed to fit within the range of a 32-bit signed integer.</li>
+<li>You could assume no leading zero bit in the integer&rsquo;s binary representation.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: 5
+Output: 2
+Explanation: The binary representation of 5 is 101 (no leading zero bits), and its complement is 010. So you need to output 2.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: 1
+Output: 0
+Explanation: The binary representation of 1 is 1 (no leading zero bits), and its complement is 0. So you need to output 0.
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数，让我们求补数。通过分析题目汇总的例子，我们知道需要做的就是每个位翻转一下就行了，但是翻转的起始位置上从最高位的1开始的，前面的0是不能被翻转的，所以我们从高往低遍历，如果遇到第一个1了后，我们的flag就赋值为true，然后就可以进行翻转了，翻转的方法就是对应位异或一个1即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findComplement(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">bool</span> start = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">31</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (num &amp; (<span style="color: #800080;">1</span> &lt;&lt; i)) start = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (start) num ^= (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> num;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于位操作里面的取反符号～本身就可以翻转位，但是如果直接对num取反的话就是每一位都翻转了，而最高位1之前的0是不能翻转的，所以我们只要用一个mask来标记最高位1前面的所有0的位置，然后对mask取反后，与上对num取反的结果即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findComplement(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">int</span> mask =<span style="color: #000000;"> INT_MAX;
+        </span><span style="color: #0000ff;">while</span> (mask &amp; num) mask &lt;&lt;= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> ~mask &amp; ~<span style="color: #000000;">num;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>再来看一种迭代的写法，一行搞定碉堡了，思路就是每次都右移一位，并根据最低位的值先进行翻转，如果当前值小于等于1了，就不用再调用递归函数了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findComplement(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">return</span> (<span style="color: #800080;">1</span> - num % <span style="color: #800080;">2</span>) + <span style="color: #800080;">2</span> * (num &lt;= <span style="color: #800080;">1</span> ? <span style="color: #800080;">0</span> : findComplement(num / <span style="color: #800080;">2</span><span style="color: #000000;">));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/74627/3-line-c" target="_blank">https://discuss.leetcode.com/topic/74627/3-line-c</a></p>
+<p><a href="https://discuss.leetcode.com/topic/74968/simple-java-one-line-solution" target="_blank">https://discuss.leetcode.com/topic/74968/simple-java-one-line-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/74642/java-1-line-bit-manipulation-solution" target="_blank">https://discuss.leetcode.com/topic/74642/java-1-line-bit-manipulation-solution</a></p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

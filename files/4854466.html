@@ -1,0 +1,75 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4854466.html">[LeetCode] Game of Life 生命游戏</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>According to the&nbsp;<a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Wikipedia's article</a>: "The&nbsp;Game of Life, also known simply as&nbsp;Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970."</p>
+<p>Given a&nbsp;<em>board</em>&nbsp;with&nbsp;<em>m</em>&nbsp;by&nbsp;<em>n</em>&nbsp;cells, each cell has an initial state&nbsp;<em>live</em>&nbsp;(1) or&nbsp;<em>dead</em>&nbsp;(0). Each cell interacts with its&nbsp;<a href="https://en.wikipedia.org/wiki/Moore_neighborhood" target="_blank">eight neighbors</a>&nbsp;(horizontal, vertical, diagonal) using the following four rules (taken from the above Wikipedia article):</p>
+<p>&nbsp;</p>
+<ol>
+<li>Any live cell with fewer than two live neighbors dies, as if caused by under-population.</li>
+<li>Any live cell with two or three live neighbors lives on to the next generation.</li>
+<li>Any live cell with more than three live neighbors dies, as if by over-population..</li>
+<li>Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Write a function to compute the next state (after one update) of the board given its current state.</p>
+<p>Follow up:&nbsp;</p>
+<ol>
+<li>Could you solve it in-place? Remember that the board needs to be updated at the same time: You cannot update some cells first and then use their updated values to update other cells.</li>
+<li>In this question, we represent the board using a 2D array. In principle, the board is infinite, which would cause problems when the active area encroaches the border of the array. How would you address these problems?</li>
+</ol>
+<p>&nbsp;</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/jianchao.li.fighter">@jianchao.li.fighter</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题是有名的<a href="https://zh.wikipedia.org/wiki/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F" target="_blank">康威生命游戏</a>, 而我又是第一次听说这个东东，这是一种细胞自动机，每一个位置有两种状态，1为活细胞，0为死细胞，对于每个位置都满足如下的条件：</p>
+<p>1. 如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡</p>
+<p>2. 如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活</p>
+<p>3. 如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡</p>
+<p>4. 如果死细胞周围正好有三个活细胞，则该位置死细胞复活</p>
+<p>由于题目中要求我们用置换方法in-place来解题，所以我们就不能新建一个相同大小的数组，那么我们只能更新原有数组，但是题目中要求所有的位置必须被同时更新，但是在循环程序中我们还是一个位置一个位置更新的，那么当一个位置更新了，这个位置成为其他位置的neighbor时，我们怎么知道其未更新的状态呢，我们可以使用状态机转换：</p>
+<p>状态0： 死细胞转为死细胞</p>
+<p>状态1： 活细胞转为活细胞</p>
+<p>状态2： 活细胞转为死细胞</p>
+<p>状态3： 死细胞转为活细胞</p>
+<p>最后我们对所有状态对2取余，那么状态0和2就变成死细胞，状态1和3就是活细胞，达成目的。我们先对原数组进行逐个扫描，对于每一个位置，扫描其周围八个位置，如果遇到状态1或2，就计数器累加1，扫完8个邻居，如果少于两个活细胞或者大于三个活细胞，而且当前位置是活细胞的话，标记状态2，如果正好有三个活细胞且当前是死细胞的话，标记状态3。完成一遍扫描后再对数据扫描一遍，对2取余变成我们想要的结果。参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> gameOfLife(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">int</span> m = board.size(), n = m ? board[<span style="color: #800080;">0</span>].size() : <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> dx[] = {-<span style="color: #800080;">1</span>, -<span style="color: #800080;">1</span>, -<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">int</span> dy[] = {-<span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, -<span style="color: #800080;">1</span>, -<span style="color: #800080;">1</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; <span style="color: #800080;">8</span>; ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">int</span> x = i + dx[k], y = j +<span style="color: #000000;"> dy[k];
+                    </span><span style="color: #0000ff;">if</span> (x &gt;= <span style="color: #800080;">0</span> &amp;&amp; x &lt; m &amp;&amp; y &gt;= <span style="color: #800080;">0</span> &amp;&amp; y &lt; n &amp;&amp; (board[x][y] == <span style="color: #800080;">1</span> || board[x][y] == <span style="color: #800080;">2</span><span style="color: #000000;">)) {
+                        </span>++<span style="color: #000000;">cnt;
+                    }
+                }
+                </span><span style="color: #0000ff;">if</span> (board[i][j] &amp;&amp; (cnt &lt; <span style="color: #800080;">2</span> || cnt &gt; <span style="color: #800080;">3</span>)) board[i][j] = <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!board[i][j] &amp;&amp; cnt == <span style="color: #800080;">3</span>) board[i][j] = <span style="color: #800080;">3</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                board[i][j] </span>%= <span style="color: #800080;">2</span><span style="color: #000000;">;
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/61910/clean-o-1-space-o-mn-time-java-solution" target="_blank">https://leetcode.com/discuss/61910/clean-o-1-space-o-mn-time-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

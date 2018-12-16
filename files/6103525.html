@@ -1,0 +1,71 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6103525.html">[LeetCode] Can I Win 我能赢吗</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>In the "100 game," two players take turns adding, to a running total, any integer from 1..10. The player who first causes the running total to reach or exceed 100 wins.</p>
+<p>What if we change the game so that players cannot re-use integers?</p>
+<p>For example, two players might take turns drawing from a common pool of numbers of 1..15 without replacement until they reach a total &gt;= 100.</p>
+<p>Given an integer&nbsp;<code>maxChoosableInteger</code>&nbsp;and another integer&nbsp;<code>desiredTotal</code>, determine if the first player to move can force a win, assuming both players play optimally.</p>
+<p>You can always assume that&nbsp;<code>maxChoosableInteger</code>&nbsp;will not be larger than 20 and&nbsp;<code>desiredTotal</code>&nbsp;will not be larger than 300.</p>
+<p>Example</p>
+<pre>Input:
+maxChoosableInteger = 10
+desiredTotal = 11
+
+Output:
+false
+
+Explanation:
+No matter which integer the first player choose, the first player will lose.
+The first player can choose an integer from 1 up to 10.
+If the first player choose 1, the second player can only choose integers from 2 up to 10.
+The second player will win by choosing 10 and get a total = 11, which is &gt;= desiredTotal.
+Same with other integers chosen by the first player, the second player will always win.</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一堆数字，然后两个人，每人每次选一个数字，看数字总数谁先到给定值，有点像之前那道<a href="http://www.cnblogs.com/grandyang/p/4873248.html">Nim Game</a>，但是比那题难度大。我刚开始想肯定说用递归啊，结果写完发现TLE了，后来发现我们必须要优化效率，使用HashMap来记录已经计算过的结果。我们首先来看如果给定的数字范围大于等于目标值的话，直接返回true。如果给定的数字总和小于目标值的话，说明谁也没法赢，返回false。然后我们进入递归函数，首先我们查找当前情况是否在哈希表中存在，有的话直接返回即可。我们使用一个整型数按位来记录数组中的某个数字是否使用过，我们遍历所有数字，将该数字对应的mask算出来，如果其和used相与为0的话，说明该数字没有使用过，我们看如果此时的目标值小于等于当前数字，说明已经赢了，或者我们调用递归函数，如果返回false，说明也是第一个人赢了。为啥呢，因为当前我们已经选过数字了，此时就该对第二个人调用递归函数，只有他的结果是false，我们才能赢，所以此时我们标记true，返回true。如果遍历完所有数字，我们标记false，返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canIWin(<span style="color: #0000ff;">int</span> maxChoosableInteger, <span style="color: #0000ff;">int</span><span style="color: #000000;"> desiredTotal) {
+        </span><span style="color: #0000ff;">if</span> (maxChoosableInteger &gt;= desiredTotal) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (maxChoosableInteger * (maxChoosableInteger + <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span> &lt; desiredTotal) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">bool</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">return</span> canWin(maxChoosableInteger, desiredTotal, <span style="color: #800080;">0</span><span style="color: #000000;">, m);
+    }
+    </span><span style="color: #0000ff;">bool</span> canWin(<span style="color: #0000ff;">int</span> length, <span style="color: #0000ff;">int</span> total, <span style="color: #0000ff;">int</span> used, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">bool</span>&gt;&amp;<span style="color: #000000;"> m) {
+        </span><span style="color: #0000ff;">if</span> (m.count(used)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> m[used];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; length; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> cur = (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i);
+            </span><span style="color: #0000ff;">if</span> ((cur &amp; used) == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (total &lt;= i + <span style="color: #800080;">1</span> || !canWin(length, total - (i + <span style="color: #800080;">1</span>), cur |<span style="color: #000000;"> used, m)) {
+                    m[used] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                }
+            }
+        }
+        m[used] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4873248.html">Nim Game</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5226206.html" target="_blank">Flip Game II</a><span class="Apple-converted-space">&nbsp;</span>&nbsp;&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5677550.html">Guess Number Higher or Lower II</a>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6369688.html">Predict the Winner</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/can-i-win/" target="_blank">https://leetcode.com/problems/can-i-win/</a></p>
+<p><a href="https://leetcode.com/problems/can-i-win/discuss/95283/brute-force-and-memoization" target="_blank">https://leetcode.com/problems/can-i-win/discuss/95283/brute-force-and-memoization</a></p>
+<p><a href="https://leetcode.com/problems/can-i-win/discuss/95277/Java-solution-using-HashMap-with-detailed-explanation" target="_blank">https://leetcode.com/problems/can-i-win/discuss/95277/Java-solution-using-HashMap-with-detailed-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

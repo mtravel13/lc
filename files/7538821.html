@@ -1,0 +1,138 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7538821.html">[LeetCode] Maximum Width of Binary Tree 二叉树的最大宽度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, write a function to get the maximum width of the given tree. The width of a tree is the maximum width among all levels. The binary tree has the same structure as a&nbsp;full binary tree, but some nodes are null.</p>
+<p>The width of one level is defined as the length between the end-nodes (the leftmost and right most non-null nodes in the level, where the&nbsp;<code>null</code>&nbsp;nodes between the end-nodes are also counted into the length calculation.</p>
+<p>Example 1:</p>
+<pre>Input: 
+
+           1
+         /   \
+        3     2
+       / \     \  
+      5   3     9 
+
+Output: 4
+Explanation: The maximum width existing in the third level with the length 4 (5,3,null,9).
+</pre>
+<p>Example 2:</p>
+<pre>Input: 
+
+          1
+         /  
+        3    
+       / \       
+      5   3     
+
+Output: 2
+Explanation: The maximum width existing in the third level with the length 2 (5,3).
+</pre>
+<p>Example 3:</p>
+<pre>Input: 
+
+          1
+         / \
+        3   2 
+       /        
+      5      
+
+Output: 2
+Explanation: The maximum width existing in the second level with the length 2 (3,2).
+</pre>
+<p>Example 4:</p>
+<pre>Input: 
+
+          1
+         / \
+        3   2
+       /     \  
+      5       9 
+     /         \
+    6           7
+Output: 8
+Explanation:The maximum width existing in the fourth level with the length 8 (6,null,null,null,null,null,null,7).
+
+
+</pre>
+<p>Note:&nbsp;Answer will in the range of 32-bit signed integer.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求二叉树的最大宽度，根据题目中的描述可知，这里的最大宽度不是满树的时候的最大宽度，如果是那样的话，肯定是最后一层的结点数最多。这里的最大宽度应该是两个存在的结点中间可容纳的总的结点个数，中间的结点可以为空。那么其实只要我们知道了每一层中最左边和最右边的结点的位置，我们就可以算出这一层的宽度了。所以这道题的关键就是要记录每一层中最左边结点的位置，我们知道对于一棵完美二叉树，如果根结点是深度1，那么每一层的结点数就是2*n-1，那么每个结点的位置就是[1, 2*n-1]中的一个，假设某个结点的位置是i，那么其左右子结点的位置可以直接算出来，为2*i和2*i+1，可以自行带例子检验。由于之前说过，我们需要保存每一层的最左结点的位置，那么我们使用一个数组start，由于数组是从0开始的，我们就姑且认定根结点的深度为0，不影响结果。我们从根结点进入，深度为0，位置为1，进入递归函数。</p>
+<p>首先判断，如果当前结点为空，那么直接返回，然后判断如果当前深度大于start数组的长度，说明当前到了新的一层的最左结点，我们将当前位置存入start数组中。然后我们用idx - start[h] + 1来更新结果res。这里idx是当前结点的位置，start[h]是当前层最左结点的位置。然后对左右子结点分别调用递归函数，注意左右子结点的位置可以直接计算出来，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> widthOfBinaryTree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> start;
+        helper(root, </span><span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">, start, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span> h, <span style="color: #0000ff;">int</span> idx, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; start, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (h &gt;=<span style="color: #000000;"> start.size()) start.push_back(idx);
+        res </span>= max(res, idx - start[h] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        helper(node</span>-&gt;left, h + <span style="color: #800080;">1</span>, idx * <span style="color: #800080;">2</span><span style="color: #000000;">, start, res);
+        helper(node</span>-&gt;right, h + <span style="color: #800080;">1</span>, idx * <span style="color: #800080;">2</span> + <span style="color: #800080;">1</span><span style="color: #000000;">, start, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法还是递归，比上面的解法稍微简洁一些，没有用结果res变量，而是递归函数直接返回最大宽度了，但是解题思路没有啥区别，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> widthOfBinaryTree(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> start;
+        </span><span style="color: #0000ff;">return</span> helper(root, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">, start);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(TreeNode* node, <span style="color: #0000ff;">int</span> h, <span style="color: #0000ff;">int</span> idx, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> start) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (h &gt;=<span style="color: #000000;"> start.size()) start.push_back(idx);
+        </span><span style="color: #0000ff;">return</span> max({idx - start[h] + <span style="color: #800080;">1</span>, helper(node-&gt;left, h + <span style="color: #800080;">1</span>, idx * <span style="color: #800080;">2</span>, start), helper(node-&gt;right, h + <span style="color: #800080;">1</span>, idx * <span style="color: #800080;">2</span> + <span style="color: #800080;">1</span><span style="color: #000000;">, start)});
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这个解法用的是层序遍历，迭代的方法来写的，注意这里使用了队列queue来辅助运算，queue里存的是一个pair，结点和其当前位置，在进入新一层的循环时，首先将首结点的位置保存出来当作最左位置，然后对于遍历到的结点，都更新右结点的位置，遍历一层的结点后来计算宽度更新结果res，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> widthOfBinaryTree(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        queue</span>&lt;pair&lt;TreeNode*,<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q;
+        q.push({root, </span><span style="color: #800080;">1</span><span style="color: #000000;">});
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> left = q.front().second, right = left, n =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                auto t </span>=<span style="color: #000000;"> q.front().first; 
+                right </span>=<span style="color: #000000;"> q.front().second; q.pop();
+                </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push({t-&gt;left, right * <span style="color: #800080;">2</span><span style="color: #000000;">});
+                </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push({t-&gt;right, right * <span style="color: #800080;">2</span> + <span style="color: #800080;">1</span><span style="color: #000000;">});
+            }
+            res </span>= max(res, right - left + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/100145/java-c-very-simple-dfs-solution">https://discuss.leetcode.com/topic/100145/java-c-very-simple-dfs-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/100149/c-java-bfs-dfs-3liner-clean-code-with-explanation">https://discuss.leetcode.com/topic/100149/c-java-bfs-dfs-3liner-clean-code-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

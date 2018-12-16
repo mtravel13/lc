@@ -1,0 +1,133 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5358793.html">[LeetCode] Flatten Nested List Iterator 压平嵌套链表迭代器</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a nested list of integers, implement an iterator to flatten it.</p>
+<p>Each element is either an integer, or a list -- whose elements may also be integers or other lists.</p>
+<p><strong>Example 1:</strong><br />
+Given the list <code>[[1,1],2,[1,1]]</code>,
+</p>
+<p>
+By calling <em>next</em> repeatedly until <em>hasNext</em> returns false, the order of elements returned by <em>next</em> should be: <code>[1,1,2,1,1]</code>.
+</p>
+<p><strong>Example 2:</strong><br />
+Given the list <code>[1,[4,[6]]]</code>,
+</p>
+<p>
+By calling <em>next</em> repeatedly until <em>hasNext</em> returns false, the order of elements returned by <em>next</em> should be: <code>[1,4,6]</code>.
+</p>
+<p>&nbsp;</p>
+<p>这道题让我们建立压平嵌套链表的迭代器，关于嵌套链表的数据结构最早出现在<a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a>中，而那道题是用的递归的方法来解的，而迭代器一般都是用迭代的方法来解的，而递归一般都需用栈来辅助遍历，由于栈的后进先出的特性，我们在对向量遍历的时候，从后往前把对象压入栈中，那么第一个对象最后压入栈就会第一个取出来处理，我们的hasNext()函数需要遍历栈，并进行处理，如果栈顶元素是整数，直接返回true，如果不是，那么移除栈顶元素，并开始遍历这个取出的list，还是从后往前压入栈，循环停止条件是栈为空，返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> NestedIterator {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NestedIterator(vector</span>&lt;NestedInteger&gt; &amp;<span style="color: #000000;">nestedList) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = nestedList.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            s.push(nestedList[i]);
+        }
+    }
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> next() {
+        NestedInteger t </span>=<span style="color: #000000;"> s.top(); s.pop();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t.getInteger();
+    }
+
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">s.empty()) {
+            NestedInteger t </span>=<span style="color: #000000;"> s.top(); 
+            </span><span style="color: #0000ff;">if</span> (t.isInteger()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            s.pop();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = t.getList().size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+                s.push(t.getList()[i]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }<br />
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    stack</span>&lt;NestedInteger&gt;<span style="color: #000000;"> s;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用deque来代替stack，实现思路和上面完全一样，参见代码如下:</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> NestedIterator {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NestedIterator(vector</span>&lt;NestedInteger&gt; &amp;<span style="color: #000000;">nestedList) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nestedList) {
+            d.push_back(a);
+        }
+    }
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> next() {
+        NestedInteger t </span>=<span style="color: #000000;"> d.front(); d.pop_front();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t.getInteger();
+    }
+
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">d.empty()) {
+            NestedInteger t </span>=<span style="color: #000000;"> d.front();
+            </span><span style="color: #0000ff;">if</span> (t.isInteger()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            d.pop_front();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; t.getList().size(); ++<span style="color: #000000;">i) {
+                d.insert(d.begin() </span>+<span style="color: #000000;"> i, t.getList()[i]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    deque</span>&lt;NestedInteger&gt;<span style="color: #000000;"> d;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>虽说迭代器是要用迭代的方法，但是我们可以强行使用递归来解，怎么个强行法呢，就是我们使用一个队列queue，在构造函数的时候就利用迭代的方法把这个嵌套链表全部压平展开，然后在调用hasNext()和next()就很简单了：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> NestedIterator {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    NestedIterator(vector</span>&lt;NestedInteger&gt; &amp;<span style="color: #000000;">nestedList) {
+        make_queue(nestedList);
+    }
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> q.front(); q.pop();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t; 
+    }
+
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">return</span> !<span style="color: #000000;">q.empty();
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+    </span><span style="color: #0000ff;">void</span> make_queue(vector&lt;NestedInteger&gt; &amp;<span style="color: #000000;">nestedList) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : nestedList) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (a.isInteger()) q.push(a.getInteger());
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> make_queue(a.getList());
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5340305.html" target="_blank">Nested List Weight Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5209621.html" target="_blank">Flatten 2D Vector</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5212785.html" target="_blank">Zigzag Iterator</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/95841/simple-solution-with-queue" target="_blank">https://leetcode.com/discuss/95841/simple-solution-with-queue</a></p>
+<p><a href="https://leetcode.com/discuss/95892/concise-c-without-storing-all-values-at-initialization" target="_blank">https://leetcode.com/discuss/95892/concise-c-without-storing-all-values-at-initialization</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

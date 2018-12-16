@@ -1,0 +1,119 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4332522.html">[LeetCode] Combinations 组合项</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two integers&nbsp;<em>n</em>&nbsp;and&nbsp;<em>k</em>, return all possible combinations of&nbsp;<em>k</em>&nbsp;numbers out of 1 ...&nbsp;<em>n</em>.</p>
+<p>For example,<br />If&nbsp;<em>n</em>&nbsp;= 4 and&nbsp;<em>k</em>&nbsp;= 2, a solution is:</p>
+<pre>[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]</pre>
+<p>这道题让求1到n共n个数字里k个数的组合数的所有情况，还是要用深度优先搜索DFS来解，根据以往的经验，像这种要求出所有结果的集合，一般都是用DFS调用递归来解。那么我们建立一个保存最终结果的大集合res，还要定义一个保存每一个组合的小集合out，每次放一个数到out里，如果out里数个数到了k个，则把out保存到最终结果中，否则在下一层中继续调用递归。网友<a href="http://blog.csdn.net/u010500263/article/details/18435495" target="_blank">u010500263的博客</a>里有一张图很好的说明了递归调用的顺序，请点击<a href="http://blog.csdn.net/u010500263/article/details/18435495" target="_blank">这里</a>。根据上面分析，可写出代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; combine(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        helper(n, k, </span><span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span> k, <span style="color: #0000ff;">int</span> level, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; <span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">out</span>.size() == k) {res.push_back(<span style="color: #0000ff;">out</span>); <span style="color: #0000ff;">return</span><span style="color: #000000;">;}
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = level; i &lt;= n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(i);
+            helper(n, k, i </span>+ <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+            </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>对于n = 5, k = 3, 处理的结果如下：</p>
+<p>1 2 3 <br />1	2	4<br />1	2	5<br />1	3	4<br />1	3	5<br />1	4	5<br />2	3	4<br />2	3	5<br />2	4	5<br />3	4	5</p>
+<p>&nbsp;</p>
+<p>我们再来看一种递归的写法，此解法没用helper当递归函数，而是把本身就当作了递归函数，写起来十分的简洁，也是非常有趣的一种解法。这个解法用到了一个重要的性质&nbsp;C(n, k) = C(n-1, k-1) + C(n-1, k)，这应该在我们高中时候学排列组合的时候学过吧，博主也记不清了。总之，翻译一下就是，在n个数中取k个数的组合项个数，等于在n-1个数中取k-1个数的组合项个数再加上在n-1个数中取k个数的组合项个数之和。这里博主就不证明了，因为我也不会，就直接举题目中的例子来说明吧：</p>
+<p>C(4, 2) = C(3, 1) + C(3, 2)</p>
+<p>我们不难写出 C(3, 1) 的所有情况：[1], [2], [3]，还有 C(3, 2) 的所有情况：[1, 2], [1, 3], [2, 3]。我们发现二者加起来为6，正好是 C(4, 2) 的个数之和。但是我们仔细看会发现，C(3, 2)的所有情况包含在 C(4, 2) 之中，但是&nbsp;C(3, 1) 的每种情况只有一个数字，而我们需要的结果k=2，其实很好办，每种情况后面都加上4，于是变成了：[1, 4], [2, 4], [3, 4]，加上C(3, 2) 的所有情况：[1, 2], [1, 3], [2, 3]，正好就得到了 n=4, k=2 的所有情况了。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; combine(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (k &gt; n || k &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">if</span> (k == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {{}};
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res = combine(n - <span style="color: #800080;">1</span>, k - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : res) a.push_back(n);
+        </span><span style="color: #0000ff;">for</span> (auto &amp;a : combine(n - <span style="color: #800080;">1</span><span style="color: #000000;">, k)) res.push_back(a);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们再来看一种迭代的写法，也是一种比较巧妙的方法。这里每次先递增最右边的数字，存入结果res中，当右边的数字超过了n，则增加其左边的数字，然后将当前数组赋值为左边的数字，再逐个递增，直到最左边的数字也超过了n，停止循环。对于n=4, k=2时，遍历的顺序如下所示：</p>
+<pre class="markdown-highlight"><code class="hljs php"><span class="hljs-number"><span style="color: #000000;">0 </span><span class="hljs-number"><span style="color: #000000;">0 </span><span class="hljs-comment"><span style="color: #000000;">#initialization
+</span><span class="hljs-number"><span style="color: #000000;">1 </span><span class="hljs-number"><span style="color: #000000;">0
+</span><span class="hljs-number"><span style="color: #000000;">1 </span><span class="hljs-number"><span style="color: #000000;">1 </span><span class="hljs-comment">
+<span class="hljs-number"><span style="color: #000000;">1 </span><span class="hljs-number"><span style="color: #000000;">2 </span><span class="hljs-comment"><span style="color: #000000;">#push_back
+</span><span class="hljs-number"><span style="color: #000000;">1 </span><span class="hljs-number"><span style="color: #000000;">3 </span><span class="hljs-comment"><span style="color: #000000;">#push_back
+</span><span class="hljs-number"><span style="color: #000000;">1 </span><span class="hljs-number"><span style="color: #000000;">4 </span><span class="hljs-comment"><span style="color: #000000;">#push_back
+</span><span class="hljs-number"><span style="color: #000000;">1 </span><span class="hljs-number"><span style="color: #000000;">5
+</span><span class="hljs-number"><span style="color: #000000;">2 </span><span class="hljs-number"><span style="color: #000000;">5
+</span><span class="hljs-number"><span style="color: #000000;">2 </span><span class="hljs-number"><span style="color: #000000;">2 </span><span class="hljs-comment">
+<span class="hljs-number"><span style="color: #000000;">2 </span><span class="hljs-number"><span style="color: #000000;">3 </span><span class="hljs-comment"><span style="color: #000000;">#push_back
+</span><span class="hljs-number"><span style="color: #000000;">2 </span><span class="hljs-number"><span style="color: #000000;">4 </span><span class="hljs-comment"><span style="color: #000000;">#push_back
+...
+</span><span class="hljs-number"><span style="color: #000000;">3 </span><span class="hljs-number"><span style="color: #000000;">4 </span><span class="hljs-comment"><span style="color: #000000;">#push_back
+</span><span class="hljs-number"><span style="color: #000000;">3 </span><span class="hljs-number"><span style="color: #000000;">5
+</span><span class="hljs-number"><span style="color: #000000;">4 </span><span class="hljs-number"><span style="color: #000000;">5
+</span><span class="hljs-number"><span style="color: #000000;">4 </span><span class="hljs-number"><span style="color: #000000;">4
+</span><span class="hljs-number"><span style="color: #000000;">4 </span><span class="hljs-number"><span style="color: #000000;">5
+</span><span class="hljs-number"><span style="color: #000000;">5 </span><span class="hljs-number"><span style="color: #000000;">5 </span><span class="hljs-comment"><span style="color: #000000;">#stop</span> <br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; combine(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span>(k, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span>++<span style="color: #0000ff;">out</span><span style="color: #000000;">[i];
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">out</span>[i] &gt; n) --<span style="color: #000000;">i;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i == k - <span style="color: #800080;">1</span>) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span>++<span style="color: #000000;">i;
+                </span><span style="color: #0000ff;">out</span>[i] = <span style="color: #0000ff;">out</span>[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4419259.html" target="_blank">Combination Sum</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4358848.html" target="_blank">Permutations</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/combinations/description/">https://leetcode.com/problems/combinations/description/</a></p>
+<p><a href="https://leetcode.com/problems/combinations/discuss/27015/3-ms-Java-Solution">https://leetcode.com/problems/combinations/discuss/27015/3-ms-Java-Solution</a></p>
+<p><a href="https://leetcode.com/problems/combinations/discuss/27002/Backtracking-Solution-Java">https://leetcode.com/problems/combinations/discuss/27002/Backtracking-Solution-Java</a></p>
+<p><a href="https://leetcode.com/problems/combinations/discuss/26992/Short-Iterative-C++-Answer-8ms">https://leetcode.com/problems/combinations/discuss/26992/Short-Iterative-C++-Answer-8ms</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4051348.html">[LeetCode] Maximum Depth of Binary Tree 二叉树的最大深度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, find its maximum depth.</p>
+<p>The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.</p>
+<p>Note:&nbsp;A leaf is a node with no children.</p>
+<p>Example:</p>
+<p>Given binary tree&nbsp;<code>[3,9,20,null,null,15,7]</code>,</p>
+<pre>    3
+   / \
+  9  20
+    /  \
+   15   7</pre>
+<p>return its depth = 3.</p>
+<p>&nbsp;</p>
+<p>求二叉树的最大深度问题用到深度优先搜索DFS，递归的完美应用，跟求二叉树的最小深度问题原理相同。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxDepth(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span> + max(maxDepth(root-&gt;left), maxDepth(root-&gt;<span style="color: #000000;">right));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> maxDepth(TreeNode root) {
+        </span><span style="color: #0000ff;">return</span> root == <span style="color: #0000ff;">null</span> ? 0 : (1 +<span style="color: #000000;"> Math.max(maxDepth(root.left), maxDepth(root.right)));
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用层序遍历二叉树，然后计数总层数，即为二叉树的最大深度，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> maxDepth(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        queue</span>&lt;TreeNode*&gt;<span style="color: #000000;"> q;
+        q.push(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span>++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                TreeNode </span>*t =<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">if</span> (t-&gt;left) q.push(t-&gt;<span style="color: #000000;">left);
+                </span><span style="color: #0000ff;">if</span> (t-&gt;right) q.push(t-&gt;<span style="color: #000000;">right);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> maxDepth(TreeNode root) {
+        </span><span style="color: #0000ff;">if</span> (root == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = 0<span style="color: #000000;">;
+        Queue</span>&lt;TreeNode&gt; q = <span style="color: #0000ff;">new</span> LinkedList&lt;&gt;<span style="color: #000000;">();
+        q.offer(root);
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.isEmpty()) {
+            </span>++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; n; ++<span style="color: #000000;">i) {
+                TreeNode t </span>=<span style="color: #000000;"> q.poll();
+                </span><span style="color: #0000ff;">if</span> (t.left != <span style="color: #0000ff;">null</span><span style="color: #000000;">) q.offer(t.left);
+                </span><span style="color: #0000ff;">if</span> (t.right != <span style="color: #0000ff;">null</span><span style="color: #000000;">) q.offer(t.right);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>求二叉树的最小深度可以参见我的博文：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4042168.html" target="_blank">http://www.cnblogs.com/grandyang/p/4042168.html</a></p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4045660.html" target="_blank">Balanced Binary Tree</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4042168.html" target="_blank">Minimum Depth of Binary Tree</a></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9873496.html">Maximum Depth of N-ary Tree</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/maximum-depth-of-binary-tree/" target="_blank">https://leetcode.com/problems/maximum-depth-of-binary-tree/</a></p>
+<p><a href="https://discuss.leetcode.com/topic/10317/my-code-of-c-depth-first-search-and-breadth-first-search" target="_blank">https://discuss.leetcode.com/topic/10317/my-code-of-c-depth-first-search-and-breadth-first-search</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

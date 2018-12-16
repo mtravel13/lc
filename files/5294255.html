@@ -1,0 +1,161 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5294255.html">[LeetCode] Counting Bits 计数位</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non negative integer number <strong>num</strong>. For every numbers <strong>i</strong> in the range <strong>0 &le; i &le; num</strong> calculate the number of 1's in their binary representation and return them as an array.</p>
+<p> <strong>Example:</strong><br />
+For <code>num = 5</code> you should return <code>[0,1,1,2,1,2]</code>.
+</p>
+<p>
+<strong>Follow up:</strong>
+</p>
+<ul>
+<li>It is very easy to come up with a solution with run time <strong>O(n*sizeof(integer))</strong>. But can you do it in linear time <strong>O(n)</strong> /possibly in a single pass?</li>
+<li>Space complexity should be <strong>O(n)</strong>.</li>
+<li>Can you do it like a boss? Do it without using any builtin function like <strong>__builtin_popcount</strong>  in c++ or in any other language.</li>
+
+
+</ul>
+<p><strong>Hint:</strong></p>
+<ol id="hints">
+<li class="hint animated fadeInLeft" style="display: list-item;">You should make use of what you have produced already.</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">Divide the numbers in ranges like [2-3], [4-7], [8-15] and so on. And try to generate new range from previous.</li>
+<li class="hint animated fadeInLeft" style="display: list-item;">Or does the odd/even status of the number help you in calculating the number of 1s?</li>
+
+
+</ol>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/syedee">@ syedee </a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给我们一个整数n，然我们统计从0到n每个数的二进制写法的1的个数，存入一个一维数组中返回，题目中明确表示不希望我们一个数字一个数字，一位一位的傻算，而是希望我们找出规律，而且题目中也提示了我们注意[2-3], [4-7], [8-15]这些区间的规律，那么我们写出0到15的数的二进制和1的个数如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">0</span>    <span style="color: #800080;">0000</span>    <span style="color: #800080;">0</span>
+-------------
+<span style="color: #800080;">1</span>    <span style="color: #800080;">0001</span>    <span style="color: #800080;">1</span>
+-------------
+<span style="color: #800080;">2</span>    <span style="color: #800080;">0010</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">3</span>    <span style="color: #800080;">0011</span>    <span style="color: #800080;">2</span>
+-------------
+<span style="color: #800080;">4</span>    <span style="color: #800080;">0100</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">0101</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">0110</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">7</span>    <span style="color: #800080;">0111</span>    <span style="color: #800080;">3</span>
+-------------
+<span style="color: #800080;">8</span>    <span style="color: #800080;">1000</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">9</span>    <span style="color: #800080;">1001</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">10</span>   <span style="color: #800080;">1010</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">11</span>   <span style="color: #800080;">1011</span>    <span style="color: #800080;">3</span>
+<span style="color: #800080;">12</span>   <span style="color: #800080;">1100</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">13</span>   <span style="color: #800080;">1101</span>    <span style="color: #800080;">3</span>
+<span style="color: #800080;">14</span>   <span style="color: #800080;">1110</span>    <span style="color: #800080;">3</span>
+<span style="color: #800080;">15</span>   <span style="color: #800080;">1111</span>    <span style="color: #800080;">4</span></pre>
+</div>
+<p>我最先看出的规律是这样的，除去前两个数字0个1，从2开始，2和3，是[2<sup>1</sup>, 2<sup>2</sup>)区间的，值为1和2。而4到7属于[2<sup>2</sup>, 2<sup>3</sup>)区间的，值为1,2,2,3，前半部分1和2和上一区间相同，2和3是上面的基础上每个数字加1。再看8到15，属于[2<sup>3</sup>, 2<sup>4</sup>)区间的，同样满足上述规律，所以可以写出代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; countBits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        </span><span style="color: #0000ff;">if</span> (num == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> {<span style="color: #800080;">0</span><span style="color: #000000;">};
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res{<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">int</span> k = <span style="color: #800080;">2</span>, i = <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt;=<span style="color: #000000;"> num) {
+            </span><span style="color: #0000ff;">for</span> (i = pow(<span style="color: #800080;">2</span>, k - <span style="color: #800080;">1</span>); i &lt; pow(<span style="color: #800080;">2</span>, k); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (i &gt; num) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> t = (pow(<span style="color: #800080;">2</span>, k) - pow(<span style="color: #800080;">2</span>, k - <span style="color: #800080;">1</span>)) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (i &lt; pow(<span style="color: #800080;">2</span>, k - <span style="color: #800080;">1</span>) + t) res.push_back(res[i -<span style="color: #000000;"> t]);
+                </span><span style="color: #0000ff;">else</span> res.push_back(res[i - t] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+            </span>++<span style="color: #000000;">k;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看一种投机取巧的方法，直接利用了built-in的函数bitset的count函数可以直接返回1的个数，题目中说了不提倡用这种方法，写出来只是多一种思路而已：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; countBits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= num; ++<span style="color: #000000;">i) {
+            res.push_back(bitset</span>&lt;<span style="color: #800080;">32</span>&gt;<span style="color: #000000;">(i).count());
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法相比第一种方法就要简洁很多了，这个规律找的更好，规律是，从1开始，遇到偶数时，其1的个数和该偶数除以2得到的数字的1的个数相同，遇到奇数时，其1的个数等于该奇数除以2得到的数字的1的个数再加1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; countBits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res{<span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= num; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span>) res.push_back(res[i / <span style="color: #800080;">2</span><span style="color: #000000;">]);
+            </span><span style="color: #0000ff;">else</span> res.push_back(res[i / <span style="color: #800080;">2</span>] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法就更加巧妙了，巧妙的利用了i&amp;(i - 1)， 这个本来是用来判断一个数是否是2的指数的快捷方法，比如8，二进制位1000, 那么8&amp;(8-1)为0，只要为0就是2的指数, 那么我们现在来看一下0到15的数字和其对应的i&amp;(i - 1)值：</p>
+<div class="cnblogs_code">
+<pre>i    bin       <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span>    i&amp;(i-<span style="color: #800080;">1</span><span style="color: #000000;">)
+</span><span style="color: #800080;">0</span>    <span style="color: #800080;">0000</span>    <span style="color: #800080;">0</span>
+-----------------------
+<span style="color: #800080;">1</span>    <span style="color: #800080;">0001</span>    <span style="color: #800080;">1</span>    <span style="color: #800080;">0000</span>
+-----------------------
+<span style="color: #800080;">2</span>    <span style="color: #800080;">0010</span>    <span style="color: #800080;">1</span>    <span style="color: #800080;">0000</span>
+<span style="color: #800080;">3</span>    <span style="color: #800080;">0011</span>    <span style="color: #800080;">2</span>    <span style="color: #800080;">0010</span>
+-----------------------
+<span style="color: #800080;">4</span>    <span style="color: #800080;">0100</span>    <span style="color: #800080;">1</span>    <span style="color: #800080;">0000</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">0101</span>    <span style="color: #800080;">2</span>    <span style="color: #800080;">0100</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">0110</span>    <span style="color: #800080;">2</span>    <span style="color: #800080;">0100</span>
+<span style="color: #800080;">7</span>    <span style="color: #800080;">0111</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">0110</span>
+-----------------------
+<span style="color: #800080;">8</span>    <span style="color: #800080;">1000</span>    <span style="color: #800080;">1</span>    <span style="color: #800080;">0000</span>
+<span style="color: #800080;">9</span>    <span style="color: #800080;">1001</span>    <span style="color: #800080;">2</span>    <span style="color: #800080;">1000</span>
+<span style="color: #800080;">10</span>   <span style="color: #800080;">1010</span>    <span style="color: #800080;">2</span>    <span style="color: #800080;">1000</span>
+<span style="color: #800080;">11</span>   <span style="color: #800080;">1011</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1010</span>
+<span style="color: #800080;">12</span>   <span style="color: #800080;">1100</span>    <span style="color: #800080;">2</span>    <span style="color: #800080;">1000</span>
+<span style="color: #800080;">13</span>   <span style="color: #800080;">1101</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1100</span>
+<span style="color: #800080;">14</span>   <span style="color: #800080;">1110</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1100</span>
+<span style="color: #800080;">15</span>   <span style="color: #800080;">1111</span>    <span style="color: #800080;">4</span>    <span style="color: #800080;">1110</span></pre>
+</div>
+<p>我们可以发现每个i值都是i&amp;(i-1)对应的值加1，这样我们就可以写出代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; countBits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(num + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= num; ++<span style="color: #000000;">i) {
+            res[i] </span>= res[i &amp; (i - <span style="color: #800080;">1</span>)] + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/92796/four-lines-c-time-o-n-space-o-1" target="_blank">https://leetcode.com/discuss/92796/four-lines-c-time-o-n-space-o-1</a></p>
+<p><a href="https://leetcode.com/discuss/92694/my-408-ms-c-solution-using-bitset" target="_blank">https://leetcode.com/discuss/92694/my-408-ms-c-solution-using-bitset</a></p>
+<p><a href="https://leetcode.com/discuss/92698/my-448ms-c-easy-solution-o-n-time-and-o-n-space" target="_blank">https://leetcode.com/discuss/92698/my-448ms-c-easy-solution-o-n-time-and-o-n-space</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

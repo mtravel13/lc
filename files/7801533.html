@@ -1,0 +1,66 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7801533.html">[LeetCode] Maximum Length of Repeated Subarray 最长的重复子数组</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two integer arrays <code>A</code> and <code>B</code>, return the maximum length of an subarray that appears in both arrays.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong>
+A: [1,2,3,2,1]
+B: [3,2,1,4,7]
+<strong>Output:</strong> 3
+<strong>Explanation:</strong> 
+The repeated subarray with maximum length is [3, 2, 1].
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol><ol>
+<li>1 &lt;= len(A), len(B) &lt;= 1000</li>
+<li>0 &lt;= A[i], B[i] &lt; 100</li>
+
+
+
+
+</ol></ol>
+<p>&nbsp;</p>
+<p>这道题给了我们两个数组A和B，让我们返回连个数组的最长重复子数组。那么如果我们将数组换成字符串，实际这道题就是求Longest Common Substring的问题了，而貌似LeetCode上并没有这种明显的要求最长相同子串的题，注意需要跟最长子序列Longest Common Subsequence区分开，关于最长子序列会在follow up中讨论。好，先来看这道题，对于这种求极值的问题，DP是不二之选，我们使用一个二维的DP数组，其中dp[i][j]表示数组A的前i个数字和数组B的前j个数字的最长子数组的长度，如果dp[i][j]不为0，则A中第i个数组和B中第j个数字必须相等，比对于这两个数组[1,2,2]和[3,1,2]，我们的dp数组为：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;"><span style="color: #0000ff;">  3 1 2</span>
+<span style="color: #0000ff;">1</span> 0 <span style="color: #ff0000;">1</span> 0
+<span style="color: #0000ff;">2</span> 0 0 <span style="color: #ff0000;">2</span>
+<span style="color: #0000ff;">2</span> 0 0 <span style="color: #ff0000;">1</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们注意观察，dp值不为0的地方，都是当A[i] == B[j]的地方，而且还要加上左上方的dp值，即dp[i-1][j-1]，所以当前的dp[i][j]就等于dp[i-1][j-1] + 1，而一旦A[i] != B[j]时，直接赋值为0，不用多想，因为子数组是要连续的，一旦不匹配了，就不能再增加长度了。我们每次算出一个dp值，都要用来更新结果res，这样就能得到最长相同子数组的长度了，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findLength(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; A, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(A.size() + <span style="color: #800080;">1</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;(B.size() + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; dp.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt; dp[i].size(); ++<span style="color: #000000;">j) {
+                dp[i][j] </span>= (A[i - <span style="color: #800080;">1</span>] == B[j - <span style="color: #800080;">1</span>]) ? dp[i - <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span>] + <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">;
+                res </span>=<span style="color: #000000;"> max(res, dp[i][j]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Follow up：在开始时，博主提到了要跟最长相同子序列Longest Common Subsequence区分开来，虽然LeetCode没有直接求最大相同子序列的题，但有几道题利用到了求该问题的思想，比如<a href="http://www.cnblogs.com/grandyang/p/7144045.html">Delete Operation for Two Strings</a>和<a href="http://www.cnblogs.com/grandyang/p/7752002.html">Minimum ASCII Delete Sum for Two Strings</a>等，详细讨论请参见评论区一楼 :)</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4501934.html" target="_blank">Minimum Size Subarray Sum</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

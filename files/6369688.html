@@ -1,0 +1,107 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6369688.html">[LeetCode] Predict the Winner 预测赢家</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of scores that are non-negative integers. Player 1 picks one of the numbers from either end of the array followed by the player 2 and then player 1 and so on. Each time a player picks a number, that number will not be available for the next player. This continues until all the scores have been chosen. The player with the maximum score wins.</p>
+<p>Given an array of scores, predict whether player 1 is the winner. You can assume each player plays to maximize his score.</p>
+<p>Example 1:</p>
+<pre>Input: [1, 5, 2]
+Output: False
+Explanation: Initially, player 1 can choose between 1 and 2. <br />If he chooses 2 (or 1), then player 2 can choose from 1 (or 2) and 5. If player 2 chooses 5, then player 1 will be left with 1 (or 2). <br />So, final score of player 1 is 1 + 2 = 3, and player 2 is 5. <br />Hence, player 1 will never be the winner and you need to return False.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [1, 5, 233, 7]
+Output: True
+Explanation: Player 1 first chooses 1. Then player 2 have to choose between 5 and 7. No matter which number player 2 choose, player 1 can choose 233.<br />Finally, player 1 has more score (234) than player 2 (12), so you need to return True representing player1 can win.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>1 &lt;= length of the array &lt;= 20.</li>
+<li>Any scores in the given array are non-negative integers and will not exceed 10,000,000.</li>
+<li>If the scores of both players are equal, then player 1 is still the winner.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了一个小游戏，有一个数组，两个玩家轮流取数，说明了只能从开头或结尾取，问我们第一个玩家能赢吗。这道题我想到了应该是用Minimax来做，由于之前有过一道这样的题<a href="http://www.cnblogs.com/grandyang/p/5677550.html">Guess Number Higher or Lower II</a>，所以依稀记得应该要用递归的方法，而且当前玩家赢返回true的条件就是递归调用下一个玩家输返回false。我们需要一个变量来标记当前是第几个玩家，还需要两个变量来分别记录两个玩家的当前数字和，在递归函数里面，如果当前数组为空了，我们直接比较两个玩家的当前得分即可，如果数组中只有一个数字了，我们根据玩家标识来将这个数字加给某个玩家并进行比较总得分。如果数组有多个数字，我们分别生成两个新数组，一个是去掉首元素，一个是去掉尾元素，然后根据玩家标识分别调用不同的递归，只要下一个玩家两种情况中任意一种返回false了，那么当前玩家就可以赢了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> PredictTheWinner(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">return</span> canWin(nums, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">bool</span> canWin(vector&lt;<span style="color: #0000ff;">int</span>&gt; nums, <span style="color: #0000ff;">int</span> sum1, <span style="color: #0000ff;">int</span> sum2, <span style="color: #0000ff;">int</span><span style="color: #000000;"> player) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> sum1 &gt;=<span style="color: #000000;"> sum2;
+        </span><span style="color: #0000ff;">if</span> (nums.size() == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (player == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> sum1 + nums[<span style="color: #800080;">0</span>] &gt;=<span style="color: #000000;"> sum2;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (player == <span style="color: #800080;">2</span>) <span style="color: #0000ff;">return</span> sum2 + nums[<span style="color: #800080;">0</span>] &gt;<span style="color: #000000;"> sum1;
+        }
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; va = vector&lt;<span style="color: #0000ff;">int</span>&gt;(nums.begin() + <span style="color: #800080;">1</span><span style="color: #000000;">, nums.end());
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; vb = vector&lt;<span style="color: #0000ff;">int</span>&gt;(nums.begin(), nums.end() - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (player == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">return</span> !canWin(va, sum1 + nums[<span style="color: #800080;">0</span>], sum2, <span style="color: #800080;">2</span>) || !canWin(vb, sum1 + nums.back(), sum2, <span style="color: #800080;">2</span><span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (player == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">return</span> !canWin(va, sum1, sum2 + nums[<span style="color: #800080;">0</span>], <span style="color: #800080;">1</span>) || !canWin(vb, sum1, sum2 + nums.back(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们还可以使用DP加Minimax的方法来做，先来看递归的写法，十分的简洁。DP数组的作用是保存中间结果，再次遇到相同情况时直接返回不用再次计算，提高了运算效率：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> PredictTheWinner(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, -<span style="color: #800080;">1</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">return</span> canWin(nums, <span style="color: #800080;">0</span>, n - <span style="color: #800080;">1</span>, dp) &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">int</span> canWin(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> s, <span style="color: #0000ff;">int</span> e, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> dp) {
+        </span><span style="color: #0000ff;">if</span> (dp[s][e] == -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+            dp[s][e] </span>= (s == e) ? nums[s] : max(nums[s] - canWin(nums, s + <span style="color: #800080;">1</span>, e, dp), nums[e] - canWin(nums, s, e - <span style="color: #800080;">1</span><span style="color: #000000;">, dp));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dp[s][e];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是DP加Minimax的递归写法，要注意的是DP的更新顺序，跟以往不太一样，这种更新方法是按区间来更新的，感觉之前好像没有遇到过这种更新的方法，还蛮特别的：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> PredictTheWinner(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dp(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++i) dp[i][i] =<span style="color: #000000;"> nums[i];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> len = <span style="color: #800080;">1</span>; len &lt; n; ++<span style="color: #000000;">len) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = len; j &lt; n; ++i, ++<span style="color: #000000;">j) {
+                dp[i][j] </span>= max(nums[i] - dp[i + <span style="color: #800080;">1</span>][j], nums[j] - dp[i][j - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dp[<span style="color: #800080;">0</span>][n - <span style="color: #800080;">1</span>] &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5677550.html">Guess Number Higher or Lower II</a>&nbsp;</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/76394/linear-time-solution" target="_blank">https://discuss.leetcode.com/topic/76394/linear-time-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/76312/java-1-line-recursion-solution" target="_blank">https://discuss.leetcode.com/topic/76312/java-1-line-recursion-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/76327/c-dp-solution-with-explanation/2" target="_blank">https://discuss.leetcode.com/topic/76327/c-dp-solution-with-explanation/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

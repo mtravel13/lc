@@ -1,0 +1,41 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5450001.html">[LeetCode] Moving Average from Data Stream 从数据流中移动平均值</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a stream of integers and a window size, calculate the moving average of all integers in the sliding window.</p>
+<p>For example,<br />MovingAverage m = new MovingAverage(3);<br />m.next(1) = 1<br />m.next(10) = (1 + 10) / 2<br />m.next(3) = (1 + 10 + 3) / 3<br />m.next(5) = (10 + 3 + 5) / 3 </p>
+<p>&nbsp;</p>
+<p>这道题定义了一个MovingAverage类，里面可以存固定个数字，然后我们每次读入一个数字，如果加上这个数字后总个数大于限制的个数，那么我们移除最早进入的数字，然后返回更新后的平均数，这种先进先出的特性最适合使用队列queue来做，而且我们还需要一个double型的变量sum来记录当前所有数字之和，这样有新数字进入后，如果没有超出限制个数，则sum加上这个数字，如果超出了，那么sum先减去最早的数字，再加上这个数字，然后返回sum除以queue的个数即可：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MovingAverage {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    MovingAverage(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> size) {
+        </span><span style="color: #0000ff;">this</span>-&gt;size =<span style="color: #000000;"> size;
+        sum </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">double</span> next(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val) {
+        </span><span style="color: #0000ff;">if</span> (q.size() &gt;=<span style="color: #000000;"> size) {
+            sum </span>-=<span style="color: #000000;"> q.front(); q.pop();
+        }
+        q.push(val);
+        sum </span>+=<span style="color: #000000;"> val;
+        </span><span style="color: #0000ff;">return</span> sum /<span style="color: #000000;"> q.size();
+    }
+    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> sum;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

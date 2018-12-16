@@ -1,0 +1,51 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4380706.html">[LeetCode] N-Queens II N皇后问题之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Follow up for N-Queens problem.</p>
+<p>Now, instead outputting board configurations, return the total number of distinct solutions.</p>
+<p><img src="http://www.leetcode.com/wp-content/uploads/2012/03/8-queens.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4377782.html">&nbsp;N-Queens N皇后问题</a>&nbsp;的延伸，说是延伸其实我觉得两者顺序应该颠倒一样，上一道题比这道题还要稍稍复杂一些，两者本质上没有啥区别，都是要用回溯法Backtracking来解，如果理解了之前那道题的思路，此题只要做很小的改动即可，不再需要求出具体的皇后的摆法，只需要每次生成一种解法时，计数器加一即可，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> totalNQueens(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; pos(n, -<span style="color: #800080;">1</span><span style="color: #000000;">);
+        totalNQueensDFS(pos, </span><span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> totalNQueensDFS(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;pos, <span style="color: #0000ff;">int</span> row, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> pos.size();
+        </span><span style="color: #0000ff;">if</span> (row == n) ++<span style="color: #000000;">res;
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> col = <span style="color: #800080;">0</span>; col &lt; n; ++<span style="color: #000000;">col) {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isValid(pos, row, col)) {
+                    pos[row] </span>=<span style="color: #000000;"> col;
+                    totalNQueensDFS(pos, row </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, res);
+                    pos[row] </span>= -<span style="color: #800080;">1</span><span style="color: #000000;">;
+                }
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">bool</span> isValid(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;pos, <span style="color: #0000ff;">int</span> row, <span style="color: #0000ff;">int</span><span style="color: #000000;"> col) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; row; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (col == pos[i] || abs(row - i) == abs(col -<span style="color: #000000;"> pos[i])) {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,108 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7439222.html">[LeetCode] Dota2 Senate 刀塔二参议院</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>In the world of Dota2, there are two parties: the&nbsp;<code>Radiant</code>&nbsp;and the&nbsp;<code>Dire</code>.</p>
+<p>The Dota2 senate consists of senators coming from two parties. Now the senate wants to make a decision about a change in the Dota2 game. The voting for this change is a round-based procedure. In each round, each senator can exercise&nbsp;<code>one</code>&nbsp;of the two rights:</p>
+<ol>
+<li><code>Ban one senator's right</code>:&nbsp;<br />A senator can make another senator lose&nbsp;all his rights&nbsp;in this and all the following rounds.</li>
+<li><code>Announce the victory</code>:&nbsp;<br />If this senator found the senators who still have rights to vote are all from&nbsp;the same party, he can announce the victory and make the decision about the change in the game.</li>
+
+</ol>
+<p>&nbsp;</p>
+<p>Given a string representing each senator's party belonging. The character 'R' and 'D' represent the&nbsp;<code>Radiant</code>&nbsp;party and the&nbsp;<code>Dire</code>&nbsp;party respectively. Then if there are&nbsp;<code>n</code>&nbsp;senators, the size of the given string will be&nbsp;<code>n</code>.</p>
+<p>The round-based procedure starts from the first senator to the last senator in the given order. This procedure will last until the end of voting. All the senators who have lost their rights will be skipped during the procedure.</p>
+<p>Suppose every senator is smart enough and will play the best strategy for his own party, you need to predict which party will finally announce the victory and make the change in the Dota2 game. The output should be&nbsp;<code>Radiant</code>&nbsp;or&nbsp;<code>Dire</code>.</p>
+<p>Example 1:</p>
+<pre>Input: "RD"
+Output: "Radiant"
+Explanation: The first senator comes from Radiant and he can just ban the next senator's right in the round 1. <br />And the second senator can't exercise any rights any more since his right has been banned. <br />And in the round 2, the first senator can just announce the victory since he is the only guy in the senate who can vote.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: "RDD"
+Output: "Dire"
+Explanation: 
+The first senator comes from Radiant and he can just ban the next senator's right in the round 1. <br />And the second senator can't exercise any rights anymore since his right has been banned. <br />And the third senator comes from Dire and he can ban the first senator's right in the round 1. <br />And in the round 2, the third senator can just announce the victory since he is the only guy in the senate who can vote.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The length of the given string will in the range [1, 10,000].</li>
+</ol>
+<p>&nbsp;</p>
+<p>该来的总会来！！！自从上次LeetCode拿提莫出题<a href="http://www.cnblogs.com/grandyang/p/6399408.html">Teemo Attacking</a>后，我就知道刀塔早晚也难逃魔掌，这道题直接就搞起了刀塔二。不过话说如果你是从魔兽3无缝过渡到刀塔，那么应该熟悉了两个阵营的叫法，近卫和天灾。刀塔二里面不知道搞什么鬼，改成了光辉和梦魇，不管了，反正跟这道题的解法没什么关系。这道题模拟了刀塔类游戏开始之前的BP过程，两个阵营按顺序Ban掉对方的英雄，看最后谁剩下来了，就返回哪个阵营。那么博主能想到的简单暴力的方法就是先统计所有R和D的个数，然后从头开始遍历，如果遇到了R，就扫描之后所有的位置，然后还要扫描R前面的位置，这就要用到数组的环形遍历的知识了，其实就是坐标对总长度取余，使其不会越界，如果我们找到了下一个D，就将其标记为B，然后对应的计数器cntR自减1。对于D也是同样处理，我们的while循环的条件是cntR和cntD都要大于0，当有一个等于0了的话，那么推出循环，返回那个不为0的阵营即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> predictPartyVictory(<span style="color: #0000ff;">string</span><span style="color: #000000;"> senate) {
+        </span><span style="color: #0000ff;">int</span> n = senate.size(), cntR = <span style="color: #800080;">0</span>, cntD = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : senate) {
+            c </span>== <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span> ? ++cntR : ++<span style="color: #000000;">cntD;
+        }
+        </span><span style="color: #0000ff;">if</span> (cntR == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">Dire</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (cntD == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">Radiant</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (cntR &gt; <span style="color: #800080;">0</span> &amp;&amp; cntD &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (senate[i] == <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; i + n; ++<span style="color: #000000;">j) {
+                        </span><span style="color: #0000ff;">if</span> (senate[j % n] == <span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                            senate[j </span>% n] = <span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                            </span>--<span style="color: #000000;">cntD;
+                            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                        }
+                    }
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (senate[i] == <span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; i + n; ++<span style="color: #000000;">j) {
+                        </span><span style="color: #0000ff;">if</span> (senate[j % n] == <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                            senate[j </span>% n] = <span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                            </span>--<span style="color: #000000;">cntR;
+                            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                        }
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> cntR != <span style="color: #800080;">0</span> ? <span style="color: #800000;">"</span><span style="color: #800000;">Radiant</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">Dire</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的暴力搜索的方法略显复杂，我们其实有更好的方法来做，我们可以用两个队列queue，把各自阵营的位置存入不同的队列里面，然后进行循环，每次从两个队列各取一个位置出来，看其大小关系，小的那个说明在前面，就可以把后面的那个Ban掉，所以我们要把小的那个位置要加回队列里面，但是不能直接加原位置，因为下一轮才能再轮到他来Ban，所以我们要加上一个n，再排入队列。这样当某个队列为空时，推出循环，我们返回不为空的那个阵营，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> predictPartyVictory(<span style="color: #0000ff;">string</span><span style="color: #000000;"> senate) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> senate.size();
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q1, q2;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            (senate[i] </span>== <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span>) ?<span style="color: #000000;"> q1.push(i) : q2.push(i);
+        }
+        </span><span style="color: #0000ff;">while</span> (!q1.empty() &amp;&amp; !<span style="color: #000000;">q2.empty()) {
+            </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> q1.front(); q1.pop();
+            </span><span style="color: #0000ff;">int</span> j =<span style="color: #000000;"> q2.front(); q2.pop();
+            (i </span>&lt; j) ? q1.push(i + n) : q2.push(j +<span style="color: #000000;"> n);
+        }
+        </span><span style="color: #0000ff;">return</span> (q1.size() &gt; q2.size()) ? <span style="color: #800000;">"</span><span style="color: #800000;">Radiant</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">Dire</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6399408.html">Teemo Attacking</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/97671/java-c-very-simple-greedy-solution-with-explanation">https://discuss.leetcode.com/topic/97671/java-c-very-simple-greedy-solution-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

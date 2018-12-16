@@ -1,0 +1,84 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5983113.html">[LeetCode] Third Maximum Number 第三大的数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a&nbsp;non-empty&nbsp;array of integers, return the&nbsp;third&nbsp;maximum number in this array. If it does not exist, return the maximum number. The time complexity must be in O(n).</p>
+<p>Example 1:</p>
+<pre>Input: [3, 2, 1]
+
+Output: 1
+
+Explanation: The third maximum is 1.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [1, 2]
+
+Output: 2
+
+Explanation: The third maximum does not exist, so the maximum (2) is returned instead.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: [2, 2, 3, 1]
+
+Output: 1
+
+Explanation: Note that the third maximum here means the third maximum distinct number.
+Both numbers with value 2 are both considered as second maximum.</pre>
+<p>&nbsp;</p>
+<p>这道题让我们求数组中第三大的数，如果不存在的话那么就返回最大的数，题目中说明了这里的第三大不能和第二大相同，必须是严格的小于，而并非小于等于。这道题并不是很难，如果知道怎么求第二大的数，那么求第三大的数的思路都是一样的。那么我们用三个变量first, second, third来分别保存第一大，第二大，和第三大的数，然后我们遍历数组，如果遍历到的数字大于当前第一大的数first，那么三个变量各自错位赋值，如果当前数字大于second，小于first，那么就更新second和third，如果当前数字大于third，小于second，那就只更新third，注意这里有个坑，就是初始化要用长整型long的最小值，否则当数组中有INT_MIN存在时，程序就不知道该返回INT_MIN还是最大值first了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> thirdMax(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">long</span> first = LONG_MIN, second = LONG_MIN, third =<span style="color: #000000;"> LONG_MIN;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            </span><span style="color: #0000ff;">if</span> (num &gt;<span style="color: #000000;"> first) {
+                third </span>=<span style="color: #000000;"> second;
+                second </span>=<span style="color: #000000;"> first;
+                first </span>=<span style="color: #000000;"> num;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (num &gt; second &amp;&amp; num &lt;<span style="color: #000000;"> first) {
+                third </span>=<span style="color: #000000;"> second;
+                second </span>=<span style="color: #000000;"> num;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (num &gt; third &amp;&amp; num &lt;<span style="color: #000000;"> second) {
+                third </span>=<span style="color: #000000;"> num;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> (third == LONG_MIN || third == second) ?<span style="color: #000000;"> first : third;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法的时间复杂度是O(nlgn)，不符合题目要求，纯粹是拓宽下思路哈，利用了set的自动排序和自动去重复项的特性，很好的解决了问题，对于遍历到的数字，加入set中，重复项就自动去掉了，如果此时set大小大于3个了，那么我们把set的第一个元素去掉，也就是将第四大的数字去掉，那么就可以看出set始终维护的是最大的三个不同的数字，最后遍历结束后，我们看set的大小是否为3，是的话就返回首元素，不是的话就返回尾元素，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> thirdMax(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> num : nums) {
+            s.insert(num);
+            </span><span style="color: #0000ff;">if</span> (s.size() &gt; <span style="color: #800080;">3</span><span style="color: #000000;">) {
+                s.erase(s.begin());
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> s.size() == <span style="color: #800080;">3</span> ? *s.begin() : *<span style="color: #000000;">s.rbegin();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/63903/short-easy-c-using-set" target="_blank">https://discuss.leetcode.com/topic/63903/short-easy-c-using-set</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

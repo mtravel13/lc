@@ -1,0 +1,74 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8910994.html">[LeetCode] Jewels and Stones 珠宝和石头</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<div>
+<p>You're given strings&nbsp;<code>J</code>&nbsp;representing the types of stones that are jewels, and&nbsp;<code>S</code>&nbsp;representing the stones you have.&nbsp; Each character in&nbsp;<code>S</code>is a type of stone you have.&nbsp; You want to know how many of the stones you have are also jewels.</p>
+<p>The letters in&nbsp;<code>J</code>&nbsp;are guaranteed distinct, and all characters in&nbsp;<code>J</code>&nbsp;and&nbsp;<code>S</code>&nbsp;are letters. Letters are case sensitive, so&nbsp;<code>"a"</code>&nbsp;is considered a different type of stone from&nbsp;<code>"A"</code>.</p>
+<p>Example 1:</p>
+<pre>Input: J = "aA", S = "aAAbbbb"
+Output: 3
+</pre>
+<p>Example 2:</p>
+<pre>Input: J = "z", S = "ZZ"
+Output: 0
+</pre>
+<p>Note:</p>
+<ul>
+<li><code>S</code>&nbsp;and&nbsp;<code>J</code>&nbsp;will consist of letters and have length at most 50.</li>
+<li>The characters in&nbsp;<code>J</code>&nbsp;are distinct.</li>
+</ul>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>这道题给了我们两个字符串，珠宝字符串J和石头字符串S，其中J中的每个字符都是珠宝，S中的每个字符都是石头，问我们S中有多少个珠宝。这道题没什么难度，高于八成的Accept率也应证了其Easy难度实至名归。那么先来暴力搜索吧，就将S中的每个字符都在J中搜索一遍，搜索到了就break掉，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numJewelsInStones(<span style="color: #0000ff;">string</span> J, <span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> s : S) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> j : J) {
+                </span><span style="color: #0000ff;">if</span> (s ==<span style="color: #000000;"> j) {
+                    </span>++res; <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们用HashSet来优化时间复杂度，将珠宝字符串J中的所有字符都放入HashSet中，然后遍历石头字符串中的每个字符，到HashSet中查找是否存在，存在的话计数器自增1即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numJewelsInStones(<span style="color: #0000ff;">string</span> J, <span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;"> s;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : J) s.insert(c);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : S) {
+            </span><span style="color: #0000ff;">if</span> (s.count(c)) ++<span style="color: #000000;">res;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/jewels-and-stones/solution/">https://leetcode.com/problems/jewels-and-stones/solution/</a></p>
+<p><a href="https://leetcode.com/problems/jewels-and-stones/discuss/113553/C++JavaPython-Easy-and-Concise-Solution-O(M+N)">https://leetcode.com/problems/jewels-and-stones/discuss/113553/C++JavaPython-Easy-and-Concise-Solution-O(M+N)</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

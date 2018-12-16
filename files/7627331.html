@@ -1,0 +1,77 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7627331.html">[LeetCode] Baseball Game 棒球游戏</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You're now a baseball game point recorder.</p>
+<p>Given a list of strings, each string can be one of the 4 following types:</p>
+<ol>
+<li><code>Integer</code>&nbsp;(one round's score): Directly represents the number of points you get in this round.</li>
+<li><code>"+"</code>&nbsp;(one round's score): Represents that the points you get in this round are the sum of the last two&nbsp;<code>valid</code>round's points.</li>
+<li><code>"D"</code>&nbsp;(one round's score): Represents that the points you get in this round are the doubled data of the last&nbsp;<code>valid</code>&nbsp;round's points.</li>
+<li><code>"C"</code>&nbsp;(an operation, which isn't a round's score): Represents the last&nbsp;<code>valid</code>&nbsp;round's points you get were invalid and should be removed.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Each round's operation is permanent and could have an impact on the round before and the round after.</p>
+<p>You need to return the sum of the points you could get in all the rounds.</p>
+<p>Example 1:</p>
+<pre>Input: ["5","2","C","D","+"]
+Output: 30
+Explanation: 
+Round 1: You could get 5 points. The sum is: 5.
+Round 2: You could get 2 points. The sum is: 7.
+Operation 1: The round 2's data was invalid. The sum is: 5.  
+Round 3: You could get 10 points (the round 2's data has been removed). The sum is: 15.
+Round 4: You could get 5 + 10 = 15 points. The sum is: 30.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: ["5","-2","4","C","D","9","+","+"]
+Output: 27
+Explanation: 
+Round 1: You could get 5 points. The sum is: 5.
+Round 2: You could get -2 points. The sum is: 3.
+Round 3: You could get 4 points. The sum is: 7.
+Operation 1: The round 3's data is invalid. The sum is: 3.  
+Round 4: You could get -4 points (the round 3's data has been removed). The sum is: -1.
+Round 5: You could get 9 points. The sum is: 8.
+Round 6: You could get -4 + 9 = 5 points. The sum is 13.
+Round 7: You could get 9 + 5 = 14 points. The sum is 27.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The size of the input list will be between 1 and 1000.</li>
+<li>Every integer represented in the list will be between -30000 and 30000.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题不是一道难题，直接按照题目的描述来分情况处理即可，博主开始在取数组的最后一个数和倒数第二个数的时候还做了数组为空检测，但是的貌似这道题默认输入都是合法的，不会存在上一轮不存在还要取值的情况，那就不用检测啦，代码就更加的简洁啦：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> calPoints(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> ops) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> op : ops) {
+            </span><span style="color: #0000ff;">if</span> (op == <span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+                v.push_back(v.back() </span>+ v[v.size() - <span style="color: #800080;">2</span><span style="color: #000000;">]);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (op == <span style="color: #800000;">"</span><span style="color: #800000;">D</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+                v.push_back(</span><span style="color: #800080;">2</span> *<span style="color: #000000;"> v.back());
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (op == <span style="color: #800000;">"</span><span style="color: #800000;">C</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+                v.pop_back();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                v.push_back(stoi(op));
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> accumulate(v.begin(), v.end(), <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

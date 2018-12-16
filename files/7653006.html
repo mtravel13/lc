@@ -1,0 +1,175 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7653006.html">[LeetCode] Minimum Genetic Mutation 最小基因变化</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>A gene string can be represented by an 8-character long string, with choices from&nbsp;<code>"A"</code>,&nbsp;<code>"C"</code>,&nbsp;<code>"G"</code>,&nbsp;<code>"T"</code>.</p>
+<p>Suppose we need to investigate about a mutation (mutation from "start" to "end"), where ONE mutation is defined as ONE single character changed in the gene string.</p>
+<p>For example,&nbsp;<code>"AACCGGTT"</code>&nbsp;-&gt;&nbsp;<code>"AACCGGTA"</code>&nbsp;is 1 mutation.</p>
+<p>Also, there is a given gene "bank", which records all the valid gene mutations. A gene must be in the bank to make it a valid gene string.</p>
+<p>Now, given 3 things - start, end, bank, your task is to determine what is the minimum number of mutations needed to mutate from "start" to "end". If there is no such a mutation, return -1.</p>
+<p>Note:</p>
+<ol>
+<li>Starting point is assumed to be valid, so it might not be included in the bank.</li>
+<li>If multiple mutations are needed, all mutations during in the sequence must be valid.</li>
+<li>You may assume start and end string is not the same.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>start: "AACCGGTT"
+end:   "AACCGGTA"
+bank: ["AACCGGTA"]
+
+return: 1
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>start: "AACCGGTT"
+end:   "AAACGGTA"
+bank: ["AACCGGTA", "AACCGCTA", "AAACGGTA"]
+
+return: 2
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>start: "AAAAACCC"
+end:   "AACCCCCC"
+bank: ["AAAACCCC", "AAACCCCC", "AACCCCCC"]
+
+return: 3
+</pre>
+<p>&nbsp;</p>
+<p>这道题跟之前的<a href="http://www.cnblogs.com/grandyang/p/4539768.html" target="_blank">Word Ladder</a>完全是一道题啊，换个故事就直接来啊，越来不走心了啊。不过博主做的时候并没有想起来是之前一样的题，而是先按照脑海里第一个浮现出的思路做的，发现也通过OJ了。博主使用的一种BFS的搜索，先建立bank数组的距离场，这里距离就是两个字符串之间不同字符的个数。然后以start字符串为起点，向周围距离为1的点扩散，采用BFS搜索，每扩散一层，level自加1，当扩散到end字符串时，返回当前level即可。注意我们要把start字符串也加入bank中，而且此时我们也知道start的坐标位置，bank的最后一个位置，然后在简历距离场的时候，调用一个count子函数，用来统计输入的两个字符串之间不同字符的个数，注意dist[i][j]和dist[j][i]是相同，所以我们只用算一次就行了。然后我们进行BFS搜索，用一个visited集合来保存遍历过的字符串，注意检测距离的时候，dist[i][j]和dist[j][i]只要有一个是1，就可以了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMutation(<span style="color: #0000ff;">string</span> start, <span style="color: #0000ff;">string</span> end, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> bank) {
+        </span><span style="color: #0000ff;">if</span> (bank.empty()) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        bank.push_back(start);
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> bank.size();
+        queue</span>&lt;<span style="color: #0000ff;">int</span>&gt; q{{n - <span style="color: #800080;">1</span><span style="color: #000000;">}};
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dist(n, vector&lt;<span style="color: #0000ff;">int</span>&gt;(n, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                dist[i][j] </span>=<span style="color: #000000;"> count(bank[i], bank[j]);
+            }
+        }
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> visited;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> q.size();
+            </span>++<span style="color: #000000;">res;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> q.front(); q.pop();
+                visited.insert(t);
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">if</span> ((dist[t][j] != <span style="color: #800080;">1</span> &amp;&amp; dist[j][t] != <span style="color: #800080;">1</span>) || visited.count(j)) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (bank[j] == end) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+                    q.push(j);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">int</span> count(<span style="color: #0000ff;">string</span> word1, <span style="color: #0000ff;">string</span><span style="color: #000000;"> word2) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> word1.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (word1[i] != word2[i]) ++<span style="color: #000000;">cnt;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法跟之前的那道<a href="http://www.cnblogs.com/grandyang/p/4539768.html" target="_blank">Word Ladder</a>是一样的，也是用的BFS搜索。跟上面的解法不同之处在于，对于遍历到的字符串，我们不再有距离场，而是对于每个字符，我们都尝试将其换为一个新的字符，每次只换一个，这样会得到一个新的字符串，如果这个字符串在bank中存在，说明这样变换是合法的，加入visited集合和queue中等待下一次遍历，记得在下次置换字符的时候要将之前的还原。我们在queue中取字符串出来遍历的时候，先检测其是否和end相等，相等的话返回level，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMutation(<span style="color: #0000ff;">string</span> start, <span style="color: #0000ff;">string</span> end, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> bank) {
+        </span><span style="color: #0000ff;">if</span> (bank.empty()) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">char</span>&gt; gens{<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">C</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">G</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">T</span><span style="color: #800000;">'</span><span style="color: #000000;">};
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> s{bank.begin(), bank.end()};
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> visited;
+        queue</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> q{{start}};
+        </span><span style="color: #0000ff;">int</span> level = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> q.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">if</span> (t == end) <span style="color: #0000ff;">return</span><span style="color: #000000;"> level;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; t.size(); ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">char</span> old =<span style="color: #000000;"> t[j];
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : gens) {
+                        t[j] </span>=<span style="color: #000000;"> c;
+                        </span><span style="color: #0000ff;">if</span> (s.count(t) &amp;&amp; !<span style="color: #000000;">visited.count(t)) {
+                            visited.insert(t);
+                            q.push(t);
+                        }
+                    }
+                    t[j] </span>=<span style="color: #000000;"> old;
+                }
+            }
+            </span>++<span style="color: #000000;">level;
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>博主一直想找种递归的解法，于是在论坛上找到了<a href="https://discuss.leetcode.com/topic/101351/dfs-java" target="_blank">这个帖子</a>，是Java版的递归写法，博主将其改写成C++版本，但是无法通过OJ，百思不得其解啊，明明一模一样啊，连变量名都起的一样，为啥Java版的就是对的，博主的这个改写版就不对呢，各位看官大神们帮忙解答一下呀～</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Why this not passing OJ ? Exactly the same as this Java version: </span><span style="color: #008000; text-decoration: underline;">https://discuss.leetcode.com/topic/101351/dfs-java</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minMutation(<span style="color: #0000ff;">string</span> start, <span style="color: #0000ff;">string</span> end, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> bank) {
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; explored(bank.size(), <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (bank.empty()) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> minMutation(explored, start, end,  bank);
+    }
+    </span><span style="color: #0000ff;">bool</span> minMutation(vector&lt;<span style="color: #0000ff;">bool</span>&gt;&amp; explored , <span style="color: #0000ff;">string</span> start, <span style="color: #0000ff;">string</span> end, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> bank) {
+        </span><span style="color: #0000ff;">if</span> (start == end) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> step = bank.size() + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; bank.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (diffOne(start, bank[i]) &amp;&amp;<span style="color: #000000;"> explored[i]) {
+                explored[i] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> temp =<span style="color: #000000;"> minMutation(explored, bank[i], end, bank);
+                </span><span style="color: #0000ff;">if</span> (temp != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    step </span>=<span style="color: #000000;"> min(step, temp);
+                }
+                explored[i] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> step == bank.size() + <span style="color: #800080;">1</span> ? -<span style="color: #800080;">1</span> : <span style="color: #800080;">1</span> +<span style="color: #000000;"> step;
+    }
+    </span><span style="color: #0000ff;">bool</span> diffOne(<span style="color: #0000ff;">string</span>&amp; s1, <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> s2) {
+        </span><span style="color: #0000ff;">int</span> count = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s1.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s1[i] != s2[i]) ++<span style="color: #000000;">count;
+            </span><span style="color: #0000ff;">if</span> (count &gt;= <span style="color: #800080;">2</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> count == <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4539768.html" target="_blank">Word Ladder</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4548184.html" target="_blank">Word Ladder II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/101351/dfs-java" target="_blank">https://discuss.leetcode.com/topic/101351/dfs-java</a></p>
+<p><a href="https://discuss.leetcode.com/topic/65780/java-solution-using-bfs" target="_blank">https://discuss.leetcode.com/topic/65780/java-solution-using-bfs</a></p>
+</div>
+<div id="interviewed-div">&nbsp;</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

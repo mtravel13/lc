@@ -1,0 +1,103 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5541012.html">[LeetCode] Android Unlock Patterns 安卓解锁模式</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an Android&nbsp;3x3&nbsp;key lock screen and two integers&nbsp;m&nbsp;and&nbsp;n, where 1 &le; m &le; n &le; 9, count the total number of unlock patterns of the Android lock screen, which consist of minimum of&nbsp;m&nbsp;keys and maximum&nbsp;n&nbsp;keys.</p>
+<p>Rules for a valid pattern:</p>
+<ol>
+<li>Each pattern must connect at least&nbsp;m&nbsp;keys and at most&nbsp;n&nbsp;keys.</li>
+<li>All the keys must be distinct.</li>
+<li>If the line connecting two consecutive keys in the pattern passes through any other keys, the other keys must have previously selected in the pattern. No jumps through non selected key is allowed.</li>
+<li>The order of keys used matters.</li>
+</ol>
+<p>&nbsp;</p>
+<p><img src="https://discuss.leetcode.com/uploads/files/1461680355228-cptqh.png" alt="" /></p>
+<p>Explanation:</p>
+<pre>| 1 | 2 | 3 |
+| 4 | 5 | 6 |
+| 7 | 8 | 9 |</pre>
+<p>&nbsp;</p>
+<p>Invalid move:&nbsp;<code>4 - 1 - 3 - 6&nbsp;</code><br />Line 1 - 3 passes through key 2 which had not been selected in the pattern.</p>
+<p>Invalid move:&nbsp;<code>4 - 1 - 9 - 2</code><br />Line 1 - 9 passes through key 5 which had not been selected in the pattern.</p>
+<p>Valid move:&nbsp;<code>2 - 4 - 1 - 3 - 6</code><br />Line 1 - 3 is valid because it passes through key 2, which had been selected in the pattern</p>
+<p>Valid move:&nbsp;<code>6 - 5 - 4 - 1 - 9 - 2</code><br />Line 1 - 9 is valid because it passes through key 5, which had been selected in the pattern.</p>
+<p>Example:<br />Given&nbsp;m&nbsp;= 1,&nbsp;n&nbsp;= 1, return 9.</p>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://discuss.leetcode.com/user/elmirap">@elmirap</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题乍一看题目这么长以为是一个设计题，其实不是，这道题还是比较有意思的，起码跟实际结合的比较紧密。这道题说的是安卓机子的解锁方法，有9个数字键，如果密码的长度范围在[m, n]之间，问所有的解锁模式共有多少种，注意题目中给出的一些非法的滑动模式。那么我们先来看一下哪些是非法的，首先1不能直接到3，必须经过2，同理的有4到6，7到9，1到7，2到8，3到9，还有就是对角线必须经过5，例如1到9，3到7等。我们建立一个二维数组jumps，用来记录两个数字键之间是否有中间键，然后再用一个一位数组visited来记录某个键是否被访问过，然后我们用递归来解，我们先对1调用递归函数，在递归函数中，我们遍历1到9每个数字next，然后找他们之间是否有jump数字，如果next没被访问过，并且jump为0，或者jump被访问过，我们对next调用递归函数。数字1的模式个数算出来后，由于1,3,7,9是对称的，所以我们乘4即可，然后再对数字2调用递归函数，2,4,6,9也是对称的，再乘4，最后单独对5调用一次，然后把所有的加起来就是最终结果了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numberOfPatterns(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; visited(<span style="color: #800080;">10</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; jumps(<span style="color: #800080;">10</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;(<span style="color: #800080;">10</span>, <span style="color: #800080;">0</span><span style="color: #000000;">));
+        jumps[</span><span style="color: #800080;">1</span>][<span style="color: #800080;">3</span>] = jumps[<span style="color: #800080;">3</span>][<span style="color: #800080;">1</span>] = <span style="color: #800080;">2</span><span style="color: #000000;">;
+        jumps[</span><span style="color: #800080;">4</span>][<span style="color: #800080;">6</span>] = jumps[<span style="color: #800080;">6</span>][<span style="color: #800080;">4</span>] = <span style="color: #800080;">5</span><span style="color: #000000;">;
+        jumps[</span><span style="color: #800080;">7</span>][<span style="color: #800080;">9</span>] = jumps[<span style="color: #800080;">9</span>][<span style="color: #800080;">7</span>] = <span style="color: #800080;">8</span><span style="color: #000000;">;
+        jumps[</span><span style="color: #800080;">1</span>][<span style="color: #800080;">7</span>] = jumps[<span style="color: #800080;">7</span>][<span style="color: #800080;">1</span>] = <span style="color: #800080;">4</span><span style="color: #000000;">;
+        jumps[</span><span style="color: #800080;">2</span>][<span style="color: #800080;">8</span>] = jumps[<span style="color: #800080;">8</span>][<span style="color: #800080;">2</span>] = <span style="color: #800080;">5</span><span style="color: #000000;">;
+        jumps[</span><span style="color: #800080;">3</span>][<span style="color: #800080;">9</span>] = jumps[<span style="color: #800080;">9</span>][<span style="color: #800080;">3</span>] = <span style="color: #800080;">6</span><span style="color: #000000;">;
+        jumps[</span><span style="color: #800080;">1</span>][<span style="color: #800080;">9</span>] = jumps[<span style="color: #800080;">9</span>][<span style="color: #800080;">1</span>] = jumps[<span style="color: #800080;">3</span>][<span style="color: #800080;">7</span>] = jumps[<span style="color: #800080;">7</span>][<span style="color: #800080;">3</span>] = <span style="color: #800080;">5</span><span style="color: #000000;">;
+        res </span>+= helper(<span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, m, n, jumps, visited) * <span style="color: #800080;">4</span><span style="color: #000000;">;</span><span style="color: #000000;">
+        res </span>+= helper(<span style="color: #800080;">2</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, m, n, jumps, visited) * <span style="color: #800080;">4</span><span style="color: #000000;">;</span><span style="color: #000000;">
+        res </span>+= helper(<span style="color: #800080;">5</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, m, n, jumps, visited);</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> helper(<span style="color: #0000ff;">int</span> num, <span style="color: #0000ff;">int</span> len, <span style="color: #0000ff;">int</span> res, <span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;jumps, vector&lt;<span style="color: #0000ff;">bool</span>&gt; &amp;<span style="color: #000000;">visited) {
+        </span><span style="color: #0000ff;">if</span> (len &gt;= m) ++<span style="color: #000000;">res;
+        </span>++<span style="color: #000000;">len;
+        </span><span style="color: #0000ff;">if</span> (len &gt; n) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        visited[num] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> next = <span style="color: #800080;">1</span>; next &lt;= <span style="color: #800080;">9</span>; ++<span style="color: #000000;">next) {
+            </span><span style="color: #0000ff;">int</span> jump =<span style="color: #000000;"> jumps[num][next];
+            </span><span style="color: #0000ff;">if</span> (!visited[next] &amp;&amp; (jump == <span style="color: #800080;">0</span> ||<span style="color: #000000;"> visited[jump])) {
+                res </span>=<span style="color: #000000;"> helper(next, len, res, m, n, jumps, visited);
+            }
+        }
+        visited[num] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}; </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法很简洁，但是不容易理解，讲解请看这个<a href="https://leetcode.com/discuss/104320/short-c-solution" target="_blank">帖子</a>。其中used是一个9位的mask，每位对应一个数字，如果为1表示存在，0表示不存在，(i1, j1)是之前的位置，(i, j)是当前的位置，所以滑动是从(i1, j1)到(i, j)，中间点为((i1+i)/2, (j1+j)/2), 这里的I和J分别为i1+i和j1+j，还没有除以2，所以I和J都是整数。如果I%2或者J%2不为0，说明中间点的坐标不是整数，即中间点不存在，如果中间点存在，如果中间点被使用了，则这条线也是成立的，可以调用递归，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numberOfPatterns(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">return</span> count(m, n, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">int</span> count(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span> used, <span style="color: #0000ff;">int</span> i1, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j1) {
+        </span><span style="color: #0000ff;">int</span> res = m &lt;= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (!n) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">3</span>; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> I = i1 + i, J = j1 + j, used2 = used | (<span style="color: #800080;">1</span> &lt;&lt; (i * <span style="color: #800080;">3</span> +<span style="color: #000000;"> j));
+                </span><span style="color: #0000ff;">if</span> (used2 &gt; used &amp;&amp; (I % <span style="color: #800080;">2</span> || J % <span style="color: #800080;">2</span> || used2 &amp; (<span style="color: #800080;">1</span> &lt;&lt; (I / <span style="color: #800080;">2</span> * <span style="color: #800080;">3</span> + J / <span style="color: #800080;">2</span><span style="color: #000000;">)))) {
+                    res </span>+= count(m - <span style="color: #800080;">1</span>, n - <span style="color: #800080;">1</span><span style="color: #000000;">, used2, i, j);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/104320/short-c-solution" target="_blank">https://leetcode.com/discuss/104320/short-c-solution</a></p>
+<p><a href="https://leetcode.com/discuss/104436/java-concise-backtracking-solution%20" target="_blank">https://leetcode.com/discuss/104436/java-concise-backtracking-solution</a></p>
+<p><a href="https://leetcode.com/discuss/104688/simple-and-concise-java-solution-in-69ms" target="_blank">https://leetcode.com/discuss/104688/simple-and-concise-java-solution-in-69ms</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

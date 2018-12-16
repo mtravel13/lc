@@ -1,0 +1,54 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4873248.html">[LeetCode] Nim Game 尼姆游戏</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are playing the following Nim Game with your friend: There is a heap of stones on the table, each time one of you take turns to remove 1 to 3 stones. The one who removes the last stone will be the winner. You will take the first turn to remove the stones.</p>
+<p>Both of you are very clever and have optimal strategies for the game. Write a function to determine whether you can win the game given the number of stones in the heap.</p>
+<p>For example, if there are 4 stones in the heap, then you will never win the game: no matter 1, 2, or 3 stones you remove, the last stone will always be removed by your friend.</p>
+<p><strong>Hint:</strong></p>
+<ol id="hints">
+<li class="hint animated fadeInLeft" style="display: list-item;">If there are 5 stones in the heap, could you figure out a way to remove the stones such that you will always be the winner?</li>
+</ol>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/discuss/user/jianchao.li.fighter">@jianchao.li.fighter</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>有史以来最少代码量的解法，虽然解法很简单，但是题目还是蛮有意思的，题目说给我们一堆石子，每次可以拿一个两个或三个，两个人轮流拿，拿到最后一个石子的人获胜，现在给我们一堆石子的个数，问我们能不能赢。那么我们就从最开始分析，由于是我们先拿，那么3个以内(包括3个)的石子，我们直接赢，如果共4个，那么我们一定输，因为不管我们取几个，下一个人一次都能取完。如果共5个，我们赢，因为我们可以取一个，然后变成4个让别人取，根据上面的分析我们赢，所以我们列出1到10个的情况如下：</p>
+<p>1&nbsp;&nbsp;&nbsp; Win</p>
+<p>2&nbsp;&nbsp;&nbsp; Win</p>
+<p>3&nbsp;&nbsp;&nbsp; Win</p>
+<p><span style="color: #ff0000;">4&nbsp;&nbsp;&nbsp; Lost</span></p>
+<p>5&nbsp;&nbsp;&nbsp; Win</p>
+<p>6&nbsp;&nbsp;&nbsp; Win</p>
+<p>7&nbsp;&nbsp;&nbsp; Win</p>
+<p><span style="color: #ff0000;">8&nbsp;&nbsp;&nbsp; Lost</span></p>
+<p>9&nbsp;&nbsp;&nbsp; Win</p>
+<p>10&nbsp;&nbsp; Win</p>
+<p>由此我们可以发现规律，只要是4的倍数个，我们一定会输，所以对4取余即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> canWinNim(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">return</span> n % <span style="color: #800080;">4</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>讨论：我们来generalize一下这道题，当可以拿1～n个石子时，那么个数为(n+1)的整数倍时一定会输，我们试着证明一下这个结论，若当前共有m*(n+1)个石子，那么：</p>
+<div>当m=1时，即剩n+1个的时候，肯定会输，因为不管你取1～n中的任何一个数字，另一个人都可以取完。</div>
+<div>当m&gt;1时，即有m*(n+1)的时候，不管你先取1～n中的任何一个数字x，另外一个人一定会取n+1-x个，这样总数就变成了(m-1)*(n+1)，第二个人就一直按这个策略取，那么直到剩n+1个的时候，就便变成m=1的情况，一定会输。</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5226206.html" target="_blank">Flip Game II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/nim-game/solution/">https://leetcode.com/problems/nim-game/solution/</a></p>
+<p><a href="https://leetcode.com/problems/nim-game/discuss/73749/Theorem:-all-4s-shall-be-false">https://leetcode.com/problems/nim-game/discuss/73749/Theorem:-all-4s-shall-be-false</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

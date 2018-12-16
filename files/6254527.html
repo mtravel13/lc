@@ -1,0 +1,128 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6254527.html">[LeetCode] Concatenated Words 连接的单词</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of words (without duplicates), please write a program that returns all concatenated words in the given list of words.</p>
+<p>A concatenated word is defined as a string that is comprised entirely of at least two shorter words in the given array.</p>
+<p>Example:</p>
+<pre>Input: ["cat","cats","catsdogcats","dog","dogcatsdog","hippopotamuses","rat","ratcatdogcat"]
+
+Output: ["catsdogcats","dogcatsdog","ratcatdogcat"]
+
+Explanation: "catsdogcats" can be concatenated by "cats", "dog" and "cats"; <br /> "dogcatsdog" can be concatenated by "dog", "cats" and "dog"; <br />"ratcatdogcat" can be concatenated by "rat", "cat", "dog" and "cat".
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The number of elements of the given array will not exceed&nbsp;<code>10,000</code></li>
+<li>The length sum of elements in the given array will not exceed&nbsp;<code>600,000</code>.</li>
+<li>All the input string will only include lower case letters.</li>
+<li>The returned elements order does not matter.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给了一个由单词组成的数组，某些单词是可能由其他的单词组成的，让我们找出所有这样的单词。这道题跟之前那道<a href="http://www.cnblogs.com/grandyang/p/4257740.html" target="_blank">Word Break</a>十分类似，我们可以对每一个单词都调用之前那题的方法，我们首先把所有单词都放到一个unordered_set中，这样可以快速找到某个单词是否在数组中存在。对于当前要判断的单词，我们先将其从set中删去，然后调用之前的<a href="http://www.cnblogs.com/grandyang/p/4257740.html" target="_blank">Word Break</a>的解法，具体讲解可以参见之前的帖子。如果是可以拆分，那么我们就存入结果res中，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findAllConcatenatedWordsInADict(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">if</span> (words.size() &lt;= <span style="color: #800080;">2</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> dict(words.begin(), words.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            dict.erase(word);
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> word.size();
+            </span><span style="color: #0000ff;">if</span> (len == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; v(len + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+            v[</span><span style="color: #800080;">0</span>] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len + <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">if</span> (v[j] &amp;&amp; dict.count(word.substr(j, i -<span style="color: #000000;"> j))) {
+                        v[i] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    }
+                }
+            }
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (v.back()) res.push_back(word);
+            dict.insert(word);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法跟上面的方法很类似，不同的是判断每个单词的时候不用将其移除set，而是在判断的过程中加了判断，使其不会判断单词本身是否在集合set中存在，而且由于对单词中子字符串的遍历顺序不同，加了一些优化在里面，使得其运算速度更快一些，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findAllConcatenatedWordsInADict(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> dict(words.begin(), words.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> word.size();
+            </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; dp(n + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+            dp[</span><span style="color: #800080;">0</span>] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (!dp[i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j &lt;= n; ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">if</span> (j - i &lt; n &amp;&amp; dict.count(word.substr(i, j -<span style="color: #000000;"> i))) {
+                        dp[j] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    }
+                }
+                </span><span style="color: #0000ff;">if</span> (dp[n]) {res.push_back(word); <span style="color: #0000ff;">break</span><span style="color: #000000;">;}
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是递归的写法，其中递归函数中的cnt表示有其他单词组成的个数，至少得由其他两个单词组成才符合题意，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; findAllConcatenatedWordsInADict(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        unordered_set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> dict(words.begin(), words.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">if</span> (word.empty()) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (helper(word, dict, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)) {
+                res.push_back(word);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">bool</span> helper(<span style="color: #0000ff;">string</span>&amp; word, unordered_set&lt;<span style="color: #0000ff;">string</span>&gt;&amp; dict, <span style="color: #0000ff;">int</span> pos, <span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt) {
+        </span><span style="color: #0000ff;">if</span> (pos &gt;= word.size() &amp;&amp; cnt &gt;= <span style="color: #800080;">2</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= (<span style="color: #0000ff;">int</span>)word.size() - pos; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> word.substr(pos, i);
+            </span><span style="color: #0000ff;">if</span> (dict.count(t) &amp;&amp; helper(word, dict, pos + i, cnt + <span style="color: #800080;">1</span><span style="color: #000000;">)) {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4257740.html" target="_blank">Word Break</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/72393/c-772-ms-dp-solution" target="_blank">https://discuss.leetcode.com/topic/72393/c-772-ms-dp-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/72433/c-600ms-20-lines-of-code-dfs-solution-is-there-any-way-to-optimize" target="_blank">https://discuss.leetcode.com/topic/72433/c-600ms-20-lines-of-code-dfs-solution-is-there-any-way-to-optimize</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

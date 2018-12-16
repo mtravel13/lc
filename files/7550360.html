@@ -1,0 +1,70 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7550360.html">[LeetCode] Equal Tree Partition 划分等价树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree with&nbsp;<code>n</code>&nbsp;nodes, your task is to check if it's possible to partition the tree to two trees which have the equal sum of values after removing&nbsp;exactly&nbsp;one edge on the original tree.</p>
+<p>Example 1:</p>
+<pre>Input:     
+    5
+   / \
+  10 10
+    /  \
+   2   3
+
+Output: True
+Explanation: 
+    5
+   / 
+  10
+      
+Sum: 15
+
+   10
+  /  \
+ 2    3
+
+Sum: 15
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:     
+    1
+   / \
+  2  10
+    /  \
+   2   20
+
+Output: False
+Explanation: You can't split the tree into two trees with equal sum after removing exactly one edge on the tree.</pre>
+<p>&nbsp;</p>
+<p>这道题让我们划分等价树，就是说当移除一条边后，被分成的两棵树的结点之和需要相等。那么通过观察题目中的例子我们可以发现，如果我们将每个结点的结点值变成其所有子结点的结点值之和再加上当前的结点值，那么对于例子1来说，根结点的结点值就变成了30，断开位置的结点就变成了15，那么我们就可以发现其实只要断开位置的结点值是根结点值的一半，就存在等价划分。所以这道题的难点就是更新每个结点的结点值，我们可以使用递归来做。博主最开始使用的是unordered_set，把更新后的每个结点值都存入集合中，但是对于test case: [0, 1, -1] 会fail, 仔细分析下这个case，发现更新后的根结点值还是0，而且0已经被存入集合了，而0除以2还是0，在集合中存在，会返回true，但其实这棵树是不能等价划分的。0的情况确实比较特殊，所以我们使用unordered_map，建立更新后的结点值和其出现次数之间的映射，这样只有map中0的个数大于1的时候，才返回true。这样完美的避开了根结点为0的陷阱，Perfect！参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> checkEqualTree(TreeNode*<span style="color: #000000;"> root) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">int</span> sum =<span style="color: #000000;"> helper(root, m);
+        </span><span style="color: #0000ff;">if</span> (sum == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> m[<span style="color: #800080;">0</span>] &gt; <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> sum % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span> &amp;&amp; m.count(sum / <span style="color: #800080;">2</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">int</span> helper(TreeNode* node, unordered_map&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> m) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> cur = node-&gt;val + helper(node-&gt;left, m) + helper(node-&gt;<span style="color: #000000;">right, m);
+        </span>++<span style="color: #000000;">m[cur];
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cur;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/100179/java-c-simple-solution-with-only-one-hashmap">https://discuss.leetcode.com/topic/100179/java-c-simple-solution-with-only-one-hashmap</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

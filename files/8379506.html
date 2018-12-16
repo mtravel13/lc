@@ -1,0 +1,110 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8379506.html">[LeetCode] Cut Off Trees for Golf Event 为高尔夫赛事砍树</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<div>
+<p>You are asked to cut off trees in a forest for a golf event. The forest is represented as a non-negative 2D map, in this map:</p>
+<ol>
+<li><code>0</code>&nbsp;represents the&nbsp;<code>obstacle</code>&nbsp;can't be reached.</li>
+<li><code>1</code>&nbsp;represents the&nbsp;<code>ground</code>&nbsp;can be walked through.</li>
+<li><code>The place with number bigger than 1</code>&nbsp;represents a&nbsp;<code>tree</code>&nbsp;can be walked through, and this positive number represents the tree's height.</li>
+</ol>
+<p>&nbsp;</p>
+<p>You are asked to cut off&nbsp;all&nbsp;the trees in this forest in the order of tree's height - always cut off the tree with lowest height first. And after cutting, the original place has the tree will become a grass (value 1).</p>
+<p>You will start from the point (0, 0) and you should output the minimum steps&nbsp;you need to walk&nbsp;to cut off all the trees. If you can't cut off all the trees, output -1 in that situation.</p>
+<p>You are guaranteed that no two&nbsp;<code>trees</code>&nbsp;have the same height and there is at least one tree needs to be cut off.</p>
+<p>Example 1:</p>
+<pre>Input: 
+[
+ [1,2,3],
+ [0,0,4],
+ [7,6,5]
+]
+Output: 6
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: 
+[
+ [1,2,3],
+ [0,0,0],
+ [7,6,5]
+]
+Output: -1
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: 
+[
+ [2,3,4],
+ [0,0,5],
+ [8,7,6]
+]
+Output: 6
+Explanation: You started from the point (0,0) and you can cut off the tree in (0,0) directly without walking.
+</pre>
+<p>&nbsp;</p>
+<p>Hint: size of the given matrix will not exceed 50x50.</p>
+<p>&nbsp;</p>
+</div>
+</div>
+<p>这道题让我们砍掉所有高度大于1的树，而且要求是按顺序从低到高来砍，那么本质实际上还是要求任意两点之间的最短距离啊。对于这种类似迷宫遍历求最短路径的题，BFS是不二之选啊。那么这道题就对高度相邻的两棵树之间调用一个BFS，所以我们可以把BFS的内容放倒子函数helper中来使用。那么我们首先就要将所有的树从低到高进行排序，我们遍历原二位矩阵，将每棵树的高度及其横纵坐标取出来，组成一个三元组，然后放到vector中，之后用sort对数组进行排序，因为sort默认是以第一个数字排序，这也是为啥我们要把高度放在第一个位置。然后我们就遍历我们的trees数组，我们的起始位置是（0，0），终点位置是从trees数组中取出的树的位置，然后调用BFS的helper函数，这个BFS的子函数就是很基本的写法，没啥过多需要讲解的地方，会返回最短路径的值，如果无法到达目标点，就返回-1。所以我们先检查，如果helper函数返回-1了，那么我们就直接返回-1，否则就将cnt加到结果res中。然后更新我们的起始点为当前树的位置，然后循环取下一棵树即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> cutOffTree(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> forest) {
+        </span><span style="color: #0000ff;">int</span> m = forest.size(), n = forest[<span style="color: #800080;">0</span>].size(), res = <span style="color: #800080;">0</span>, row = <span style="color: #800080;">0</span>, col = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> trees;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (forest[i][j] &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) trees.push_back({forest[i][j], i, j});
+            }
+        }
+        sort(trees.begin(), trees.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; trees.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> cnt = helper(forest, row, col, trees[i][<span style="color: #800080;">1</span>], trees[i][<span style="color: #800080;">2</span><span style="color: #000000;">]);
+            </span><span style="color: #0000ff;">if</span> (cnt == -<span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+            res </span>+=<span style="color: #000000;"> cnt;
+            row </span>= trees[i][<span style="color: #800080;">1</span><span style="color: #000000;">];
+            col </span>= trees[i][<span style="color: #800080;">2</span><span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> helper(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp; forest, <span style="color: #0000ff;">int</span> row, <span style="color: #0000ff;">int</span> col, <span style="color: #0000ff;">int</span> treeRow, <span style="color: #0000ff;">int</span><span style="color: #000000;"> treeCol) {
+        </span><span style="color: #0000ff;">if</span> (row == treeRow &amp;&amp; col == treeCol) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = forest.size(), n = forest[<span style="color: #800080;">0</span>].size(), cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> q{{{row, col}}};
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; visited(m, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dirs{{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span><span style="color: #000000;">}};
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span>++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = q.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+                auto t </span>=<span style="color: #000000;"> q.front(); q.pop();
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto dir : dirs) {
+                    </span><span style="color: #0000ff;">int</span> x = t.first + dir[<span style="color: #800080;">0</span>], y = t.second + dir[<span style="color: #800080;">1</span><span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= m || y &lt; <span style="color: #800080;">0</span> || y &gt;= n || visited[x][y] || forest[x][y] == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (x == treeRow &amp;&amp; y == treeCol) <span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+                    visited[x][y] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    q.push({x, y});
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+}; </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/102973/c-sort-bfs-with-explanation">https://discuss.leetcode.com/topic/102973/c-sort-bfs-with-explanation</a></p>
+<p><a href="https://discuss.leetcode.com/topic/103052/java-solution-priorityqueue-bfs">https://discuss.leetcode.com/topic/103052/java-solution-priorityqueue-bfs</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

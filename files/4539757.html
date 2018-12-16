@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4539757.html">[LeetCode] Kth Largest Element in an Array 数组中第k大的数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Find the&nbsp;kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.</p>
+<p>Example 1:</p>
+<pre>Input: <code>[3,2,1,5,6,4] </code>and k = 2
+Output: 5
+</pre>
+<p>Example 2:</p>
+<pre>Input: <code>[3,2,3,1,2,4,5,5,6] </code>and k = 4
+Output: 4</pre>
+<p>Note:&nbsp;<br />You may assume k is always valid, 1 &le; k &le; array's length.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求数组中第k大的数字，怎么求呢，当然首先想到的是给数组排序，然后求可以得到第k大的数字。先看一种利用c++的STL中的集成的排序方法，不用我们自己实现，这样的话这道题只要两行就完事了，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findKthLargest(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        sort(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">return</span> nums[nums.size() -<span style="color: #000000;"> k];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是利用了priority_queue的自动排序的特性，跟上面的解法思路上没有什么区别，当然我们也可以换成multiset来做，一个道理，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findKthLargest(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        priority_queue</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> q(nums.begin(), nums.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; k - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            q.pop();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q.top();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面两种方法虽然简洁，但是确不是本题真正想考察的东西，可以说有一定的偷懒嫌疑。这道题最好的解法应该是下面这种做法，用到了快速排序Quick Sort的思想，这里排序的方向是从小往大排。对快排不熟悉的童鞋们随意上网搜些帖子看下吧，多如牛毛啊，总有一款适合你。核心思想是每次都要先找一个中枢点Pivot，然后遍历其他所有的数字，像这道题从小往大排的话，就把小于中枢点的数字放到左半边，把大于中枢点的放在右半边，这样中枢点是整个数组中第几大的数字就确定了，虽然左右两部分不一定是完全有序的，但是并不影响本题要求的结果，所以我们求出中枢点的位置，如果正好是k-1，那么直接返回该位置上的数字；如果大于k-1，说明要求的数字在左半部分，更新右边界，再求新的中枢点位置；反之则更新右半部分，求中枢点的位置；不得不说，这个思路真的是巧妙啊～</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findKthLargest(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = nums.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">int</span> pos =<span style="color: #000000;"> partition(nums, left, right);
+            </span><span style="color: #0000ff;">if</span> (pos == k - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> nums[pos];
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (pos &gt; k - <span style="color: #800080;">1</span>) right = pos - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> left = pos + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">int</span> partition(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span><span style="color: #000000;"> right) {
+        </span><span style="color: #0000ff;">int</span> pivot = nums[left], l = left + <span style="color: #800080;">1</span>, r =<span style="color: #000000;"> right;
+        </span><span style="color: #0000ff;">while</span> (l &lt;=<span style="color: #000000;"> r) {
+            </span><span style="color: #0000ff;">if</span> (nums[l] &lt; pivot &amp;&amp; nums[r] &gt;<span style="color: #000000;"> pivot) {
+                swap(nums[l</span>++], nums[r--<span style="color: #000000;">]);
+            }
+            </span><span style="color: #0000ff;">if</span> (nums[l] &gt;= pivot) ++<span style="color: #000000;">l;
+            </span><span style="color: #0000ff;">if</span> (nums[r] &lt;= pivot) --<span style="color: #000000;">r;
+        }
+        swap(nums[left], nums[r]);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> r;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5139057.html">Wiggle Sort II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5454125.html">Top K Frequent Elements</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5983113.html">Third Maximum Number</a></p>
+<p>Kth Largest Element in a Stream</p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank">https://leetcode.com/problems/kth-largest-element-in-an-array/</a></p>
+<p><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/discuss/60294/Solution-explained" target="_blank">https://leetcode.com/problems/kth-largest-element-in-an-array/discuss/60294/Solution-explained</a></p>
+<p><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/discuss/60309/C%2B%2B-PartitionMax-Heappriority_queuemultiset" target="_blank">https://leetcode.com/problems/kth-largest-element-in-an-array/discuss/60309/C%2B%2B-PartitionMax-Heappriority_queuemultiset</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

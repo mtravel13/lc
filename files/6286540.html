@@ -1,0 +1,84 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6286540.html">[LeetCode] Magical String 神奇字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>A magical string&nbsp;S&nbsp;consists of only '1' and '2' and obeys the following rules:</p>
+<p>The string&nbsp;S&nbsp;is magical because concatenating the number of contiguous occurrences of characters '1' and '2' generates the string&nbsp;S&nbsp;itself.</p>
+<p>The first few elements of string&nbsp;S&nbsp;is the following:&nbsp;S&nbsp;= "1221121221221121122&hellip;&hellip;"</p>
+<p>If we group the consecutive '1's and '2's in&nbsp;S, it will be:</p>
+<p>1 22 11 2 1 22 1 22 11 2 11 22 ......</p>
+<p>and the occurrences of '1's or '2's in each group are:</p>
+<p>1 2 2 1 1 2 1 2 2 1 2 2 ......</p>
+<p>You can see that the occurrence sequence above is the&nbsp;S&nbsp;itself.</p>
+<p>Given an integer N as input, return the number of '1's in the first N number in the magical string&nbsp;S.</p>
+<p>Note:&nbsp;N will not exceed 100,000.</p>
+<p>Example 1:</p>
+<pre>Input: 6
+Output: 3
+Explanation: The first 6 elements of magical string S is "12211" and it contains three 1's, so return 3.
+</pre>
+<p>&nbsp;</p>
+<p>这道题介绍了一种神奇字符串，只由1和2组成，通过计数1组和2组的个数，又能生成相同的字符串。而让我们求前n个数字中1的个数说白了其实就是让我们按规律生成这个神奇字符串，只有生成了字符串的前n个字符，才能统计出1的个数。其实这道题的难点就是在于找到规律来生成字符串，这里我们就直接说规律了，因为博主也没有自己找到，都是看了网上大神们的解法。根据第三个数字2开始往后生成数字，此时生成两个1，然后根据第四个数字1，生成一个2，再根据第五个数字1，生成一个1，以此类推，生成的数字1或2可能通过异或3来交替生成，在生成的过程中同时统计1的个数即可，参见代码如下：</p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> magicalString(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">if</span> (n &lt;= <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (n &lt;= <span style="color: #800080;">3</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">1</span>, head = <span style="color: #800080;">2</span>, tail = <span style="color: #800080;">3</span>, num = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; v{<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">2</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">while</span> (tail &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; v[head]; ++<span style="color: #000000;">i) {
+                v.push_back(num);
+                </span><span style="color: #0000ff;">if</span> (num == <span style="color: #800080;">1</span> &amp;&amp; tail &lt; n) ++<span style="color: #000000;">res;
+                </span>++<span style="color: #000000;">tail;
+            }
+            num </span>^= <span style="color: #800080;">3</span><span style="color: #000000;">;
+            </span>++<span style="color: #000000;">head;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法的思路跟上面一样，但是写法上面大大的简洁了，感觉很叼！</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> magicalString(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">string</span> s = <span style="color: #800000;">"</span><span style="color: #800000;">122</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (s.size() &lt;<span style="color: #000000;"> n) {
+            s </span>+= <span style="color: #0000ff;">string</span>(s[i++] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>, s.back() ^ <span style="color: #800080;">3</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span> count(s.begin(), s.begin() + n, <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/74637/short-c" target="_blank">https://discuss.leetcode.com/topic/74637/short-c</a></p>
+<p><a href="https://discuss.leetcode.com/topic/74917/simple-java-solution-using-one-array-and-two-pointers" target="_blank">https://discuss.leetcode.com/topic/74917/simple-java-solution-using-one-array-and-two-pointers</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

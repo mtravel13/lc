@@ -1,0 +1,141 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4606926.html">[LeetCode] Longest Common Prefix 最长共同前缀</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Write a function to find the longest common prefix string amongst an array of strings.</p>
+<p>If there is no common prefix, return an empty string&nbsp;<code>""</code>.</p>
+<p>Example 1:</p>
+<pre>Input: ["flower","flow","flight"]
+Output: "fl"
+</pre>
+<p>Example 2:</p>
+<pre>Input: ["dog","racecar","car"]
+Output: ""
+Explanation: There is no common prefix among the input strings.
+</pre>
+<p>Note:</p>
+<p>All given inputs are in lowercase letters&nbsp;<code>a-z</code>.</p>
+<p>&nbsp;</p>
+<p>这道题让我们求一系列字符串的共同前缀，没有什么特别的技巧，无脑查找即可，我们定义两个变量i和j，其中i是遍历搜索字符串中的字符，j是遍历字符串集中的每个字符串。这里将单词上下排好，则相当于一个各行长度有可能不相等的二维数组，我们遍历顺序和一般的横向逐行遍历不同，而是采用纵向逐列遍历，在遍历的过程中，如果某一行没有了，说明其为最短的单词，因为共同前缀的长度不能长于最短单词，所以此时返回已经找出的共同前缀。我们每次取出第一个字符串的某一个位置的单词，然后遍历其他所有字符串的对应位置看是否相等，如果有不满足的直接返回res，如果都相同，则将当前字符存入结果，继续检查下一个位置的字符，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> longestCommonPrefix(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> strs) {
+        </span><span style="color: #0000ff;">if</span> (strs.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; strs[<span style="color: #800080;">0</span>].size(); ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">char</span> c = strs[<span style="color: #800080;">0</span><span style="color: #000000;">][j];
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; strs.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (j &gt;= strs[i].size() || strs[i][j] !=<span style="color: #000000;"> c) {
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+                }
+            }
+            res.push_back(c);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String longestCommonPrefix(String[] strs) {
+        </span><span style="color: #0000ff;">if</span> (strs == <span style="color: #0000ff;">null</span> || strs.length == 0) <span style="color: #0000ff;">return</span> ""<span style="color: #000000;">;
+        String res </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> String();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = 0; j &lt; strs[0].length(); ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">char</span> c = strs[0<span style="color: #000000;">].charAt(j);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt; strs.length; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (j &gt;= strs[i].length() || strs[i].charAt(j) !=<span style="color: #000000;"> c) {
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+                }
+            }
+            res </span>+=<span style="color: #000000;"> Character.toString(c);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对上面的方法进行适当精简，如果我们发现当前某个字符和下一行对应位置的字符不相等，说明不会再有更长的共同前缀了，我们直接通过用substr的方法直接取出共同前缀的子字符串。如果遍历结束前没有返回结果的话，说明第一个单词就是公共前缀，返回为结果即可。代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> longestCommonPrefix(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> strs) {
+        </span><span style="color: #0000ff;">if</span> (strs.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; strs[<span style="color: #800080;">0</span>].size(); ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; strs.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (j &gt;= strs[i].size() || j &gt;= strs[i + <span style="color: #800080;">1</span>].size() || strs[i][j] != strs[i + <span style="color: #800080;">1</span><span style="color: #000000;">][j]) {
+                    </span><span style="color: #0000ff;">return</span> strs[i].substr(<span style="color: #800080;">0</span><span style="color: #000000;">, j);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> strs[<span style="color: #800080;">0</span><span style="color: #000000;">];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String longestCommonPrefix(String[] strs) {
+        </span><span style="color: #0000ff;">if</span> (strs == <span style="color: #0000ff;">null</span> || strs.length == 0) <span style="color: #0000ff;">return</span> ""<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = 0; j &lt; strs[0].length(); ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; strs.length - 1; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (j &gt;= strs[i].length() || j &gt;= strs[i + 1].length() || strs[i].charAt(j) != strs[i + 1<span style="color: #000000;">].charAt(j)) {
+                    </span><span style="color: #0000ff;">return</span> strs[i].substring(0<span style="color: #000000;">, j);   
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> strs[0<span style="color: #000000;">];
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们再来看一种解法，这种方法给输入字符串数组排了个序，想想这样做有什么好处？既然是按字母顺序排序的话，那么有共同字母多的两个字符串会被排到一起，而跟大家相同的字母越少的字符串会被挤到首尾两端，那么如果有共同前缀的话，一定会出现在首尾两端的字符串中，所以我们只需要找首尾字母串的共同前缀即可。比如例子1排序后为 ["flight", "flow", "flower"]，例子2排序后为 ["cat", "dog", "racecar"]，虽然例子2没有共同前缀，但也可以认为共同前缀是空串，且出现在首尾两端的字符串中。由于是按字母顺序排的，而不是按长度，所以首尾字母的长度关系不知道，为了防止溢出错误，我们只遍历而这种较短的那个的长度，找出共同前缀返回即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>C++ 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> longestCommonPrefix(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> strs) {
+        </span><span style="color: #0000ff;">if</span> (strs.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        sort(strs.begin(), strs.end());
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, len = min(strs[<span style="color: #800080;">0</span><span style="color: #000000;">].size(), strs.back().size());
+        </span><span style="color: #0000ff;">while</span> (i &lt; len &amp;&amp; strs[<span style="color: #800080;">0</span>][i] == strs.back()[i]) ++<span style="color: #000000;">i;
+        </span><span style="color: #0000ff;">return</span> strs[<span style="color: #800080;">0</span>].substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Java 解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String longestCommonPrefix(String[] strs) {
+        </span><span style="color: #0000ff;">if</span> (strs == <span style="color: #0000ff;">null</span> || strs.length == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        Arrays.sort(strs);
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, len = Math.min(strs[<span style="color: #800080;">0</span>].length(), strs[strs.length - <span style="color: #800080;">1</span><span style="color: #000000;">].length());
+        </span><span style="color: #0000ff;">while</span> (i &lt; len &amp;&amp; strs[<span style="color: #800080;">0</span>].charAt(i) == strs[strs.length - <span style="color: #800080;">1</span>].charAt(i)) i++<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> strs[<span style="color: #800080;">0</span>].substring(<span style="color: #800080;">0</span><span style="color: #000000;">, i);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/longest-common-prefix">https://leetcode.com/problems/longest-common-prefix</a></p>
+<p><a href="https://leetcode.com/problems/longest-common-prefix/discuss/6910/Java-code-with-13-lines">https://leetcode.com/problems/longest-common-prefix/discuss/6910/Java-code-with-13-lines</a></p>
+<p><a href="https://leetcode.com/problems/longest-common-prefix/discuss/6940/Java-We-Love-Clear-Code!">https://leetcode.com/problems/longest-common-prefix/discuss/6940/Java-We-Love-Clear-Code!</a></p>
+<p><a href="https://leetcode.com/problems/longest-common-prefix/discuss/6926/Accepted-c%2B%2B-6-lines-4ms">https://leetcode.com/problems/longest-common-prefix/discuss/6926/Accepted-c%2B%2B-6-lines-4ms</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

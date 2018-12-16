@@ -1,0 +1,114 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5209621.html">[LeetCode] Flatten 2D Vector 压平二维向量</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Implement an iterator to flatten a 2d vector.</p>
+<p>For example,<br />Given 2d vector =</p>
+<pre>[
+  [1,2],
+  [3],
+  [4,5,6]
+]
+</pre>
+<p>&nbsp;</p>
+<p>By calling&nbsp;<em>next</em>&nbsp;repeatedly until&nbsp;<em>hasNext</em>&nbsp;returns false, the order of elements returned by&nbsp;<em>next</em>&nbsp;should be:&nbsp;<code>[1,2,3,4,5,6]</code>.</p>
+<p>Hint:</p>
+<ol id="hints">
+<li class="hint animated fadeInLeft">How many variables do you need to keep track?</li>
+<li class="hint animated fadeInLeft">Two variables is all you need. Try with&nbsp;<code>x</code>&nbsp;and&nbsp;<code>y</code>.</li>
+<li class="hint animated fadeInLeft">Beware of empty rows. It could be the first few rows.</li>
+<li class="hint animated fadeInLeft">To write correct code, think about the&nbsp;<a href="https://en.wikipedia.org/wiki/Invariant_(computer_science)" target="_blank">invariant</a>&nbsp;to maintain. What is it?</li>
+<li class="hint animated fadeInLeft">The invariant is&nbsp;<code>x</code>&nbsp;and&nbsp;<code>y</code>&nbsp;must always point to a valid point in the 2d vector. Should you maintain your invariant&nbsp;<em>ahead of time</em>&nbsp;or&nbsp;<em>right when you need it</em>?</li>
+<li class="hint animated fadeInLeft">Not sure? Think about how you would implement&nbsp;<code>hasNext()</code>. Which is more complex?</li>
+<li class="hint animated fadeInLeft">Common logic in two different places should be refactored into a common method.</li>
+</ol>
+<p>Follow up:<br />As an added challenge, try to code it using only&nbsp;<a href="http://www.cplusplus.com/reference/iterator/iterator/" target="_blank">iterators in C++</a>&nbsp;or&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html" target="_blank">iterators in Java</a>.</p>
+<p>&nbsp;</p>
+<p>这道题让我们压平一个二维向量数组，并且实现一个iterator的功能，包括next和hasNext函数，那么最简单的方法就是将二维数组按顺序先存入到一个一维数组里，然后此时只要维护一个变量i来记录当前遍历到的位置，hasNext函数看当前坐标是否小于元素总数，next函数即为取出当前位置元素，坐标后移一位，参见代码如下： &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Vector2D {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Vector2D(vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> vec2d) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : vec2d) {
+            v.insert(v.end(), a.begin(), a.end());
+        }    
+    }
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">return</span> v[i++<span style="color: #000000;">];
+    }
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">return</span> i &lt;<span style="color: #000000;"> v.size();
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+    </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看另一种解法，不直接转换为一维数组，而是维护两个变量x和y，我们将x和y初始化为0，对于hasNext函数，我们检查当前x是否小于总行数，y是否和当前行的列数相同，如果相同，说明要转到下一行，则x自增1，y初始化为0，若此时x还是小于总行数，说明下一个值可以被取出来，那么在next函数就可以直接取出行为x，列为y的数字，并将y自增1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Vector2D {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Vector2D(vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> vec2d) {
+        v </span>=<span style="color: #000000;"> vec2d;
+        x </span>= y = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">return</span> v[x][y++<span style="color: #000000;">];
+    }
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">while</span> (x &lt; v.size() &amp;&amp; y ==<span style="color: #000000;"> v[x].size()) {
+            </span>++<span style="color: #000000;">x; 
+            y </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> x &lt;<span style="color: #000000;"> v.size();
+    }    
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> v;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> x, y;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>题目中的Follow up让我们用interator来做，C++中iterator不像Java中的那么强大，自己本身并没有包含next和hasNext函数，所以我们得自己来实现，我们将x定义为行的iterator，再用个end指向二维数组的末尾，定义一个整型变量y来指向列位置，实现思路和上一种解法完全相同，只是写法略有不同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Vector2D {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Vector2D(vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> vec2d) {
+        x </span>=<span style="color: #000000;"> vec2d.begin();
+        end </span>=<span style="color: #000000;"> vec2d.end();
+    }
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> next() {
+        </span><span style="color: #0000ff;">return</span> (*x)[y++<span style="color: #000000;">];
+    }
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> hasNext() {
+        </span><span style="color: #0000ff;">while</span> (x != end &amp;&amp; y == (*<span style="color: #000000;">x).size()) {
+            </span>++<span style="color: #000000;">x; 
+            y </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> x !=<span style="color: #000000;"> end;
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;">::iterator x, end;
+    </span><span style="color: #0000ff;">int</span> y = <span style="color: #800080;">0</span><span style="color: #000000;">;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/52614/2-short-c-solution" target="_blank">https://leetcode.com/discuss/52614/2-short-c-solution</a></p>
+<p><a href="https://leetcode.com/discuss/50292/7-9-lines-added-java-and-c-o-1-space" target="_blank">https://leetcode.com/discuss/50292/7-9-lines-added-java-and-c-o-1-space</a></p>
+<p><a href="https://leetcode.com/discuss/50259/20ms-c-solution-with-explanations?show=50295#a50295" target="_blank">https://leetcode.com/discuss/50259/20ms-c-solution-with-explanations?show=50295#a50295</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,50 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4032449.html">[LeetCode] Pascal&#39;s Triangle 杨辉三角</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-negative integer&nbsp;<em>numRows</em>, generate the first&nbsp;<em>numRows</em>&nbsp;of Pascal's triangle.</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif" alt="" /><br /><small>In Pascal's triangle, each number is the sum of the two numbers directly above it.</small></p>
+<p>Example:</p>
+<pre>Input: 5
+Output:
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]</pre>
+<pre><br /><br /></pre>
+<p>杨辉三角是二项式系数的一种写法，如果熟悉杨辉三角的五个性质，那么很好生成，可参见我的上一篇博文<a href="http://www.cnblogs.com/grandyang/p/4031536.html" target="_blank">Pascal's Triangle II</a>。具体生成算是：每一行的首个和结尾一个数字都是1，从第三行开始，中间的每个数字都是上一行的左右两个数字之和。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; generate(<span style="color: #0000ff;">int</span><span style="color: #000000;"> numRows) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; res(numRows, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; numRows; ++<span style="color: #000000;">i) {
+            res[i].resize(i </span>+ <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt; i; ++<span style="color: #000000;">j) {
+                res[i][j] </span>= res[i - <span style="color: #800080;">1</span>][j - <span style="color: #800080;">1</span>] + res[i - <span style="color: #800080;">1</span><span style="color: #000000;">][j];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4031536.html" target="_blank">Pascal's Triangle II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/pascals-triangle/" target="_blank">https://leetcode.com/problems/pascals-triangle/</a></p>
+<p><a href="https://leetcode.com/problems/pascals-triangle/discuss/38150/My-C%2B%2B-code-0ms" target="_blank">https://leetcode.com/problems/pascals-triangle/discuss/38150/My-C%2B%2B-code-0ms</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

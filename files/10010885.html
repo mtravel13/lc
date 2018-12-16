@@ -1,0 +1,141 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/10010885.html">Solve Error: &quot;errcode&quot;: 40016, &quot;errmsg&quot;: &quot;invalid button size hint&quot;</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>在使用微信官方给的添加自定义菜单的示例代码：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">{
+    </span>"button"<span style="color: #000000;">: [
+        {
+            </span>"name": "扫码"<span style="color: #000000;">, 
+            </span>"sub_button"<span style="color: #000000;">: [
+                {
+                    </span>"type": "scancode_waitmsg"<span style="color: #000000;">, 
+                    </span>"name": "扫码带提示"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_0_0"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }, 
+                {
+                    </span>"type": "scancode_push"<span style="color: #000000;">, 
+                    </span>"name": "扫码推事件"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_0_1"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }
+            ]
+        }, 
+        {
+            </span>"name": "发图"<span style="color: #000000;">, 
+            </span>"sub_button"<span style="color: #000000;">: [
+                {
+                    </span>"type": "pic_sysphoto"<span style="color: #000000;">, 
+                    </span>"name": "系统拍照发图"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_1_0"<span style="color: #000000;">, 
+                   </span>"sub_button"<span style="color: #000000;">: [ ]
+                 }, 
+                {
+                    </span>"type": "pic_photo_or_album"<span style="color: #000000;">, 
+                    </span>"name": "拍照或者相册发图"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_1_1"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }, 
+                {
+                    </span>"type": "pic_weixin"<span style="color: #000000;">, 
+                    </span>"name": "微信相册发图"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_1_2"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }
+            ]
+        }, 
+        {
+            </span>"name": "发送位置"<span style="color: #000000;">, 
+            </span>"type": "location_select"<span style="color: #000000;">, 
+            </span>"key": "rselfmenu_2_0"<span style="color: #000000;">
+        },
+        {
+           </span>"type": "media_id"<span style="color: #000000;">, 
+           </span>"name": "图片"<span style="color: #000000;">, 
+           </span>"media_id": "MEDIA_ID1"<span style="color: #000000;">
+        }, 
+        {
+           </span>"type": "view_limited"<span style="color: #000000;">, 
+           </span>"name": "图文消息"<span style="color: #000000;">, 
+           </span>"media_id": "MEDIA_ID2"<span style="color: #000000;">
+        }
+    ]
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>可能会遇到如下的错误：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #ff0000;">Connection: keep-alive
+Date: Sat, 24 Nov 2018 00:58:30 GMT
+Content-Type: application/json; encoding=utf-8
+Content-Length: 71
+{
+    "errcode": 40016, 
+    "errmsg": "invalid button size hint: [dNjLEa01101961]"
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>原因可能是因为想展示的按钮太多了，装不下了，去掉最后两个就好了：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">{
+    </span>"button"<span style="color: #000000;">: [
+        {
+            </span>"name": "扫码"<span style="color: #000000;">, 
+            </span>"sub_button"<span style="color: #000000;">: [
+                {
+                    </span>"type": "scancode_waitmsg"<span style="color: #000000;">, 
+                    </span>"name": "扫码带提示"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_0_0"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }, 
+                {
+                    </span>"type": "scancode_push"<span style="color: #000000;">, 
+                    </span>"name": "扫码推事件"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_0_1"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }
+            ]
+        }, 
+        {
+            </span>"name": "发图"<span style="color: #000000;">, 
+            </span>"sub_button"<span style="color: #000000;">: [
+                {
+                    </span>"type": "pic_sysphoto"<span style="color: #000000;">, 
+                    </span>"name": "系统拍照发图"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_1_0"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }, 
+                {
+                    </span>"type": "pic_photo_or_album"<span style="color: #000000;">, 
+                    </span>"name": "拍照或者相册发图"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_1_1"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }, 
+                {
+                    </span>"type": "pic_weixin"<span style="color: #000000;">, 
+                    </span>"name": "微信相册发图"<span style="color: #000000;">, 
+                    </span>"key": "rselfmenu_1_2"<span style="color: #000000;">, 
+                    </span>"sub_button"<span style="color: #000000;">: [ ]
+                }
+            ]
+        }, 
+        {
+            </span>"name": "发送位置"<span style="color: #000000;">, 
+            </span>"type": "location_select"<span style="color: #000000;">, 
+            </span>"key": "rselfmenu_2_0"<span style="color: #000000;">
+        }
+    ]
+}</span></pre>
+</div>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

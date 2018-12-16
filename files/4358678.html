@@ -1,0 +1,80 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4358678.html">[LeetCode] Permutation Sequence 序列排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The set&nbsp;<code>[1,2,3,...,<em>n</em>]</code>&nbsp;contains a total of&nbsp;<em>n</em>! unique permutations.</p>
+<p>By listing and labeling all of the permutations in order, we get the following sequence for&nbsp;<em>n</em>&nbsp;= 3:</p>
+<ol>
+<li><code>"123"</code></li>
+<li><code>"132"</code></li>
+<li><code>"213"</code></li>
+<li><code>"231"</code></li>
+<li><code>"312"</code></li>
+<li><code>"321"</code></li>
+</ol>
+<p>Given&nbsp;<em>n</em>&nbsp;and&nbsp;<em>k</em>, return the&nbsp;<em>k</em>th&nbsp;permutation sequence.</p>
+<p>Note:</p>
+<ul>
+<li>Given&nbsp;<em>n</em>&nbsp;will be between 1 and 9 inclusive.</li>
+<li>Given&nbsp;<em>k</em>&nbsp;will be between 1 and&nbsp;<em>n</em>! inclusive.</li>
+</ul>
+<p>Example 1:</p>
+<pre>Input: n = 3, k = 3
+Output: "213"
+</pre>
+<p>Example 2:</p>
+<pre>Input: n = 4, k = 9
+Output: "2314"</pre>
+<p>&nbsp;</p>
+<p>这道题是让求出n个数字的第k个排列组合，由于其特殊性，我们不用将所有的排列组合的情况都求出来，然后返回其第k个，我们可以只求出第k个排列组合即可，那么难点就在于如何知道数字的排列顺序，可参见网友<a href="http://bangbingsyb.blogspot.com/2014/11/leetcode-permutation-sequence.html" target="_blank">喜刷刷的博客</a>，首先我们要知道当n = 3时，其排列组合共有3! = 6种，当n = 4时，其排列组合共有4! = 24种，我们就以n = 4, k = 17的情况来分析，所有排列组合情况如下：</p>
+<p><span style="color: #ff0000;">1</span><span style="color: #008000;">2</span>34<br /><span style="color: #ff0000;">1</span><span style="color: #008000;">2</span>43<br /><span style="color: #ff0000;">1</span><span style="color: #0000ff;">3</span>24<br /><span style="color: #ff0000;">1</span><span style="color: #0000ff;">3</span>42<br /><span style="color: #ff0000;">1</span><span style="color: #ffcc00;">4</span>23<br /><span style="color: #ff0000;">1</span><span style="color: #ffcc00;">4</span>32<br /><span style="color: #008000;">2</span><span style="color: #ff0000;">1</span>34<br /><span style="color: #008000;">2</span><span style="color: #ff0000;">1</span>43<br /><span style="color: #008000;">2</span><span style="color: #0000ff;">3</span>14  <br /><span style="color: #008000;">2</span><span style="color: #0000ff;">3</span>41<br /><span style="color: #008000;">2</span><span style="color: #ffcc00;">4</span>13<br /><span style="color: #008000;">2</span><span style="color: #ffcc00;">4</span>31<br /><span style="color: #0000ff;">3</span><span style="color: #ff0000;">1</span>24<br /><span style="color: #0000ff;">3</span><span style="color: #ff0000;">1</span>42<br /><span style="color: #0000ff;">3</span><span style="color: #008000;">2</span>14<br /><span style="color: #0000ff;">3</span><span style="color: #008000;">2</span>41<br /><span style="color: #0000ff;">3</span><span style="color: #ffcc00;">4</span>12	&lt;---  k = 17<br /><span style="color: #0000ff;">3</span><span style="color: #ffcc00;">4</span>21<br /><span style="color: #ffcc00;">4</span><span style="color: #ff0000;">1</span>23<br /><span style="color: #ffcc00;">4</span><span style="color: #ff0000;">1</span>32<br /><span style="color: #ffcc00;">4</span><span style="color: #008000;">2</span>13<br /><span style="color: #ffcc00;">4</span><span style="color: #008000;">2</span>31<br /><span style="color: #ffcc00;">4</span><span style="color: #0000ff;">3</span>12<br /><span style="color: #ffcc00;">4</span><span style="color: #0000ff;">3</span>21</p>
+<p>我们可以发现，每一位上1,2,3,4分别都出现了6次，当最高位上的数字确定了，第二高位每个数字都出现了2次，当第二高位也确定了，第三高位上的数字都只出现了1次，当第三高位确定了，那么第四高位上的数字也只能出现一次，下面我们来看k = 17这种情况的每位数字如何确定，由于k = 17是转化为数组下标为16：</p>
+<p>最高位可取1,2,3,4中的一个，每个数字出现3！= 6次，所以k = 16的第一位数字的下标为16 / 6 = 2，在 "1234" 中即3被取出。这里我们的k是要求的坐标为k的全排列序列，我们定义 k' 为当最高位确定后，要求的全排序列在新范围中的位置，同理，k'' 为当第二高为确定后，所要求的全排列序列在新范围中的位置，以此类推，下面来具体看看：</p>
+<p>第二位此时从1,2,4中取一个，k = 16，则此时的 k' = 16 % (3!) = 4，如下所示，而剩下的每个数字出现2！= 2次，所以第二数字的下标为4 / 2 = 2，在 "124" 中即4被取出。</p>
+<p><span style="color: #0000ff;">3</span><span style="color: #ff0000;">1</span>24<br /><span style="color: #0000ff;">3</span><span style="color: #ff0000;">1</span>42<br /><span style="color: #0000ff;">3</span><span style="color: #008000;">2</span>14<br /><span style="color: #0000ff;">3</span><span style="color: #008000;">2</span>41<br /><span style="color: #0000ff;">3</span><span style="color: #ff9900;">4</span>12	&lt;--- k' = 4<br /><span style="color: #0000ff;">3</span><span style="color: #ff9900;">4</span>21</p>
+<p>第三位此时从1,2中去一个，k' = 4，则此时的k'' = 4 % (2!) = 0，如下所示，而剩下的每个数字出现1！= 1次，所以第三个数字的下标为 0 / 1 = 0，在 "12" 中即1被取出。</p>
+<p><span style="color: #0000ff;">3</span><span style="color: #ff9900;">4</span>12 &lt;--- k'' = 0<br /><span style="color: #0000ff;">3</span><span style="color: #ff9900;">4</span>21</p>
+<p>第四位是从2中取一个，k'' = 0，则此时的k''' = 0 % (1!) = 0，如下所示，而剩下的每个数字出现0！= 1次，所以第四个数字的下标为0 / 1= 0，在 "2" 中即2被取出。</p>
+<p><span style="color: #0000ff;">3</span><span style="color: #ff9900;">4</span>12 &lt;--- k''' = 0</p>
+<p>那么我们就可以找出规律了<br />a1 = k / (n - 1)!<br />k1 = k</p>
+<p>a2 = k1 / (n - 2)!<br />k2 = k1 % (n - 2)!<br />...</p>
+<p>an-1 = kn-2 / 1!<br />kn-1 = kn-2 % 1!</p>
+<p>an = kn-1 / 0!<br />kn = kn-1 % 0! </p>
+<p>&nbsp;</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> getPermutation(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">string</span> num = <span style="color: #800000;">"</span><span style="color: #800000;">123456789</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; f(n, <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++i) f[i] = f[i - <span style="color: #800080;">1</span>] *<span style="color: #000000;"> i;
+        </span>--<span style="color: #000000;">k;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n; i &gt;= <span style="color: #800080;">1</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> j = k / f[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            k </span>%= f[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            res.push_back(num[j]);
+            num.erase(j, </span><span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4428207.html" target="_blank">Next Permutation</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4358848.html" target="_blank">Permutations</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/permutation-sequence/description/">https://leetcode.com/problems/permutation-sequence/description/</a></p>
+<p><a href="https://leetcode.com/problems/permutation-sequence/discuss/22508/An-iterative-solution-for-reference">https://leetcode.com/problems/permutation-sequence/discuss/22508/An-iterative-solution-for-reference</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

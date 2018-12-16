@@ -1,0 +1,37 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4782695.html">[LeetCode] H-Index II 求H指数之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p><strong>Follow up</strong> for <a href="https://leetcode.com/problems/h-index/" target="_blank">H-Index</a>: What if the <code>citations</code> array is sorted in ascending order? Could you optimize your algorithm?</p>
+<p><strong>Hint:</strong></p>
+<ol id="hints">
+<li class="hint animated fadeInLeft" style="display: list-item;">Expected runtime complexity is in <em>O</em>(log <em>n</em>) and the input is sorted.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这题是之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4781203.html">H-Index 求H指数</a>的拓展，输入数组是有序的，让我们在O(log n)的时间内完成计算，看到这个时间复杂度，应该有很敏锐的意识应该用二分查找法，我们最先初始化left和right为0和数组长度len-1，然后取中间值mid，比较citations[mid]和len-mid做比较，如果前者大，则right移到mid之前，反之right移到mid之后，终止条件是left&gt;right，最后返回len-left即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> hIndex(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> citations) {
+        </span><span style="color: #0000ff;">int</span> len = citations.size(), left = <span style="color: #800080;">0</span>, right = len - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;=<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = <span style="color: #800080;">0.5</span> * (left +<span style="color: #000000;"> right);
+            </span><span style="color: #0000ff;">if</span> (citations[mid] == len - mid) <span style="color: #0000ff;">return</span> len -<span style="color: #000000;"> mid;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (citations[mid] &gt; len - mid) right = mid - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> len -<span style="color: #000000;"> left;
+    }
+};</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

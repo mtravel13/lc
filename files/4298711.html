@@ -1,0 +1,118 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4298711.html">[LeetCode] Rotate Array 旋转数组</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Rotate an array of&nbsp;<em>n</em>&nbsp;elements to the right by&nbsp;<em>k</em>&nbsp;steps.</p>
+<p>For example, with&nbsp;<em>n</em>&nbsp;= 7 and&nbsp;<em>k</em>&nbsp;= 3, the array&nbsp;<code>[1,2,3,4,5,6,7]</code>&nbsp;is rotated to&nbsp;<code>[5,6,7,1,2,3,4]</code>.</p>
+<p>Note:<br />Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.</p>
+<p class="showspoilers"><a href="https://oj.leetcode.com/problems/rotate-array/">[show hint]</a></p>
+<div class="spoilers">Hint:<br />Could you do it in-place with O(1) extra space?</div>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://oj.leetcode.com/discuss/user/Freezen">@Freezen</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>新题抢先刷，这道题标为Easy，应该不是很难，我们先来看一种O(n)的空间复杂度的方法，我们复制一个和nums一样的数组，然后利用映射关系i -&gt; (i+k)%n来交换数字。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; t =<span style="color: #000000;"> nums;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            nums[(i </span>+ k) % nums.size()] =<span style="color: #000000;"> t[i];
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于提示中要求我们空间复杂度为O(1)，所以我们不能用辅助数组，上面的思想还是可以使用的，但是写法就复杂的多，而且需要用到很多的辅助变量，我们用题目中的例子来展示下面这种算法的nums的变化过程：</p>
+<p>1 2 3 4 5 6 7 <br />1 2 3 <span style="color: #ff0000;">1</span> 5 6 7<br />1 2 3 1 5 6 <span style="color: #ff0000;">4</span><br />1 2 <span style="color: #ff0000;">7</span> 1 5 6 4<br />1 2 7 1 5 <span style="color: #ff0000;">3</span> 4<br />1 <span style="color: #ff0000;">6</span> 7 1 5 3 4<br />1 6 7 1 <span style="color: #ff0000;">2</span> 3 4<br /><span style="color: #ff0000;">5</span> 6 7 1 2 3 4</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty() || (k %= nums.size()) == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), start = <span style="color: #800080;">0</span>, i = <span style="color: #800080;">0</span>, cur = nums[i], cnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (cnt++ &lt;<span style="color: #000000;"> n) {
+            i </span>= (i + k) %<span style="color: #000000;"> n;
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> nums[i];
+            nums[i] </span>=<span style="color: #000000;"> cur;
+            </span><span style="color: #0000ff;">if</span> (i ==<span style="color: #000000;"> start) {
+                </span>++start; ++<span style="color: #000000;">i;
+                cur </span>=<span style="color: #000000;"> nums[i];
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur </span>=<span style="color: #000000;"> t;
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>根据热心网友<a id="a_comment_author_3489589" href="http://www.cnblogs.com/waruzhi/" target="_blank">waruzhi</a>的留言，这道题其实还有种类似翻转字符的方法，思路是先把前n-k个数字翻转一下，再把后k个数字翻转一下，最后再把整个数组翻转一下：</p>
+<p>1 2 3 4 5 6 7 <br /><span style="color: #ff0000;">4 3 2 1</span> 5 6 7 <br />4 3 2 1 <span style="color: #ff0000;">7 6 5</span><br /><span style="color: #ff0000;">5 6 7 1 2 3 4</span></p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty() || (k %= nums.size()) == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        reverse(nums.begin(), nums.begin() </span>+ n -<span style="color: #000000;"> k);
+        reverse(nums.begin() </span>+ n -<span style="color: #000000;"> k, nums.end());
+        reverse(nums.begin(), nums.end());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>由于旋转数组的操作也可以看做从数组的末尾取k个数组放入数组的开头，所以我们用STL的push_back和erase可以很容易的实现这些操作。</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty() || (k %= nums.size()) == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n - k; ++<span style="color: #000000;">i) {
+            nums.push_back(nums[</span><span style="color: #800080;">0</span><span style="color: #000000;">]);
+            nums.erase(nums.begin());
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法其实还蛮独特的，通过不停的交换某两个数字的位置来实现旋转，根据<a href="https://discuss.leetcode.com/topic/9406/3-lines-of-c-in-one-pass-using-swap" target="_blank">网上这个帖子</a>的思路改写而来，数组改变过程如下：</p>
+<p>1 2 3 4 5 6 7 <br /><span style="color: #ff0000;">5</span> 2 3 4 <span style="color: #ff0000;">1</span> 6 7 <br />5 <span style="color: #ff0000;">6</span> 3 4 1 <span style="color: #ff0000;">2</span> 7<br />5 6 <span style="color: #ff0000;">7</span> 4 1 2 <span style="color: #ff0000;">3</span><br />5 6 7 <span style="color: #ff0000;">1 4</span> 2 3<br />5 6 7 1 <span style="color: #ff0000;">2 4</span> 3<br />5 6 7 1 2 <span style="color: #ff0000;">3 4</span></p>
+<p>&nbsp;</p>
+<p>解法五：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> rotate(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n = nums.size(), start = <span style="color: #800080;">0</span><span style="color: #000000;">;   
+        </span><span style="color: #0000ff;">while</span> (n &amp;&amp; (k %=<span style="color: #000000;"> n)) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; k; ++<span style="color: #000000;">i) {
+                swap(nums[i </span>+ start], nums[n - k + i +<span style="color: #000000;"> start]);
+            }
+            n </span>-=<span style="color: #000000;"> k;
+            start </span>+=<span style="color: #000000;"> k;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/9801/summary-of-c-solutions/2" target="_blank">https://discuss.leetcode.com/topic/9801/summary-of-c-solutions/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/24283/a-7-line-time-o-n-in-place-solution-no-reversing/2" target="_blank">https://discuss.leetcode.com/topic/24283/a-7-line-time-o-n-in-place-solution-no-reversing/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

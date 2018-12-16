@@ -1,0 +1,157 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5250200.html">[LeetCode] Alien Dictionary 另类字典</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of words from the dictionary, where&nbsp;words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.</p>
+<p>For example,<br />Given the following words in dictionary,</p>
+<pre>[
+  "wrt",
+  "wrf",
+  "er",
+  "ett",
+  "rftt"
+]
+</pre>
+<p>&nbsp;</p>
+<p>The correct order is:&nbsp;<code>"wertf"</code>.</p>
+<p>Note:</p>
+<ol>
+<li>You may assume all letters are in lowercase.</li>
+<li>If the order is invalid, return an empty string.</li>
+<li>There may be multiple valid order of letters, return any one of them is fine.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让给了我们一些按&ldquo;字母顺序&rdquo;排列的单词，但是这个字母顺序不是我们熟知的顺序，而是另类的顺序，让我们根据这些&ldquo;有序&rdquo;的单词来找出新的字母顺序，这实际上是一道有向图的问题，跟之前的那两道<a href="http://www.cnblogs.com/grandyang/p/4504793.html" target="_blank">Course Schedule II</a>和<a href="http://www.cnblogs.com/grandyang/p/4484571.html" target="_blank">Course Schedule</a>的解法很类似，我们先来看BFS的解法，我们需要一个set来保存我们可以推测出来的顺序关系，比如题目中给的例子，我们可以推出的顺序关系有：</p>
+<div class="cnblogs_code">
+<pre>t-&gt;<span style="color: #000000;">f
+w</span>-&gt;<span style="color: #000000;">e
+r</span>-&gt;<span style="color: #000000;">t
+e</span>-&gt;r</pre>
+</div>
+<p>那么set就用来保存这些pair，我们还需要另一个set来保存所有出现过的字母，需要一个一维数组in来保存每个字母的入度，另外还要一个queue来辅助拓扑遍历，我们先遍历单词集，把所有字母先存入ch，然后我们每两个相邻的单词比较，找出顺序pair，然后我们根据这些pair来赋度，我们把ch中入度为0的字母都排入queue中，然后开始遍历，如果字母在set中存在，则将其pair中对应的字母的入度减1，若此时入度减为0了，则将对应的字母排入queue中并且加入结果res中，直到遍历完成，我们看结果res和ch中的元素个数是否相同，若不相同则说明可能有环存在，返回空字符串，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> alienOrder(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        </span><span style="color: #0000ff;">set</span>&lt;pair&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">char</span>&gt; &gt;<span style="color: #000000;"> s;
+        unordered_set</span>&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;"> ch;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">in</span>(<span style="color: #800080;">256</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        queue</span>&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;"> q;
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : words) ch.insert(a.begin(), a.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> mn = min(words[i].size(), words[i + <span style="color: #800080;">1</span>].size()), j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (; j &lt; min(words[i].size(), words[i + <span style="color: #800080;">1</span>].size()); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (words[i][j] != words[i + <span style="color: #800080;">1</span><span style="color: #000000;">][j]) {
+                    s.insert(make_pair(words[i][j], words[i </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">][j]));
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (j == mn &amp;&amp; words[i].size() &gt; words[i + <span style="color: #800080;">1</span>].size()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (auto a : s) ++<span style="color: #0000ff;">in</span><span style="color: #000000;">[a.second];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : ch) {
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">in</span>[a] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                q.push(a);
+                res </span>+=<span style="color: #000000;"> a;
+            } 
+        }
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> q.front(); q.pop();
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : s) {
+                </span><span style="color: #0000ff;">if</span> (a.first ==<span style="color: #000000;"> c) {
+                    </span>--<span style="color: #0000ff;">in</span><span style="color: #000000;">[a.second];
+                    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">in</span>[a.second] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                        q.push(a.second);
+                        res </span>+=<span style="color: #000000;"> a.second;
+                    }
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> res.size() == ch.size() ? res : <span style="color: #800000;">""</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看一种DFS的解法，思路和BFS的很类似，我们需要建立一个二维的bool数组g，然后把出现过的字母的对应的位置都赋为true，然后我们把可以推出的顺序的对应位置也赋为true，然后我们就开始递归调用，如果递归函数有返回false的，说明有冲突，则返回false，递归调用结束后结果res中存了入度不为0的字母，最后把入度为0的字母加到最后面，最后把结果res翻转一下即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> alienOrder(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; g(<span style="color: #800080;">26</span>, vector&lt;<span style="color: #0000ff;">bool</span>&gt;(<span style="color: #800080;">26</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; path(<span style="color: #800080;">26</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : word) {
+                g[c </span>- <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>][c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> mn = min(words[i].size(), words[i + <span style="color: #800080;">1</span>].size()), j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (; j &lt; mn; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (words[i][j] != words[i + <span style="color: #800080;">1</span><span style="color: #000000;">][j]) {
+                    g[words[i][j] </span>- <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>][words[i + <span style="color: #800080;">1</span>][j] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (j == mn &amp;&amp; words[i].size() &gt; words[i + <span style="color: #800080;">1</span>].size()) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">26</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!dfs(g, i, path, res)) <span style="color: #0000ff;">return</span> <span style="color: #800000;">""</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">26</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (g[i][i]) res += (<span style="color: #0000ff;">char</span>)(i + <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">string</span><span style="color: #000000;">(res.rbegin(), res.rend());
+    }
+    </span><span style="color: #0000ff;">bool</span> dfs(vector&lt;vector&lt;<span style="color: #0000ff;">bool</span>&gt;&gt; &amp;g, <span style="color: #0000ff;">int</span> idx, vector&lt;<span style="color: #0000ff;">bool</span>&gt; &amp;path, <span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (!g[idx][idx]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        path[idx] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">26</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i == idx || !g[idx][i]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (path[i]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (!dfs(g, i, path, res)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        path[idx] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        g[idx][idx] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        res </span>+= (<span style="color: #0000ff;">char</span>)(idx + <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="interviewed_div">类似题目：</div>
+<div>
+<p><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5000291.html">Minimum Height Trees</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4504793.html" target="_blank">Course Schedule II</a></p>
+<a href="http://www.cnblogs.com/grandyang/p/4484571.html" target="_blank">Course Schedule</a></div>
+<div>&nbsp;</div>
+<div>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/72402/fast-java-solution-3ms-dfs-topological-sort" target="_blank">https://leetcode.com/discuss/72402/fast-java-solution-3ms-dfs-topological-sort</a></p>
+<p><a href="https://discuss.leetcode.com/topic/33546/my-concise-java-solution-based-on-topological-sorting/7" target="_blank">https://discuss.leetcode.com/topic/33546/my-concise-java-solution-based-on-topological-sorting/7</a></p>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

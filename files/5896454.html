@@ -1,0 +1,130 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5896454.html">[LeetCode] Binary Watch 二进制表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>A binary watch has 4 LEDs on the top which represent the hours (0-11), and the 6 LEDs on the bottom represent the minutes (0-59).</p>
+<p>Each LED represents a zero or one, with the least significant bit on the right.</p>
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Binary_clock_samui_moon.jpg" alt="" width="183" height="137" />
+<p>For example, the above binary watch reads "3:25".</p>
+<p>Given a non-negative integer&nbsp;<em>n</em>&nbsp;which represents the number of LEDs that are currently on, return all possible times the watch could represent.</p>
+<p>Example:</p>
+<pre>Input: n = 1<br />Return: ["1:00", "2:00", "4:00", "8:00", "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"]</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The order of output does not matter.</li>
+<li>The hour must not contain a leading zero, for example "01:00" is not valid, it should be "1:00".</li>
+<li>The minute must be consist of two digits and may contain a leading zero, for example "10:2" is not valid, it should be "10:02".</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题考察我们二进制表，说实话，博主对二进制表无感，感觉除了装b没啥其他的作用，谁会看个时间还要算半天啊，但是这并不影响我们做题，我们首先来看一种写法很简洁的解法，这种解法利用到了bitset这个类，可以将任意进制数转为二进制，而且又用到了count函数，用来统计1的个数。那么时针从0遍历到11，分针从0遍历到59，然后我们把时针的数组左移6位加上分针的数值，然后统计1的个数，即为亮灯的个数，我们遍历所有的情况，当其等于num的时候，存入结果res中，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<div>
+<div id="company_tags" class="btn btn-xs btn-warning">解法一：</div>
+<div class="btn btn-xs btn-warning">
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; readBinaryWatch(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> h = <span style="color: #800080;">0</span>; h &lt; <span style="color: #800080;">12</span>; ++<span style="color: #000000;">h) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> m = <span style="color: #800080;">0</span>; m &lt; <span style="color: #800080;">60</span>; ++<span style="color: #000000;">m) {
+                </span><span style="color: #0000ff;">if</span> (bitset&lt;<span style="color: #800080;">10</span>&gt;((h &lt;&lt; <span style="color: #800080;">6</span>) + m).count() ==<span style="color: #000000;"> num) {
+                    res.push_back(to_string(h) </span>+ (m &lt; <span style="color: #800080;">10</span> ? <span style="color: #800000;">"</span><span style="color: #800000;">:0</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">:</span><span style="color: #800000;">"</span>) +<span style="color: #000000;"> to_string(m));
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面的方法之所以那么简洁是因为用了bitset这个类，如果我们不用这个类，那么应该怎么做呢？这个灯亮问题的本质其实就是在n个数字中取出k个，那么就跟之前的那道<a href="http://www.cnblogs.com/grandyang/p/4332522.html" target="_blank">Combinations</a>一样，我们可以借鉴那道题的解法，那么思路是，如果总共要取num个，我们在小时集合里取i个，算出和，然后在分钟集合里去num-i个求和，如果两个都符合题意，那么加入结果中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; readBinaryWatch(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; hour{<span style="color: #800080;">8</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">1</span>}, minute{<span style="color: #800080;">32</span>, <span style="color: #800080;">16</span>, <span style="color: #800080;">8</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">1</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= num; ++<span style="color: #000000;">i) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; hours =<span style="color: #000000;"> generate(hour, i);
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; minutes = generate(minute, num -<span style="color: #000000;"> i);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> h : hours) {
+                </span><span style="color: #0000ff;">if</span> (h &gt; <span style="color: #800080;">11</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> m : minutes) {
+                    </span><span style="color: #0000ff;">if</span> (m &gt; <span style="color: #800080;">59</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                    res.push_back(to_string(h) </span>+ (m &lt; <span style="color: #800080;">10</span> ? <span style="color: #800000;">"</span><span style="color: #800000;">:0</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">:</span><span style="color: #800000;">"</span>) +<span style="color: #000000;"> to_string(m));
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; generate(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        helper(nums, cnt, </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; nums, <span style="color: #0000ff;">int</span> cnt, <span style="color: #0000ff;">int</span> pos, <span style="color: #0000ff;">int</span> <span style="color: #0000ff;">out</span>, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (cnt == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = pos; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            helper(nums, cnt </span>- <span style="color: #800080;">1</span>, i + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span> +<span style="color: #000000;"> nums[i], res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法就比较搞笑了，是博主在没法想出上面两种方法的情况下万般无奈使用的，你个二进制表再叼也就72种情况，全给你列出来，然后采用跟上面那种解法相同的思路，时针集合取k个，分针集合取num-k个，然后存入结果中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; readBinaryWatch(<span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; hours{{<span style="color: #800080;">0</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">2</span>,<span style="color: #800080;">4</span>,<span style="color: #800080;">8</span>},{<span style="color: #800080;">3</span>,<span style="color: #800080;">5</span>,<span style="color: #800080;">9</span>,<span style="color: #800080;">6</span>,<span style="color: #800080;">10</span>},{<span style="color: #800080;">7</span>,<span style="color: #800080;">11</span><span style="color: #000000;">}};
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; minutes{{<span style="color: #800080;">0</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">2</span>,<span style="color: #800080;">4</span>,<span style="color: #800080;">8</span>,<span style="color: #800080;">16</span>,<span style="color: #800080;">32</span>},{<span style="color: #800080;">3</span>,<span style="color: #800080;">5</span>,<span style="color: #800080;">9</span>,<span style="color: #800080;">17</span>,<span style="color: #800080;">33</span>,<span style="color: #800080;">6</span>,<span style="color: #800080;">10</span>,<span style="color: #800080;">18</span>,<span style="color: #800080;">34</span>,<span style="color: #800080;">12</span>,<span style="color: #800080;">20</span>,<span style="color: #800080;">36</span>,<span style="color: #800080;">24</span>,<span style="color: #800080;">40</span>,<span style="color: #800080;">48</span>},{<span style="color: #800080;">7</span>,<span style="color: #800080;">11</span>,<span style="color: #800080;">19</span>,<span style="color: #800080;">35</span>,<span style="color: #800080;">13</span>,<span style="color: #800080;">21</span>,<span style="color: #800080;">37</span>,<span style="color: #800080;">25</span>,<span style="color: #800080;">41</span>,<span style="color: #800080;">49</span>,<span style="color: #800080;">14</span>,<span style="color: #800080;">22</span>,<span style="color: #800080;">38</span>,<span style="color: #800080;">26</span>,<span style="color: #800080;">42</span>,<span style="color: #800080;">50</span>,<span style="color: #800080;">28</span>,<span style="color: #800080;">44</span>,<span style="color: #800080;">52</span>,<span style="color: #800080;">56</span>},{<span style="color: #800080;">15</span>,<span style="color: #800080;">23</span>,<span style="color: #800080;">39</span>,<span style="color: #800080;">27</span>,<span style="color: #800080;">43</span>,<span style="color: #800080;">51</span>,<span style="color: #800080;">29</span>,<span style="color: #800080;">45</span>,<span style="color: #800080;">53</span>,<span style="color: #800080;">57</span>,<span style="color: #800080;">30</span>,<span style="color: #800080;">46</span>,<span style="color: #800080;">54</span>,<span style="color: #800080;">58</span>},{<span style="color: #800080;">31</span>,<span style="color: #800080;">47</span>,<span style="color: #800080;">55</span>,<span style="color: #800080;">59</span><span style="color: #000000;">}};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt;= num; ++<span style="color: #000000;">k) {
+            </span><span style="color: #0000ff;">int</span> t = num -<span style="color: #000000;"> k;
+            </span><span style="color: #0000ff;">if</span> (k &gt; <span style="color: #800080;">3</span> || t &gt; <span style="color: #800080;">5</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; hours[k].size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; minutes[t].size(); ++<span style="color: #000000;">j) {
+                    </span><span style="color: #0000ff;">string</span> str = minutes[t][j] &lt; <span style="color: #800080;">10</span> ? <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> to_string(minutes[t][j]) : to_string(minutes[t][j]);
+                    res.push_back(to_string(hours[k][i]) </span>+ <span style="color: #800000;">"</span><span style="color: #800000;">:</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/59374/simple-python-java" target="_blank">https://discuss.leetcode.com/topic/59374/simple-python-java</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a href="https://discuss.leetcode.com/topic/59401/straight-forward-6-line-c-solution-no-need-to-explain" target="_blank">https://discuss.leetcode.com/topic/59401/straight-forward-6-line-c-solution-no-need-to-explain</a></p>
+<p><a href="https://discuss.leetcode.com/topic/59494/3ms-java-solution-using-backtracking-and-idea-of-permutation-and-combination/2" target="_blank">https://discuss.leetcode.com/topic/59494/3ms-java-solution-using-backtracking-and-idea-of-permutation-and-combination/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

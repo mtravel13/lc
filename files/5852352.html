@@ -1,0 +1,91 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5852352.html">[LeetCode] Longest Substring with At Least K Repeating Characters 至少有K个重复字符的最长子字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Find the length of the longest substring <strong><em>T</em></strong> of a given string (consists of lowercase letters only) such that every character in <strong><em>T</em></strong> appears no less than <em>k</em> times.</p>
+<p><strong>Example 1:</strong></p>
+<pre>Input:
+s = "aaabb", k = 3
+
+Output:
+3
+
+The longest substring is "aaa", as 'a' is repeated 3 times.
+</pre>
+<p><strong>Example 2:</strong></p>
+<pre>Input:
+s = "ababbc", k = 2
+
+Output:
+5
+
+The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated 3 times.
+</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一个字符串s和一个正整数k，让我们求一个最大子字符串并且每个字符必须至少出现k次。作为LeetCode第三次编程比赛的压轴题目，博主再一次没有做出来，虽然难度标识只是Medium。后来在网上膜拜学习了大神们的解法，发现我当时的没做出来的原因主要是卡在了如何快速的判断某一个字符串是否所有的元素都已经满足了至少出现k次这个条件，虽然我也用哈希表建立了字符和其出现次数之间的映射，但是如果每一次都要遍历哈希表中的所有字符看其出现次数是否大于k，未免有些不高效。而用mask就很好的解决了这个问题，由于字母只有26个，而整型mask有32位，足够用了，每一位代表一个字母，如果为1，表示该字母不够k次，如果为0就表示已经出现了k次，这种思路真是太聪明了，隐约记得这种用法在之前的题目中也用过，但是博主并不能举一反三(沮丧脸:()，还得继续努力啊。我们遍历字符串，对于每一个字符，我们都将其视为起点，然后遍历到末尾，我们增加哈希表中字母的出现次数，如果其小于k，我们将mask的对应位改为1，如果大于等于k，将mask对应位改为0。然后看mask是否为0，是的话就更新res结果，然后把当前满足要求的子字符串的起始位置j保存到max_idx中，等内层循环结束后，将外层循环变量i赋值为max_idx+1，继续循环直至结束，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestSubstring(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, i = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">while</span> (i + k &lt;=<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">int</span> m[<span style="color: #800080;">26</span>] = {<span style="color: #800080;">0</span>}, mask = <span style="color: #800080;">0</span>, max_idx =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">int</span> t = s[j] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                </span>++<span style="color: #000000;">m[t];
+                </span><span style="color: #0000ff;">if</span> (m[t] &lt; k) mask |= (<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> t);
+                </span><span style="color: #0000ff;">else</span> mask &amp;= (~(<span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> t));
+                </span><span style="color: #0000ff;">if</span> (mask == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    res </span>= max(res, j - i + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                    max_idx </span>=<span style="color: #000000;"> j;
+                }
+            }
+            i </span>= max_idx + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种写法是上面的解法的递归写法，看起来简洁了不少，但是个人感觉比较难想，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> longestSubstring(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> n = s.size(), max_idx = <span style="color: #800080;">0</span>, res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m[<span style="color: #800080;">128</span>] = {<span style="color: #800080;">0</span><span style="color: #000000;">};
+        </span><span style="color: #0000ff;">bool</span> ok = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : s) ++<span style="color: #000000;">m[c];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (m[s[i]] &lt;<span style="color: #000000;"> k) {
+                res </span>= max(res, longestSubstring(s.substr(max_idx, i -<span style="color: #000000;"> max_idx), k));
+                ok </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                max_idx </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> ok ? n : max(res, longestSubstring(s.substr(max_idx, n -<span style="color: #000000;"> max_idx), k));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5351347.html" target="_blank">Longest Substring with At Most K Distinct Characters</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5185561.html" target="_blank">Longest Substring with At Most Two Distinct Characters</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4480780.html" target="_blank">Longest Substring Without Repeating Characters</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/57272/o-nlogn-recursive-cpp-solution" target="_blank">https://discuss.leetcode.com/topic/57272/o-nlogn-recursive-cpp-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/57134/two-short-c-solutions-3ms-and-6ms/2" target="_blank">https://discuss.leetcode.com/topic/57134/two-short-c-solutions-3ms-and-6ms/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

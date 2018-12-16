@@ -1,0 +1,57 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4238577.html">[LeetCode] Fraction to Recurring Decimal 分数转循环小数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.</p>
+<p>If the fractional part is repeating, enclose the repeating part in parentheses.</p>
+<p>For example,</p>
+<ul>
+<li>Given numerator = 1, denominator = 2, return "0.5".</li>
+<li>Given numerator = 2, denominator = 1, return "2".</li>
+<li>Given numerator = 2, denominator = 3, return "0.(6)".</li>
+</ul>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://oj.leetcode.com/discuss/user/Shangrila">@Shangrila</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题还是比较有意思的，开始还担心万一结果是无限不循环小数怎么办，百度之后才发现原来可以写成分数的都是有理数，而有理数要么是有限的，要么是无限循环小数，无限不循环的叫无理数，例如圆周率pi或自然数e等，小学数学没学好，汗！由于还存在正负情况，处理方式是按正数处理，符号最后在判断，那么我们需要把除数和被除数取绝对值，那么问题就来了：由于整型数INT的取值范围是-2147483648～2147483647，而对-2147483648取绝对值就会超出范围，所以我们需要先转为long long型再取绝对值。那么怎么样找循环呢，肯定是再得到一个数字后要看看之前有没有出现这个数。为了节省搜索时间，我们采用哈希表来存数每个小数位上的数字。还有一个小技巧，由于我们要算出小数每一位，采取的方法是每次把余数乘10，再除以除数，得到的商即为小数的下一位数字。等到新算出来的数字在之前出现过，则在循环开始出加左括号，结束处加右括号。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> fractionToDecimal(<span style="color: #0000ff;">int</span> numerator, <span style="color: #0000ff;">int</span><span style="color: #000000;"> denominator) {
+        </span><span style="color: #0000ff;">int</span> s1 = numerator &gt;= <span style="color: #800080;">0</span> ? <span style="color: #800080;">1</span> : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> s2 = denominator &gt;= <span style="color: #800080;">0</span> ? <span style="color: #800080;">1</span> : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> num = abs( (<span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span><span style="color: #000000;">)numerator );
+        </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> den = abs( (<span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span><span style="color: #000000;">)denominator );
+        </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> <span style="color: #0000ff;">out</span> = num /<span style="color: #000000;"> den;
+        </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> rem = num %<span style="color: #000000;"> den;
+        unordered_map</span>&lt;<span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">string</span> res = to_string(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (s1 * s2 == -<span style="color: #800080;">1</span> &amp;&amp; (<span style="color: #0000ff;">out</span> &gt; <span style="color: #800080;">0</span> || rem &gt; <span style="color: #800080;">0</span>)) res = <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">if</span> (rem == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+        res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> s = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> pos = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (rem != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (m.find(rem) !=<span style="color: #000000;"> m.end()) {
+                s.insert(m[rem], </span><span style="color: #800000;">"</span><span style="color: #800000;">(</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+                s </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">)</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">return</span> res +<span style="color: #000000;"> s;
+            }
+            m[rem] </span>=<span style="color: #000000;"> pos;
+            s </span>+= to_string((rem * <span style="color: #800080;">10</span>) /<span style="color: #000000;"> den);
+            rem </span>= (rem * <span style="color: #800080;">10</span>) %<span style="color: #000000;"> den;
+            </span>++<span style="color: #000000;">pos;
+        }
+        </span><span style="color: #0000ff;">return</span> res +<span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

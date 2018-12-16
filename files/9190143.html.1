@@ -1,0 +1,110 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9190143.html">[LeetCode] Custom Sort String 自定义排序的字符串</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p><code>S</code>&nbsp;and&nbsp;<code>T</code>&nbsp;are strings composed of lowercase letters. In&nbsp;<code>S</code>, no letter occurs more than once.</p>
+<p><code>S</code>&nbsp;was sorted in some custom order previously. We want to permute the characters of&nbsp;<code>T</code>&nbsp;so that they match the order that&nbsp;<code>S</code>&nbsp;was sorted. More specifically, if&nbsp;<code>x</code>&nbsp;occurs before&nbsp;<code>y</code>&nbsp;in&nbsp;<code>S</code>, then&nbsp;<code>x</code>&nbsp;should occur before&nbsp;<code>y</code>&nbsp;in the returned string.</p>
+<p>Return any permutation of&nbsp;<code>T</code>&nbsp;(as a string) that satisfies this property.</p>
+<pre>Example :
+Input: 
+S = "cba"
+T = "abcd"
+Output: "cbad"
+Explanation: 
+"a", "b", "c" appear in S, so the order of "a", "b", "c" should be "c", "b", and "a". 
+Since "d" does not appear in S, it can be at any position in T. "dcba", "cdba", "cbda" are also valid outputs.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li><code>S</code>&nbsp;has length at most&nbsp;<code>26</code>, and no character is repeated in&nbsp;<code>S</code>.</li>
+<li><code>T</code>&nbsp;has length at most&nbsp;<code>200</code>.</li>
+<li><code>S</code>&nbsp;and&nbsp;<code>T</code>&nbsp;consist of lowercase letters only.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题给了我们两个字符串S和T，让我们将T按照S的顺序进行排序，就是说在S中如果字母x在字母y之前，那么排序后的T中字母x也要在y之前，其他S中未出现的字母位置无所谓。那么我们其实关心的是S中的字母，只要按S中的字母顺序遍历，对于遍历到的每个字母，如果T中有的话，就先排出来，这样等S中的字母遍历完了，再将T中剩下的字母加到后面即可。所以我们先用HashMap统计T中每个字母出现的次数，然后遍历S中的字母，只要T中有，就将该字母重复其出现次数个，加入结果res中，然后将该字母出现次数重置为0。之后再遍历一遍HashMap，将T中其他字母加入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> customSortString(<span style="color: #0000ff;">string</span> S, <span style="color: #0000ff;">string</span><span style="color: #000000;"> T) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : T) ++<span style="color: #000000;">m[c];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : S) {
+            res </span>+= <span style="color: #0000ff;">string</span><span style="color: #000000;">(m[c], c);
+            m[c] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) {
+            res </span>+= <span style="color: #0000ff;">string</span><span style="color: #000000;">(a.second, a.first);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法的思路和上面的一样，只不过这里没有使用HashMap，而是使用了一个长度为26的数组，因为题目中说了S和T中都是小写的字母，其他部分没有啥太大的区别，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> customSortString(<span style="color: #0000ff;">string</span> S, <span style="color: #0000ff;">string</span><span style="color: #000000;"> T) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; cnt(<span style="color: #800080;">26</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : T) ++cnt[c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : S) {
+            </span><span style="color: #0000ff;">while</span> (cnt[c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>]-- &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) res.push_back(c);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : T) {
+            </span><span style="color: #0000ff;">while</span> (cnt[c - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>]-- &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) res.push_back(c);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法可以说是简洁的让人发指啊，就两行搞定碉堡了。我们自定义了sort的排序的排序方式，对于字符串T中的任意两个字母a和b，按照其在S中的顺序排序，在S中排前面的在T中也排前面，完全符合题意，所以就能很好的work，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> customSortString(<span style="color: #0000ff;">string</span> S, <span style="color: #0000ff;">string</span><span style="color: #000000;"> T) {
+        sort(T.begin(), T.end(), [</span>&amp;](<span style="color: #0000ff;">char</span> a, <span style="color: #0000ff;">char</span> b) {<span style="color: #0000ff;">return</span> S.find(a) &lt;<span style="color: #000000;"> S.find(b);});
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> T;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法没有用到STL中内置的find函数，而是用了HashMap来建立S中每个字母和其出现位置之间的映射，这样在自定义排序方法的时候，就可以直接从HashMap中取位置了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> customSortString(<span style="color: #0000ff;">string</span> S, <span style="color: #0000ff;">string</span><span style="color: #000000;"> T) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; S.size(); ++<span style="color: #000000;">i) {
+            m[S[i]] </span>= i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        sort(T.begin(), T.end(), [</span>&amp;](<span style="color: #0000ff;">char</span> a, <span style="color: #0000ff;">char</span> b) {<span style="color: #0000ff;">return</span> m[a] &lt;<span style="color: #000000;"> m[b];});
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> T;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="https://leetcode.com/problems/custom-sort-string/solution/">https://leetcode.com/problems/custom-sort-string/solution/</a></p>
+<p><a href="https://leetcode.com/problems/custom-sort-string/discuss/116556/Two-Lines-C++">https://leetcode.com/problems/custom-sort-string/discuss/116556/Two-Lines-C++</a></p>
+<p><a href="https://leetcode.com/problems/custom-sort-string/discuss/116615/Java-5-ms-10-line-counting-solution-with-comment">https://leetcode.com/problems/custom-sort-string/discuss/116615/Java-5-ms-10-line-counting-solution-with-comment</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

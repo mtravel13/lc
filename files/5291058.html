@@ -1,0 +1,85 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5291058.html">[LeetCode] Best Meeting Point 最佳开会地点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A group of two or more people wants to meet and minimize the total travel distance. You are given a 2D grid of values 0 or 1, where each 1 marks the home of someone in the group. The distance is calculated using <a href="http://en.wikipedia.org/wiki/Taxicab_geometry" target="_blank">Manhattan Distance</a>, where distance(p1, p2) = <code>|p2.x - p1.x| + |p2.y - p1.y|</code>.</p>
+<p>For example, given three people living at <code>(0,0)</code>, <code>(0,4)</code>, and <code>(2,2)</code>:</p>
+<pre>1 - 0 - 0 - 0 - 1
+|   |   |   |   |
+0 - 0 - 0 - 0 - 0
+|   |   |   |   |
+0 - 0 - 1 - 0 - 0</pre>
+<p>The point <code>(0,2)</code> is an ideal meeting point, as the total travel distance of 2+2+2=6 is minimal. So return 6.</p>
+<p><strong>Hint:</strong></p>
+<ol id="hints">
+<li class="hint animated fadeInLeft" style="display: list-item;">Try to solve it in one dimension first. How can this solution apply to the two dimension case?</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求最佳的开会地点，该地点需要到每个为1的点的曼哈顿距离之和最小，题目中给了我们提示，让我们先从一维的情况来分析，那么我们先看一维时有两个点A和B的情况,</p>
+<p>______A_____P_______B_______</p>
+<p>那么我们可以发现，只要开会为位置P在[A, B]区间内，不管在哪，距离之和都是A和B之间的距离，如果P不在[A, B]之间，那么距离之和就会大于A和B之间的距离，那么我们现在再加两个点C和D：</p>
+<p>______C_____A_____P_______B______D______</p>
+<p>我们通过分析可以得出，P点的最佳位置就是在[A, B]区间内，这样和四个点的距离之和为AB距离加上CD距离，在其他任意一点的距离都会大于这个距离，那么分析出来了上述规律，这题就变得很容易了，我们只要给位置排好序，然后用最后一个坐标减去第一个坐标，即CD距离，倒数第二个坐标减去第二个坐标，即AB距离，以此类推，直到最中间停止，那么一维的情况分析出来了，二维的情况就是两个一维相加即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minTotalDistance(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> rows, cols;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; grid.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; grid[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    rows.push_back(i);
+                    cols.push_back(j);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> minTotalDistance(rows) +<span style="color: #000000;"> minTotalDistance(cols);
+    }
+    </span><span style="color: #0000ff;">int</span> minTotalDistance(vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        sort(v.begin(), v.end());
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = v.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt; j) res += v[j--] - v[i++<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以不用多写一个函数，直接对rows和cols同时处理，稍稍能简化些代码：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minTotalDistance(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;&amp;<span style="color: #000000;"> grid) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> rows, cols;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; grid.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; grid[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (grid[i][j] == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    rows.push_back(i);
+                    cols.push_back(j);
+                }
+            }
+        }
+        sort(cols.begin(), cols.end());
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, i = <span style="color: #800080;">0</span>, j = rows.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt; j) res += rows[j] - rows[i] + cols[j--] - cols[i++<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/65336/14ms-java-solution" target="_blank">https://leetcode.com/discuss/65336/14ms-java-solution</a></p>
+<p><a href="https://leetcode.com/discuss/85074/14-lines-concise-and-easy-understand-c-solution" target="_blank">https://leetcode.com/discuss/85074/14-lines-concise-and-easy-understand-c-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

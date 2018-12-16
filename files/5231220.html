@@ -1,0 +1,60 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5231220.html">[LeetCode] Paint Fence 粉刷篱笆</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;&nbsp;</p>
+<p>There is a fence with n posts, each post can be painted with one of the k colors.</p>
+<p>You have to paint all the posts such that no more than two adjacent fence posts have the same color.</p>
+<p>Return the total number of ways you can paint the fence.</p>
+<p>Note:<br />n and k are non-negative integers.</p>
+<p>&nbsp;</p>
+<p>这道题让我们粉刷篱笆，有n个部分需要刷，有k种颜色的油漆，规定了不能有超过两个的相同颜色涂的部分，问我们总共有多少种刷法。那么我们首先来分析一下，如果n=0的话，说明没有需要刷的部分，直接返回0即可，如果n为1的话，那么有几种颜色，就有几种刷法，所以应该返回k，当n=2时，k=2时，我们可以分两种情况来统计，一种是相邻部分没有相同的，一种相同部分有相同的颜色，那么对于没有相同的，对于第一个格子，我们有k种填法，对于下一个相邻的格子，由于不能相同，所以我们只有k-1种填法。而有相同部分颜色的刷法和上一个格子的不同颜色刷法相同，因为我们下一格的颜色和之前那个格子颜色刷成一样的即可，最后总共的刷法就是把不同和相同两个刷法加起来，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numWays(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> same = <span style="color: #800080;">0</span>, diff =<span style="color: #000000;"> k;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> t =<span style="color: #000000;"> diff;
+            diff </span>= (same + diff) * (k - <span style="color: #800080;">1</span><span style="color: #000000;">);
+            same </span>=<span style="color: #000000;"> t;
+        }
+        </span><span style="color: #0000ff;">return</span> same +<span style="color: #000000;"> diff;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法和上面那方法几乎一样，只不过多了一个变量，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> numWays(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> same = <span style="color: #800080;">0</span>, diff = k, res = same +<span style="color: #000000;"> diff;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+            same </span>=<span style="color: #000000;"> diff;
+            diff </span>= res * (k - <span style="color: #800080;">1</span><span style="color: #000000;">);
+            res </span>= same +<span style="color: #000000;"> diff;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5;">参考资料：</span></p>
+<p class="p1"><span class="s1"><a href="https://leetcode.com/discuss/56173/o-n-time-java-solution-o-1-space">https://leetcode.com/discuss/56173/o-n-time-java-solution-o-1-space</a></span></p>
+<p class="p1"><span class="s1"><a href="https://leetcode.com/discuss/85147/complete-explanation-o-n-time-o-1-space">https://leetcode.com/discuss/85147/complete-explanation-o-n-time-o-1-space</a></span></p>
+<p class="p1">&nbsp;</p>
+<p class="p1"><span class="s1"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></span></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,68 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4267628.html">[LeetCode] Clone Graph 无向图的复制</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Clone an undirected graph. Each node in the graph contains a&nbsp;<code>label</code>&nbsp;and a list of its&nbsp;<code>neighbors</code>.</p>
+<div><br />OJ's undirected graph serialization:
+<p>Nodes are labeled uniquely.</p>
+
+
+We use&nbsp;<code>#</code>&nbsp;as a separator for each node, and&nbsp;<code>,</code>&nbsp;as a separator for node label and each neighbor of the node.
+<p>&nbsp;</p>
+<p>As an example, consider the serialized graph&nbsp;<code><span style="color: red;">{<span style="color: black;">0</span>,1,2#</span><span style="color: blue;"><span style="color: black;">1</span>,2#</span><span style="color: green;"><span style="color: black;">2</span>,2}</span></code>.</p>
+<p>The graph has a total of three nodes, and therefore contains three parts as separated by&nbsp;<code>#</code>.</p>
+<ol>
+<li>First node is labeled as&nbsp;<code><span style="color: black;">0</span></code>. Connect node&nbsp;<code><span style="color: black;">0</span></code>&nbsp;to both nodes&nbsp;<code><span style="color: red;">1</span></code>&nbsp;and&nbsp;<code><span style="color: red;">2</span></code>.</li>
+<li>Second node is labeled as&nbsp;<code><span style="color: black;">1</span></code>. Connect node&nbsp;<code><span style="color: black;">1</span></code>&nbsp;to node&nbsp;<code><span style="color: blue;">2</span></code>.</li>
+<li>Third node is labeled as&nbsp;<code><span style="color: black;">2</span></code>. Connect node&nbsp;<code><span style="color: black;">2</span></code>&nbsp;to node&nbsp;<code><span style="color: green;">2</span></code>&nbsp;(itself), thus forming a self-cycle.</li>
+
+
+</ol>
+<p>&nbsp;</p>
+<p>Visually, the graph looks like the following:</p>
+<pre>       1
+      / \
+     /   \
+    0 --- 2
+         / \
+         \_/</pre>
+</div>
+<p>&nbsp;</p>
+<p>这道无向图的复制问题和之前的<a href="http://www.cnblogs.com/grandyang/p/4261431.html" target="_blank">拷贝带有随机指针的链表</a>有些类似，那道题的难点是如何处理每个节点的随机指针，这道题目的难点在于如何处理每个节点的neighbors，由于在深度拷贝每一个节点后，还要将其所有neighbors放到一个vector中，而如何避免重复拷贝呢？这道题好就好在所有节点值不同，所以我们可以使用哈希表来对应节点值和新生成的节点。对于图的遍历的两大基本方法是深度优先搜索DFS和广度优先搜索BFS，此题的两种解法可参见网友<a href="http://www.cnblogs.com/springfor/p/3874591.html" target="_blank">爱做饭的小莹子的博客</a>，这里我们使用深度优先搜索DFS来解答此题，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for undirected graph.
+ * struct UndirectedGraphNode {
+ *     int label;
+ *     vector&lt;UndirectedGraphNode *&gt; neighbors;
+ *     UndirectedGraphNode(int x) : label(x) {};
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    UndirectedGraphNode </span>*cloneGraph(UndirectedGraphNode *<span style="color: #000000;">node) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">int</span>, UndirectedGraphNode*&gt;<span style="color: #000000;"> umap;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> clone(node, umap);
+    }
+    UndirectedGraphNode </span>*clone(UndirectedGraphNode *node, unordered_map&lt;<span style="color: #0000ff;">int</span>, UndirectedGraphNode*&gt; &amp;<span style="color: #000000;">umap) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;"> node;
+        </span><span style="color: #0000ff;">if</span> (umap.count(node-&gt;label)) <span style="color: #0000ff;">return</span> umap[node-&gt;<span style="color: #000000;">label];
+        UndirectedGraphNode </span>*newNode = <span style="color: #0000ff;">new</span> UndirectedGraphNode(node-&gt;<span style="color: #000000;">label);
+        umap[node</span>-&gt;label] =<span style="color: #000000;"> newNode;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; node-&gt;neighbors.size(); ++<span style="color: #000000;">i) {
+            (newNode</span>-&gt;neighbors).push_back(clone(node-&gt;<span style="color: #000000;">neighbors[i], umap));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> newNode;
+    } 
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

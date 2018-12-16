@@ -1,0 +1,59 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8068326.html">[LeetCode] Monotone Increasing Digits 单调递增数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Given a non-negative integer&nbsp;<code>N</code>, find the largest number that is less than or equal to&nbsp;<code>N</code>&nbsp;with monotone increasing digits.</p>
+<p>(Recall that an integer has&nbsp;<em>monotone increasing digits</em>&nbsp;if and only if each pair of adjacent digits&nbsp;<code>x</code>&nbsp;and&nbsp;<code>y</code>&nbsp;satisfy&nbsp;<code>x &lt;= y</code>.)</p>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: N = 10
+Output: 9
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: N = 1234
+Output: 1234
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: N = 332
+Output: 299
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;<code>N</code>&nbsp;is an integer in the range&nbsp;<code>[0, 10^9]</code>.</p>
+<p>&nbsp;</p>
+</div>
+<p>这道题给了我们一个非负数，让我们求一个数字小于等于给定数字，且该数字各位上的数字是单调递增的。那么我们就来分析题目中给的几个例子吧，首先如果是10的话，我们知道1大于0，所以不是单调自增的，那么返回的数就是9。第二个例子是1234，各位上已经满足单调自增的条件了，返回原数即可。第三个例子是332，我们发现最后一位2小于之前的3，那么此时我们将前面位减1，先变成322，再往前看，还是小于前面的3，那么我们再将前面位减1，就变成了222，此时222不是最大的单调递增数，我们可以将后面两位变成9，于是乎就有了299，小于给定的332，符合题意。如果给定的数字是232，那么就会得到229，我们可以发现规律，要找到从后往前遍历的最后一个值升高的位置，让前一位减1，并把当前位以及后面的所有位都变成9，就可以得到最大的单调递增数啦。</p>
+<p>我们用j表示最后一个值升高的位置，具体来说应该是其前一位的值大，初始化为总位数n，然后从后往前遍历，因为每次要和前一位比较，为防止越界，应遍历到第二个数停止，如果当前位大于等于前一位，符合单调递增，直接跳过；否则就将前一位自减1，j赋值为当前位i，循环结束后，从j位到末尾的位数都改为9即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> monotoneIncreasingDigits(<span style="color: #0000ff;">int</span><span style="color: #000000;"> N) {
+        </span><span style="color: #0000ff;">string</span> str =<span style="color: #000000;"> to_string(N);
+        </span><span style="color: #0000ff;">int</span> n = str.size(), j =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt; <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (str[i] &gt;= str[i - <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            </span>--str[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            j </span>=<span style="color: #000000;"> i;
+        }        
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = j; i &lt; n; ++<span style="color: #000000;">i) {
+            str[i] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> stoi(str);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5883736.html">Remove K Digits</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

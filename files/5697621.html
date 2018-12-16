@@ -1,0 +1,78 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5697621.html">[LeetCode] Wiggle Subsequence 摆动子序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A sequence of numbers is called a <strong>wiggle sequence</strong> if the differences between successive numbers strictly alternate between positive and negative. The first difference (if one exists) may be either positive or negative. A sequence with fewer than two elements is trivially a wiggle sequence.</p>
+<p>For example, <code>[1,7,4,9,2,5]</code> is a wiggle sequence because the differences (6,-3,5,-7,3) are alternately positive and negative. In contrast, <code>[1,4,7,2,5]</code> and <code>[1,7,4,5,5]</code> are not wiggle sequences, the first because its first two differences are positive and the second because its last difference is zero.</p>
+<p>Given a sequence of integers, return the length of the longest subsequence that is a wiggle sequence. A subsequence is obtained by deleting some number of elements (eventually, also zero) from the original sequence, leaving the remaining elements in their original order.</p>
+<p><strong>Examples:</strong><br />
+</p>
+<pre><strong>Input:</strong> [1,7,4,9,2,5]
+<strong>Output:</strong> 6
+The entire sequence is a wiggle sequence.
+
+<strong>Input:</strong> [1,17,5,10,13,15,10,5,16,8]
+<strong>Output:</strong> 7
+There are several subsequences that achieve this length. One is [1,17,10,13,10,16,8].
+
+<strong>Input:</strong> [1,2,3,4,5,6,7,8,9]
+<strong>Output:</strong> 2
+</pre>
+<p><strong>Follow up:</strong><br />
+Can you do it in O(<em>n</em>) time?
+</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://leetcode.com/agave/">@agave</a> and <a href="https://leetcode.com/stefanpochmann/">@StefanPochmann</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给我了我们一个数组，让我们求最长摆动子序列，关于摆动Wiggle数组，可以参见LC上之前的两道题<a href="http://www.cnblogs.com/grandyang/p/5177285.html" target="_blank">Wiggle Sort</a>和<a href="http://www.cnblogs.com/grandyang/p/5139057.html">Wiggle Sort II</a>。题目中给的tag说明了这道题可以用DP和Greedy两种方法来做，那么我们先来看DP的做法，我们维护两个dp数组p和q，其中p[i]表示到i位置时首差值为正的摆动子序列的最大长度，q[i]表示到i位置时首差值为负的摆动子序列的最大长度。我们从i=1开始遍历数组，然后对于每个遍历到的数字，再从开头位置遍历到这个数字，然后比较nums[i]和nums[j]，分别更新对应的位置，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> wiggleMaxLength(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; p(nums.size(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; q(nums.size(), <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (nums[i] &gt; nums[j]) p[i] = max(p[i], q[j] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (nums[i] &lt; nums[j]) q[i] = max(q[i], p[j] + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> max(p.back(), q.back());
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>题目中有个Follow up说要在O(n)的时间内完成，而Greedy算法正好可以达到这个要求，这里我们不在维护两个dp数组，而是维护两个变量p和q，然后遍历数组，如果当前数字比前一个数字大，则p=q+1，如果比前一个数字小，则q=p+1，最后取p和q中的较大值跟n比较，取较小的那个，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> wiggleMaxLength(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> p = <span style="color: #800080;">1</span>, q = <span style="color: #800080;">1</span>, n =<span style="color: #000000;"> nums.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] &gt; nums[i - <span style="color: #800080;">1</span>]) p = q + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (nums[i] &lt; nums[i - <span style="color: #800080;">1</span>]) q = p + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> min(n, max(p, q));
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5177285.html" target="_blank">Wiggle Sort</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5139057.html">Wiggle Sort II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/51893/two-solutions-one-is-dp-the-other-is-greedy" target="_blank">https://discuss.leetcode.com/topic/51893/two-solutions-one-is-dp-the-other-is-greedy</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

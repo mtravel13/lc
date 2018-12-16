@@ -1,0 +1,55 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4462810.html">[LeetCode] Count Primes 质数的个数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Count the number of prime numbers less than a non-negative number,&nbsp;<em>n</em>.</p>
+<p>Example:</p>
+<pre>Input: 10
+Output: 4
+Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.</pre>
+<div class="spoilers">References:
+<p><a href="https://primes.utm.edu/howmany.html" target="_blank">How Many Primes Are There?</a></p>
+<p><a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes" target="_blank">Sieve of Eratosthenes</a></p>
+</div>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://leetcode.com/discuss/user/mithmatt">@mithmatt</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给定一个非负数n，让我们求小于n的质数的个数，题目中给了充足的提示，解题方法就在第二个提示<a href="http://zh.wikipedia.org/wiki/%E5%9F%83%E6%8B%89%E6%89%98%E6%96%AF%E7%89%B9%E5%B0%BC%E7%AD%9B%E6%B3%95" target="_blank">埃拉托斯特尼筛法Sieve of Eratosthenes</a>中，这个算法的过程如下图所示，我们从2开始遍历到根号n，先找到第一个质数2，然后将其所有的倍数全部标记出来，然后到下一个质数3，标记其所有倍数，一次类推，直到根号n，此时数组中未被标记的数字就是质数。我们需要一个n-1长度的bool型数组来记录每个数字是否被标记，长度为n-1的原因是题目说是小于n的质数个数，并不包括n。 然后我们来实现埃拉托斯特尼筛法，难度并不是很大，代码如下所示：</p>
+<p>&nbsp;</p>
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/b/b9/Sieve_of_Eratosthenes_animation.gif" alt="埃拉托斯特尼筛法" width="445" height="369" data-file-width="445" data-file-height="369" /></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> countPrimes(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; prime(n, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (prime[i]) {
+                </span>++<span style="color: #000000;">res;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">2</span>; i * j &lt; n; ++<span style="color: #000000;">j) {
+                    prime[i </span>* j] = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4743837.html" target="_blank">Ugly Number II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4741934.html" target="_blank">Ugly Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4800552.html" target="_blank">Perfect Squares</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/count-primes/" target="_blank">https://leetcode.com/problems/count-primes/</a></p>
+<p><a href="https://leetcode.com/problems/count-primes/discuss/57588/My-simple-Java-solution" target="_blank">https://leetcode.com/problems/count-primes/discuss/57588/My-simple-Java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

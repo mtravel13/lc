@@ -1,0 +1,66 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6703311.html">[LeetCode] Reverse Words in a String III 翻转字符串中的单词之三</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string, you need to reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.</p>
+<p>Example 1:</p>
+<pre>Input: "Let's take LeetCode contest"
+Output: "s'teL ekat edoCteeL tsetnoc"
+</pre>
+<p>&nbsp;</p>
+<p>Note:&nbsp;In the string, each word is separated by single space and there will not be any extra space in the string.</p>
+<p>&nbsp;</p>
+<p>这道题让我们翻转字符串中的每个单词，感觉整体难度要比之前两道<a href="http://www.cnblogs.com/grandyang/p/5186294.html" target="_blank">Reverse Words in a String II</a>和<a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a>要小一些，由于题目中说明了没有多余空格，使得难度进一步的降低了。首先我们来看使用字符流处理类stringstream来做的方法，相当简单，就是按顺序读入每个单词进行翻转即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseWords(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span>, t = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        istringstream </span><span style="color: #0000ff;">is</span><span style="color: #000000;">(s);
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">is</span> &gt;&gt;<span style="color: #000000;"> t) {
+            reverse(t.begin(), t.end());
+            res </span>+= t + <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">;
+        }
+        res.pop_back();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们来看不使用字符流处理类，也不使用STL内置的reverse函数的方法，那么就是用两个指针，分别指向每个单词的开头和结尾位置，确定了单词的首尾位置后，再用两个指针对单词进行首尾交换即可，有点像验证回文字符串的方法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> reverseWords(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> start = <span style="color: #800080;">0</span>, end = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> s.size();
+        </span><span style="color: #0000ff;">while</span> (start &lt; n &amp;&amp; end &lt;<span style="color: #000000;"> n) {
+            </span><span style="color: #0000ff;">while</span> (end &lt; n &amp;&amp; s[end] != <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) ++<span style="color: #000000;">end;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start, j = end - <span style="color: #800080;">1</span>; i &lt; j; ++i, --<span style="color: #000000;">j) {
+                swap(s[i], s[j]);
+            }
+            start </span>= ++<span style="color: #000000;">end;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5186294.html" target="_blank">Reverse Words in a String II</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606676.html" target="_blank">Reverse Words in a String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/85773/nothing-fancy-straight-java-stringbuilder" target="_blank">https://discuss.leetcode.com/topic/85773/nothing-fancy-straight-java-stringbuilder</a></p>
+<p><a href="https://discuss.leetcode.com/topic/85797/java-two-methods-3-line-using-built-in-and-char-array" target="_blank">https://discuss.leetcode.com/topic/85797/java-two-methods-3-line-using-built-in-and-char-array</a></p>
+<p><br class="Apple-interchange-newline" /><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

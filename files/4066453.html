@@ -1,0 +1,43 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4066453.html">[LeetCode] Remove Duplicates from Sorted List 移除有序链表中的重复项</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>Given a sorted linked list, delete all duplicates such that each element appear only&nbsp;<em>once</em>.</p>
+<p>For example,<br />Given&nbsp;<code>1-&gt;1-&gt;2</code>, return&nbsp;<code>1-&gt;2</code>.<br />Given&nbsp;<code>1-&gt;1-&gt;2-&gt;3-&gt;3</code>, return&nbsp;<code>1-&gt;2-&gt;3</code>.</p>
+<p>&nbsp;</p>
+<p>移除有序链表中的重复项需要定义个指针指向该链表的第一个元素，然后第一个元素和第二个元素比较，如果重复了，则删掉第二个元素，如果不重复，指针指向第二个元素。这样遍历完整个链表，则剩下的元素没有重复项。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*deleteDuplicates(ListNode *<span style="color: #000000;">head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        
+        ListNode </span>*start =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (start &amp;&amp; start-&gt;<span style="color: #000000;">next) {
+            </span><span style="color: #0000ff;">if</span> (start-&gt;val == start-&gt;next-&gt;<span style="color: #000000;">val) {
+                ListNode </span>*tmp = start-&gt;<span style="color: #000000;">next;
+                start</span>-&gt;next = start-&gt;next-&gt;<span style="color: #000000;">next;
+                delete tmp;
+            } </span><span style="color: #0000ff;">else</span> start = start-&gt;<span style="color: #000000;">next;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

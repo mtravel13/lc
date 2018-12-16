@@ -1,0 +1,105 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7920253.html">[LeetCode] My Calendar I 我的日历之一</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Implement a&nbsp;<code>MyCalendar</code>&nbsp;class to store your events. A new event can be added if adding the event will not cause a double booking.</p>
+<p>Your class will have the method,&nbsp;<code>book(int start, int end)</code>. Formally, this represents a booking on the half open interval&nbsp;<code>[start, end)</code>, the range of real numbers&nbsp;<code>x</code>&nbsp;such that&nbsp;<code>start &lt;= x &lt; end</code>.</p>
+<p>A&nbsp;<em>double booking</em>&nbsp;happens when two events have some non-empty intersection (ie., there is some time that is common to both events.)</p>
+<p>For each call to the method&nbsp;<code>MyCalendar.book</code>, return&nbsp;<code>true</code>&nbsp;if the event can be added to the calendar successfully without causing a double booking. Otherwise, return&nbsp;<code>false</code>&nbsp;and do not add the event to the calendar.</p>
+Your class will be called like this:&nbsp;<code>MyCalendar cal = new MyCalendar();</code>&nbsp;<code>MyCalendar.book(start, end)</code>
+<p>Example 1:</p>
+<pre>MyCalendar();
+MyCalendar.book(10, 20); // returns true
+MyCalendar.book(15, 25); // returns false
+MyCalendar.book(20, 30); // returns true
+Explanation: 
+The first event can be booked.  The second can't because time 15 is already booked by another event.
+The third event can be booked, as the first event takes every time less than 20, but not including 20.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ul>
+<li>The number of calls to&nbsp;<code>MyCalendar.book</code>&nbsp;per test case will be at most&nbsp;<code>1000</code>.</li>
+<li>In calls to&nbsp;<code>MyCalendar.book(start, end)</code>,&nbsp;<code>start</code>&nbsp;and&nbsp;<code>end</code>&nbsp;are integers in the range&nbsp;<code>[0, 10^9]</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题让我们设计一个我的日历类，里面有一个book函数，需要给定一个起始时间和结束时间，与Google Calendar不同的是，我们的事件事件上不能重叠，实际上这道题的本质就是检查区间是否重叠。那么我们可以暴力搜索，对于每一个将要加入的区间，我们都和已经已经存在的区间进行比较，看是否有重复。而新加入的区间和当前区间产生重复的情况有两种，一种是新加入区间的前半段重复，并且，另一种是新加入区间的后半段重复。比如当前区间如果是[3, 8)，那么第一种情况下新加入区间就是[6, 9)，那么触发条件就是当前区间的起始时间小于等于新加入区间的起始时间，并且结束时间大于新加入区间的结束时间。第二种情况下新加入区间就是[2,5)，那么触发条件就是当前区间的起始时间大于等于新加入区间的起始时间，并且起始时间小于新加入区间的结束时间。这两种情况均返回false，否则就将新区间加入数组，并返回true即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCalendar {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    MyCalendar() {}
+    
+    </span><span style="color: #0000ff;">bool</span> book(<span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span><span style="color: #000000;"> end) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : cal) {
+            </span><span style="color: #0000ff;">if</span> (a.first &lt;= start &amp;&amp; a.second &gt; start) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (a.first &gt;= start &amp;&amp; a.first &lt; end) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        cal.push_back({start, end});
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> cal;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法将上面方法的两个if判断融合成为了一个，我们来观察两个区间的起始和结束位置的关系发现，如果两个区间的起始时间中的较大值小于结束区间的较小值，那么就有重合，返回false。比如 [3, 8) 和 [6, 9)，3和6中的较大值6，小于8和9中的较小值8，有重叠。再比如[3, 8) 和 [2, 5)，3和2中的较大值3，就小于8和5中的较小值5，有重叠。而对于[3, 8) 和 [9, 10)，3和9中的较大值9，不小于8和10中的较小值8，所以没有重叠，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCalendar {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    MyCalendar() {}
+    
+    </span><span style="color: #0000ff;">bool</span> book(<span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span><span style="color: #000000;"> end) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : cal) {
+            </span><span style="color: #0000ff;">if</span> (max(a.first, start) &lt; min(a.second, end)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        cal.push_back({start, end});
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    vector</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> cal;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面两种解法都是线性搜索，我们起始可以优化搜索时间，如果我们的区间是有序的话。所以我们用一个map来建立起始时间和结束时间的映射，map会按照起始时间进行自动排序。然后对于新进来的区间，我们在已有区间中查找第一个不小于新入区间的起始时间的区间，如果这个区间存在的话，说明新入区间的起始时间小于等于当前区间，也就是解法一中的第二个if情况，当前区间起始时间小于新入区间结束时间的话返回false。我们还要跟前面一个区间进行查重叠操作，那么判断如果当前区间不是第一个区间的话，就找到前一个区间，此时是解法一中第一个if情况，并且如果前一个区间的结束时间大于新入区间的起始时间的话，返回false。否则就建立新的映射，返回true即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyCalendar {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    MyCalendar() {}
+    
+    </span><span style="color: #0000ff;">bool</span> book(<span style="color: #0000ff;">int</span> start, <span style="color: #0000ff;">int</span><span style="color: #000000;"> end) {
+        auto it </span>=<span style="color: #000000;"> cal.lower_bound(start);
+        </span><span style="color: #0000ff;">if</span> (it != cal.end() &amp;&amp; it-&gt;first &lt; end) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (it != cal.begin() &amp;&amp; prev(it)-&gt;second &gt; start) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        cal[start] </span>=<span style="color: #000000;"> end;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    map</span>&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> cal;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/111205/java-8-liner-treemap">https://discuss.leetcode.com/topic/111205/java-8-liner-treemap</a></p>
+<p><a href="https://discuss.leetcode.com/topic/111244/simple-c-o-n-solution">https://discuss.leetcode.com/topic/111244/simple-c-o-n-solution</a>&nbsp;</p>
+<p><a href="https://discuss.leetcode.com/topic/111306/clean-c-o-logn-solution">https://discuss.leetcode.com/topic/111306/clean-c-o-logn-solution</a></p>
+</div>
+<div id="interviewed-div"><a href="https://discuss.leetcode.com/topic/111194/java-c-clean-code-with-explanation">https://discuss.leetcode.com/topic/111194/java-c-clean-code-with-explanation</a></div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

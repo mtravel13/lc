@@ -1,0 +1,43 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8097513.html">[LeetCode] Daily Temperatures 日常温度</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a list of daily&nbsp;<code>temperatures</code>, produce a list that, for each day in the input, tells you how many days you would have to wait until a warmer temperature. If there is no future day for which this is possible, put&nbsp;<code>0</code>&nbsp;instead.</p>
+<p>For example, given the list&nbsp;<code>temperatures = [73, 74, 75, 71, 69, 72, 76, 73]</code>, your output should be&nbsp;<code>[1, 1, 4, 2, 1, 1, 0, 0]</code>.</p>
+<p>Note:&nbsp;The length of&nbsp;<code>temperatures</code>&nbsp;will be in the range&nbsp;<code>[1, 30000]</code>. Each temperature will be an integer in the range&nbsp;<code>[30, 100]</code>.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个数组，让我们找下一个比当前数字大的数字的距离，我们研究一下题目中给的例子，发现数组是无序的，所以没法用二分法快速定位下一个大的数字，那么最先考虑的方法就是暴力搜索了，写起来没有什么难度，但是OJ并不答应。实际上这道题应该使用递减栈Descending Stack来做，栈里只有递减元素，思路是这样的，我们遍历数组，如果栈不空，且当前数字大于栈顶元素，那么如果直接入栈的话就不是递减栈了，所以我们取出栈顶元素，那么由于当前数字大于栈顶元素的数字，而且一定是第一个大于栈顶元素的数，那么我们直接求出下标差就是二者的距离了，然后继续看新的栈顶元素，直到当前数字小于等于栈顶元素停止，然后将数字入栈，这样就可以一直保持递减栈，且每个数字和第一个大于它的数的距离也可以算出来了，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; dailyTemperatures(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> temperatures) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> temperatures.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(n, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> st;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; temperatures.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">while</span> (!st.empty() &amp;&amp; temperatures[i] &gt;<span style="color: #000000;"> temperatures[st.top()]) {
+                auto t </span>=<span style="color: #000000;"> st.top(); st.pop();
+                res[t] </span>= i -<span style="color: #000000;"> t;
+            }
+            st.push(i);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6399855.html" target="_blank">Next Greater Element I</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/112830/java-easy-ac-solution-with-stack">https://discuss.leetcode.com/topic/112830/java-easy-ac-solution-with-stack</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

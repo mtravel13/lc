@@ -1,0 +1,47 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5224896.html">[LeetCode] Flip Game 翻转游戏</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are playing the following Flip Game with your friend: Given a string that contains only these two characters:&nbsp;<code>+</code>&nbsp;and&nbsp;<code>-</code>, you and your friend take turns to flip twoconsecutive&nbsp;<code>"++"</code>&nbsp;into&nbsp;<code>"--"</code>. The game ends when a person can no longer make a move and therefore the other person will be the winner.</p>
+<p>Write a function to compute all possible states of the string after one valid move.</p>
+<p>For example, given&nbsp;<code>s = "++++"</code>, after one move, it may become one of the following states:</p>
+<pre>[
+  "--++",
+  "+--+",
+  "++--"
+]
+</pre>
+<p>&nbsp;</p>
+<p>If there is no valid move, return an empty list&nbsp;<code>[]</code>.</p>
+<p>&nbsp;</p>
+<p>这道题让我们把相邻的两个++变成--，真不是一道难题，我们就从第二个字母开始遍历，每次判断当前字母是否为+，和之前那个字母是否为+，如果都为加，则将翻转后的字符串存入结果中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; generatePossibleNextMoves(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> &amp;&amp; s[i - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                res.push_back(s.substr(</span><span style="color: #800080;">0</span>, i - <span style="color: #800080;">1</span>) + <span style="color: #800000;">"</span><span style="color: #800000;">--</span><span style="color: #800000;">"</span> + s.substr(i + <span style="color: #800080;">1</span><span style="color: #000000;">));
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4873248.html"><span style="color: #000000;"><a href="http://www.cnblogs.com/grandyang/p/5226206.html" target="_blank">Flip Game II</a><br /></span></a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/flip-game/description/" target="_blank">https://leetcode.com/problems/flip-game/description/</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

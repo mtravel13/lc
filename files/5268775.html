@@ -1,0 +1,107 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5268775.html">[LeetCode] Smallest Rectangle Enclosing Black Pixels 包含黑像素的最小矩阵</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>An image is represented by a binary matrix with&nbsp;<code>0</code>&nbsp;as a white pixel and&nbsp;<code>1</code>&nbsp;as a black pixel. The black pixels are connected, i.e., there is only one black region. Pixels are connected horizontally and vertically. Given the location&nbsp;<code>(x, y)</code>&nbsp;of one of the black pixels, return the area of the smallest (axis-aligned) rectangle that encloses all black pixels.</p>
+<p>For example, given the following image:</p>
+<pre>[
+  "0010",
+  "0110",
+  "0100"
+]
+</pre>
+<p>and&nbsp;<code>x = 0</code>,&nbsp;<code>y = 2</code>,</p>
+<p>&nbsp;</p>
+<p>Return&nbsp;<code>6</code>.</p>
+<p>&nbsp;</p>
+<p>这道题给我们一个二维矩阵，表示一个图片的数据，其中1代表黑像素，0代表白像素，现在让我们找出一个最小的矩阵可以包括所有的黑像素，还给了我们一个黑像素的坐标，我们先来看Brute Force的方法，这种方法的效率不高，遍历了整个数组，如果遇到了1，就更新矩形的返回，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Brute force</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minArea(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp; image, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">int</span> left = y, right = y, up = x, down =<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; image.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; image[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (image[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    left </span>=<span style="color: #000000;"> min(left, j);
+                    right </span>=<span style="color: #000000;"> max(right, j);
+                    up </span>=<span style="color: #000000;"> min(up, i);
+                    down </span>=<span style="color: #000000;"> max(down, i);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> (right - left + <span style="color: #800080;">1</span>) * (down - up + <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是解法一的递归写法，本质上来说跟上面的解法没有啥区别，也没有任何的优化，所以仍然可以认为是暴力搜索法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> DFS</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minArea(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp; image, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">int</span> left = y, right = y, up = x, down =<span style="color: #000000;"> x;
+        dfs(image, x, y, left, right, up, down);
+        </span><span style="color: #0000ff;">return</span> (right - left + <span style="color: #800080;">1</span>) * (down - up + <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">void</span> dfs(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt; &amp;image, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> y, <span style="color: #0000ff;">int</span> &amp;left, <span style="color: #0000ff;">int</span> &amp;right, <span style="color: #0000ff;">int</span> &amp;up, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">down) {
+        </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span> || x &gt;= image.size() || y &lt; <span style="color: #800080;">0</span> || y &gt;= image[<span style="color: #800080;">0</span>].size() || image[x][y] != <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        left </span>=<span style="color: #000000;"> min(left, y); 
+        right </span>=<span style="color: #000000;"> max(right, y);
+        up </span>=<span style="color: #000000;"> min(up, x);
+        down </span>=<span style="color: #000000;"> max(down, x);
+        image[x][y] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">2</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        dfs(image, x </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, y, left, right, up, down);
+        dfs(image, x </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, y, left, right, up, down);
+        dfs(image, x, y </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, left, right, up, down);
+        dfs(image, x, y </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, left, right, up, down);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们再来看一种优化了时间复杂度的解法，这是一种二分搜索法，以给定的一个黑像素(x, y)为中心，分别用二分法快速找到整个黑色区域的上下左右的临界点，然后直接算出面积。首先我们来看上边界怎么找，既然是以(x, y)为中心，而且上边界又是某个行数，那么其范围肯定在[0, x]之间，能成为上边界的条件是该行中至少有一个点是1，那么其列数的范围就在[0, n]之间，我们在进行二分搜索的时候，先根据i, j算出中间行mid，然后列数从0开始遍历，直到找到为1的点，或者越界位置，然后我们判断列数是否越界，越界的话，说明当前行没有1，此时更新i为mid+1，如果找到了1，那么更新j为mid。找下边界也是同样的道理，但是跟上边界稍微又些不同的地方是，如果当前行找到了1，我们应该再往下找，那么i应该更新为mid+1；如果没找到，就应该往上找，靠近(x, y)点；所以两种情况只是在二分法更新范围的地方正好想法，所以我们可以用一个bool型的变量opt来决定还如何更新行数。</p>
+<p>下面我们来看如何确定左边界和右边界，其实跟确定上下边界大同小异。左边界是列数，若以(x, y)点为中心，那么其范围便是[0, y]，因为我们之前已经确定了上下边界up和down了，所以左边界点的行数范围就是[up, down]，那么同理，当我们通过i, j求出了中间列mid时，我们就要遍历该列，找到为1的点，所以此时我们是用image[k][mid]，而在找上下边界时，我们用的是image[mid][k]，还是顺序不一样，我们可以用另外一个bool型变量h来控制，h表示horizontal，就是水平遍历的意思。这样我们通过两个bool型变量就可以用一个函数来涵盖四种情况的二分搜索，是不是很叼？下面更新i或j的时候参考上下边界的分析，应该不难理解，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Binary Search</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minArea(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp; image, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">int</span> m = image.size(), n = image[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">int</span> up = binary_search(image, <span style="color: #0000ff;">true</span>, <span style="color: #800080;">0</span>, x, <span style="color: #800080;">0</span>, n, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> down = binary_search(image, <span style="color: #0000ff;">true</span>, x + <span style="color: #800080;">1</span>, m, <span style="color: #800080;">0</span>, n, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> left = binary_search(image, <span style="color: #0000ff;">false</span>, <span style="color: #800080;">0</span>, y, up, down, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> right = binary_search(image, <span style="color: #0000ff;">false</span>, y + <span style="color: #800080;">1</span>, n, up, down, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> (right - left) * (down -<span style="color: #000000;"> up);
+    }
+    </span><span style="color: #0000ff;">int</span> binary_search(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt; &amp;image, <span style="color: #0000ff;">bool</span> h, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> j, <span style="color: #0000ff;">int</span> low, <span style="color: #0000ff;">int</span> high, <span style="color: #0000ff;">bool</span><span style="color: #000000;"> opt) {
+        </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> j) {
+            </span><span style="color: #0000ff;">int</span> k = low, mid = (i + j) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (k &lt; high &amp;&amp; (h ? image[mid][k] : image[k][mid]) == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">k;
+            </span><span style="color: #0000ff;">if</span> (k &lt; high == opt) j =<span style="color: #000000;"> mid;
+            </span><span style="color: #0000ff;">else</span> i = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+};</span></pre>
+</div>
+<p><br />参考资料：</p>
+<p><a href="https://leetcode.com/discuss/68243/c-dfs-solution" target="_blank">https://leetcode.com/discuss/68243/c-dfs-solution</a></p>
+<p><a href="https://leetcode.com/discuss/71898/1ms-java-binary-search-dfs-is-4ms" target="_blank">https://leetcode.com/discuss/71898/1ms-java-binary-search-dfs-is-4ms</a></p>
+<p><a href="https://leetcode.com/discuss/68246/c-java-python-binary-search-solution-with-explanation" target="_blank">https://leetcode.com/discuss/68246/c-java-python-binary-search-solution-with-explanation</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

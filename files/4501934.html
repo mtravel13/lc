@@ -1,0 +1,134 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4501934.html">[LeetCode] Minimum Size Subarray Sum 最短子数组之和</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of&nbsp;n&nbsp;positive integers and a positive integer&nbsp;s, find the minimal length of a subarray of which the sum &ge;&nbsp;s. If there isn't one, return 0 instead.</p>
+<p>For example, given the array&nbsp;<code>[2,3,1,2,4,3]</code>&nbsp;and&nbsp;<code>s = 7</code>,<br />the subarray&nbsp;<code>[4,3]</code>&nbsp;has the minimal length under the problem constraint.</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/minimum-size-subarray-sum/">click to show more practice.</a></p>
+<div class="spoilers">More practice:
+<p>If you have figured out the&nbsp;<em>O</em>(<em>n</em>) solution, try coding another solution of which the time complexity is&nbsp;<em>O</em>(<em>n</em>&nbsp;log&nbsp;<em>n</em>).</p>
+
+
+
+
+
+
+</div>
+<p>Credits:<br />Special thanks to&nbsp;<a href="https://oj.leetcode.com/discuss/user/Freezen">@Freezen</a>&nbsp;for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给定了我们一个数字，让我们求子数组之和大于等于给定值的最小长度，跟之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4377150.html"> Maximum Subarray 最大子数组</a>有些类似，并且题目中要求我们实现O(n)和O(nlgn)两种解法，那么我们先来看O(n)的解法，我们需要定义两个指针left和right，分别记录子数组的左右的边界位置，然后我们让right向右移，直到子数组和大于等于给定值或者right达到数组末尾，此时我们更新最短距离，并且将left像右移一位，然后再sum中减去移去的值，然后重复上面的步骤，直到right到达末尾，且left到达临界位置，即要么到达边界，要么再往右移动，和就会小于给定值。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> O(n)</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSubArrayLen(<span style="color: #0000ff;">int</span> s, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">if</span> (nums.empty()) <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = <span style="color: #800080;">0</span>, sum = <span style="color: #800080;">0</span>, len = nums.size(), res = len + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (right &lt;<span style="color: #000000;"> len) {
+            </span><span style="color: #0000ff;">while</span> (sum &lt; s &amp;&amp; right &lt;<span style="color: #000000;"> len) {
+                sum </span>+= nums[right++<span style="color: #000000;">];
+            }
+            </span><span style="color: #0000ff;">while</span> (sum &gt;=<span style="color: #000000;"> s) {
+                res </span>= min(res, right -<span style="color: #000000;"> left);
+                sum </span>-= nums[left++<span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> res == len + <span style="color: #800080;">1</span> ? <span style="color: #800080;">0</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>同样的思路，我们也可以换一种写法，参考代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSubArrayLen(<span style="color: #0000ff;">int</span> s, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, left = <span style="color: #800080;">0</span>, sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; nums.size(); ++<span style="color: #000000;">i) {
+            sum </span>+=<span style="color: #000000;"> nums[i];
+            </span><span style="color: #0000ff;">while</span> (left &lt;= i &amp;&amp; sum &gt;=<span style="color: #000000;"> s) {
+                res </span>= min(res, i - left + <span style="color: #800080;">1</span><span style="color: #000000;">);
+                sum </span>-= nums[left++<span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> res == INT_MAX ? <span style="color: #800080;">0</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面我们再来看看O(nlgn)的解法，这个解法要用到二分查找法，思路是，我们建立一个比原数组长一位的sums数组，其中sums[i]表示nums数组中[0, i - 1]的和，然后我们对于sums中每一个值sums[i]，用二分查找法找到子数组的右边界位置，使该子数组之和大于sums[i] + s，然后我们更新最短长度的距离即可。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> O(nlgn)</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSubArrayLen(<span style="color: #0000ff;">int</span> s, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> len = nums.size(), sums[len + <span style="color: #800080;">1</span>] = {<span style="color: #800080;">0</span>}, res = len + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; len + <span style="color: #800080;">1</span>; ++i) sums[i] = sums[i - <span style="color: #800080;">1</span>] + nums[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len + <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> right = searchRight(i + <span style="color: #800080;">1</span>, len, sums[i] +<span style="color: #000000;"> s, sums);
+            </span><span style="color: #0000ff;">if</span> (right == len + <span style="color: #800080;">1</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (res &gt; right - i) res = right -<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">return</span> res == len + <span style="color: #800080;">1</span> ? <span style="color: #800080;">0</span><span style="color: #000000;"> : res;
+    }
+    </span><span style="color: #0000ff;">int</span> searchRight(<span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span> right, <span style="color: #0000ff;">int</span> key, <span style="color: #0000ff;">int</span><span style="color: #000000;"> sums[]) {
+        </span><span style="color: #0000ff;">while</span> (left &lt;=<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = (left + right) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (sums[mid] &gt;= key) right = mid - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> left;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以不用为二分查找法专门写一个函数，直接嵌套在for循环中即可，参加代码如下：</p>
+<p>&nbsp;</p>
+<p>解法四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> minSubArrayLen(<span style="color: #0000ff;">int</span> s, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        </span><span style="color: #0000ff;">int</span> res = INT_MAX, n =<span style="color: #000000;"> nums.size();
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; sums(n + <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; n + <span style="color: #800080;">1</span>; ++i) sums[i] = sums[i - <span style="color: #800080;">1</span>] + nums[i - <span style="color: #800080;">1</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> left = i + <span style="color: #800080;">1</span>, right = n, t = sums[i] +<span style="color: #000000;"> s;
+            </span><span style="color: #0000ff;">while</span> (left &lt;=<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (sums[mid] &lt; t) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> right = mid - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (left == n + <span style="color: #800080;">1</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            res </span>= min(res, left -<span style="color: #000000;"> i);
+        }
+        </span><span style="color: #0000ff;">return</span> res == INT_MAX ? <span style="color: #800080;">0</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>讨论：本题有一个很好的Follow up，就是去掉所有数字是正数的限制条件，而去掉这个条件会使得累加数组不一定会是递增的了，那么就不能使用二分法，同时双指针的方法也会失效，只能另辟蹊径了。其实博主觉得同时应该去掉大于s的条件，只保留sum=s这个要求，因为这样我们可以再建立累加数组后用2sum的思路，快速查找s-sum是否存在，如果有了大于的条件，还得继续遍历所有大于s-sum的值，效率提高不了多少。</p>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4340948.html" target="_blank">Minimum Window Substring</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6810361.html">Subarray Sum Equals K</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7801533.html">Maximum Length of Repeated Subarray</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/17063/4ms-o-n-8ms-o-nlogn-c">https://discuss.leetcode.com/topic/17063/4ms-o-n-8ms-o-nlogn-c</a></p>
+<p><a href="https://discuss.leetcode.com/topic/18583/accepted-clean-java-o-n-solution-two-pointers">https://discuss.leetcode.com/topic/18583/accepted-clean-java-o-n-solution-two-pointers</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

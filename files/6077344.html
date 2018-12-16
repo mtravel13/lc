@@ -1,0 +1,76 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6077344.html">[LeetCode] Assign Cookies 分点心</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most one cookie. Each child i has a greed factor gi, which is the minimum size of a cookie that the child will be content with; and each cookie j has a size sj. If sj&nbsp;&gt;= gi, we can assign the cookie j to the child i, and the child i will be content. Your goal is to maximize the number of your content children and output the maximum number.</p>
+<p>Note:<br />You may assume the greed factor is always positive.&nbsp;<br />You cannot assign more than one cookie to one child.</p>
+<p>Example 1:</p>
+<pre>Input: [1,2,3], [1,1]
+
+Output: 1
+
+Explanation: You have 3 children and 2 cookies. The greed factors of 3 children are 1, 2, 3. 
+And even though you have 2 cookies, since their size is both 1, you could only make the child whose greed factor is 1 content.
+You need to output 1.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [1,2], [1,2,3]
+
+Output: 2
+
+Explanation: You have 2 children and 3 cookies. The greed factors of 2 children are 1, 2. 
+You have 3 cookies and their sizes are big enough to gratify all of the children, 
+You need to output 2.</pre>
+<p>&nbsp;</p>
+<p>这道题给了我们一堆cookie，每个cookie的大小不同，还有一堆小朋友，每个小朋友的胃口也不同的，问我们当前的cookie最多能满足几个小朋友。这是典型的利用贪婪算法的题目，我们可以首先对两个数组进行排序，让小的在前面。然后我们先拿最小的cookie给胃口最小的小朋友，看能否满足，能的话，我们结果res自加1，然后再拿下一个cookie去满足下一位小朋友；如果当前cookie不能满足当前小朋友，那么我们就用下一块稍大一点的cookie去尝试满足当前的小朋友。当cookie发完了或者小朋友没有了我们停止遍历，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findContentChildren(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; g, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> s) {
+         </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, p = <span style="color: #800080;">0</span><span style="color: #000000;">;
+         sort(g.begin(), g.end());
+         sort(s.begin(), s.end());
+         </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+             </span><span style="color: #0000ff;">if</span> (s[i] &gt;=<span style="color: #000000;"> g[p]) {
+                 </span>++<span style="color: #000000;">res;
+                 </span>++<span style="color: #000000;">p;
+                 </span><span style="color: #0000ff;">if</span> (p &gt;= g.size()) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+             }
+         }
+         </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以对上述代码进行精简，我们用变量j既可以表示小朋友数组的坐标，同时又可以表示已满足的小朋友的个数，因为只有满足了当前的小朋友，才会去满足下一个胃口较大的小朋友，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findContentChildren(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; g, vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size() &amp;&amp; j &lt; g.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (s[i] &gt;= g[j]) ++<span style="color: #000000;">j;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> j;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/67676/simple-greedy-java-solution" target="_blank">https://discuss.leetcode.com/topic/67676/simple-greedy-java-solution</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

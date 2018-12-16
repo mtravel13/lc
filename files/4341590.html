@@ -1,0 +1,66 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4341590.html">[LeetCode] Set Matrix Zeroes 矩阵赋零</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a&nbsp;<em>m</em>&nbsp;x&nbsp;<em>n</em>&nbsp;matrix, if an element is 0, set its entire row and column to 0. Do it in place.</p>
+<p class="showspoilers"><a href="https://leetcode.com/problems/set-matrix-zeroes/">click to show follow up.</a></p>
+<div class="spoilers">Follow up:
+<p>Did you use extra space?<br />A straight forward solution using O(<em>m</em><em>n</em>) space is probably a bad idea.<br />A simple improvement uses O(<em>m</em>&nbsp;+&nbsp;<em>n</em>) space, but still not the best solution.<br />Could you devise a constant space solution?</p>
+
+
+
+
+
+
+</div>
+<p>&nbsp;</p>
+<p>据说这题是CareerCup上的原题，我还没有刷CareerCup，所以不知道啦，不过这题也不算难，虽然我也是看了网上的解法照着写的，但是下次遇到绝对想的起来。这道题中说的空间复杂度为O(mn)的解法自不用多说，直接新建一个和matrix等大小的矩阵，然后一行一行的扫，只要有0，就将新建的矩阵的对应行全赋0，行扫完再扫列，然后把更新完的矩阵赋给matrix即可，这个算法的空间复杂度太高。将其优化到O(m+n)的方法是，用一个长度为m的一维数组记录各行中是否有0，用一个长度为n的一维数组记录各列中是否有0，最后直接更新matrix数组即可。这道题的要求是用O(1)的空间，那么我们就不能新建数组，我们考虑就用原数组的第一行第一列来记录各行各列是否有0.</p>
+<p>- 先扫描第一行第一列，如果有0，则将各自的flag设置为true<br />- 然后扫描除去第一行第一列的整个数组，如果有0，则将对应的第一行和第一列的数字赋0<br />- 再次遍历除去第一行第一列的整个数组，如果对应的第一行和第一列的数字有一个为0，则将当前值赋0<br />- 最后根据第一行第一列的flag来更新第一行第一列</p>
+<p>代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> setZeroes(vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">matrix) {
+        </span><span style="color: #0000ff;">if</span> (matrix.empty() || matrix[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = matrix.size(), n = matrix[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">bool</span> rowZero = <span style="color: #0000ff;">false</span>, colZero = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (matrix[i][<span style="color: #800080;">0</span>] == <span style="color: #800080;">0</span>) colZero = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (matrix[<span style="color: #800080;">0</span>][i] == <span style="color: #800080;">0</span>) rowZero = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        } 
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (matrix[i][j] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    matrix[</span><span style="color: #800080;">0</span>][j] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    matrix[i][</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (matrix[<span style="color: #800080;">0</span>][j] == <span style="color: #800080;">0</span> || matrix[i][<span style="color: #800080;">0</span>] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                    matrix[i][j] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (rowZero) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++i) matrix[<span style="color: #800080;">0</span>][i] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (colZero) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++i) matrix[i][<span style="color: #800080;">0</span>] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

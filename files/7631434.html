@@ -1,0 +1,79 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7631434.html">[LeetCode] Repeated String Match 重复字符串匹配</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two strings A and B, find the minimum number of times A has to be repeated such that B is a substring of it. If no such solution, return -1.</p>
+<p>For example, with A = "abcd" and B = "cdabcdab".</p>
+<p>Return 3, because by repeating A three times (&ldquo;abcdabcdabcd&rdquo;), B is a substring of it; and B is not a substring of A repeated two times ("abcdabcd").</p>
+<p>Note:<br />The length of&nbsp;<code>A</code>&nbsp;and&nbsp;<code>B</code>&nbsp;will be between 1 and 10000.</p>
+<p>&nbsp;</p>
+<p>这道题让我们用字符串B来匹配字符串A，问字符串A需要重复几次，如果无法匹配，则返回-1。那么B要能成为A的字符串，那么A的长度肯定要大于等于B，所以当A的长度小于B的时候，我们可以先进行重复A，直到A的长度大于等于B，并且累计次数cnt。那么此时我们用find来找，看B是否存在A中，如果存在直接返回cnt。如果不存在，我们再加上一个A，再来找，这样可以处理这种情况A="abc", B="cab"，如果此时还找不到，说明无法匹配，返回-1，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> repeatedStringMatch(<span style="color: #0000ff;">string</span> A, <span style="color: #0000ff;">string</span><span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">int</span> n1 = A.size(), n2 = B.size(), cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> A;
+        </span><span style="color: #0000ff;">while</span> (t.size() &lt;<span style="color: #000000;"> n2) {
+            t </span>+=<span style="color: #000000;"> A;
+            </span>++<span style="color: #000000;">cnt;
+        }
+        </span><span style="color: #0000ff;">if</span> (t.find(B) != <span style="color: #0000ff;">string</span>::npos) <span style="color: #0000ff;">return</span><span style="color: #000000;"> cnt;
+        t </span>+=<span style="color: #000000;"> A;
+        </span><span style="color: #0000ff;">return</span> (t.find(B) != <span style="color: #0000ff;">string</span>::npos) ? cnt + <span style="color: #800080;">1</span> : -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法就更简洁了，思路和上面的一样，都是每次给t增加一个字符串A，我们其实可以直接算出最多需要增加的个数，即B的长度除以A的长度再加上2，当B小于A的时候，那么可能需要两个A，所以i就是小于等于2，这样我们每次在t中找B，如果找到了，就返回i，没找到，就增加一个A，循环推出后返回-1即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> repeatedStringMatch(<span style="color: #0000ff;">string</span> A, <span style="color: #0000ff;">string</span><span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">string</span> t =<span style="color: #000000;"> A;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= B.size() / A.size() + <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (t.find(B) != <span style="color: #0000ff;">string</span>::npos) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+            t </span>+=<span style="color: #000000;"> A;
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法还是由热心网友<a id="a_comment_author_3832129" href="http://home.cnblogs.com/u/1090659/" target="_blank">edyyy</a>提供，没有用到字符串自带的find函数，而是逐个字符进行比较，循环字符串A中的所有字符，然后用个变量j，初始化为0，用来循环字符串B中的字符，每个字符和A中对应的字符进行比较，此时从A中取字符就要把A当作一个循环数组来处理，用(i+j)%m来取字符，还要确保j小于n，避免越界，如果字符匹配的话，j自增1。while 循环结束后，如果j等于n了，说明B中所有的字符都成功匹配了，那么我们来计算A的重复次数，通过(i+j-1)/m + 1来得到，注意i+j要减1再除以m，之后再加上一次。因为当i+j正好等于m时，说明此时不用重复A，那么(i+j-1)/m + 1还是等于1，当i+j&gt;m的时候，需要重复A了，(i+j-1)/m + 1也可以得到正确的结构，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> repeatedStringMatch(<span style="color: #0000ff;">string</span> A, <span style="color: #0000ff;">string</span><span style="color: #000000;"> B) {
+        </span><span style="color: #0000ff;">int</span> m = A.size(), n =<span style="color: #000000;"> B.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (j &lt; n &amp;&amp; A[(i + j) % m] == B[j]) ++<span style="color: #000000;">j;
+            </span><span style="color: #0000ff;">if</span> (j == n) <span style="color: #0000ff;">return</span> (i + j - <span style="color: #800080;">1</span>) / m + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6087347.html">Repeated Substring Pattern</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/105579/c-4-lines-o-m-n-o-1-and-8-lines-kmp-o-m-n-o-n">https://discuss.leetcode.com/topic/105579/c-4-lines-o-m-n-o-1-and-8-lines-kmp-o-m-n-o-n</a></p>
+<p><a href="https://discuss.leetcode.com/topic/105566/java-solution-just-keep-building-oj-missing-test-cases">https://discuss.leetcode.com/topic/105566/java-solution-just-keep-building-oj-missing-test-cases</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

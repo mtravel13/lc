@@ -1,0 +1,75 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7519466.html">[LeetCode] Find K Closest Elements 寻找K个最近元素</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Given a sorted array, two integers&nbsp;<code>k</code>&nbsp;and&nbsp;<code>x</code>, find the&nbsp;<code>k</code>&nbsp;closest elements to&nbsp;<code>x</code>&nbsp;in the array. The result should also be sorted in ascending order. If there is a tie, the smaller elements are always preferred.</p>
+<p>Example 1:</p>
+<pre>Input: [1,2,3,4,5], k=4, x=3
+Output: [1,2,3,4]
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: [1,2,3,4,5], k=4, x=-1
+Output: [1,2,3,4]
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The value k is positive and will always be smaller than the length of the sorted array.</li>
+<li>Length of the given array is positive and will not exceed 104</li>
+<li>Absolute value of elements in the array and x will not exceed 104</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题给我们了一个数组，还有两个变量k和x。让我们找数组中离x最近的k个元素，而且说明了数组是有序的，如果两个数字距离x相等的话，取较小的那个。从给定的例子可以分析出x不一定是数组中的数字，我们想，由于数组是有序的，所以最后返回的k个元素也一定是有序的，那么其实就是返回了原数组的一个长度为k的子数组，转化一下，实际上相当于在长度为n的数组中去掉n-k个数字，而且去掉的顺序肯定是从两头开始去，因为距离x最远的数字肯定在首尾出现。那么问题就变的明朗了，我们每次比较首尾两个数字跟x的距离，将距离大的那个数字删除，直到剩余的数组长度为k为止，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findClosestElements(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; arr, <span style="color: #0000ff;">int</span> k, <span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res =<span style="color: #000000;"> arr;
+        </span><span style="color: #0000ff;">while</span> (res.size() &gt;<span style="color: #000000;"> k) {
+            </span><span style="color: #0000ff;">int</span> first  = <span style="color: #800080;">0</span>, last = res.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (x - res.front() &lt;= res.back() -<span style="color: #000000;"> x) {
+                res.pop_back();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                res.erase(res.begin());
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法是论坛上的高分解法，用到了二分搜索法。其实博主最开始用的方法并不是帖子中的这两个方法，虽然也是用的二分搜索法，但博主搜的是第一个不小于x的数，然后同时向左右两个方向遍历，每次取和x距离最小的数加入结果res中，直到取满k个为止。但是下面这种方法更加巧妙一些，二分法的判定条件做了一些改变，就可以直接找到要返回的k的数字的子数组的起始位置，感觉非常的神奇。每次比较的是mid位置和x的距离跟mid+k跟x的距离，以这两者的大小关系来确定二分法折半的方向，最后找到最近距离子数组的起始位置，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; findClosestElements(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; arr, <span style="color: #0000ff;">int</span> k, <span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = arr.size() -<span style="color: #000000;"> k;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (x - arr[mid] &gt; arr[mid + k] - x) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+        }
+        </span><span style="color: #0000ff;">return</span> vector&lt;<span style="color: #0000ff;">int</span>&gt;(arr.begin() + left, arr.begin() + left +<span style="color: #000000;"> k);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/99281/o-log-n-java-1-line-o-log-n-k-python">https://discuss.leetcode.com/topic/99281/o-log-n-java-1-line-o-log-n-k-python</a>&nbsp;</p>
+<p><a href="https://discuss.leetcode.com/topic/99274/very-simple-and-short-acc-solution-modifying-the-input-list">https://discuss.leetcode.com/topic/99274/very-simple-and-short-acc-solution-modifying-the-input-list</a></p>
+</div>
+<div id="interviewed-div">&nbsp;</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

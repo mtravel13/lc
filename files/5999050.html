@@ -1,0 +1,71 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5999050.html">[LeetCode] Longest Repeating Character Replacement 最长重复字符置换</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string that consists of only uppercase English letters, you can replace any letter in the string with another letter at most <em>k</em> times. Find the length of a longest substring containing all repeating letters you can get after performing the above operations.</p>
+<p><strong>Note:</strong><br />
+Both the string's length and <em>k</em> will not exceed 10<sup>4</sup>.
+</p>
+<p>
+<strong>Example 1:</strong>
+</p>
+<pre><strong>Input:</strong>
+s = "ABAB", k = 2
+
+<strong>Output:</strong>
+4
+
+<strong>Explanation:</strong>
+Replace the two 'A's with two 'B's or vice versa.
+</pre>
+<p><strong>Example 2:</strong></p>
+<pre><strong>Input:</strong>
+s = "AABABBA", k = 1
+
+<strong>Output:</strong>
+4
+
+<strong>Explanation:</strong>
+Replace the one 'A' in the middle with 'B' and form "AABBBBA".
+The substring "BBBB" has the longest repeating letters, which is 4.
+</pre>
+<p>&nbsp;</p>
+<p>这道题给我们了一个字符串，说我们有k次随意置换任意字符的机会，让我们找出最长的重复字符的字符串。这道题跟之前那道<a href="http://www.cnblogs.com/grandyang/p/5351347.html" target="_blank">Longest Substring with At Most K Distinct Characters</a>很像，都需要用滑动窗口Sliding Window来解。我们首先来想，如果没有k的限制，让我们求把字符串变成只有一个字符重复的字符串需要的最小置换次数，那么就是字符串的总长度减去出现次数最多的字符的个数。如果加上k的限制，我们其实就是求满足(子字符串的长度减去出现次数最多的字符个数)&lt;=k的最大子字符串长度即可，搞清了这一点，我们也就应该知道怎么用滑动窗口来解了吧我们用一个变量start记录滑动窗口左边界，初始化为0，然后我们遍历字符串，每次累加出现字符的个数，然后更新出现最多字符的个数，然后我们判断当前滑动窗口是否满足之前说的那个条件，如果不满足，我们就把滑动窗口左边界向右移动一个，并注意去掉的字符要在counts里减一，直到满足条件，我们更新结果res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> characterReplacement(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> res = <span style="color: #800080;">0</span>, maxCnt = <span style="color: #800080;">0</span>, start = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; counts(<span style="color: #800080;">26</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; s.size(); ++<span style="color: #000000;">i) {
+            maxCnt </span>= max(maxCnt, ++counts[s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">]);
+            </span><span style="color: #0000ff;">while</span> (i - start + <span style="color: #800080;">1</span> - maxCnt &gt;<span style="color: #000000;"> k) {
+                </span>--counts[s[start] - <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+                </span>++<span style="color: #000000;">start;
+            }
+            res </span>= max(res, i - start + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5852352.html">Longest Substring with At Least K Repeating Characters</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5351347.html" target="_blank">Longest Substring with At Most K Distinct Characters</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5185561.html" target="_blank">Longest Substring with At Most Two Distinct Characters</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4480780.html" target="_blank">Longest Substring Without Repeating Characters</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/63494/java-12-lines-o-n-sliding-window-solution-with-explanation/2" target="_blank">https://discuss.leetcode.com/topic/63494/java-12-lines-o-n-sliding-window-solution-with-explanation/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/63416/sliding-window-similar-to-finding-longest-substring-with-k-distinct-characters/2" target="_blank">https://discuss.leetcode.com/topic/63416/sliding-window-similar-to-finding-longest-substring-with-k-distinct-characters/2</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

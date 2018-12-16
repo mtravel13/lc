@@ -1,0 +1,123 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/9223105.html">[LeetCode] Valid Tic-Tac-Toe State 验证井字棋状态</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>A Tic-Tac-Toe board is given as a string array&nbsp;<code>board</code>. Return True if and only if it is possible to reach this board position during the course of a valid tic-tac-toe game.</p>
+<p>The&nbsp;<code>board</code>&nbsp;is a 3 x 3 array, and consists of characters&nbsp;<code>" "</code>,&nbsp;<code>"X"</code>, and&nbsp;<code>"O"</code>.&nbsp; The " " character represents an empty square.</p>
+<p>Here are the rules of Tic-Tac-Toe:</p>
+<ul>
+<li>Players take turns placing characters into empty squares (" ").</li>
+<li>The first player always places "X" characters, while the second player always places "O" characters.</li>
+<li>"X" and "O" characters are always placed into empty squares, never filled ones.</li>
+<li>The game ends when there are 3 of the same (non-empty) character filling any row, column, or diagonal.</li>
+<li>The game also ends if all squares are non-empty.</li>
+<li>No more moves can be played if the game is over.</li>
+</ul>
+<pre>Example 1:
+Input: board = ["O&nbsp; ", "&nbsp; &nbsp;", "&nbsp; &nbsp;"]
+Output: false
+Explanation: The first player always plays "X".
+
+Example 2:
+Input: board = ["XOX", " X ", "   "]
+Output: false
+Explanation: Players take turns making moves.
+
+Example 3:
+Input: board = ["XXX", "   ", "OOO"]
+Output: false
+
+Example 4:
+Input: board = ["XOX", "O O", "XOX"]
+Output: true
+</pre>
+<p>Note:</p>
+<ul>
+<li><code>board</code>&nbsp;is a length-3 array of strings, where each string&nbsp;<code>board[i]</code>&nbsp;has length 3.</li>
+<li>Each&nbsp;<code>board[i][j]</code>&nbsp;is a character in the set&nbsp;<code>{" ", "X", "O"}</code>.</li>
+</ul>
+<p>&nbsp;</p>
+<p>这道题又是关于井字棋游戏的，之前也有一道类似的题<a href="http://www.cnblogs.com/grandyang/p/5467118.html">Design Tic-Tac-Toe</a>，不过那道题是模拟游戏进行的，而这道题是让我们验证当前井字棋的游戏状态是否正确。这题的例子给的比较好，cover了很多种情况：</p>
+<p>情况一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">0</span><span style="color: #000000;"> _ _
+_ _ _
+_ _ _</span></pre>
+</div>
+<p>这是不正确的状态，因为先走的使用X，所以只出现一个O，是不对的。</p>
+<p>情况二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">X O X
+_ X _
+_ _ _</span></pre>
+</div>
+<p>这个也是不正确的，因为两个player交替下棋，X最多只能比O多一个，这里多了两个，肯定是不对的。</p>
+<p>情况三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">X X X
+_ _ _ 
+O O O</span></pre>
+</div>
+<p>这个也是不正确的，因为一旦第一个玩家的X连成了三个，那么游戏马上结束了，不会有另外一个O出现。</p>
+<p>情况四：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">X O X
+O _ O
+X O X</span></pre>
+</div>
+<p>这个状态没什么问题，是可以出现的状态。</p>
+<p>好，那么根据给的这些例子，我们可以分析一下规律，根据例子1和例子2我们得出下棋顺序是有规律的，必须是先X后O，不能破坏这个顺序，那么我们可以使用一个turns变量，当是X时，turns自增1，反之若是O，则turns自减1，那么最终turns一定是0或者1，其他任何值都是错误的，比如例子1中，turns就是-1，例子2中，turns是2，都是不对的。根据例子3，我们得出结论，只能有一个玩家获胜，那么我们可以用两个变量xwin和owin，来记录两个玩家的获胜状态，由于井字棋的制胜规则是横竖斜任意一个方向有三个连续的就算赢，那么我们分别在各个方向查找3个连续的X，有的话xwin赋值为true，还要查找3个连续的O，有的话owin赋值为true，例子3中xwin和owin同时为true了，是错误的。还有一种情况，例子中没有cover到的是：</p>
+<p>情况五：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">X X X
+O O _
+O _ _</span></pre>
+</div>
+<p>我们看到虽然只有xwin为true，但是这种状态还是错误的，因为一旦第三个X放下后，游戏立即结束，不会有第三个O放下，这么检验这种情况呢？这是我们的turns变量就非常的重要了，当第三个O放下后，turns自减1，此时turns为0了，而正确的应该是当xwin为true的时候，第三个O不能放下，那么turns不减1，则还是1，这样就可以区分情况五了。当然，我们可以交换X和O的位置，即当owin为true时，turns一定要为0。现在我们已经覆盖了搜索的情况了，参见代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> validTicTacToe(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">bool</span> xwin = <span style="color: #0000ff;">false</span>, owin = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; row(<span style="color: #800080;">3</span>), col(<span style="color: #800080;">3</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> diag = <span style="color: #800080;">0</span>, antidiag = <span style="color: #800080;">0</span>, turns = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">3</span>; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span>++row[i]; ++col[j]; ++<span style="color: #000000;">turns;
+                    </span><span style="color: #0000ff;">if</span> (i == j) ++<span style="color: #000000;">diag;
+                    </span><span style="color: #0000ff;">if</span> (i + j == <span style="color: #800080;">2</span>) ++<span style="color: #000000;">antidiag;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    </span>--row[i]; --col[j]; --<span style="color: #000000;">turns;
+                    </span><span style="color: #0000ff;">if</span> (i == j) --<span style="color: #000000;">diag;
+                    </span><span style="color: #0000ff;">if</span> (i + j == <span style="color: #800080;">2</span>) --<span style="color: #000000;">antidiag;
+                }
+            }
+        }
+        xwin </span>= row[<span style="color: #800080;">0</span>] == <span style="color: #800080;">3</span> || row[<span style="color: #800080;">1</span>] == <span style="color: #800080;">3</span> || row[<span style="color: #800080;">2</span>] == <span style="color: #800080;">3</span> ||<span style="color: #000000;">
+               col[</span><span style="color: #800080;">0</span>] == <span style="color: #800080;">3</span> || col[<span style="color: #800080;">1</span>] == <span style="color: #800080;">3</span> || col[<span style="color: #800080;">2</span>] == <span style="color: #800080;">3</span> ||<span style="color: #000000;">
+               diag </span>== <span style="color: #800080;">3</span> || antidiag == <span style="color: #800080;">3</span><span style="color: #000000;">;
+        owin </span>= row[<span style="color: #800080;">0</span>] == -<span style="color: #800080;">3</span> || row[<span style="color: #800080;">1</span>] == -<span style="color: #800080;">3</span> || row[<span style="color: #800080;">2</span>] == -<span style="color: #800080;">3</span> ||<span style="color: #000000;">
+               col[</span><span style="color: #800080;">0</span>] == -<span style="color: #800080;">3</span> || col[<span style="color: #800080;">1</span>] == -<span style="color: #800080;">3</span> || col[<span style="color: #800080;">2</span>] == -<span style="color: #800080;">3</span> ||<span style="color: #000000;">
+               diag </span>== -<span style="color: #800080;">3</span> || antidiag == -<span style="color: #800080;">3</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> ((xwin &amp;&amp; turns == <span style="color: #800080;">0</span>) || (owin &amp;&amp; turns == <span style="color: #800080;">1</span>)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> (turns == <span style="color: #800080;">0</span> || turns == <span style="color: #800080;">1</span>) &amp;&amp; (!xwin || !<span style="color: #000000;">owin);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5467118.html">Design Tic-Tac-Toe</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/valid-tic-tac-toe-state/discuss/117580/Straightforward-Java-solution-with-explaination">https://leetcode.com/problems/valid-tic-tac-toe-state/discuss/117580/Straightforward-Java-solution-with-explaination</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

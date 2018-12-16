@@ -1,0 +1,93 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4321292.html">[LeetCode] Partition List 划分链表</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a linked list and a value&nbsp;<em>x</em>, partition it such that all nodes less than&nbsp;<em>x</em>&nbsp;come before nodes greater than or equal to&nbsp;<em>x</em>.</p>
+<p>You should preserve the original relative order of the nodes in each of the two partitions.</p>
+<p>For example,<br />Given&nbsp;<code>1-&gt;4-&gt;3-&gt;2-&gt;5-&gt;2</code>&nbsp;and&nbsp;<em>x</em>&nbsp;= 3,<br />return&nbsp;<code>1-&gt;2-&gt;2-&gt;4-&gt;3-&gt;5</code>.</p>
+<p>&nbsp;</p>
+<p>这道题要求我们划分链表，把所有小于给定值的节点都移到前面，大于该值的节点顺序不变，相当于一个局部排序的问题。那么可以想到的一种解法是首先找到第一个大于或等于给定值的节点，用题目中给的例子来说就是先找到4，然后再找小于3的值，每找到一个就将其取出置于4之前即可，代码如下：</p>
+<p>解法一</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*partition(ListNode *head, <span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        dummy</span>-&gt;next =<span style="color: #000000;"> head;
+        ListNode </span>*pre = dummy, *cur =<span style="color: #000000;"> head;;
+        </span><span style="color: #0000ff;">while</span> (pre-&gt;next &amp;&amp; pre-&gt;next-&gt;val &lt; x) pre = pre-&gt;<span style="color: #000000;">next;
+        cur </span>=<span style="color: #000000;"> pre;
+        </span><span style="color: #0000ff;">while</span> (cur-&gt;<span style="color: #000000;">next) {
+            </span><span style="color: #0000ff;">if</span> (cur-&gt;next-&gt;val &lt;<span style="color: #000000;"> x) {
+                ListNode </span>*tmp = cur-&gt;<span style="color: #000000;">next;
+                cur</span>-&gt;next = tmp-&gt;<span style="color: #000000;">next;
+                tmp</span>-&gt;next = pre-&gt;<span style="color: #000000;">next;
+                pre</span>-&gt;next =<span style="color: #000000;"> tmp;
+                pre </span>= pre-&gt;<span style="color: #000000;">next;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur </span>= cur-&gt;<span style="color: #000000;">next;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>这种解法的链表变化顺序为：</p>
+<p>1 -&gt; 4 -&gt; 3 -&gt; 2 -&gt; 5 -&gt; 2&nbsp;</p>
+<p>1 -&gt; 2 -&gt; 4 -&gt; 3 -&gt; 5 -&gt; 2&nbsp;</p>
+<p>1 -&gt; 2 -&gt; 2 -&gt; 4 -&gt; 3 -&gt; 5</p>
+<p>&nbsp;</p>
+<p>此题还有一种解法，就是将所有小于给定值的节点取出组成一个新的链表，此时原链表中剩余的节点的值都大于或等于给定值，只要将原链表直接接在新链表后即可，代码如下：</p>
+<p>解法二</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*partition(ListNode *head, <span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #0000ff;">if</span> (!head) <span style="color: #0000ff;">return</span><span style="color: #000000;"> head;
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        ListNode </span>*newDummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        dummy</span>-&gt;next =<span style="color: #000000;"> head;
+        ListNode </span>*cur = dummy, *p =<span style="color: #000000;"> newDummy;
+        </span><span style="color: #0000ff;">while</span> (cur-&gt;<span style="color: #000000;">next) {
+            </span><span style="color: #0000ff;">if</span> (cur-&gt;next-&gt;val &lt;<span style="color: #000000;"> x) {
+                p</span>-&gt;next = cur-&gt;<span style="color: #000000;">next;
+                p </span>= p-&gt;<span style="color: #000000;">next;
+                cur</span>-&gt;next = cur-&gt;next-&gt;<span style="color: #000000;">next;
+                p</span>-&gt;next =<span style="color: #000000;"> NULL;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur </span>= cur-&gt;<span style="color: #000000;">next;
+            }
+        }
+        p</span>-&gt;next = dummy-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">return</span> newDummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>此种解法链表变化顺序为：</p>
+<p>Original:&nbsp;1 -&gt; 4 -&gt; 3 -&gt; 2 -&gt; 5 -&gt; 2&nbsp;</p>
+<p>New:</p>
+<p>&nbsp;</p>
+<p>Original: 4 -&gt; 3 -&gt; 2 -&gt; 5 -&gt; 2&nbsp;</p>
+<p>New:　 &nbsp;1</p>
+<p>&nbsp;</p>
+<p>Original: 4 -&gt; 3 -&gt; 5 -&gt; 2&nbsp;</p>
+<p>New:　 &nbsp;1 -&gt; 2</p>
+<p>&nbsp;</p>
+<p>Original: 4 -&gt; 3 -&gt; 5&nbsp;</p>
+<p>New:　 &nbsp;1 -&gt; 2 -&gt; 2</p>
+<p>&nbsp;</p>
+<p>Original:&nbsp;</p>
+<p>New:　 &nbsp;1 -&gt; 2 -&gt; 2 -&gt;&nbsp;4 -&gt; 3 -&gt; 5&nbsp;</p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

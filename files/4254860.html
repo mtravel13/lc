@@ -1,0 +1,68 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4254860.html">[LeetCode] Reorder List 链表重排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p>Given a singly linked list <em>L</em>: <em>L</em><sub>0</sub>&rarr;<em>L</em><sub>1</sub>&rarr;&hellip;&rarr;<em>L</em><sub><em>n</em>-1</sub>&rarr;<em>L</em><sub>n</sub>,<br />
+reorder it to: <em>L</em><sub>0</sub>&rarr;<em>L</em><sub><em>n</em></sub>&rarr;<em>L</em><sub>1</sub>&rarr;<em>L</em><sub><em>n</em>-1</sub>&rarr;<em>L</em><sub>2</sub>&rarr;<em>L</em><sub><em>n</em>-2</sub>&rarr;&hellip;
+</p>
+<p>You must do this in-place without altering the nodes' values.</p>
+<p>
+For example,<br />
+Given <code>{1,2,3,4}</code>, reorder it to <code>{1,4,2,3}</code>.
+</p>
+<p>&nbsp;</p>
+<p>这道链表重排序问题可以拆分为以下三个小问题：</p>
+<p>1. 使用快慢指针来找到链表的中点，并将链表从中点处断开，形成两个独立的链表。</p>
+<p>2. 将第二个链翻转。</p>
+<p>3. 将第二个链表的元素间隔地插入第一个链表中。</p>
+<p>&nbsp;</p>
+<p>代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> reorderList(ListNode *<span style="color: #000000;">head) {
+        </span><span style="color: #0000ff;">if</span> (!head || !head-&gt;next || !head-&gt;next-&gt;next) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        ListNode </span>*fast =<span style="color: #000000;"> head;
+        ListNode </span>*slow =<span style="color: #000000;"> head;
+        </span><span style="color: #0000ff;">while</span> (fast-&gt;next &amp;&amp; fast-&gt;next-&gt;<span style="color: #000000;">next) {
+            slow </span>= slow-&gt;<span style="color: #000000;">next;
+            fast </span>= fast-&gt;next-&gt;<span style="color: #000000;">next;
+        }
+        ListNode </span>*mid = slow-&gt;<span style="color: #000000;">next;
+        slow</span>-&gt;next =<span style="color: #000000;"> NULL;
+        ListNode </span>*last =<span style="color: #000000;"> mid;
+        ListNode </span>*pre =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (last) {
+            ListNode </span>*next = last-&gt;<span style="color: #000000;">next;
+            last</span>-&gt;next =<span style="color: #000000;"> pre;
+            pre </span>=<span style="color: #000000;"> last;
+            last </span>=<span style="color: #000000;"> next;
+        }
+        </span><span style="color: #0000ff;">while</span> (head &amp;&amp;<span style="color: #000000;"> pre) {
+            ListNode </span>*next = head-&gt;<span style="color: #000000;">next;
+            head</span>-&gt;next =<span style="color: #000000;"> pre;
+            pre </span>= pre-&gt;<span style="color: #000000;">next;
+            head</span>-&gt;next-&gt;next =<span style="color: #000000;"> next;
+            head </span>=<span style="color: #000000;"> next;
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

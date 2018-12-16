@@ -1,0 +1,79 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7577878.html">[LeetCode] Beautiful Arrangement II 优美排列之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Given two integers&nbsp;<code>n</code>&nbsp;and&nbsp;<code>k</code>, you need to construct a list which contains&nbsp;<code>n</code>&nbsp;different positive integers ranging from&nbsp;<code>1</code>&nbsp;to&nbsp;<code>n</code>&nbsp;and obeys the following requirement:&nbsp;<br />Suppose this list is [a1, a2, a3, ... , an], then the list [|a1&nbsp;- a2|, |a2&nbsp;- a3|, |a3&nbsp;- a4|, ... , |an-1&nbsp;- an|] has exactly&nbsp;<code>k</code>&nbsp;distinct integers.</p>
+<p>If there are multiple answers, print any of them.</p>
+<p>Example 1:</p>
+<pre>Input: n = 3, k = 1
+Output: [1, 2, 3]
+Explanation: The [1, 2, 3] has three different positive integers ranging from 1 to 3, and the [1, 1] has exactly 1 distinct integer: 1.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: n = 3, k = 2
+Output: [1, 3, 2]
+Explanation: The [1, 3, 2] has three different positive integers ranging from 1 to 3, and the [2, 1] has exactly 2 distinct integers: 1 and 2.
+</pre>
+<p>&nbsp;</p>
+<p>Note:</p>
+<ol>
+<li>The&nbsp;<code>n</code>&nbsp;and&nbsp;<code>k</code>&nbsp;are in the range 1 &lt;= k &lt; n &lt;= 104.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题虽然也叫优美排列，但是貌似跟之前那道<a href="http://www.cnblogs.com/grandyang/p/6533276.html">Beautiful Arrangement</a>的关系不太大。这道题给我们了一个数字n和一个数字k，让找出一种排列方式，使得1到n组成的数组中相邻两个数的差的绝对值正好有k种。给了k和n的关系为k&lt;n。那么我们首先来考虑，是否这种条件关系下，是否已定存在这种优美排列呢，我们用一个例子来分析，比如说当n=8，我们有数组：</p>
+<p>1, 2, 3, 4, 5, 6, 7, 8</p>
+<p>当我们这样有序排列的话，相邻两数的差的绝对值为1。我们想差的绝对值最大能为多少，应该是把1和8放到一起，为7。那么为了尽可能的产生不同的差的绝对值，我们在8后面需要放一个小数字，比如2，这样会产生差的绝对值6，同理，后面再跟一个大数，比如7，产生差的绝对值5，以此类推，我们得到下列数组：</p>
+<p>1, 8, 2, 7, 3, 6, 4, 5</p>
+<p>其差的绝对值为：7，6，5，4，3，2，1</p>
+<p>共有7种，所以我们知道k最大为n-1，所以这样的排列一定会存在。我们的策略是，先按照这种最小最大数相邻的方法排列，没排一个，k自减1，当k减到1的时候，后面的排列方法只要按照生序的方法排列，就不会产生不同的差的绝对值，这种算法的时间复杂度是O(n)，属于比较高效的那种。我们使用两个指针，初始时分别指向1和n，然后分别从i和j取数加入结果res，每取一个数字k自减1，直到k减到1的时候，开始按升序取后面的数字，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; constructArray(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>, j =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">while</span> (i &lt;=<span style="color: #000000;"> j) {
+            </span><span style="color: #0000ff;">if</span> (k &gt; <span style="color: #800080;">1</span>) res.push_back(k-- % <span style="color: #800080;">2</span> ? i++ : j--<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span> res.push_back(i++<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法是把上面的if...else的语句用三元操作符合并成了一句，看起来更加简洁了一些。&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; constructArray(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>, j =<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">while</span> (i &lt;=<span style="color: #000000;"> j) {
+            res.push_back(k </span>&gt; <span style="color: #800080;">1</span> ? (k-- % <span style="color: #800080;">2</span> ? i++ : j--) : i++<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/6533276.html">Beautiful Arrangement</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/101113/c-java-clean-code-4-liner/2">https://discuss.leetcode.com/topic/101113/c-java-clean-code-4-liner</a></p>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

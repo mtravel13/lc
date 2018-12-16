@@ -1,0 +1,146 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4555831.html">[LeetCode] Surrounded Regions 包围区域</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a 2D board containing <code>'X'</code> and <code>'O'</code>, capture all regions surrounded by <code>'X'</code>.</p>
+<p>A region is captured by flipping all <code>'O'</code>s into <code>'X'</code>s in that surrounded region.</p>
+<p> For example,<br />
+</p>
+<pre>X X X X
+X O O X
+X X O X
+X O X X
+</pre>
+<p>After running your function, the board should be:</p>
+<pre>X X X X
+X X X X
+X X X X
+X O X X
+</pre>
+<p>&nbsp;</p>
+<p>这道题有点像围棋，将包住的O都变成X，但不同的是边缘的O不算被包围，跟之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4402656.html">Number of Islands 岛屿的数量</a>很类似，都可以用DFS来解。刚开始我的思路是DFS遍历中间的O，如果没有到达边缘，都变成X，如果到达了边缘，将之前变成X的再变回来。但是这样做非常的不方便，在网上看到大家普遍的做法是扫面矩阵的四条边，如果有O，则用DFS遍历，将所有连着的O都变成另一个字符，比如\$，这样剩下的O都是被包围的，然后将这些O变成X，把$变回O就行了。代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> solve(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; board.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; board[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> ((i == <span style="color: #800080;">0</span> || i == board.size() - <span style="color: #800080;">1</span> || j == <span style="color: #800080;">0</span> || j == board[i].size() - <span style="color: #800080;">1</span>) &amp;&amp; board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+                    solveDFS(board, i, j);
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; board.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; board[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) board[i][j] = <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span>) board[i][j] = <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">void</span> solveDFS(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt; &gt; &amp;board, <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            board[i][j] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (i &gt; <span style="color: #800080;">0</span> &amp;&amp; board[i - <span style="color: #800080;">1</span>][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+                solveDFS(board, i </span>- <span style="color: #800080;">1</span><span style="color: #000000;">, j);
+            </span><span style="color: #0000ff;">if</span> (j &lt; board[i].size() - <span style="color: #800080;">1</span> &amp;&amp; board[i][j + <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+                solveDFS(board, i, j </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (i &lt; board.size() - <span style="color: #800080;">1</span> &amp;&amp; board[i + <span style="color: #800080;">1</span>][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+                solveDFS(board, i </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, j);
+            </span><span style="color: #0000ff;">if</span> (<strong><span style="color: #ff0000;">j &gt; 1</span></strong> &amp;&amp; board[i][j - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+                solveDFS(board, i, j </span>- <span style="color: #800080;">1</span><span style="color: #000000;">);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>有网友提问上面的代码中红色部分为啥是j &gt; 1 而不是j &gt; 0，为啥j &gt; 0无法通过OJ的最后一个大数据集合，我开始也不知道其中奥秘，直到被另一个网友提醒在本地机子上可以通过最后一个大数据集合，于是我也写了一个程序来验证，请参见<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4759189.html">验证LeetCode Surrounded Regions 包围区域的DFS方法</a>。发现j &gt; 0是正确的，可以得到相同的结果。</p>
+<p>下面这种解法还是DFS解法，只是递归函数的写法稍有不同，但是本质上并没有太大的区别，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> solve(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">if</span> (board.empty() || board[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = board.size(), n = board[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> || i == m - <span style="color: #800080;">1</span> || j == <span style="color: #800080;">0</span> || j == n - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) dfs(board, i , j);
+                }
+            }   
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) board[i][j] = <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span>) board[i][j] = <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">void</span> dfs(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt; &amp;board, <span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">int</span> m = board.size(), n = board[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; dir{{<span style="color: #800080;">0</span>,-<span style="color: #800080;">1</span>},{-<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span>},{<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span>},{<span style="color: #800080;">1</span>,<span style="color: #800080;">0</span><span style="color: #000000;">}};
+        board[x][y] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; dir.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> dx = x + dir[i][<span style="color: #800080;">0</span>], dy = y + dir[i][<span style="color: #800080;">1</span><span style="color: #000000;">];
+            </span><span style="color: #0000ff;">if</span> (dx &gt;= <span style="color: #800080;">0</span> &amp;&amp; dx &lt; m &amp;&amp; dy &gt; <span style="color: #800080;">0</span> &amp;&amp; dy &lt; n &amp;&amp; board[dx][dy] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                dfs(board, dx, dy);
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用迭代的解法，但是整体的思路还是一样的，我们在找到边界上的O后，然后利用队列queue进行BFS查找和其相连的所有O，然后都标记上美元号。最后的处理还是先把所有的O变成X，然后再把美元号变回O即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">void</span> solve(vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp;<span style="color: #000000;"> board) {
+        </span><span style="color: #0000ff;">if</span> (board.empty() || board[<span style="color: #800080;">0</span>].empty()) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> m = board.size(), n = board[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (i != <span style="color: #800080;">0</span> &amp;&amp; i != m - <span style="color: #800080;">1</span> &amp;&amp; j != <span style="color: #800080;">0</span> &amp;&amp; j != n - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (board[i][j] != <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                board[i][j] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                queue</span>&lt;<span style="color: #0000ff;">int</span>&gt; q{{i * n +<span style="color: #000000;"> j}};
+                </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+                    </span><span style="color: #0000ff;">int</span> t = q.front(), x = t / n, y = t %<span style="color: #000000;"> n; q.pop();
+                    </span><span style="color: #0000ff;">if</span> (x &gt;= <span style="color: #800080;">1</span> &amp;&amp; board[x - <span style="color: #800080;">1</span>][y] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) {board[x - <span style="color: #800080;">1</span>][y] = <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span>; q.push(t -<span style="color: #000000;"> n);}
+                    </span><span style="color: #0000ff;">if</span> (x &lt; m - <span style="color: #800080;">1</span> &amp;&amp; board[x + <span style="color: #800080;">1</span>][y] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) {board[x + <span style="color: #800080;">1</span>][y] = <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span>; q.push(t +<span style="color: #000000;"> n);}
+                    </span><span style="color: #0000ff;">if</span> (y &gt;= <span style="color: #800080;">1</span> &amp;&amp; board[x][y - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) {board[x][y - <span style="color: #800080;">1</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span>; q.push(t - <span style="color: #800080;">1</span><span style="color: #000000;">);}
+                    </span><span style="color: #0000ff;">if</span> (y &lt; n - <span style="color: #800080;">1</span> &amp;&amp; board[x][y + <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) {board[x][y + <span style="color: #800080;">1</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span>; q.push(t + <span style="color: #800080;">1</span><span style="color: #000000;">);}
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) board[i][j] = <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (board[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">$</span><span style="color: #800000;">'</span>) board[i][j] = <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4402656.html" target="_blank">Number of Islands</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5285868.html" target="_blank">Walls and Gates</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/surrounded-regions/" target="_blank">https://leetcode.com/problems/surrounded-regions/</a></p>
+<p><a href="https://leetcode.com/problems/surrounded-regions/discuss/41895/Share-my-clean-Java-Code" target="_blank">https://leetcode.com/problems/surrounded-regions/discuss/41895/Share-my-clean-Java-Code</a></p>
+<p><a href="https://leetcode.com/problems/surrounded-regions/discuss/41825/Simple-BFS-solution-easy-to-understand" target="_blank">https://leetcode.com/problems/surrounded-regions/discuss/41825/Simple-BFS-solution-easy-to-understand</a></p>
+<p><a href="https://leetcode.com/problems/surrounded-regions/discuss/41612/A-really-simple-and-readable-C%2B%2B-solutionuff0conly-cost-12ms" target="_blank">https://leetcode.com/problems/surrounded-regions/discuss/41612/A-really-simple-and-readable-C%2B%2B-solutionuff0conly-cost-12ms</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

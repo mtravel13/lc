@@ -1,0 +1,191 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6006000.html">[LeetCode] Word Squares 单词平方</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a set of words&nbsp;(without duplicates), find all&nbsp;<a href="https://en.wikipedia.org/wiki/Word_square" target="_blank">word squares</a>&nbsp;you can build from them.</p>
+<p>A sequence of words forms a valid word square if the&nbsp;<em>k</em>th&nbsp;row and column read the exact same string, where 0 &le;&nbsp;<em>k</em>&nbsp;&lt; max(numRows, numColumns).</p>
+<p>For example, the word sequence&nbsp;<code>["ball","area","lead","lady"]</code>&nbsp;forms a word square because each word reads the same both horizontally and vertically.</p>
+<pre>b a l l
+a r e a
+l e a d
+l a d y
+</pre>
+<p>Note:</p>
+<ol>
+<li>There are at least 1 and at most 1000 words.</li>
+<li>All words will have the exact same length.</li>
+<li>Word length is at least 1 and at most 5.</li>
+<li>Each word contains only lowercase English alphabet&nbsp;<code>a-z</code>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input:
+["area","lead","wall","lady","ball"]
+
+Output:
+[
+  [ "wall",
+    "area",
+    "lead",
+    "lady"
+  ],
+  [ "ball",
+    "area",
+    "lead",
+    "lady"
+  ]
+]
+
+Explanation:
+The output consists of two word squares. The order of output does not matter (just the order of words in each word square matters).
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+["abat","baba","atan","atal"]
+
+Output:
+[
+  [ "baba",
+    "abat",
+    "baba",
+    "atan"
+  ],
+  [ "baba",
+    "abat",
+    "baba",
+    "atal"
+  ]
+]
+
+Explanation:
+The output consists of two word squares. The order of output does not matter (just the order of words in each word square matters).
+</pre>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5991673.html">Valid Word Square</a>的延伸，由于要求出所有满足要求的单词平方，所以难度大大的增加了，不要幻想着可以利用之前那题的解法来暴力破解，OJ不会答应的。那么根据以往的经验，对于这种要打印出所有情况的题的解法大多都是用递归来解，那么这题的关键是根据前缀来找单词，我们如果能利用合适的数据结构来建立前缀跟单词之间的映射，使得我们能快速的通过前缀来判断某个单词是否存在，这是解题的关键。对于建立这种映射，这里主要有两种方法，一种是利用哈希表来建立前缀和所有包含此前缀单词的集合之前的映射，第二种方法是建立前缀树Trie，顾名思义，前缀树专门就是为这种问题设计的。那么我们首先来看第一种方法，用哈希表来建立映射的方法，我们就是取出每个单词的所有前缀，然后将该单词加入该前缀对应的集合中去，然后我们建立一个空的nxn的char矩阵，其中n为单词的长度，我们的目标就是来把这个矩阵填满，我们从0开始遍历，我们先取出长度为0的前缀，即空字符串，由于我们在建立映射的时候，空字符串也和每个单词的集合建立了映射，然后我们遍历这个集合，用遍历到的单词的i位置字符，填充矩阵mat[i][i]，然后j从i+1出开始遍历，对应填充矩阵mat[i][j]和mat[j][i]，然后我们根据第j行填充得到的前缀，到哈希表中查看有没单词，如果没有，就break掉，如果有，则继续填充下一个位置。最后如果j==n了，说明第0行和第0列都被填好了，我们再调用递归函数，开始填充第一行和第一列，依次类推，直至填充完成，参见代码如下：</p>
+<div>
+<div id="company_tags" class="btn btn-xs btn-warning">&nbsp;</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; wordSquares(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> res;
+        unordered_map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">int</span> n = words[<span style="color: #800080;">0</span><span style="color: #000000;">].size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">string</span> key = word.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i);
+                m[key].insert(word);
+            }
+        }
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt; mat(n, vector&lt;<span style="color: #0000ff;">char</span>&gt;<span style="color: #000000;">(n));
+        helper(</span><span style="color: #800080;">0</span><span style="color: #000000;">, n, mat, m, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+      </span><span style="color: #0000ff;">void</span> helper(<span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span> n, vector&lt;vector&lt;<span style="color: #0000ff;">char</span>&gt;&gt;&amp; mat, unordered_map&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;&gt;&amp; m, vector&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;&amp;<span style="color: #000000;"> res) {
+            </span><span style="color: #0000ff;">if</span> (i ==<span style="color: #000000;"> n) {
+                vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n; ++j) <span style="color: #0000ff;">out</span>.push_back(<span style="color: #0000ff;">string</span><span style="color: #000000;">(mat[j].begin(), mat[j].end()));
+                res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">string</span> key = <span style="color: #0000ff;">string</span>(mat[i].begin(), mat[i].begin() +<span style="color: #000000;"> i);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> str : m[key]) { 
+            mat[i][i] </span>=<span style="color: #000000;"> str[i];
+            </span><span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (; j &lt; n; ++<span style="color: #000000;">j) {
+                mat[i][j] </span>=<span style="color: #000000;"> str[j];
+                mat[j][i] </span>=<span style="color: #000000;"> str[j];
+                </span><span style="color: #0000ff;">if</span> (!m.count(<span style="color: #0000ff;">string</span>(mat[j].begin(), mat[j].begin() + i + <span style="color: #800080;">1</span>))) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (j == n) helper(i + <span style="color: #800080;">1</span><span style="color: #000000;">, n, mat, m, res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面来看建立前缀树Trie的方法，这种方法的难点是看能不能熟练的写出Trie的定义，还有构建过程，以及后面在递归函数中，如果利用前缀树来快速查找单词的前缀，总之，这道题是前缀树的一种经典的应用，能白板写出来就说明基本上已经掌握了前缀树了，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> TrieNode {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> indexs;
+        vector</span>&lt;TrieNode*&gt;<span style="color: #000000;"> children;
+        TrieNode(): children(</span><span style="color: #800080;">26</span><span style="color: #000000;">, nullptr) {}
+    };
+    TrieNode</span>* buildTrie(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        TrieNode </span>*root = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; words.size(); ++<span style="color: #000000;">i) {
+            TrieNode </span>*t =<span style="color: #000000;"> root;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; words[i].size(); ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (!t-&gt;children[words[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">]) {
+                    t</span>-&gt;children[words[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TrieNode();
+                }
+                t </span>= t-&gt;children[words[i][j] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+                t</span>-&gt;<span style="color: #000000;">indexs.push_back(i);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+    }
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt; wordSquares(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> words) {
+        TrieNode </span>*root =<span style="color: #000000;"> buildTrie(words);
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; <span style="color: #0000ff;">out</span>(words[<span style="color: #800080;">0</span><span style="color: #000000;">].size());
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">out</span>[<span style="color: #800080;">0</span>] =<span style="color: #000000;"> word;
+            helper(words, </span><span style="color: #800080;">1</span>, root, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">int</span> level, TrieNode* root, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; <span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">string</span>&gt;&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (level &gt;= words[<span style="color: #800080;">0</span><span style="color: #000000;">].size()) {
+            res.push_back(</span><span style="color: #0000ff;">out</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">string</span> str = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; level; ++<span style="color: #000000;">i) {
+            str </span>+= <span style="color: #0000ff;">out</span><span style="color: #000000;">[i][level];
+        }
+        TrieNode </span>*t =<span style="color: #000000;"> root;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; str.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!t-&gt;children[str[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>]) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            t </span>= t-&gt;children[str[i] - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> idx : t-&gt;<span style="color: #000000;">indexs) {
+            </span><span style="color: #0000ff;">out</span>[level] =<span style="color: #000000;"> words[idx];
+            helper(words, level </span>+ <span style="color: #800080;">1</span>, root, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5991673.html">Valid Word Square</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/63646/java-53ms-dfs-hashmap" target="_blank">https://discuss.leetcode.com/topic/63646/java-53ms-dfs-hashmap</a></p>
+<p><a href="https://discuss.leetcode.com/topic/63390/70ms-concise-c-solution-using-trie-and-backtracking" target="_blank">https://discuss.leetcode.com/topic/63390/70ms-concise-c-solution-using-trie-and-backtracking</a></p>
+<p><a href="https://discuss.leetcode.com/topic/63516/explained-my-java-solution-using-trie-126ms-16-16/2" target="_blank">https://discuss.leetcode.com/topic/63516/explained-my-java-solution-using-trie-126ms-16-16/2</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,54 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4419386.html">[LeetCode] Combination Sum II 组合之和之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a collection of candidate numbers (<em>C</em>) and a target number (<em>T</em>), find all unique combinations in&nbsp;<em>C</em>&nbsp;where the candidate numbers sums to&nbsp;<em>T</em>.</p>
+<p>Each number in&nbsp;<em>C</em>&nbsp;may only be used&nbsp;once&nbsp;in the combination.</p>
+<p>Note:</p>
+<ul>
+<li>All numbers (including target) will be positive integers.</li>
+<li>Elements in a combination (<em>a</em>1,&nbsp;<em>a</em>2, &hellip; ,&nbsp;<em>a</em>k) must be in non-descending order. (ie,&nbsp;<em>a</em>1&nbsp;&le;&nbsp;<em>a</em>2&nbsp;&le; &hellip; &le;&nbsp;<em>a</em>k).</li>
+<li>The solution set must not contain duplicate combinations.</li>
+</ul>
+<p>&nbsp;</p>
+<p>For example, given candidate set&nbsp;<code>10,1,2,7,6,1,5</code>&nbsp;and target&nbsp;<code>8</code>,&nbsp;<br />A solution set is:&nbsp;<br /><code>[1, 7]</code>&nbsp;<br /><code>[1, 2, 5]</code>&nbsp;<br /><code>[2, 6]</code>&nbsp;<br /><code>[1, 1, 6]</code>&nbsp;</p>
+<p>&nbsp;</p>
+<p>这道题跟之前那道<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4419259.html">&nbsp;Combination Sum 组合之和</a>&nbsp;本质没有区别，只需要改动一点点即可，之前那道题给定数组中的数字可以重复使用，而这道题不能重复使用，只需要在之前的基础上修改两个地方即可，首先在递归的for循环里加上if (i &gt; start &amp;&amp; num[i] == num[i - 1]) continue; 这样可以防止res中出现重复项，然后就在递归调用combinationSum2DFS里面的参数换成i+1，这样就不会重复使用数组中的数字了，代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; combinationSum2(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;num, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt;<span style="color: #000000;"> res;
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+        sort(num.begin(), num.end());
+        combinationSum2DFS(num, target, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> combinationSum2DFS(vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;num, <span style="color: #0000ff;">int</span> target, <span style="color: #0000ff;">int</span> start, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #0000ff;">out</span>, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt; &gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (target &lt; <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (target == <span style="color: #800080;">0</span>) res.push_back(<span style="color: #0000ff;">out</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = start; i &lt; num.size(); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (i &gt; start &amp;&amp; num[i] == num[i - <span style="color: #800080;">1</span>]) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.push_back(num[i]);
+                combinationSum2DFS(num, target </span>- num[i], i + <span style="color: #800080;">1</span>, <span style="color: #0000ff;">out</span><span style="color: #000000;">, res);
+                </span><span style="color: #0000ff;">out</span><span style="color: #000000;">.pop_back();
+            }
+        }
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="link_post_title" class="link-post-title" href="http://www.cnblogs.com/grandyang/p/4537983.html">Combination Sum III</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4419259.html" target="_blank">Combination Sum</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,77 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5883736.html">[LeetCode] Remove K Digits 去掉K位数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a non-negative integer&nbsp;<em>num</em>&nbsp;represented as a string, remove&nbsp;<em>k</em>&nbsp;digits from the number so that the new number is the smallest possible.</p>
+<p>Note:</p>
+<ul>
+<li>The length of&nbsp;<em>num</em>&nbsp;is less than 10002 and will be &ge;&nbsp;<em>k</em>.</li>
+<li>The given&nbsp;<em>num</em>&nbsp;does not contain any leading zero.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Example 1:</p>
+<pre>Input: num = "1432219", k = 3
+Output: "1219"
+Explanation: Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: num = "10200", k = 1
+Output: "200"
+Explanation: Remove the leading 1 and the number is 200. Note that the output must not contain leading zeroes.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input: num = "10", k = 2
+Output: "0"
+Explanation: Remove all the digits from the number and it is left with nothing which is 0.
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们将给定的数字去掉k位，要使得留下来的数字最小，这题跟LeetCode上之前那道<a href="http://www.cnblogs.com/grandyang/p/5136749.html">Create Maximum Number</a>有些类似，可以借鉴其中的思路，如果n是num的长度，我们要去除k个，那么需要剩下n-k个，我们开始遍历给定数字num的每一位，对于当前遍历到的数字c，进行如下while循环，如果res不为空，且k大于0，且res的最后一位大于c，那么我们应该将res的最后一位移去，且k自减1。当跳出while循环后，我们将c加入res中，最后我们将res的大小重设为n-k。根据题目中的描述，可能会出现"0200"这样不符合要求的情况，所以我们用一个while循环来去掉前面的所有0，然后返回时判断是否为空，为空则返回&ldquo;0&rdquo;，参见代码如下：</p>
+<p>&nbsp;</p>
+<div>
+<div id="company_tags" class="btn btn-xs btn-warning">
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> removeKdigits(<span style="color: #0000ff;">string</span> num, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> n = num.size(), keep = n -<span style="color: #000000;"> k;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : num) {
+            </span><span style="color: #0000ff;">while</span> (k &amp;&amp; res.size() &amp;&amp; res.back() &gt;<span style="color: #000000;"> c) {
+                res.pop_back();
+                </span>--<span style="color: #000000;">k;
+            }
+            res.push_back(c);
+        }
+        res.resize(keep);
+        </span><span style="color: #0000ff;">while</span> (!res.empty() &amp;&amp; res[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">) res.erase(res.begin());
+        </span><span style="color: #0000ff;">return</span> res.empty() ? <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span><span style="color: #000000;"> : res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5136749.html">Create Maximum Number</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5085379.html">Remove Duplicate Letters</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4606334.html" target="_blank">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

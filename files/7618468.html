@@ -1,0 +1,95 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7618468.html">[LeetCode] Valid Palindrome II 验证回文字符串之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-empty string <code>s</code>, you may delete <strong>at most</strong> one character. Judge whether you can make it a palindrome.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> "aba"
+<strong>Output:</strong> True
+</pre>
+<p><strong>Example 2:</strong><br />
+</p>
+<pre><strong>Input:</strong> "abca"
+<strong>Output:</strong> True
+<strong>Explanation:</strong> You could delete the character 'c'.
+</pre>
+<p><strong>Note:</strong><br />
+</p>
+<ol><ol>
+<li>The string will only contain lowercase characters a-z.
+The maximum length of the string is 50000.</li>
+
+
+
+</ol></ol>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/4030114.html" target="_blank">Valid Palindrome</a>的拓展，还是让我们验证回复字符串，但是区别是这道题的字符串中只含有小写字母，而且这道题允许删除一个字符，那么当遇到不匹配的时候，我们到底是删除左边的字符，还是右边的字符呢，我们的做法是两种情况都要算一遍，只要有一种能返回true，那么结果就返回true。我们可以写一个子函数来判断字符串中的某一个范围内的子字符串是否为回文串，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> validPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> (s[left] != s[right]) <span style="color: #0000ff;">return</span> isValid(s, left, right - <span style="color: #800080;">1</span>) || isValid(s, left + <span style="color: #800080;">1</span><span style="color: #000000;">, right);
+            </span>++left; --<span style="color: #000000;">right;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">bool</span> isValid(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">int</span> left, <span style="color: #0000ff;">int</span><span style="color: #000000;"> right) {
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> (s[left] != s[right]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span>++left; --<span style="color: #000000;">right;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种写法跟上面的解法思路一样，只不过没有写额外的函数，还是要遍历两种情况，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> validPalindrome(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right = s.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+            </span><span style="color: #0000ff;">if</span> (s[left] ==<span style="color: #000000;"> s[right]) {
+                </span>++left; --<span style="color: #000000;">right;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">int</span> l = left, r = right - <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">while</span> (l &lt;<span style="color: #000000;"> r) {
+                    </span><span style="color: #0000ff;">if</span> (s[l] != s[r]) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span>++l; --<span style="color: #000000;">r;
+                    </span><span style="color: #0000ff;">if</span> (l &gt;= r) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                }
+                </span>++<span style="color: #000000;">left;
+                </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                    </span><span style="color: #0000ff;">if</span> (s[left] != s[right]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    </span>++left; --<span style="color: #000000;">right;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4030114.html" target="_blank">Valid Palindrome</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/103939/java-o-n-time-o-1-space">https://discuss.leetcode.com/topic/103939/java-o-n-time-o-1-space</a></p>
+<p><a href="https://discuss.leetcode.com/topic/103911/two-solutions-optimized-and-recursive-java-and-c">https://discuss.leetcode.com/topic/103911/two-solutions-optimized-and-recursive-java-and-c</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

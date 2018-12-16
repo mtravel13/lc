@@ -1,0 +1,130 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6231504.html">[LeetCode] Sort Characters By Frequency 根据字符出现频率排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-12">
+<div class="question-content">
+<p>Given a string, sort it in decreasing order based on the frequency of characters.</p>
+<p>Example 1:</p>
+<pre>Input:
+"tree"
+
+Output:
+"eert"
+
+Explanation:
+'e' appears twice while 'r' and 't' both appear once.
+So 'e' must appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input:
+"cccaaa"
+
+Output:
+"cccaaa"
+
+Explanation:
+Both 'c' and 'a' appear three times, so "aaaccc" is also a valid answer.
+Note that "cacaca" is incorrect, as the same characters must be together.
+</pre>
+<p>&nbsp;</p>
+<p>Example 3:</p>
+<pre>Input:
+"Aabb"
+
+Output:
+"bbAa"
+
+Explanation:
+"bbaA" is also a valid answer, but "Aabb" is incorrect.
+Note that 'A' and 'a' are treated as two different characters.
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们给一个字符串按照字符出现的频率来排序，那么毫无疑问肯定要先统计出每个字符出现的个数，那么之后怎么做呢？我们可以利用优先队列的自动排序的特点，把个数和字符组成pair放到优先队列里排好序后，再取出来组成结果res即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> frequencySort(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        priority_queue</span>&lt;pair&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">char</span>&gt;&gt;<span style="color: #000000;"> q;
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : s) ++<span style="color: #000000;">m[c];
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto a : m) q.push({a.second, a.first});
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">q.empty()) {
+            auto t </span>=<span style="color: #000000;"> q.top(); q.pop();
+            res.append(t.first, t.second);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以使用STL自带的sort来做，关键就在于重写comparator，由于需要使用外部变量，记得中括号中放入＆，然后我们将频率大的返回，注意一定还要处理频率相等的情况，要不然两个频率相等的字符可能穿插着出现在结果res中，这样是不对的。参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> frequencySort(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : s) ++<span style="color: #000000;">m[c];
+        sort(s.begin(), s.end(), [</span>&amp;](<span style="color: #0000ff;">char</span>&amp; a, <span style="color: #0000ff;">char</span>&amp;<span style="color: #000000;"> b){
+            </span><span style="color: #0000ff;">return</span> m[a] &gt; m[b] || (m[a] == m[b] &amp;&amp; a &lt;<span style="color: #000000;"> b);
+        });
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们也可以不使用优先队列，而是建立一个字符串数组，因为某个字符的出现次数不可能超过s的长度，所以我们将每个字符根据其出现次数放入数组中的对应位置，那么最后我们只要从后往前遍历数组所有位置，将不为空的位置的字符串加入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> frequencySort(<span style="color: #0000ff;">string</span><span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; v(s.size() + <span style="color: #800080;">1</span>, <span style="color: #800000;">""</span><span style="color: #000000;">);
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : s) ++<span style="color: #000000;">m[c];
+        </span><span style="color: #0000ff;">for</span> (auto&amp;<span style="color: #000000;"> a : m) {
+            v[a.second].append(a.second, a.first);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = s.size(); i &gt; <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">v[i].empty()) {
+                res.append(v[i]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7689927.html">Top K Frequent Words</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5802109.html">First Unique Character in a String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/sort-characters-by-frequency/description/">https://leetcode.com/problems/sort-characters-by-frequency/description/</a></p>
+<p><a href="https://leetcode.com/problems/sort-characters-by-frequency/discuss/93404/c-on-solution-without-sort">https://leetcode.com/problems/sort-characters-by-frequency/discuss/93404/c-on-solution-without-sort</a></p>
+<p><a href="https://leetcode.com/problems/sort-characters-by-frequency/discuss/93409/concise-c-solution-using-stl-sort">https://leetcode.com/problems/sort-characters-by-frequency/discuss/93409/concise-c-solution-using-stl-sort</a></p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

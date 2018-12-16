@@ -1,0 +1,100 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5078490.html">[LeetCode] Count of Smaller Numbers After Self 计算后面较小数字的个数</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>You are given an integer array&nbsp;<em>nums</em>&nbsp;and you have to return a new&nbsp;<em>counts</em>&nbsp;array. The&nbsp;<em>counts</em>&nbsp;array has the property where&nbsp;<code>counts[i]</code>&nbsp;is the number of smaller elements to the right of&nbsp;<code>nums[i]</code>.</p>
+<p>Example:</p>
+<pre>Given <em>nums</em> = [5, 2, 6, 1]
+
+To the right of 5 there are 2 smaller elements (2 and 1).
+To the right of 2 there is only 1 smaller element (1).
+To the right of 6 there is 1 smaller element (1).
+To the right of 1 there is 0 smaller element.
+</pre>
+<p>Return the array&nbsp;<code>[2, 1, 1, 0]</code>.</p>
+<p>&nbsp;</p>
+<p>这道题给定我们一个数组，让我们计算每个数字右边所有小于这个数字的个数，目测我们不能用brute force，OJ肯定不答应，那么我们为了提高运算效率，首先可以使用用二分搜索法，思路是将给定数组从最后一个开始，用二分法插入到一个新的数组，这样新数组就是有序的，那么此时该数字在新数组中的坐标就是原数组中其右边所有较小数字的个数，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Binary Search</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; countSmaller(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> t, res(nums.size());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = nums.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> left = <span style="color: #800080;">0</span>, right =<span style="color: #000000;"> t.size();
+            </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (t[mid] &gt;= nums[i]) right =<span style="color: #000000;"> mid;
+                </span><span style="color: #0000ff;">else</span> left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+            res[i] </span>=<span style="color: #000000;"> right;
+            t.insert(t.begin() </span>+<span style="color: #000000;"> right, nums[i]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>上面使用二分搜索法是一种插入排序的做法，我们还可以用C++中的STL的一些自带的函数来帮助我们，比如求距离distance，或是求第一个不小于当前数字的函数lower_bound，这里利用这两个函数代替了上一种方法中的二分搜索的部分，两种方法的核心思想都是相同的，构造有序数组，找出新加进来的数组在有序数组中对应的位置存入结果中即可，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Insert Sort</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; countSmaller(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> t, res(nums.size());
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = nums.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> d =<span style="color: #000000;"> distance(t.begin(), lower_bound(t.begin(), t.end(), nums[i]));
+            res[i] </span>=<span style="color: #000000;"> d;
+            t.insert(t.begin() </span>+<span style="color: #000000;"> d, nums[i]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<div>再来看一种利用二分搜索树来解的方法，我们来构造一棵二分搜索树，稍有不同的地方是我们需要加一个变量smaller来记录比当前节点值小的所有节点的个数，我们每插入一个节点，会判断其和根节点的大小，如果新的节点值小于根节点值，则其会插入到左子树中，我们此时要增加根节点的smaller，并继续递归调用左子节点的insert。如果节点值大于根节点值，则需要递归调用右子节点的insert并加上根节点的smaller，并加1，参见代码如下：</div>
+<div>&nbsp;</div>
+<div>解法三：</div>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Binary Search Tree</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Node {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val, smaller;
+        Node </span>*left, *<span style="color: #000000;">right;
+        Node(</span><span style="color: #0000ff;">int</span> v, <span style="color: #0000ff;">int</span><span style="color: #000000;"> s) : val(v), smaller(s), left(NULL), right(NULL) {}
+    };
+    </span><span style="color: #0000ff;">int</span> insert(Node *&amp;root, <span style="color: #0000ff;">int</span><span style="color: #000000;"> v) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> (root = <span style="color: #0000ff;">new</span> Node(v, <span style="color: #800080;">0</span>)), <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (root-&gt;val &gt; v) <span style="color: #0000ff;">return</span> root-&gt;smaller++, insert(root-&gt;<span style="color: #000000;">left, v);
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> insert(root-&gt;right, v) + root-&gt;smaller + (root-&gt;val &lt; v ? <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; countSmaller(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> nums) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> res(nums.size());
+        Node </span>*root =<span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = nums.size() - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">i) {
+            res[i] </span>=<span style="color: #000000;"> insert(root, nums[i]);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/73280/my-simple-ac-java-binary-search-code" target="_blank">https://leetcode.com/discuss/73280/my-simple-ac-java-binary-search-code</a></p>
+<p><a href="https://leetcode.com/discuss/73635/insert-sort-method-c-use-68ms-solution" target="_blank">https://leetcode.com/discuss/73635/insert-sort-method-c-use-68ms-solution</a></p>
+<p><a href="https://leetcode.com/discuss/75586/14-line-44ms-c-building-bst" target="_blank">https://leetcode.com/discuss/75586/14-line-44ms-c-building-bst</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,68 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5181672.html">[LeetCode] Read N Characters Given Read4 II - Call multiple times 用Read4来读取N个字符之二 - 多次调用</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>The API: int read4(char *buf) reads 4 characters at a time from a file.</p>
+<p>The return value is the actual number of characters read. For example, it returns 3 if there is only 3 characters left in the file.</p>
+<p>By using the read4 API, implement the function int read(char *buf, int n) that reads n characters from the file.</p>
+<p>Note:<br />The read function may be called multiple times. </p>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a id="homepage1_HomePageDays_DaysList_ctl05_DayList_TitleUrl_1" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5174322.html">Read N Characters Given Read4</a>的拓展，那道题说read函数只能调用一次，而这道题说read函数可以调用多次，那么难度就增加了，为了更简单直观的说明问题，我们举个简单的例子吧，比如：</p>
+<p>buf = "ab", <span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">[read(1),read(2)]，返回 <span id="result_wa_testcase_expected" class="testcase-info text-success ng-binding">["a","b"]</span></span></p>
+<p>那么第一次调用<span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">read(1)</span>后，从buf中读出一个字符，那么就是第一个字符a，然后又调用了一个<span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">read(2)</span>，想取出两个字符，但是buf中只剩一个b了，所以就把取出的结果就是b。再来看一个例子：</p>
+<p><span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">buf = "a", [read(0),read(1),read(2)]<span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">，返回 <span id="result_wa_testcase_expected" class="testcase-info text-success ng-binding"><span id="result_wa_testcase_expected" class="testcase-info text-success ng-binding">["","a",""]</span></span></span></span></p>
+<p>第一次调用<span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">read(0)</span>，不取任何字符，返回空，第二次调用<span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">read(1)，取一个字符，buf中只有一个字符，取出为a，然后再调用<span id="result_wa_testcase_input" class="testcase-info text-default ng-binding">read(2)，想取出两个字符，但是buf中没有字符了，所以取出为空。</span></span><span class="testcase-info text-default ng-binding"><span class="testcase-info text-default ng-binding"><br /></span></span></p>
+<p><span class="testcase-info text-default ng-binding"><span class="testcase-info text-default ng-binding">但是这道题我不太懂的地方是明明函数返回的是int类型啊，为啥OJ的output都是vector&lt;char&gt;类的，然后我就在网上找了下面两种能通过OJ的解法，大概看了看，也是看的个一知半解，貌似是用两个变量readPos和writePos来记录读取和写的位置，i从0到n开始循环，如果此时读和写的位置相同，那么我们调用read4函数，将结果赋给writePos，把readPos置零，如果writePos为零的话，说明buf中没有东西了，返回当前的坐标i。然后我们用内置的buff变量的readPos位置覆盖输入字符串buf的i位置，如果完成遍历，返回n，参见代码如下：</span></span></p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> read(<span style="color: #0000ff;">char</span> *buf, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (readPos ==<span style="color: #000000;"> writePos) {
+                writePos </span>=<span style="color: #000000;"> read4(buff);
+                readPos </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (writePos == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+            }
+            buf[i] </span>= buff[readPos++<span style="color: #000000;">];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+    }
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> readPos = <span style="color: #800080;">0</span>, writePos = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span> buff[<span style="color: #800080;">4</span><span style="color: #000000;">];
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法和上面的方法基本相同，稍稍改变了些解法，使得看起来更加简洁一些：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> read(<span style="color: #0000ff;">char</span> *buf, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt; n &amp;&amp; (readPos &lt; writePos || (readPos = <span style="color: #800080;">0</span>) &lt; (writePos =<span style="color: #000000;"> read4(buff))))
+            buf[i</span>++] = buff[readPos++<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">char</span> buff[<span style="color: #800080;">4</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span> readPos = <span style="color: #800080;">0</span>, writePos = <span style="color: #800080;">0</span><span style="color: #000000;">;
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl05_DayList_TitleUrl_1" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5174322.html">Read N Characters Given Read4</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/21219/a-simple-java-code" target="_blank">https://leetcode.com/discuss/21219/a-simple-java-code</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" style="line-height: 1.5;" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

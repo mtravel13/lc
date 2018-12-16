@@ -1,0 +1,67 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6512921.html">[LeetCode] Detect Capital 检测大写格式</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a word, you need to judge whether the usage of capitals in it is right or not.</p>
+<p>We define the usage of capitals in a word to be right when one of the following cases holds:</p>
+<ol>
+<li>All letters in this word are capitals, like "USA".</li>
+<li>All letters in this word are not capitals, like "leetcode".</li>
+<li>Only the first letter in this word is capital if it has more than one letter, like "Google".</li>
+</ol>
+<p>Otherwise, we define that this word doesn't use capitals in a right way.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> "USA"
+<strong>Output:</strong> True
+</pre>
+<p><strong>Example 2:</strong><br />
+</p>
+<pre><strong>Input:</strong> "FlaG"
+<strong>Output:</strong> False
+</pre>
+<p><strong>Note:</strong> The input will be a non-empty word consisting of uppercase and lowercase latin letters.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个单词，让我们检测大写格式是否正确，规定了三种正确方式，要么都是大写或小写，要么首字母大写，其他情况都不正确。那么我们要做的就是统计出单词中所有大写字母的个数cnt，再来判断是否属于这三种情况，如果cnt为0，说明都是小写，正确；如果cnt和单词长度相等，说明都是大写，正确；如果cnt为1，且首字母为大写，正确，其他情况均返回false，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> detectCapitalUse(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span>, n =<span style="color: #000000;"> word.size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (word[i] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt;
+        }
+        </span><span style="color: #0000ff;">return</span> cnt == <span style="color: #800080;">0</span> || cnt == n || (cnt == <span style="color: #800080;">1</span> &amp;&amp; word[<span style="color: #800080;">0</span>] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法利用了STL的内置方法count_if，根据条件来计数，这样使得code非常简洁，两行就搞定了，丧心病狂啊～</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> detectCapitalUse(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+        </span><span style="color: #0000ff;">int</span> cnt = count_if(word.begin(), word.end(), [](<span style="color: #0000ff;">char</span> c){<span style="color: #0000ff;">return</span> c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span><span style="color: #000000;">;});
+        </span><span style="color: #0000ff;">return</span> cnt == <span style="color: #800080;">0</span> || cnt == word.size() || (cnt == <span style="color: #800080;">1</span> &amp;&amp; word[<span style="color: #800080;">0</span>] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/79912/3-lines" target="_blank">https://discuss.leetcode.com/topic/79912/3-lines</a></p>
+<p><a href="https://discuss.leetcode.com/topic/79930/java-1-liner" target="_blank">https://discuss.leetcode.com/topic/79930/java-1-liner</a></p>
+<p><a href="https://discuss.leetcode.com/topic/80314/6ms-2-lines-c-solution/2" target="_blank">https://discuss.leetcode.com/topic/80314/6ms-2-lines-c-solution/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/79911/simple-java-solution-o-n-time-o-1-space" target="_blank">https://discuss.leetcode.com/topic/79911/simple-java-solution-o-n-time-o-1-space</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

@@ -1,0 +1,59 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5842033.html">[LeetCode] Is Subsequence 是子序列</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a string&nbsp;s&nbsp;and a string&nbsp;t, check if&nbsp;s&nbsp;is subsequence of&nbsp;t.</p>
+<p>You may assume that there is only lower case English letters in both&nbsp;s&nbsp;and&nbsp;t.&nbsp;t&nbsp;is potentially a very long (length ~= 500,000) string, and&nbsp;s&nbsp;is a short string (&lt;=100).</p>
+<p>A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie,&nbsp;<code>"ace"</code>&nbsp;is a subsequence of&nbsp;<code>"abcde"</code>&nbsp;while&nbsp;<code>"aec"</code>&nbsp;is not).</p>
+<p>Example 1:<br />s&nbsp;=&nbsp;<code>"abc"</code>,&nbsp;t&nbsp;=&nbsp;<code>"ahbgdc"</code></p>
+<p>Return&nbsp;<code>true</code>.</p>
+<p>Example 2:<br />s&nbsp;=&nbsp;<code>"axc"</code>,&nbsp;t&nbsp;=&nbsp;<code>"ahbgdc"</code></p>
+<p>Return&nbsp;<code>false</code>.</p>
+<p>&nbsp;</p>
+<p>这道题算比较简单的一种，我们可以用两个指针分别指向字符串s和t，然后如果字符相等，则i和j自增1，反之只有j自增1，最后看i是否等于s的长度，等于说明s已经遍历完了，而且字符都有在t中出现过，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isSubsequence(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">string</span><span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (s.empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt; s.size() &amp;&amp; j &lt;<span style="color: #000000;"> t.size()) {
+            </span><span style="color: #0000ff;">if</span> (s[i] ==<span style="color: #000000;"> t[j]) {
+                </span>++i; ++<span style="color: #000000;">j;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span>++<span style="color: #000000;">j;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> i ==<span style="color: #000000;"> s.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种写法稍稍简洁了一些，但是思路并没有什么不同，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> isSubsequence(<span style="color: #0000ff;">string</span> s, <span style="color: #0000ff;">string</span><span style="color: #000000;"> t) {
+        </span><span style="color: #0000ff;">if</span> (s.empty()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (i &lt; s.size() &amp;&amp; j &lt;<span style="color: #000000;"> t.size()) {
+            </span><span style="color: #0000ff;">if</span> (s[i] == t[j]) ++<span style="color: #000000;">i;
+            </span>++<span style="color: #000000;">j;
+        }
+        </span><span style="color: #0000ff;">return</span> i ==<span style="color: #000000;"> s.size();
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

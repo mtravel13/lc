@@ -1,0 +1,52 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4306611.html">[LeetCode] Reverse Linked List II 倒置链表之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Reverse a linked list from position&nbsp;<em>m</em>&nbsp;to&nbsp;<em>n</em>. Do it in-place and in one-pass.</p>
+<p>For example:<br />Given&nbsp;<code>1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</code>,&nbsp;<em>m</em>&nbsp;= 2 and&nbsp;<em>n</em>&nbsp;= 4,</p>
+<p>return&nbsp;<code>1-&gt;4-&gt;3-&gt;2-&gt;5-&gt;NULL</code>.</p>
+<p>Note:<br />Given&nbsp;<em>m</em>,&nbsp;<em>n</em>&nbsp;satisfy the following condition:<br />1 &le;&nbsp;<em>m</em>&nbsp;&le;&nbsp;<em>n</em>&nbsp;&le; length of list.</p>
+<p>&nbsp;</p>
+<p>很奇怪为何没有倒置链表之一，就来了这个倒置链表之二，不过猜也能猜得到之一就是单纯的倒置整个链表，而这道作为延伸的地方就是倒置其中的某一小段。对于链表的问题，根据以往的经验一般都是要建一个dummy node，连上原链表的头结点，这样的话就算头结点变动了，我们还可以通过dummy-&gt;next来获得新链表的头结点。这道题的要求是只通过一次遍历完成，就拿题目中的例子来说，变换的是2,3,4这三个点，那么我们可以先取出2，用front指针指向2，然后当取出3的时候，我们把3加到2的前面，把front指针前移到3，依次类推，到4后停止，这样我们得到一个新链表4-&gt;3-&gt;2, front指针指向4。对于原链表连说，有两个点的位置很重要，需要用指针记录下来，分别是1和5，因为当2,3,4被取走时，原链表就变成了1-&gt;5-&gt;NULL，要把新链表插入的时候需要这两个点的位置。1的位置很好找，因为知道m的值，我们用pre指针记录1的位置，5的位置最后才能记录，当4结点被取走后，5的位置需要记下来，这样我们就可以把倒置后的那一小段链表加入到原链表中。代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    ListNode </span>*reverseBetween(ListNode *head, <span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+        ListNode </span>*dummy = <span style="color: #0000ff;">new</span> ListNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        dummy</span>-&gt;next =<span style="color: #000000;"> head;
+        ListNode </span>*cur =<span style="color: #000000;"> dummy;
+        ListNode </span>*pre, *front, *<span style="color: #000000;">last;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= m - <span style="color: #800080;">1</span>; ++i) cur = cur-&gt;<span style="color: #000000;">next;
+        pre </span>=<span style="color: #000000;"> cur;
+        last </span>= cur-&gt;<span style="color: #000000;">next;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = m; i &lt;= n; ++<span style="color: #000000;">i) {
+            cur </span>= pre-&gt;<span style="color: #000000;">next;
+            pre</span>-&gt;next = cur-&gt;<span style="color: #000000;">next;
+            cur</span>-&gt;next =<span style="color: #000000;"> front;
+            front </span>=<span style="color: #000000;"> cur;
+        }
+        cur </span>= pre-&gt;<span style="color: #000000;">next;
+        pre</span>-&gt;next =<span style="color: #000000;"> front;
+        last</span>-&gt;next =<span style="color: #000000;"> cur;
+        </span><span style="color: #0000ff;">return</span> dummy-&gt;<span style="color: #000000;">next;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

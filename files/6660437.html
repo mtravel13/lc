@@ -1,0 +1,94 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6660437.html">[LeetCode] Complex Number Multiplication 复数相乘</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given two strings representing two <a href="https://en.wikipedia.org/wiki/Complex_number">complex numbers</a>.</p>
+<p>You need to return a string representing their multiplication. Note i<sup>2</sup> = -1 according to the definition.</p>
+<p><strong>Example 1:</strong><br />
+</p>
+<pre><strong>Input:</strong> "1+1i", "1+1i"
+<strong>Output:</strong> "0+2i"
+<strong>Explanation:</strong> (1 + i) * (1 + i) = 1 + i</pre>
+<p><sup>2</sup></p>
+<pre> + 2 * i = 2i, and you need convert it to the form of 0+2i.
+</pre>
+<p><strong>Example 2:</strong><br />
+</p>
+<pre><strong>Input:</strong> "1+-1i", "1+-1i"
+<strong>Output:</strong> "0+-2i"
+<strong>Explanation:</strong> (1 - i) * (1 - i) = 1 + i</pre>
+<p><sup>2</sup></p>
+<pre> - 2 * i = -2i, and you need convert it to the form of 0+-2i.
+</pre>
+<p><strong>Note:</strong></p>
+<ol>
+<li>The input strings will not have extra blank.</li>
+<li>The input strings will be given in the form of <strong>a+bi</strong>, where the integer <strong>a</strong> and <strong>b</strong> will both belong to the range of [-100, 100]. And <strong>the output should be also in this form</strong>.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题让我们求复数的乘法，有关复数的知识最早还是在本科的复变函数中接触到的，难起来还真是难。但是这里只是最简单的乘法，只要利用好定义i<sup>2</sup>=-1就可以解题，而且这道题的另一个考察点其实是对字符的处理，我们需要把字符串中的实部和虚部分离开并进行运算，那么我们可以用STL中自带的find_last_of函数来找到加号的位置，然后分别拆出实部虚部，进行运算后再变回字符串，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> complexNumberMultiply(<span style="color: #0000ff;">string</span> a, <span style="color: #0000ff;">string</span><span style="color: #000000;"> b) {
+        </span><span style="color: #0000ff;">int</span> n1 = a.size(), n2 =<span style="color: #000000;"> b.size();
+        auto p1 </span>= a.find_last_of(<span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span>), p2 = b.find_last_of(<span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> a1 = stoi(a.substr(<span style="color: #800080;">0</span>, p1)), b1 = stoi(b.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, p2));
+        </span><span style="color: #0000ff;">int</span> a2 = stoi(a.substr(p1 + <span style="color: #800080;">1</span>, n1 - p1 - <span style="color: #800080;">2</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">int</span> b2 = stoi(b.substr(p2 + <span style="color: #800080;">1</span>, n2 - p2 - <span style="color: #800080;">2</span><span style="color: #000000;">));
+        </span><span style="color: #0000ff;">int</span> r1 = a1 * b1 - a2 * b2, r2 = a1 * b2 + a2 *<span style="color: #000000;"> b1;
+        </span><span style="color: #0000ff;">return</span> to_string(r1) + <span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span> + to_string(r2) + <span style="color: #800000;">"</span><span style="color: #800000;">i</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种方法利用到了字符串流类istringstream来读入字符串，直接将实部虚部读入int变量中，注意中间也要把加号读入char变量中，然后再进行运算即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> complexNumberMultiply(<span style="color: #0000ff;">string</span> a, <span style="color: #0000ff;">string</span><span style="color: #000000;"> b) {
+        istringstream is1(a), is2(b);
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a1, a2, b1, b2, r1, r2;
+        </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> plus;
+        is1 </span>&gt;&gt; a1 &gt;&gt; plus &gt;&gt;<span style="color: #000000;"> a2;
+        is2 </span>&gt;&gt; b1 &gt;&gt; plus &gt;&gt;<span style="color: #000000;"> b2;
+        r1 </span>= a1 * b1 - a2 * b2, r2 = a1 * b2 + a2 *<span style="color: #000000;"> b1;
+        </span><span style="color: #0000ff;">return</span> to_string(r1) + <span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span> + to_string(r2) + <span style="color: #800000;">"</span><span style="color: #800000;">i</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法实际上是C语言的解法，用到了sscanf这个读入字符串的函数，需要把string转为cost char*型，然后标明读入的方式和类型，再进行运算即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> complexNumberMultiply(<span style="color: #0000ff;">string</span> a, <span style="color: #0000ff;">string</span><span style="color: #000000;"> b) {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a1, a2, b1, b2, r1, r2;
+        sscanf(a.c_str(), </span><span style="color: #800000;">"</span><span style="color: #800000;">%d+%di</span><span style="color: #800000;">"</span>, &amp;a1, &amp;<span style="color: #000000;">a2);
+        sscanf(b.c_str(), </span><span style="color: #800000;">"</span><span style="color: #800000;">%d+%di</span><span style="color: #800000;">"</span>, &amp;b1, &amp;<span style="color: #000000;">b2);
+        r1 </span>= a1 * b1 - a2 * b2, r2 = a1 * b2 + a2 *<span style="color: #000000;"> b1;
+        </span><span style="color: #0000ff;">return</span> to_string(r1) + <span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span> + to_string(r2) + <span style="color: #800000;">"</span><span style="color: #800000;">i</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/84261/java-3-liner" target="_blank">https://discuss.leetcode.com/topic/84261/java-3-liner</a></p>
+<p><a href="https://discuss.leetcode.com/topic/84382/c-using-stringstream" target="_blank">https://discuss.leetcode.com/topic/84382/c-using-stringstream</a></p>
+<p><a href="https://discuss.leetcode.com/topic/84323/java-elegant-solution" target="_blank">https://discuss.leetcode.com/topic/84323/java-elegant-solution</a></p>
+<p><a href="https://discuss.leetcode.com/topic/84508/cpp-solution-with-sscanf" target="_blank">https://discuss.leetcode.com/topic/84508/cpp-solution-with-sscanf</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

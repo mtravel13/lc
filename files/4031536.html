@@ -1,0 +1,69 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4031536.html">[LeetCode] Pascal&#39;s Triangle II 杨辉三角之二</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a non-negative&nbsp;index&nbsp;<em>k</em>&nbsp;where&nbsp;<em>k</em>&nbsp;&le;&nbsp;33, return the&nbsp;<em>k</em>th&nbsp;index row of the Pascal's triangle.</p>
+<p>Note that the row index starts from&nbsp;0.</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif" alt="" /><br /><small>In Pascal's triangle, each number is the sum of the two numbers directly above it.</small></p>
+<p>Example:</p>
+<pre>Input: 3
+Output: [1,3,3,1]
+</pre>
+<p>Follow up:</p>
+<p>Could you optimize your algorithm to use only&nbsp;<em>O</em>(<em>k</em>) extra space?</p>
+<p>&nbsp;</p>
+<p>杨辉三角想必大家并不陌生，应该最早出现在初高中的数学中，其实就是二项式系数的一种写法。</p>
+<pre>　　　　　　　　１
+　　　　　　　１　１
+　　　　　　１　２　１
+　　　　　１　３　３　１
+　　　　１　４　６　４　１
+　　　１　５　10　10　５　１
+　　１　６　15　20　15　６　１
+　１　７　21　35　35　21　７　１
+１　８　28　56　70　56　28　８　１</pre>
+<p>杨辉三角形第n层（顶层称第0层，第1行，第n层即第n+1行，此处n为包含0在内的自然数）正好对应于二项式<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/4/b/9/4b96ccc1bce6fcd32bc5bd2fd2de4b7a.png" alt="\left(a+b\right)^{n}" />展开的系数。例如第二层1 2 1是幂指数为2的二项式<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/8/2/0/820a2947ed4432430a12c5cb107561ed.png" alt="\left(a+b\right)^{2}" />展开形式<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/5/c/2/5c2982db60ef27dfb6249933d1be73a1.png" alt="a^{2}+2ab+b^{2}" />的系数。</p>
+<p>&nbsp;</p>
+<p>杨辉三角主要有下列五条性质：</p>
+<ol>
+<li>杨辉三角以正整数构成，数字左右对称，每行由1开始逐渐变大，然后变小，回到1。</li>
+<li>第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/7/b/8/7b8b965ad4bca0e41ab51de7b31363a1.png" alt="n" />行的数字个数为<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/7/b/8/7b8b965ad4bca0e41ab51de7b31363a1.png" alt="n" />个。</li>
+<li>第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/7/b/8/7b8b965ad4bca0e41ab51de7b31363a1.png" alt="n" />行的第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/8/c/e/8ce4b16b22b58894aa86c421e8759df3.png" alt="k" />个数字为组合数<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/7/c/9/7c90e60eb2d8eaec74a30a81b1b4f1d9.png" alt="C_{n-1}^{k-1}" />。</li>
+<li>第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/7/b/8/7b8b965ad4bca0e41ab51de7b31363a1.png" alt="n" />行数字和为<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/4/2/e/42ef218254478d61d6f2afb986f4b88c.png" alt="2^{n-1}" />。</li>
+<li>除每行最左侧与最右侧的数字以外，每个数字等于它的左上方与右上方两个数字之和（也就是说，第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/7/b/8/7b8b965ad4bca0e41ab51de7b31363a1.png" alt="n" />行第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/8/c/e/8ce4b16b22b58894aa86c421e8759df3.png" alt="k" />个数字等于第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/a/4/3/a438673491daae8148eae77373b6a467.png" alt="n-1" />行的第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/1/4/4/14464ac1dfe6fa8ad8fda94bb6f01571.png" alt="k-1" />个数字与第<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/8/c/e/8ce4b16b22b58894aa86c421e8759df3.png" alt="k" />个数字的和）。这是因为有组合恒等式：<img class="mwe-math-fallback-png-inline tex" src="http://upload.wikimedia.org/math/c/7/0/c702e84dfa4142f435d9c2bbbbfeeae0.png" alt="C_{n}^{i}=C_{n-1}^{i-1}+C_{n-1}^{i}" />。可用此性质写出整个杨辉三角形。</li>
+</ol>
+<p>&nbsp;</p>
+<p>由于题目有额外限制条件，程序只能使用O(k)的额外空间，那么这样就不能把每行都算出来，而是要用其他的方法, 我最先考虑用的是第三条性质，算出每个组合数来生成第n行系数，代码参见评论区一楼。本地调试输出前十行，没啥问题，拿到OJ上测试，程序在第18行跪了，中间有个系数不正确。那么问题出在哪了呢，仔细找找，原来出在计算组合数那里，由于算组合数时需要算连乘，而整形数int的数值范围只有-32768到32768之间，那么一旦n值过大，连乘肯定无法计算。而丧心病狂的OJ肯定会测试到成百上千行，所以这个方法不行。那么我们再来考虑利用第五条性质，除了第一个和最后一个数字之外，其他的数字都是上一行左右两个值之和。那么我们只需要两个for循环，除了第一个数为1之外，后面的数都是上一次循环的数值加上它前面位置的数值之和，不停地更新每一个位置的值，便可以得到第n行的数字，具体实现代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; getRow(<span style="color: #0000ff;">int</span><span style="color: #000000;"> rowIndex) {
+        vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; res(rowIndex + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        res[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= rowIndex; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &gt;= <span style="color: #800080;">1</span>; --<span style="color: #000000;">j) {
+                res[j] </span>+= res[j - <span style="color: #800080;">1</span><span style="color: #000000;">];
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4032449.html" target="_blank">Pascal's Triangle</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/pascals-triangle-ii/" target="_blank">https://leetcode.com/problems/pascals-triangle-ii/</a></p>
+<p><a href="https://leetcode.com/problems/pascals-triangle-ii/discuss/38420/Here-is-my-brief-O(k)-solution" target="_blank">https://leetcode.com/problems/pascals-triangle-ii/discuss/38420/Here-is-my-brief-O(k)-solution</a></p>
+<p><a href="https://leetcode.com/problems/pascals-triangle-ii/discuss/38478/My-accepted-java-solution-any-better-code" target="_blank">https://leetcode.com/problems/pascals-triangle-ii/discuss/38478/My-accepted-java-solution-any-better-code</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

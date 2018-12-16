@@ -1,0 +1,124 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/8531642.html">[LeetCode] Bold Words in String 字符串中的加粗单词</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a set of keywords&nbsp;<code>words</code>&nbsp;and a string&nbsp;<code>S</code>, make all appearances of all keywords in&nbsp;<code>S</code>&nbsp;bold. Any letters between&nbsp;<code>&lt;b&gt;</code>&nbsp;and&nbsp;<code>&lt;/b&gt;</code>&nbsp;tags become bold.</p>
+<p>The returned string should use the least number of tags possible, and of course the tags should form a valid combination.</p>
+<p>For example, given that&nbsp;<code>words = ["ab", "bc"]</code>&nbsp;and&nbsp;<code>S = "aabcd"</code>, we should return&nbsp;<code>"a&lt;b&gt;abc&lt;/b&gt;d"</code>. Note that returning&nbsp;<code>"a&lt;b&gt;a&lt;b&gt;b&lt;/b&gt;c&lt;/b&gt;d"</code>&nbsp;would use more tags, so it is incorrect.</p>
+<p>Note:</p>
+<ol>
+<li><code>words</code>&nbsp;has length in range&nbsp;<code>[0, 50]</code>.</li>
+<li><code>words[i]</code>&nbsp;has length in range&nbsp;<code>[1, 10]</code>.</li>
+<li><code>S</code>&nbsp;has length in range&nbsp;<code>[0, 500]</code>.</li>
+<li>All characters in&nbsp;<code>words[i]</code>&nbsp;and&nbsp;<code>S</code>&nbsp;are lowercase letters.</li>
+</ol>
+<p>&nbsp;</p>
+<p>这道题跟之前的那道<a href="http://www.cnblogs.com/grandyang/p/7043394.html">Add Bold Tag in String</a>是一模一样的，之前还换个马甲，这次连场景都不换了，直接照搬啊？！我也是服气的～这道题应该没有太多的技巧，就是照题目意思来就行了，我们使用一个数组bold，标记所有需要加粗的位置为true，初始化所有为false。我们首先要判断每个单词word是否是S的子串，判断的方法就是逐个字符比较，遍历字符串S，找到和word首字符相等的位置，并且比较随后和word等长的子串，如果完全相同，则将子串所有的位置在bold上比较为true。等我们知道了所有需要加粗的位置后，我们就可以来生成结果res了，我们遍历bold数组，如果当前位置是true的话，表示需要加粗，那么我们首先看如果是第一个字符，或者其前面的字符不用加粗，我们加上一个左标签&lt;b&gt;，然后我们将当前字符加入结果res中，然后再判断，如果当前是末尾字符，或者后面一个字符不用加粗，则需要加上一个右标签&lt;/b&gt;；如果当前位置是false，我们直接将字符加入结果res中即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> boldWords(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> S.size();
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; bold(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">);      
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> word.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= n - len; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (S[i] == word[<span style="color: #800080;">0</span>] &amp;&amp; S.substr(i, len) ==<span style="color: #000000;"> word) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; i + len; ++j) bold[j] = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (bold[i]) {
+                </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">0</span> || !bold[i - <span style="color: #800080;">1</span>]) res += <span style="color: #800000;">"</span><span style="color: #800000;">&lt;b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+                res.push_back(S[i]);
+                </span><span style="color: #0000ff;">if</span> (i == n - <span style="color: #800080;">1</span> || !bold[i + <span style="color: #800080;">1</span>]) res += <span style="color: #800000;">"</span><span style="color: #800000;">&lt;/b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                res.push_back(S[i]);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们可以用HashSet来代替数组，只是将需要加粗的位置放入HashSet，然后我们在生成结果res的时候，先检测当前位置是否加粗，如果加粗了，并且前一个位置不在HashSet中，这样就不用判断是否是第一个元素了，因为i-1肯定不再HashSet中，也不像数组那样存在越界的可能，我们给结果res加上左标签，然后将当前的字符加入结果res中，然后再判断如果当前位置如果加粗了，并且下一个位置不在HashSet中，我们给结果res加上右标签，参见代码如下：&nbsp;</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> boldWords(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> n =<span style="color: #000000;"> S.size();
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        unordered_set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> bold;      
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+            </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> word.size();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= n - len; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (S[i] == word[<span style="color: #800080;">0</span>] &amp;&amp; S.substr(i, len) ==<span style="color: #000000;"> word) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i; j &lt; i + len; ++<span style="color: #000000;">j) bold.insert(j);
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (bold.count(i) &amp;&amp; !bold.count(i - <span style="color: #800080;">1</span>)) res += <span style="color: #800000;">"</span><span style="color: #800000;">&lt;b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            res.push_back(S[i]);
+            </span><span style="color: #0000ff;">if</span> (bold.count(i) &amp;&amp; !bold.count(i + <span style="color: #800080;">1</span>)) res += <span style="color: #800000;">"</span><span style="color: #800000;">&lt;/b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>前面提到了这道题跟<a href="http://www.cnblogs.com/grandyang/p/7043394.html">Add Bold Tag in String</a>是完全一样，那么当然二者的解法是互通的，下面的解法是之前那道题中的解法，其实整体思路是一样的，只不过在构建的bold数组的时候，是先遍历的字符串S，而不是先遍历的单词。对于字符串S中的每个字符为起点，我们都遍历下所有单词，如果某个单词是以当前字符为起点的子串的话，那么我们用i+len来更新end，所以遍历完所有单词后，只要当前位置需要加粗，那么end一定大于i，通过这种方法同样也可以生成正确的bold数组。然后在创建结果res字符串的时候也跟上面的方法有些不同，首先判断，如果当前未被加粗，那么将当前字符存入结果res中并且continue，否则开始找相连的需要加粗的位置，用j来指向下一个不用加粗的位置，这样中间的子串就可以放入标签中整体加到res中，然后继续在后面查找连续加粗的子串，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span> boldWords(vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp; words, <span style="color: #0000ff;">string</span><span style="color: #000000;"> S) {
+        </span><span style="color: #0000ff;">int</span> n = S.size(), end = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">string</span> res = <span style="color: #800000;">""</span><span style="color: #000000;">;
+        vector</span>&lt;<span style="color: #0000ff;">bool</span>&gt; bold(n, <span style="color: #0000ff;">false</span><span style="color: #000000;">);      
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span><span style="color: #000000;"> word : words) {
+                </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> word.size();
+                </span><span style="color: #0000ff;">if</span> (i + len &lt;= n &amp;&amp; S.substr(i, len) ==<span style="color: #000000;"> word) {
+                    end </span>= max(end, i +<span style="color: #000000;"> len);
+                }
+            }
+            bold[i] </span>= end &gt;<span style="color: #000000;"> i;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">bold[i]) {
+                res.push_back(S[i]);
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">int</span> j =<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">while</span> (j &lt; n &amp;&amp; bold[j]) ++<span style="color: #000000;">j;
+            res </span>+= <span style="color: #800000;">"</span><span style="color: #800000;">&lt;b&gt;</span><span style="color: #800000;">"</span> + S.substr(i, j - i) + <span style="color: #800000;">"</span><span style="color: #800000;">&lt;/b&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            i </span>= j - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/7043394.html">Add Bold Tag in String</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/bold-words-in-string/discuss/113107/Java-Solution-without-HashMap">https://leetcode.com/problems/bold-words-in-string/discuss/113107/Java-Solution-without-HashMap</a></p>
+<p><a href="https://leetcode.com/problems/bold-words-in-string/discuss/113093/Clean-Python-and-C++-solutions-with-hashset-to-store-bold-indices">https://leetcode.com/problems/bold-words-in-string/discuss/113093/Clean-Python-and-C++-solutions-with-hashset-to-store-bold-indices</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

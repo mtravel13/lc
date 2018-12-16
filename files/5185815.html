@@ -1,0 +1,63 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5185815.html">[LeetCode] Two Sum II - Input array is sorted 两数之和之二 - 输入数组有序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given an array of integers that is already sorted in ascending order, find two numbers such that they add up to a specific target number.<br />The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.<br />You may assume that each input would have exactly one solution.<br />Input: numbers={2, 7, 11, 15}, target=9<br />Output: index1=1, index2=2 </p>
+<p>&nbsp;</p>
+<p>这又是一道<a href="http://www.cnblogs.com/grandyang/p/4130379.html" target="_blank">Two Sum</a>的衍生题，作为LeetCode开山之题，我们务必要把Two Sum及其所有的衍生题都拿下，这道题其实应该更容易一些，因为给定的数组是有序的，而且题目中限定了一定会有解，我最开始想到的方法是二分法来搜索，因为一定有解，而且数组是有序的，那么第一个数字肯定要小于目标值target，那么我们每次用二分法来搜索target - numbers[i]即可，代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> O(nlgn)</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; twoSum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; numbers, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; numbers.size(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">int</span> t = target - numbers[i], left = i + <span style="color: #800080;">1</span>, right = numbers.size()<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                </span><span style="color: #0000ff;">int</span> mid = left + (right - left) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (numbers[mid] == t) <span style="color: #0000ff;">return</span> {i + <span style="color: #800080;">1</span>, mid + <span style="color: #800080;">1</span><span style="color: #000000;">};
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (numbers[mid] &lt; t) left = mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span> right =<span style="color: #000000;"> mid;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但是上面那种方法并不efficient，时间复杂度是O(nlgn)，我们再来看一种O(n)的解法，我们只需要两个指针，一个指向开头，一个指向末尾，然后向中间遍历，如果指向的两个数相加正好等于target的话，直接返回两个指针的位置即可，若小于target，左指针右移一位，若大于target，右指针左移一位，以此类推直至两个指针相遇停止，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> O(n)</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; twoSum(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; numbers, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+        </span><span style="color: #0000ff;">int</span> l = <span style="color: #800080;">0</span>, r = numbers.size() - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (l &lt;<span style="color: #000000;"> r) {
+            </span><span style="color: #0000ff;">int</span> sum = numbers[l] +<span style="color: #000000;"> numbers[r];
+            </span><span style="color: #0000ff;">if</span> (sum == target) <span style="color: #0000ff;">return</span> {l + <span style="color: #800080;">1</span>, r + <span style="color: #800080;">1</span><span style="color: #000000;">};
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (sum &lt; target) ++<span style="color: #000000;">l;
+            </span><span style="color: #0000ff;">else</span> --<span style="color: #000000;">r;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl03_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/5184143.html">Two Sum III - Data structure design</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4130379.html" target="_blank">Two Sum</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/" target="_blank">https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

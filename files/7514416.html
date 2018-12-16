@@ -1,0 +1,65 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/7514416.html">[LeetCode] Judge Route Circle 判断路线绕圈</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<div class="question-description">
+<p>Initially, there is a Robot at position (0, 0). Given a sequence of its moves, judge if this robot makes a circle, which means it moves back to&nbsp;the original place.</p>
+<p>The move sequence is represented by a string. And each move is represent by a character. The valid robot moves are&nbsp;<code>R</code>&nbsp;(Right),&nbsp;<code>L</code>(Left),&nbsp;<code>U</code>&nbsp;(Up) and&nbsp;<code>D</code>&nbsp;(down). The output should be true or false representing whether the robot makes a circle.</p>
+<p>Example 1:</p>
+<pre>Input: "UD"
+Output: true
+</pre>
+<p>&nbsp;</p>
+<p>Example 2:</p>
+<pre>Input: "LL"
+Output: false
+</pre>
+<p>&nbsp;</p>
+<p>这道题让我们判断一个路径是否绕圈，就是说有多少个U，就得对应多少个D。同理，L和R的个数也得相等。这不就是之前那道<a href="http://www.cnblogs.com/grandyang/p/4424587.html" target="_blank">Valid Parentheses</a>的变种么，这次博主终于举一反三了！这比括号那题还要简单，因为括号至少还有三种，这里就水平和竖直两种。比较简单的方法就是使用两个计数器，如果是U，则cnt1自增1；如果是D，cnt1自减1。同理，如果是L，则cnt1自增1；如果是R，cnt1自减1。最后只要看cnt1和cnt2是否同时为0即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> judgeCircle(<span style="color: #0000ff;">string</span><span style="color: #000000;"> moves) {
+        </span><span style="color: #0000ff;">int</span> cnt1 = <span style="color: #800080;">0</span>, cnt2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> move : moves) {
+            </span><span style="color: #0000ff;">if</span> (move == <span style="color: #800000;">'</span><span style="color: #800000;">U</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt1;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (move == <span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span>) --<span style="color: #000000;">cnt1;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (move == <span style="color: #800000;">'</span><span style="color: #800000;">L</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">cnt2;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (move == <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span>) --<span style="color: #000000;">cnt2;
+        }
+        </span><span style="color: #0000ff;">return</span> cnt1 == <span style="color: #800080;">0</span> &amp;&amp; cnt2 == <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种解法使用了哈希表来建立字符和其出现的次数之间的映射，最后直接比较对应的字符出现的次数是否相等即可，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">bool</span> judgeCircle(<span style="color: #0000ff;">string</span><span style="color: #000000;"> moves) {
+        unordered_map</span>&lt;<span style="color: #0000ff;">char</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> m;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> c : moves) ++<span style="color: #000000;">m[c];
+        </span><span style="color: #0000ff;">return</span> m[<span style="color: #800000;">'</span><span style="color: #800000;">L</span><span style="color: #800000;">'</span>] == m[<span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span>] &amp;&amp; m[<span style="color: #800000;">'</span><span style="color: #800000;">U</span><span style="color: #800000;">'</span>] == m[<span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span><span style="color: #000000;">];
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4424587.html" target="_blank">Valid Parentheses</a></p>
+<p>&nbsp;</p>
+<p>参考资料：&nbsp;</p>
+<p><a href="https://discuss.leetcode.com/topic/99256/c-counter-4-lines-solution">https://discuss.leetcode.com/topic/99256/c-counter-4-lines-solution</a>&nbsp;</p>
+</div>
+<div id="interviewed-div">&nbsp;</div>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

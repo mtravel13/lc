@@ -1,0 +1,59 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/6031787.html">[LeetCode] K-th Smallest in Lexicographical Order 字典顺序的第K小数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given integers&nbsp;<code>n</code>&nbsp;and&nbsp;<code>k</code>, find the lexicographically k-th smallest integer in the range from&nbsp;<code>1</code>&nbsp;to&nbsp;<code>n</code>.</p>
+<p>Note: 1 &le; k &le; n &le; 109.</p>
+<p>Example:</p>
+<pre>Input:
+n: 13   k: 2
+
+Output:
+10
+
+Explanation:
+The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.</pre>
+<p>&nbsp;</p>
+<p>这道题是之前那道<a href="http://www.cnblogs.com/grandyang/p/5798275.html">Lexicographical Numbers</a>的延伸，之前让按字典顺序打印数组，而这道题让我们快速定位某一个位置，那么我们就不能像之前那道题一样，一个一个的遍历，这样无法通过OJ，这也是这道题被定为Hard的原因。那么我们得找出能够快速定位的方法，我们如果仔细观察字典顺序的数组，我们可以发现，其实这是个十叉树Denary Tree，就是每个节点的子节点可以有十个，比如数字1的子节点就是10到19，数字10的子节点可以是100到109，但是由于n大小的限制，构成的并不是一个满十叉树。我们分析题目中给的例子可以知道，数字1的子节点有4个(10,11,12,13)，而后面的数字2到9都没有子节点，那么这道题实际上就变成了一个先序遍历十叉树的问题，那么难点就变成了如何计算出每个节点的子节点的个数，我们不停的用k减去子节点的个数，当k减到0的时候，当前位置的数字即为所求。现在我们来看如何求子节点个数，比如数字1和数字2，我们要求按字典遍历顺序从1到2需要经过多少个数字，首先把1本身这一个数字加到step中，然后我们把范围扩大十倍，范围变成10到20之前，但是由于我们要考虑n的大小，由于n为13，所以只有4个子节点，这样我们就知道从数字1遍历到数字2需要经过5个数字，然后我们看step是否小于等于k，如果是，我们cur自增1，k减去step；如果不是，说明要求的数字在子节点中，我们此时cur乘以10，k自减1，以此类推，直到k为0推出循环，此时cur即为所求：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> findKthNumber(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">int</span><span style="color: #000000;"> k) {
+        </span><span style="color: #0000ff;">int</span> cur = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span>--<span style="color: #000000;">k;
+        </span><span style="color: #0000ff;">while</span> (k &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span> step = <span style="color: #800080;">0</span>, first = cur, last = cur + <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> (first &lt;=<span style="color: #000000;"> n) {
+                step </span>+= min((<span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span>)n + <span style="color: #800080;">1</span>, last) -<span style="color: #000000;"> first;
+                first </span>*= <span style="color: #800080;">10</span><span style="color: #000000;">;
+                last </span>*= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (step &lt;=<span style="color: #000000;"> k) {
+                </span>++<span style="color: #000000;">cur;
+                k </span>-=<span style="color: #000000;"> step;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                cur </span>*= <span style="color: #800080;">10</span><span style="color: #000000;">;
+                </span>--<span style="color: #000000;">k; 
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cur;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5798275.html">Lexicographical Numbers</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://discuss.leetcode.com/topic/64624/concise-easy-to-understand-java-5ms-solution-with-explaination/2" target="_blank">https://discuss.leetcode.com/topic/64624/concise-easy-to-understand-java-5ms-solution-with-explaination/2</a></p>
+<p><a href="https://discuss.leetcode.com/topic/64462/c-python-0ms-o-log-n-2-time-o-1-space-super-easy-solution-with-detailed-explanations" target="_blank">https://discuss.leetcode.com/topic/64462/c-python-0ms-o-log-n-2-time-o-1-space-super-easy-solution-with-detailed-explanations</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

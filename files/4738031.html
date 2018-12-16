@@ -1,0 +1,92 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/4738031.html">[LeetCode] Binary Tree Paths 二叉树路径</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, return all root-to-leaf paths.</p>
+<p>For example, given the following binary tree:</p>
+<p>&nbsp;</p>
+<pre>   1
+ /   \
+2     3
+ \
+  5
+</pre>
+<p>All root-to-leaf paths are:</p>
+<pre>["1-&gt;2-&gt;5", "1-&gt;3"]</pre>
+<p>&nbsp;</p>
+<p>这道题给我们一个二叉树，让我们返回所有根到叶节点的路径，跟之前那道<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4042156.html">Path Sum II</a>很类似，比那道稍微简单一些，不需要计算路径和，只需要无脑返回所有的路径即可，那么思路还是用递归来解，博主之前就强调过，玩树的题目，十有八九都是递归，而递归的核心就是不停的DFS到叶结点，然后在回溯回去。在递归函数中，当我们遇到叶结点的时候，即没有左右子结点，那么此时一条完整的路径已经形成了，我们加上当前的叶结点后存入结果res中，然后回溯。注意这里结果res需要reference，而out是不需要引用的，不然回溯回去还要删除新添加的结点，很麻烦。为了减少判断空结点的步骤，我们在调用递归函数之前都检验一下非空即可，代码而很简洁，参见如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; binaryTreePaths(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">if</span> (root) helper(root, <span style="color: #800000;">""</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">void</span> helper(TreeNode* node, <span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span>, vector&lt;<span style="color: #0000ff;">string</span>&gt;&amp;<span style="color: #000000;"> res) {
+        </span><span style="color: #0000ff;">if</span> (!node-&gt;left &amp;&amp; !node-&gt;right) res.push_back(<span style="color: #0000ff;">out</span> + to_string(node-&gt;<span style="color: #000000;">val));
+        </span><span style="color: #0000ff;">if</span> (node-&gt;left) helper(node-&gt;left, <span style="color: #0000ff;">out</span> + to_string(node-&gt;val) + <span style="color: #800000;">"</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+        </span><span style="color: #0000ff;">if</span> (node-&gt;right) helper(node-&gt;right, <span style="color: #0000ff;">out</span> + to_string(node-&gt;val) + <span style="color: #800000;">"</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">, res);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面再来看一种递归的方法，这个方法直接在一个函数中完成递归调用，不需要另写一个helper函数，核心思想和上面没有区别，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; binaryTreePaths(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">if</span> (!root-&gt;left &amp;&amp; !root-&gt;right) <span style="color: #0000ff;">return</span> {to_string(root-&gt;<span style="color: #000000;">val)};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; left = binaryTreePaths(root-&gt;<span style="color: #000000;">left);
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; right = binaryTreePaths(root-&gt;<span style="color: #000000;">right);
+        left.insert(left.end(), right.begin(), right.end());
+        </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">a : left) {
+            a </span>= to_string(root-&gt;val) + <span style="color: #800000;">"</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> a;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> left;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>还是递归写法，从论坛中扒下来的解法，核心思路都一样啦，写法各有不同而已，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法三：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt; binaryTreePaths(TreeNode*<span style="color: #000000;"> root) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span><span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">if</span> (!root-&gt;left &amp;&amp; !root-&gt;right) <span style="color: #0000ff;">return</span> {to_string(root-&gt;<span style="color: #000000;">val)};
+        vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> str : binaryTreePaths(root-&gt;<span style="color: #000000;">left)) {
+            res.push_back(to_string(root</span>-&gt;val) + <span style="color: #800000;">"</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str);
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">string</span> str : binaryTreePaths(root-&gt;<span style="color: #000000;">right)) {
+            res.push_back(to_string(root</span>-&gt;val) + <span style="color: #800000;">"</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4042156.html" target="_blank">Path Sum II</a></p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/problems/binary-tree-paths/discuss/68258/Accepted-Java-simple-solution-in-8-lines">https://leetcode.com/problems/binary-tree-paths/discuss/68258/Accepted-Java-simple-solution-in-8-lines</a></p>
+<p><a href="https://leetcode.com/problems/binary-tree-paths/discuss/68282/Clean-Java-solution-(Accepted)-without-any-helper-recursive-function">https://leetcode.com/problems/binary-tree-paths/discuss/68282/Clean-Java-solution-(Accepted)-without-any-helper-recursive-function</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>

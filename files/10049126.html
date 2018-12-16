@@ -1,0 +1,27 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/10049126.html">Solve Error: &quot;errcode&quot;: 48001, &quot;errmsg&quot;: &quot;api unauthorized hint&quot;</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>当你想给微信公众号（不是测试账号）自定义菜单创建接口，遇到如下错误：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">200</span><span style="color: #000000;">    OK
+<span style="color: #ff0000;">Connection: keep</span></span><span style="color: #ff0000;">-alive
+Date: Sat, 01 Dec 2018 05:02:08 GMT
+Content-Type: application/json; encoding=utf-8
+Content-Length: 69
+{
+    "errcode": 48001, 
+    "errmsg": "api unauthorized hint: [fCbXNA0528vr65!]"
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>很可能的原因是你并没有自定义菜单接口的权限，去【开发】-&gt;【接口权限】 界面去查看&ldquo;自定义菜单&rdquo;的权限，如果显示 &ldquo;未获得&rdquo;，那么恭喜你，用不了。而显示的获得条件是【1】订阅号必须通过<a href="https://mp.weixin.qq.com/acct/wxverifyorder?action=index&amp;token=468262775&amp;lang=zh_CN" target="_blank">微信认证</a>&nbsp;【2】服务号自动获得。但是坑爹的是，个人申请的订阅号（2014年8月26日之后申请的）无法微信认证，而个人又无法申请服务号。如果使用【功能】中的【自定义菜单】，只能回复固定的文本或者图文，而且没法加入自己的回复逻辑，而用自己的服务器，就没法自定义菜单，我也是醉了&middot;&middot;&middot;&middot;</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>

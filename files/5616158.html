@@ -1,0 +1,99 @@
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/grandyang/p/5616158.html">[LeetCode] Find Leaves of Binary Tree 找二叉树的叶节点</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p>&nbsp;</p>
+<p>Given a binary tree, find all leaves and then remove those leaves. Then repeat the previous steps until the tree is empty.</p>
+<p> <strong>Example:</strong><br />
+Given binary tree <br />
+</p>
+<pre>          1
+         / \
+        2   3
+       / \     
+      4   5    
+</pre>
+<p>Returns <code>[4, 5, 3], [2], [1]</code>.</p>
+<p> <strong>Explanation:</strong><br />
+</p>
+<p>
+1. Remove the leaves <code>[4, 5, 3]</code> from the tree
+</p>
+<pre>          1
+         / 
+        2          
+</pre>
+<p>2. Remove the leaf <code>[2]</code> from the tree</p>
+<pre>          1          
+</pre>
+<p>3. Remove the leaf <code>[1]</code> from the tree</p>
+<pre>          []         
+</pre>
+<p>Returns <code>[4, 5, 3], [2], [1]</code>.</p>
+<p>&nbsp;</p>
+<p><strong>Credits:</strong><br />Special thanks to <a href="https://discuss.leetcode.com/user/elmirap">@elmirap</a> for adding this problem and creating all test cases.</p>
+<p>&nbsp;</p>
+<p>这道题给了我们一个二叉树，让我们返回其每层的叶节点，就像剥洋葱一样，将这个二叉树一层一层剥掉，最后一个剥掉根节点。那么题目中提示说要用DFS来做，思路是这样的，每一个节点从左子节点和右子节点分开走可以得到两个深度，由于成为叶节点的条件是左右子节点都为空，所以我们取左右子节点中较大值加1为当前节点的深度值，知道了深度值就可以将节点值加入到结果res中的正确位置了，求深度的方法我们可以参见<a href="http://www.cnblogs.com/grandyang/p/4051348.html" target="_blank">Maximum Depth of Binary Tree</a>中求最大深度的方法，参见代码如下：</p>
+<p>&nbsp;</p>
+<p>解法一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; findLeaves(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        helper(root, res);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    </span><span style="color: #0000ff;">int</span> helper(TreeNode *root, vector&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; &amp;<span style="color: #000000;">res) {
+        </span><span style="color: #0000ff;">if</span> (!root) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> depth = <span style="color: #800080;">1</span> + max(helper(root-&gt;left, res), helper(root-&gt;<span style="color: #000000;">right, res));
+        </span><span style="color: #0000ff;">if</span> (depth &gt;= res.size()) res.resize(depth + <span style="color: #800080;">1</span><span style="color: #000000;">);
+        res[depth].push_back(root</span>-&gt;<span style="color: #000000;">val);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> depth;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>下面这种DFS方法没有用计算深度的方法，而是使用了一层层剥离的方法，思路是遍历二叉树，找到叶节点，将其赋值为NULL，然后加入leaves数组中，这样一层层剥洋葱般的就可以得到最终结果了：</p>
+<p>&nbsp;</p>
+<p>解法二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt; findLeaves(TreeNode*<span style="color: #000000;"> root) {
+        vector</span>&lt;vector&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;"> res;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (root) {
+            vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> leaves;
+            root </span>=<span style="color: #000000;"> remove(root, leaves);
+            res.push_back(leaves);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+    }
+    TreeNode</span>* remove(TreeNode *node, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">leaves) {
+        </span><span style="color: #0000ff;">if</span> (!node) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        </span><span style="color: #0000ff;">if</span> (!node-&gt;left &amp;&amp; !node-&gt;<span style="color: #000000;">right) {
+            leaves.push_back(node</span>-&gt;<span style="color: #000000;">val);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+        }
+        node</span>-&gt;left = remove(node-&gt;<span style="color: #000000;">left, leaves);
+        node</span>-&gt;right = remove(node-&gt;<span style="color: #000000;">right, leaves);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> node;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>类似题目：</p>
+<p><a href="http://www.cnblogs.com/grandyang/p/4051348.html" target="_blank">Maximum Depth of Binary Tree</a></p>
+<p><a href="http://www.cnblogs.com/grandyang/p/5000291.html">Minimum Height Trees</a> </p>
+<p>&nbsp;</p>
+<p>参考资料：</p>
+<p><a href="https://leetcode.com/discuss/110406/simple-java-recursive-1ms-solution" target="_blank">https://leetcode.com/discuss/110406/simple-java-recursive-1ms-solution</a></p>
+<p><a href="https://leetcode.com/discuss/110389/12-lines-simple-java-solution-using-recursion" target="_blank">https://leetcode.com/discuss/110389/12-lines-simple-java-solution-using-recursion</a></p>
+<p>&nbsp;</p>
+<p><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/grandyang/p/4606334.html">LeetCode All in One 题目讲解汇总(持续更新中...)</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>
